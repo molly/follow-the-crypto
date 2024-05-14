@@ -1,0 +1,26 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6rem;
+  min-height: 100vh;
+}
+
+.title {
+  composes: accent-text from "./shared.module.css";
+  font-size: clamp(2rem, 10vw, 8rem);
+  text-align: center;
+}
+
+.subtitle {
+  composes: card from "./shared.module.css";
+  text-align: center;
+}
+
+.highlight {
+  composes: accent-text from "./shared.module.css";
+  font-size: 3rem;
+  padding: 1rem 0;
+  font-weight: bold;
+}

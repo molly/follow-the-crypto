@@ -1,0 +1,13 @@
+.accent-text {
+  color: transparent;
+  text-shadow: 3px 3px var(--accent);
+  text-stroke: 1px var(--text-stroke);
+  -webkit-text-stroke: 1px var(--text-stroke);
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-lg);
+}
