@@ -1,32 +1,39 @@
 :root {
   --max-width: 1100px;
   --border-radius: 8px;
-  --font-mono: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono", "Roboto Mono", "Oxygen Mono",
-    "Ubuntu Monospace", "Source Code Pro", "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
+  --font-mono: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
+    "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro",
+    "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
 
   --off-white: #e2e8f0;
   --off-black: #020617;
   --accent: #2563eb;
 
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 248, 250, 252;
-  --background-end-rgb: 241, 245, 249, 1;
+  --background-start: #f8fafc;
+  --background-end: #e2e8f0;
+  --card-background: #fefefe;
+  --table-background-secondary: var(--background-start);
+  --main-text: var(--off-black);
   --text-stroke: var(--off-black);
+  --secondary-text: #64748b;
 
   --background-gradient: radial-gradient(
     circle at center,
-    rgb(var(--background-start-rgb)) 0%,
-    rgb(var(--background-end-rgb)) 100%
+    var(--background-start) 0%,
+    var(--background-end) 100%
   );
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+    0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 30, 41, 59;
-    --background-end-rgb: 2, 6, 23;
+    --background-start: #0f172a;
+    --background-end: #020617;
+    --card-background: #1e293b;
+    --main-text: var(--off-white);
     --text-stroke: var(--off-white);
+    --secondary-text: #94a3b8;
   }
 }
 
@@ -43,13 +50,20 @@ body {
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
+  color: var(--main-text);
   background: rgb(var(--foreground-start-rgb));
   background-image: var(--background-gradient);
+  line-height: 1.2;
 }
 
 a {
   color: inherit;
+  text-decoration: none;
+}
+
+.secondary {
+  color: var(--secondary-text);
+  font-size: 0.8rem;
 }
 
 @media (prefers-color-scheme: dark) {

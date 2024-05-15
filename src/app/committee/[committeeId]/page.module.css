@@ -1,0 +1,80 @@
+.receiptsSection {
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.receipts {
+  composes: accent-text from "../../shared.module.css";
+  font-size: 3rem;
+}
+
+.donorSection {
+  composes: card from "../../shared.module.css";
+  padding: 1rem 0;
+}
+
+.donorSectionHeader {
+  padding: 0 1rem;
+  font-size: 1.5rem;
+}
+
+.donorRow {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+
+  &:nth-child(odd) {
+    background: var(--table-background-secondary);
+  }
+}
+
+.donorSummary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.2rem;
+}
+
+.tmp {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.contributionsContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.donorSubRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 1rem;
+  padding: 0.5rem 0;
+  font-size: 1rem;
+}
+
+.subRowCurrency {
+  color: var(--secondary-text);
+}
+
+.donorOccupation {
+  color: var(--secondary-text);
+  font-style: italic;
+
+  &:before {
+    content: " | ";
+    font-style: normal;
+  }
+}
+
+.donorCompany {
+  font-weight: bold;
+}
+
+.donorDate {
+  font-size: 1rem;
+  margin-left: 0.2rem;
+}

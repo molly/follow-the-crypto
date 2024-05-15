@@ -9,6 +9,7 @@
 
 .title {
   composes: accent-text from "./shared.module.css";
+  text-shadow: 0.25rem 0.25rem var(--accent);
   font-size: clamp(2rem, 10vw, 8rem);
   text-align: center;
 }
