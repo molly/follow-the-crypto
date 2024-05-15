@@ -13,6 +13,8 @@
   --background-end: #e2e8f0;
   --card-background: #fefefe;
   --table-background-secondary: var(--background-start);
+  --map-background: #ffffff;
+
   --main-text: var(--off-black);
   --text-stroke: var(--off-black);
   --secondary-text: #64748b;
@@ -31,6 +33,8 @@
     --background-start: #0f172a;
     --background-end: #020617;
     --card-background: #1e293b;
+    --map-background: var(--card-background);
+
     --main-text: var(--off-white);
     --text-stroke: var(--off-white);
     --secondary-text: #94a3b8;

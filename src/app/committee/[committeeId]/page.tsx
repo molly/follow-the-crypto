@@ -1,4 +1,4 @@
-import { COMMITTEES } from "../../data";
+import { COMMITTEES } from "../../data/committees";
 import CommitteeDetails from "./CommitteeDetails";
 import TopDonors from "./TopDonors";
 

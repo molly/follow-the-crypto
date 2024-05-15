@@ -1,6 +1,6 @@
 import { ErrorType } from "@/app/types/Error";
 import { DonorGroup, mergeDonors } from "@/app/utils/donorDetails";
-import { Committee } from "../../data";
+import { Committee } from "../../data/companyAliases";
 import Donor from "./Donor";
 import styles from "./page.module.css";
 

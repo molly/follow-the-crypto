@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Source_Sans_3 } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Source_Sans_3({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Follow the Crypto",

@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { currency } from "../../utils/utils";
 
 import { CommitteeTotals } from "@/app/types/FECTypes";
-import { Committee } from "../../data";
+import { Committee } from "../../data/companyAliases";
 import styles from "./page.module.css";
 
 async function getCommitteeData(

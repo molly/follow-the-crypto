@@ -1,4 +1,4 @@
-import { COMPANY_ALIASES } from "../data";
+import { COMPANY_ALIASES } from "../data/companyAliases";
 import { ErrorType } from "../types/Error";
 import { ScheduleA, ScheduleAPage } from "../types/FECTypes";
 import {
