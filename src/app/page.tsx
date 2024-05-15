@@ -1,6 +1,8 @@
 import BubbleMap from "./components/home/BubbleMap";
 import styles from "./page.module.css";
 
+export const revalidate = 3600;
+
 export default function Home() {
   return (
     <main className={styles.main}>

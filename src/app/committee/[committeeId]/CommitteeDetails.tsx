@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 import { currency } from "../../utils/utils";
 
+import { Committee } from "@/app/types/Committee";
 import { CommitteeTotals } from "@/app/types/FECTypes";
-import { Committee } from "../../data/companyAliases";
 import styles from "./page.module.css";
 
 async function getCommitteeData(
@@ -13,7 +13,6 @@ async function getCommitteeData(
   );
 
   if (!resp.ok) {
-    console.log(resp);
     if (resp.status >= 400 && resp.status < 500) {
       return null;
     } else {

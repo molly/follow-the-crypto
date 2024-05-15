@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Source_Sans_3 } from "next/font/google";
 import "./globals.css";
 
+export const revalidate = 3600;
 const inter = Source_Sans_3({ subsets: ["latin"] });
 
 export const metadata: Metadata = {

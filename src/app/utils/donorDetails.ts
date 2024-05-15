@@ -1,6 +1,4 @@
-import { COMPANY_ALIASES } from "../data/companyAliases";
-import { ErrorType } from "../types/Error";
-import { ScheduleA, ScheduleAPage } from "../types/FECTypes";
+import { Contribution } from "../types/Contributions";
 import {
   titlecase,
   titlecaseCompany,
@@ -10,7 +8,7 @@ import {
 
 export type DonorType = IndividualDonorType | CompanyDonorType;
 
-type IndividualDonorType = {
+export type IndividualDonorType = {
   name: string;
   company?: string;
   companyAlias?: string;
@@ -24,7 +22,7 @@ type CompanyDonorType = {
   isIndividual: false;
 };
 
-function getIndividualDonorName(donor: ScheduleA): IndividualDonorType {
+function getIndividualDonorName(donor: Contribution): IndividualDonorType {
   let occupation;
   let name = [
     donor.contributor_first_name,
@@ -43,9 +41,10 @@ function getIndividualDonorName(donor: ScheduleA): IndividualDonorType {
   return { name, occupation, isIndividual: true };
 }
 
-export function getCompanyDetails(company: string) {}
-
-function getDonorCompanyDetails(donor: ScheduleA): {
+function getDonorCompanyDetails(
+  donor: Contribution,
+  COMPANY_ALIASES: Record<string, string>,
+): {
   company: string | undefined;
   companyAlias: string | undefined;
 } {
@@ -67,61 +66,20 @@ function getDonorCompanyDetails(donor: ScheduleA): {
 }
 
 export function getDonorDetails(
-  donor: ScheduleA,
+  donor: Contribution,
+  COMPANY_ALIASES: Record<string, string>,
 ): IndividualDonorType | CompanyDonorType {
   if (donor.contributor_first_name || donor.contributor_last_name) {
     return {
       ...getIndividualDonorName(donor),
-      ...getDonorCompanyDetails(donor),
+      ...getDonorCompanyDetails(donor, COMPANY_ALIASES),
       isIndividual: true,
     };
   } else if (donor.contributor_name) {
     return {
-      ...getDonorCompanyDetails(donor),
+      ...getDonorCompanyDetails(donor, COMPANY_ALIASES),
       isIndividual: false,
     };
   }
   return { company: "", isIndividual: false };
-}
-
-export interface DonorGroup {
-  company?: string;
-  contributions: ScheduleA[];
-  total: number;
-}
-
-export function mergeDonors(donors: ScheduleAPage | ErrorType): DonorGroup[] {
-  const donorMap: Record<string, DonorGroup> = {};
-  if ("results" in donors && donors.results) {
-    for (const donor of donors.results) {
-      let group = donor.contributor_employer || donor.contributor_name;
-      if (
-        group &&
-        ["RETIRED", "SELF", "INDEPENDENT CONTRACTOR"].includes(group)
-      ) {
-        group = donor.contributor_name;
-      }
-      if (!group) {
-        group = "UNKNOWN";
-      }
-      if (group in COMPANY_ALIASES) {
-        group = COMPANY_ALIASES[group];
-      }
-
-      if (group in donorMap) {
-        donorMap[group].contributions.push(donor);
-        donorMap[group].total += donor.contribution_receipt_amount || 0;
-      } else {
-        donorMap[group] = {
-          contributions: [donor],
-          total: donor.contribution_receipt_amount || 0,
-        };
-      }
-    }
-
-    return Object.entries(donorMap)
-      .map(([company, data]) => ({ company, ...data }))
-      .sort((a, b) => b.total - a.total);
-  }
-  return [];
 }

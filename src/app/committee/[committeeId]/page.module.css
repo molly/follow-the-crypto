@@ -35,6 +35,11 @@
   font-size: 1.2rem;
 }
 
+.redactedName {
+  font-style: italic;
+  margin-right: 0.2rem;
+}
+
 .tmp {
   display: flex;
   flex-direction: row;

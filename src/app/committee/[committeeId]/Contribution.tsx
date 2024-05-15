@@ -1,16 +1,26 @@
-import { ScheduleA } from "@/app/types/FECTypes";
+import { Contribution as ContributionType } from "@/app/types/Contributions";
+import { getConstant } from "@/app/utils/constants";
 import { currency } from "@/app/utils/utils";
-import { DonorType, getDonorDetails } from "../../utils/donorDetails";
+import {
+  DonorType,
+  IndividualDonorType,
+  getDonorDetails,
+} from "../../utils/donorDetails";
 import styles from "./page.module.css";
 
-export default function Contribution({
+export default async function Contribution({
   contribution,
   isSubRow,
 }: {
-  contribution: ScheduleA;
+  contribution: ContributionType;
   isSubRow?: boolean;
 }) {
-  const donorDetails: DonorType = getDonorDetails(contribution);
+  const COMPANY_ALIASES: Record<string, string> =
+    (await getConstant("companyAliases")) || {};
+  const donorDetails: DonorType = getDonorDetails(
+    contribution,
+    COMPANY_ALIASES,
+  );
   let company, donorIdentifier;
 
   const renderContributionDate = (date: string | null | undefined) => {
@@ -25,6 +35,17 @@ export default function Contribution({
     }
   };
 
+  const renderContributorName = (
+    contribution: ContributionType,
+    donorDetails: IndividualDonorType,
+  ) => {
+    if (contribution.redacted) {
+      return <span className={styles.redactedName}>Individual</span>;
+    } else {
+      return donorDetails.name;
+    }
+  };
+
   if (isSubRow) {
     // SUBROW
     company = <span>{donorDetails.company}</span>;
@@ -32,7 +53,7 @@ export default function Contribution({
     if (donorDetails.isIndividual) {
       donorIdentifier = (
         <>
-          {donorDetails.name}{" "}
+          {renderContributorName(contribution, donorDetails)}{" "}
           {donorDetails.occupation && (
             <span className={styles.donorOccupation}>
               {donorDetails.occupation}
@@ -75,7 +96,7 @@ export default function Contribution({
       donorIdentifier = (
         <div>
           <div>
-            {donorDetails.name}{" "}
+            {renderContributorName(contribution, donorDetails)}{" "}
             {donorDetails.occupation && (
               <span className={styles.donorOccupation}>
                 {donorDetails.occupation}

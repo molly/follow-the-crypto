@@ -1,21 +1,25 @@
+import { db } from "@/app/db";
+import { Committee } from "@/app/types/Committee";
+import { Contributions, ContributionsGroup } from "@/app/types/Contributions";
 import { ErrorType } from "@/app/types/Error";
-import { DonorGroup, mergeDonors } from "@/app/utils/donorDetails";
-import { Committee } from "../../data/companyAliases";
+import { doc, getDoc } from "firebase/firestore";
 import Donor from "./Donor";
 import styles from "./page.module.css";
 
 async function getCommitteeDonors(
   committee: Committee,
-): Promise<DonorGroup[] | ErrorType> {
-  const resp = await fetch(
-    `https://api.open.fec.gov/v1/schedules/schedule_a/?committee_id=${committee.id}&per_page=100&sort=-contribution_receipt_amount&api_key=${process.env.FEC_API_KEY}`,
-  );
-
-  if (!resp.ok) {
-    return { statusCode: resp.status, error: true };
+): Promise<Contributions | ErrorType> {
+  try {
+    const docRef = doc(db, "contributions", committee.id);
+    const snapshot = await getDoc(docRef);
+    if (snapshot.exists()) {
+      return snapshot.data() as Contributions;
+    } else {
+      return { error: true, statusCode: 404 };
+    }
+  } catch (e) {
+    return { error: true };
   }
-  const data = await resp.json();
-  return mergeDonors(data);
 }
 
 export default async function TopDonors({
@@ -24,6 +28,7 @@ export default async function TopDonors({
   committee: Committee;
 }) {
   const data = await getCommitteeDonors(committee);
+  debugger;
 
   if ("error" in data) {
     if (data.statusCode && data.statusCode >= 400 && data.statusCode < 500) {
@@ -38,8 +43,8 @@ export default async function TopDonors({
   return (
     <section className={styles.donorSection}>
       <h3 className={styles.donorSectionHeader}>Top donors</h3>
-      {data.length ? (
-        data.map((donorGroup: DonorGroup, ind: number) => (
+      {data.groups.length ? (
+        data.groups.map((donorGroup: ContributionsGroup, ind: number) => (
           <Donor key={`donor-${ind}`} donorGroup={donorGroup} />
         ))
       ) : (
