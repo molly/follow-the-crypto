@@ -1,12 +1,12 @@
+.main {
+  margin: 0 auto;
+  padding: 0 1rem;
+  max-width: var(--max-width);
+}
+
 .logo {
   composes: accent-text from "../../shared.module.css";
   font-size: 1.5rem;
   padding: 1rem;
   font-weight: bold;
-}
-
-.main {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
 }

@@ -1,4 +1,4 @@
-import BubbleMap from "./components/home/BubbleMap";
+import ChloroplethMap from "./components/home/ChloroplethMap";
 import styles from "./page.module.css";
 
 export const revalidate = 3600;
@@ -17,7 +17,7 @@ export default function Home() {
         elections.
       </div>
       <div className={styles.mapContainer}>
-        <BubbleMap />
+        <ChloroplethMap />
       </div>
     </main>
   );

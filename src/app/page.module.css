@@ -4,6 +4,8 @@
   gap: 4rem 1rem;
   padding: 6rem;
   min-height: 100vh;
+  max-width: var(--max-width);
+  margin: 0 auto;
 }
 
 .title {

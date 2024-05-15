@@ -1,4 +1,4 @@
 .svg {
   fill: var(--map-background);
-  stroke: var(--main-text);
+  stroke: var(--secondary-text);
 }
