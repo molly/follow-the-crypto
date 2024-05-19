@@ -109,7 +109,7 @@ export default function ChloroplethMap() {
       {isError && <div>Something went wrong loading state donation data.</div>}
       {!isLoading && !isError && expendituresByState && (
         <>
-          <svg ref={svgRef} className={styles.svg} viewBox="0 0 960 600">
+          <svg ref={svgRef} className={styles.svg} viewBox="0 0 1000 620">
             <g>
               {data.map((d) => {
                 const setTooltipData = () => {

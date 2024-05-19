@@ -15,9 +15,10 @@ export default function ChloroplethTooltip({
   svgSize?: DOMRect;
 }) {
   const router = useRouter();
-  const scale = svgSize ? svgSize.width / 960 : 1;
+  const scale = svgSize ? svgSize.width / 1000 : 1;
 
   if (state && expenditures && centroid) {
+    // Senate race first, then house races ordered by district
     const races = Object.keys(expenditures.by_race).sort((a, b) => {
       const raceA = a.split("-");
       const raceB = b.split("-");

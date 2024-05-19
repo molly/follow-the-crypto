@@ -2,8 +2,7 @@
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   gap: 4rem 1rem;
-  padding: 6rem;
-  min-height: 100vh;
+  padding: 0.5rem;
   max-width: var(--max-width);
   margin: 0 auto;
 }
@@ -18,17 +17,46 @@
 
 .totalSpending {
   composes: card from "./shared.module.css";
-  grid-column: 5 / 9;
+  grid-column: 2/12;
   text-align: center;
 }
 
 .highlight {
   composes: accent-text from "./shared.module.css";
-  font-size: 3rem;
   padding: 1rem 0;
+  font-size: 2rem;
   font-weight: bold;
 }
 
 .mapContainer {
-  grid-column: 2 / 12;
+  grid-column: 1 / 13;
+}
+
+@media (min-width: 500px) {
+  .main {
+    padding: 6rem;
+  }
+
+  .highlight {
+    font-size: clamp(2rem, 5vw, 3rem);
+    white-space: nowrap;
+  }
+}
+
+@media (min-width: 700px) {
+  .totalSpending {
+    grid-column: 3/11;
+  }
+}
+
+@media (min-width: 800px) {
+  .totalSpending {
+    grid-column: 4/10;
+  }
+}
+
+@media (min-width: 1200px) {
+  .totalSpending {
+    grid-column: 5/9;
+  }
 }
