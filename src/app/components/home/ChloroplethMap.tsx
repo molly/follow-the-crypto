@@ -1,16 +1,16 @@
-"use client";
-
-import us from "@/app/data/counties-albers-10m.json";
 import { STATES_BY_FULL } from "@/app/data/states";
 import { db } from "@/app/db";
 import { Expenditures } from "@/app/types/Expenditures";
 import * as d3 from "d3";
 import { doc, getDoc } from "firebase/firestore";
-import { RefObject, useEffect, useRef } from "react";
+import { FeatureCollection, GeoJsonProperties, Geometry } from "geojson";
 import * as topojson from "topojson-client";
+import { Objects, Topology } from "topojson-specification";
 import styles from "./chloroplethMap.module.css";
 
-async function getExpendituresByState() {
+async function getExpendituresByState(): Promise<
+  Record<string, Expenditures> | { error: boolean; statusCode?: number }
+> {
   try {
     const docRef = doc(db, "expenditures", "states");
     const snapshot = await getDoc(docRef);
@@ -24,44 +24,62 @@ async function getExpendituresByState() {
   }
 }
 
-async function drawMap(svgRef: RefObject<SVGSVGElement>) {
-  // TODO: Error handling
-  const expenditures = await getExpendituresByState();
-  const data = topojson.feature(us, us.objects.states).features;
-  const colorScale = d3
-    .scaleThreshold()
-    .domain([10 ** 4, 10 ** 5, 10 ** 6, 10 ** 7, 10 ** 8])
-    .range(d3.schemeBlues[6]);
+function getFill(
+  stateFullName: string,
+  expendituresByState: Record<string, Expenditures>,
+  colorScale: d3.ScaleThreshold<number, string>,
+): string | undefined {
+  if (!stateFullName) {
+    return undefined;
+  }
 
-  const svg = d3.select(svgRef.current);
-  const path = d3.geoPath();
-  svg
-    .append("g")
-    .selectAll("path")
-    .data(data)
-    .enter()
-    .append("path")
-    .attr("d", path)
-    .attr("fill", (d) => {
-      const stateAbbr = STATES_BY_FULL[d.properties.name];
-      if (stateAbbr in expenditures) {
-        return colorScale(expenditures[stateAbbr].total);
-      } else {
-        return null;
-      }
-    });
+  const stateAbbr = STATES_BY_FULL[stateFullName];
+  if (stateAbbr && stateAbbr in expendituresByState) {
+    return colorScale(expendituresByState[stateAbbr].total);
+  }
+  return undefined;
 }
 
-export default function ChloroplethMap() {
-  const svgRef = useRef<SVGSVGElement>(null);
+export default async function ChloroplethMap() {
+  const us: Topology<
+    Objects<GeoJsonProperties>
+  > = require("@/app/data/counties-albers-10m.json"); // Specify the type of us
 
-  useEffect(() => {
-    drawMap(svgRef);
-  }, [svgRef]);
+  const expendituresByState = await getExpendituresByState();
+  if ("error" in expendituresByState) {
+    return <div>Error loading state donation data.</div>;
+  }
+
+  const collection: FeatureCollection<Geometry, GeoJsonProperties> =
+    topojson.feature(us, us.objects.states) as FeatureCollection<
+      Geometry,
+      GeoJsonProperties
+    >;
+  const data = collection.features;
+
+  const colorScale = d3
+    .scaleThreshold<number, string>()
+    .domain([10 ** 4, 10 ** 5, 10 ** 6, 10 ** 7, 10 ** 8])
+    .range(d3.schemeBlues[6]);
+  const path = d3.geoPath();
 
   return (
     <div className="bubble-map">
-      <svg className={styles.svg} ref={svgRef} viewBox="0 0 960 600" />
+      <svg className={styles.svg} viewBox="0 0 960 600">
+        <g>
+          {data.map((d) => (
+            <path
+              key={d.id}
+              d={path(d) as string}
+              fill={getFill(
+                d.properties?.name,
+                expendituresByState,
+                colorScale,
+              )}
+            />
+          ))}
+        </g>
+      </svg>
     </div>
   );
 }
