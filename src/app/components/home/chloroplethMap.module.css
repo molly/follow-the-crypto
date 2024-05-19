@@ -1,4 +1,15 @@
+.mapWrapper {
+  position: relative;
+}
+
 .svg {
   fill: var(--map-background);
   stroke: var(--secondary-text);
+}
+
+.tooltip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  composes: card from "../../shared.module.css";
 }

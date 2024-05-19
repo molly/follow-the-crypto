@@ -31,3 +31,9 @@ export interface Expenditures {
   by_committee: Record<string, CommitteeExpenditures>;
   total: number;
 }
+
+export interface StateExpenditures {
+  state: string;
+  expenditures?: Expenditures;
+  centroid: [number, number];
+}
