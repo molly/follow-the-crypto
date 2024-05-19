@@ -3,6 +3,12 @@ enum SupportOpposeIndicator {
   Oppose = "O",
 }
 
+enum CandidateOffice {
+  President = "P",
+  Senate = "S",
+  House = "H",
+}
+
 export interface Expenditure {
   expenditure_amount: number;
   candidate_office_state: string;
@@ -22,18 +28,22 @@ export interface Expenditure {
   support_oppose_indicator: SupportOpposeIndicator;
 }
 
-interface CommitteeExpenditures {
+interface ExpenditureGroup {
   expenditures: Expenditure[];
   total: number;
 }
 
-export interface Expenditures {
-  by_committee: Record<string, CommitteeExpenditures>;
-  total: number;
+interface RaceDetails {
+  candidate_office: CandidateOffice;
+  candidate_office_district: string;
 }
 
-export interface StateExpenditures {
-  state: string;
-  expenditures?: Expenditures;
-  centroid: [number, number];
+interface RaceExpenditureGroup extends ExpenditureGroup {
+  details: RaceDetails;
+}
+
+export interface Expenditures {
+  by_committee: Record<string, ExpenditureGroup>;
+  by_race: Record<string, RaceExpenditureGroup>;
+  total: number;
 }

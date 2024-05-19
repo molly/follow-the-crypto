@@ -6,11 +6,18 @@ import { Expenditures } from "@/app/types/Expenditures";
 import * as d3 from "d3";
 import { doc, getDoc } from "firebase/firestore";
 import { FeatureCollection, GeoJsonProperties, Geometry } from "geojson";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as topojson from "topojson-client";
 import { Objects, Topology } from "topojson-specification";
 import ChloroplethTooltip from "./ChloroplethTooltip";
 import styles from "./chloroplethMap.module.css";
+
+interface HoveredState {
+  state?: string;
+  expenditures?: Expenditures;
+  centroid?: [number, number];
+  svgSize?: DOMRect;
+}
 
 async function getExpendituresByState(): Promise<
   Record<string, Expenditures> | { error: boolean; statusCode?: number }
@@ -60,7 +67,9 @@ export default function ChloroplethMap() {
   > | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
-  const [hoveredState, setHoveredState] = useState(null);
+  const [hoveredState, setHoveredState] = useState<HoveredState | null>(null);
+
+  const svgRef = useRef<SVGSVGElement>(null);
 
   const us: Topology<
     Objects<GeoJsonProperties>
@@ -100,11 +109,10 @@ export default function ChloroplethMap() {
       {isError && <div>Something went wrong loading state donation data.</div>}
       {!isLoading && !isError && expendituresByState && (
         <>
-          <svg className={styles.svg} viewBox="0 0 960 600">
+          <svg ref={svgRef} className={styles.svg} viewBox="0 0 960 600">
             <g>
               {data.map((d) => {
                 const setTooltipData = () => {
-                  console.log(expendituresByState);
                   setHoveredState({
                     state: d.properties?.name,
                     expenditures: getExpenditure(
@@ -112,6 +120,7 @@ export default function ChloroplethMap() {
                       expendituresByState,
                     ),
                     centroid: path.centroid(d.geometry),
+                    svgSize: svgRef.current?.getBoundingClientRect(),
                   });
                 };
 

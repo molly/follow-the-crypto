@@ -7,9 +7,28 @@
   stroke: var(--secondary-text);
 }
 
+/* Tooltip */
 .tooltip {
   position: absolute;
   top: 0;
   left: 0;
   composes: card from "../../shared.module.css";
+}
+
+.tooltipTotalSpending {
+  font-weight: bold;
+}
+
+.tooltipTableRaceRow {
+  color: var(--accent);
+  cursor: pointer;
+}
+
+.tooltipTableName {
+  white-space: nowrap;
+}
+
+.tooltipTableSpending {
+  padding-left: 1rem;
+  text-align: right;
 }
