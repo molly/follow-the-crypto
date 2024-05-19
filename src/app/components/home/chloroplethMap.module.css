@@ -7,6 +7,10 @@
   stroke: var(--secondary-text);
 }
 
+.svgText {
+  fill: var(--main-text);
+}
+
 /* Tooltip */
 .tooltip {
   position: absolute;
@@ -20,8 +24,11 @@
 }
 
 .tooltipTableRaceRow {
-  color: var(--accent);
+  color: var(--link-text);
   cursor: pointer;
+  &:hover {
+    color: var(--link-text-hover);
+  }
 }
 
 .tooltipTableName {

@@ -10,6 +10,7 @@ import { useEffect, useRef, useState } from "react";
 import * as topojson from "topojson-client";
 import { Objects, Topology } from "topojson-specification";
 import ChloroplethTooltip from "./ChloroplethTooltip";
+import Legend from "./Legend";
 import styles from "./chloroplethMap.module.css";
 
 interface HoveredState {
@@ -18,6 +19,10 @@ interface HoveredState {
   centroid?: [number, number];
   svgSize?: DOMRect;
 }
+
+const DOMAIN = [10 ** 4, 10 ** 5, 10 ** 6, 10 ** 7, 10 ** 8];
+const LIGHT_THEME = ["#eff4ff", "#bfd3fe", "#6090fa", "#2563eb", "#1e4baf"];
+const DARK_THEME = ["#172a54", "#1e408a", "#1e4baf", "#2563eb", "#6090fa"];
 
 async function getExpendituresByState(): Promise<
   Record<string, Expenditures> | { error: boolean; statusCode?: number }
@@ -97,10 +102,15 @@ export default function ChloroplethMap() {
     >;
   const data = collection.features;
 
+  const isDarkMode =
+    window.matchMedia &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches;
   const colorScale = d3
     .scaleThreshold<number, string>()
-    .domain([10 ** 4, 10 ** 5, 10 ** 6, 10 ** 7, 10 ** 8])
-    .range(d3.schemeBlues[6]);
+    .domain(DOMAIN)
+    .range(isDarkMode ? DARK_THEME : LIGHT_THEME);
+  console.log(d3.schemeBlues[DOMAIN.length + 1]);
+
   const path = d3.geoPath();
 
   return (
@@ -110,6 +120,10 @@ export default function ChloroplethMap() {
       {!isLoading && !isError && expendituresByState && (
         <>
           <svg ref={svgRef} className={styles.svg} viewBox="0 0 1000 620">
+            <Legend
+              colors={isDarkMode ? DARK_THEME : LIGHT_THEME}
+              domain={DOMAIN}
+            />
             <g>
               {data.map((d) => {
                 const setTooltipData = () => {
