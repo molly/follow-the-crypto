@@ -1,21 +1,19 @@
+import TotalSpending from "./components/TotalSpending";
 import ChloroplethMap from "./components/home/ChloroplethMap";
 import styles from "./page.module.css";
+import sharedStyles from "./shared.module.css";
 
 export const revalidate = 3600;
 
 export default function Home() {
   return (
-    <main className={styles.main}>
-      <h1 className={styles.title}>
+    <main className={sharedStyles.mainGrid}>
+      <h1 className={sharedStyles.title}>
         Follow the crypto
         <br />
         &darr;
       </h1>
-      <div className={styles.totalSpending}>
-        Cryptocurrency companies and associated people have spent{" "}
-        <div className={styles.highlight}>$102 million</div> to influence 2024
-        elections.
-      </div>
+      <TotalSpending amount="$120 million" />
       <div className={styles.mapContainer}>
         <ChloroplethMap />
       </div>

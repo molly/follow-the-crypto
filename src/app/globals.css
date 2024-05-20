@@ -61,8 +61,7 @@ body {
 }
 
 a {
-  color: inherit;
-  text-decoration: none;
+  color: var(--link-text);
 }
 
 .secondary {

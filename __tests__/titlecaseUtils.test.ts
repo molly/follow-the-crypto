@@ -1,11 +1,12 @@
-import "@testing-library/jest-dom";
 import {
   titlecase,
   titlecaseCompany,
   titlecaseIndividualName,
-  titlecaseSuffix,
+  titlecaseLastFirst,
   titlecaseOccupation,
-} from "../src/app/utils/titlecase";
+  titlecaseSuffix,
+} from "@/app/utils/titlecase";
+import "@testing-library/jest-dom";
 
 describe("titlecaseUtils", () => {
   test("titlecase", () => {
@@ -48,5 +49,11 @@ describe("titlecaseUtils", () => {
 
   test("titlecase C-level occupation", () => {
     expect(titlecaseOccupation("CEO")).toBe("CEO");
+  });
+
+  test("titlecase last, first name", () => {
+    expect(titlecaseLastFirst("SMITH, JOHN")).toBe("John Smith");
+    expect(titlecaseLastFirst("LIEW, SARAH DR.")).toBe("Sarah Liew");
+    expect(titlecaseLastFirst("MCDONALD, JOHN JACK")).toBe("John McDonald");
   });
 });

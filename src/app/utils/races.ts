@@ -1,3 +1,4 @@
+// Senate race first, then house races ordered by district
 export const sortRaces = (a: string, b: string) => {
   const raceA = a.split("-");
   const raceB = b.split("-");

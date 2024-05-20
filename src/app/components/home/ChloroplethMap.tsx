@@ -130,27 +130,29 @@ export default function ChloroplethMap() {
             />
             <g>
               {data.map((d) => {
-                const setTooltipData = () => {
+                const fill = getFill(
+                  d.properties?.name,
+                  expendituresByState,
+                  colorScale,
+                );
+                function setTooltipData() {
                   setHoveredState({
                     state: d.properties?.name,
                     expenditures: getExpenditure(
                       d.properties?.name,
-                      expendituresByState,
+                      expendituresByState as Record<string, Expenditures>,
                     ),
                     centroid: path.centroid(d.geometry),
                     svgSize: svgRef.current?.getBoundingClientRect(),
                   });
-                };
+                }
 
                 return (
                   <path
-                    key={d.id}
+                    id={d.id as string}
+                    key={`state-${d.id}`}
                     d={path(d) as string}
-                    fill={getFill(
-                      d.properties?.name,
-                      expendituresByState,
-                      colorScale,
-                    )}
+                    fill={fill}
                     onMouseEnter={setTooltipData}
                     onClick={setTooltipData}
                   />

@@ -1,3 +1,12 @@
+.mainGrid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 4rem 1rem;
+  padding: 0.5rem;
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
 .accent-text {
   color: transparent;
   text-shadow: 0.1rem 0.1rem var(--accent);
@@ -5,9 +14,86 @@
   -webkit-text-stroke: 1px var(--text-stroke);
 }
 
+.title {
+  composes: accent-text;
+  grid-column: 1 / 13;
+  text-shadow: 0.25rem 0.25rem var(--accent);
+  font-size: clamp(2rem, 10vw, 8rem);
+  text-align: center;
+}
+
+.titleH2 {
+  composes: title;
+  font-size: clamp(2rem, 8vw, 5rem);
+  text-align: center;
+}
+
+.logo {
+  composes: accent-text;
+  font-size: 1.5rem;
+  padding: 1rem;
+  font-weight: bold;
+}
+
+.logoText {
+  color: transparent;
+  text-decoration: none;
+}
+
 .card {
   background: var(--card-background);
   padding: 1rem;
   border-radius: var(--border-radius);
   box-shadow: var(--shadow-lg);
+}
+
+.smallCard {
+  composes: card;
+  grid-column: 2/12;
+  text-align: center;
+}
+
+.highlight {
+  composes: accent-text;
+  padding: 1rem 0;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.plainList {
+  list-style: none;
+  padding: 0;
+}
+
+.plainListItem {
+  padding: 0.5rem 0;
+}
+
+@media (min-width: 500px) {
+  .mainGrid {
+    padding: 6rem;
+  }
+
+  .highlight {
+    font-size: clamp(2rem, 5vw, 3rem);
+    white-space: nowrap;
+  }
+}
+
+@media (min-width: 700px) {
+  .smallCard {
+    grid-column: 3/11;
+  }
+}
+
+@media (min-width: 800px) {
+  .smallCard {
+    grid-column: 4/10;
+  }
+}
+
+@media (min-width: 1200px) {
+  .smallCard {
+    grid-column: 5/9;
+  }
 }

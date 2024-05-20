@@ -38,7 +38,7 @@ interface RaceDetails {
   candidate_office_district: string;
 }
 
-interface RaceExpenditureGroup extends ExpenditureGroup {
+export interface RaceExpenditureGroup extends ExpenditureGroup {
   details: RaceDetails;
 }
 

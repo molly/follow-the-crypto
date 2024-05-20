@@ -1,0 +1,17 @@
+.committeeCard {
+  composes: card from "../../shared.module.css";
+  grid-column: 2 / 7;
+}
+
+.raceCard {
+  composes: card from "../../shared.module.css";
+  grid-column: 7 / 12;
+}
+
+.cardSection {
+  padding: 1rem 0;
+}
+
+.cardSubsection {
+  padding-left: 1rem;
+}

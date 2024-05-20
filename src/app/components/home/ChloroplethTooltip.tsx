@@ -1,6 +1,7 @@
 import { Expenditures } from "@/app/types/Expenditures";
 import { sortRaces } from "@/app/utils/races";
 import { currency } from "@/app/utils/utils";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import styles from "./chloroplethMap.module.css";
@@ -19,7 +20,6 @@ export default function ChloroplethTooltip({
   const router = useRouter();
   const scale = svgSize ? svgSize.width / 1000 : 1;
 
-  // Senate race first, then house races ordered by district
   const races = useMemo(() => {
     if (expenditures) {
       return Object.keys(expenditures.by_race).sort(sortRaces);
@@ -37,7 +37,13 @@ export default function ChloroplethTooltip({
           top: centroid[1] * scale,
         }}
       >
-        <h3>{state}</h3>
+        <h3>
+          <Link
+            href={`/state/${state.toLocaleLowerCase().split(" ").join("-")}`}
+          >
+            {state}
+          </Link>
+        </h3>
         <table>
           <tbody>
             <tr>

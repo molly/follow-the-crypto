@@ -46,3 +46,9 @@ export function titlecaseOccupation(str: string): string {
     return titlecase(str);
   }
 }
+
+export function titlecaseLastFirst(str: string): string {
+  const parts = str.split(", ");
+  const firstname = parts[1].split(" ")[0];
+  return titlecaseIndividualName(`${firstname} ${parts[0]}`);
+}
