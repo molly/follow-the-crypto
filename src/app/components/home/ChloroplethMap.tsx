@@ -6,7 +6,7 @@ import { Expenditures } from "@/app/types/Expenditures";
 import * as d3 from "d3";
 import { doc, getDoc } from "firebase/firestore";
 import { FeatureCollection, GeoJsonProperties, Geometry } from "geojson";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import * as topojson from "topojson-client";
 import { Objects, Topology } from "topojson-specification";
 import ChloroplethTooltip from "./ChloroplethTooltip";
@@ -21,7 +21,7 @@ interface HoveredState {
 }
 
 const DOMAIN = [10 ** 4, 10 ** 5, 10 ** 6, 10 ** 7, 10 ** 8];
-const LIGHT_THEME = ["#eff4ff", "#bfd3fe", "#6090fa", "#2563eb", "#1e4baf"];
+const LIGHT_THEME = ["#eff4ff", "#dbe6fe", "#93b4fd", "#2563eb", "#1e4baf"];
 const DARK_THEME = ["#172a54", "#1e408a", "#1e4baf", "#2563eb", "#6090fa"];
 
 async function getExpendituresByState(): Promise<
@@ -95,6 +95,14 @@ export default function ChloroplethMap() {
     })();
   }, [setIsLoading, setIsError, setExpendituresByState]);
 
+  const isDarkMode = useMemo(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches,
+    [],
+  );
+
   const collection: FeatureCollection<Geometry, GeoJsonProperties> =
     topojson.feature(us, us.objects.states) as FeatureCollection<
       Geometry,
@@ -102,14 +110,10 @@ export default function ChloroplethMap() {
     >;
   const data = collection.features;
 
-  const isDarkMode =
-    window.matchMedia &&
-    window.matchMedia("(prefers-color-scheme: dark)").matches;
   const colorScale = d3
     .scaleThreshold<number, string>()
     .domain(DOMAIN)
     .range(isDarkMode ? DARK_THEME : LIGHT_THEME);
-  console.log(d3.schemeBlues[DOMAIN.length + 1]);
 
   const path = d3.geoPath();
 

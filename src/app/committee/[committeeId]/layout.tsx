@@ -1,15 +1,27 @@
+import { Committee } from "@/app/types/Committee";
+import { getConstant } from "@/app/utils/constants";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import Link from "next/link";
 import "../../globals.css";
 import styles from "./layout.module.css";
 
-const inter = Inter({ subsets: ["latin"] });
-
-export const metadata: Metadata = {
-  title: "Follow the Crypto",
-  description: "",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: { committeeId: string };
+}): Promise<Metadata> {
+  const COMMITTEES: Record<string, Committee> | null =
+    await getConstant("committees");
+  if (!COMMITTEES || !COMMITTEES[params.committeeId]) {
+    return {
+      title: "Follow the Crypto",
+    };
+  }
+  const committeeName = COMMITTEES[params.committeeId].name;
+  return {
+    title: `${committeeName} | Follow the Crypto`,
+  };
+}
 
 export default function RootLayout({
   children,
