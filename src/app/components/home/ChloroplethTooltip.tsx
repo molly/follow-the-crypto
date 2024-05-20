@@ -1,6 +1,8 @@
 import { Expenditures } from "@/app/types/Expenditures";
+import { sortRaces } from "@/app/utils/races";
 import { currency } from "@/app/utils/utils";
 import { useRouter } from "next/navigation";
+import { useMemo } from "react";
 import styles from "./chloroplethMap.module.css";
 
 export default function ChloroplethTooltip({
@@ -17,18 +19,16 @@ export default function ChloroplethTooltip({
   const router = useRouter();
   const scale = svgSize ? svgSize.width / 1000 : 1;
 
-  if (state && expenditures && centroid) {
-    // Senate race first, then house races ordered by district
-    const races = Object.keys(expenditures.by_race).sort((a, b) => {
-      const raceA = a.split("-");
-      const raceB = b.split("-");
-      if (raceA[1] === "S") {
-        return -1;
-      } else {
-        return raceA[2].localeCompare(raceB[2]);
-      }
-    });
+  // Senate race first, then house races ordered by district
+  const races = useMemo(() => {
+    if (expenditures) {
+      return Object.keys(expenditures.by_race).sort(sortRaces);
+    } else {
+      return [];
+    }
+  }, [expenditures]);
 
+  if (state && expenditures && centroid) {
     return (
       <div
         className={styles.tooltip}
