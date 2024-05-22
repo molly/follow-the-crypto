@@ -1,6 +1,6 @@
 import TotalSpending from "@/app/components/TotalSpending";
 import { STATES_BY_FULL } from "@/app/data/states";
-import { db } from "@/app/db";
+import { db } from "@/app/lib/db";
 import sharedStyles from "@/app/shared.module.css";
 import { Expenditures } from "@/app/types/Expenditures";
 import { titlecase } from "@/app/utils/titlecase";

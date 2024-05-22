@@ -1,4 +1,4 @@
-import { db } from "@/app/db";
+import { db } from "@/app/lib/db";
 import { ElectionGroup } from "@/app/types/Elections";
 import { ErrorType } from "@/app/types/Error";
 import { RaceExpenditureGroup } from "@/app/types/Expenditures";

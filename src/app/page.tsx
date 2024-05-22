@@ -7,7 +7,7 @@ export const revalidate = 3600;
 
 export default function Home() {
   return (
-    <main className={sharedStyles.mainGrid}>
+    <>
       <h1 className={sharedStyles.title}>
         Follow the crypto
         <br />
@@ -17,6 +17,6 @@ export default function Home() {
       <div className={styles.mapContainer}>
         <ChloroplethMap />
       </div>
-    </main>
+    </>
   );
 }

@@ -1,6 +1,6 @@
 import { doc, getDoc } from "firebase/firestore";
 import { cache } from "react";
-import { db } from "../db";
+import { db } from "../lib/db";
 
 export const getConstant = cache(async (key: string) => {
   const docRef = doc(db, "constants", key);

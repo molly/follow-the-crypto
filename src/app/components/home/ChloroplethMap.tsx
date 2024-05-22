@@ -1,7 +1,7 @@
 "use client";
 
 import { STATES_BY_FULL } from "@/app/data/states";
-import { db } from "@/app/db";
+import { db } from "@/app/lib/db";
 import { Expenditures } from "@/app/types/Expenditures";
 import * as d3 from "d3";
 import { doc, getDoc } from "firebase/firestore";

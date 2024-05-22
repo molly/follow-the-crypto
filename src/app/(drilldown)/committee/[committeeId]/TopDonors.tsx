@@ -1,4 +1,4 @@
-import { db } from "@/app/db";
+import { db } from "@/app/lib/db";
 import { Committee } from "@/app/types/Committee";
 import { Contributions, ContributionsGroup } from "@/app/types/Contributions";
 import { ErrorType } from "@/app/types/Error";
