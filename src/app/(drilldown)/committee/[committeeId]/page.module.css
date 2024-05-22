@@ -1,15 +1,15 @@
 .receiptsSection {
-  margin: 1rem 0;
+  composes: fullWidth from "@/app/shared.module.css";
   text-align: center;
 }
 
 .receipts {
-  composes: accent-text from "../../shared.module.css";
+  composes: accent-text from "@/app/shared.module.css";
   font-size: 3rem;
 }
 
 .donorSection {
-  composes: card from "../../shared.module.css";
+  composes: fullWidthCard from "@/app/shared.module.css";
   padding: 1rem 0;
 }
 

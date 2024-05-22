@@ -1,14 +1,25 @@
 import TotalSpending from "@/app/components/TotalSpending";
 import { STATES_BY_FULL } from "@/app/data/states";
 import { db } from "@/app/db";
+import sharedStyles from "@/app/shared.module.css";
 import { Expenditures } from "@/app/types/Expenditures";
 import { titlecase } from "@/app/utils/titlecase";
 import { currency } from "@/app/utils/utils";
 import { doc, getDoc } from "firebase/firestore";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import sharedStyles from "../../shared.module.css";
 import ByCommittee from "./ByCommittee";
 import ByRace from "./ByRace";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { state: string };
+}): Promise<Metadata> {
+  return {
+    title: `${titlecase(params.state.split("-").join(" "))} | Follow the Crypto`,
+  };
+}
 
 async function getStateExpenditures(
   state: string,

@@ -1,10 +1,10 @@
 .committeeCard {
-  composes: card from "../../shared.module.css";
+  composes: card from "@/app/shared.module.css";
   grid-column: 2 / 7;
 }
 
 .raceCard {
-  composes: card from "../../shared.module.css";
+  composes: card from "@/app/shared.module.css";
   grid-column: 7 / 12;
 }
 

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
-import { currency } from "../../utils/utils";
+import { currency } from "../../../utils/utils";
 
+import sharedStyles from "@/app/shared.module.css";
 import { Committee } from "@/app/types/Committee";
 import { CommitteeTotals } from "@/app/types/FECTypes";
 import styles from "./page.module.css";
@@ -36,15 +37,15 @@ export default async function CommitteeDetails({
   }
   return (
     <>
-      <section>
+      <section className={sharedStyles.fullWidth}>
+        <h1>{committee.name}</h1>
         <span className="secondary">{data.committee_type_full}</span>
-      </section>
-
-      <section className={styles.receiptsSection}>
-        <h2 className={styles.receipts}>
-          {data.receipts ? currency(data.receipts, true) : ""}
-        </h2>
-        <span>raised this cyle</span>
+        <div className={styles.receiptsSection}>
+          <h2 className={styles.receipts}>
+            {data.receipts ? currency(data.receipts, true) : ""}
+          </h2>
+          <span>raised this cycle</span>
+        </div>
       </section>
     </>
   );
