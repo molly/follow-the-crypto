@@ -3,7 +3,7 @@ import sharedStyles from "../shared.module.css";
 
 export default function Logo() {
   return (
-    <header>
+    <header className={sharedStyles.fullWidth}>
       <div className={sharedStyles.logo}>
         <Link className={sharedStyles.logoText} href="/">
           ↓ Follow the Crypto

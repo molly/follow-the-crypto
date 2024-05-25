@@ -1,6 +1,10 @@
 import { ContributionsGroup } from "@/app/types/Contributions";
 import { titlecaseCompany } from "@/app/utils/titlecase";
 import { currency } from "@/app/utils/utils";
+import {
+  IndividualDonorType,
+  getDonorDetails,
+} from "../../../utils/donorDetails";
 import Contribution from "./Contribution";
 import styles from "./page.module.css";
 
@@ -13,12 +17,21 @@ export default function Donor({
     const donor = donorGroup.contributions[0];
     return <Contribution contribution={donor} />;
   }
+  const isIndividual = donorGroup.contributions.every(
+    (c) => c.contributor_name === donorGroup.company,
+  );
+  let name = titlecaseCompany(donorGroup.company || "");
+  if (isIndividual) {
+    const donorDetails: IndividualDonorType = getDonorDetails(
+      donorGroup.contributions[0],
+      {},
+    ) as IndividualDonorType;
+    name = donorDetails.name;
+  }
   return (
     <div className={styles.donorRow}>
       <div className={styles.donorSummary}>
-        <span className={styles.donorCompany}>
-          {titlecaseCompany(donorGroup.company || "")}
-        </span>
+        <span className={styles.donorCompany}>{name}</span>
         <span>{currency(donorGroup.total)}</span>
       </div>
       <div className={styles.contributionsContainer}>

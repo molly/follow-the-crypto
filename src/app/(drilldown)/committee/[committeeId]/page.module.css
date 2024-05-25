@@ -1,3 +1,7 @@
+.description {
+  margin-top: 1rem;
+}
+
 .receiptsSection {
   composes: fullWidth from "@/app/shared.module.css";
   text-align: center;

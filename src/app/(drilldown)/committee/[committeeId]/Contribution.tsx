@@ -1,5 +1,5 @@
+import { fetchConstant } from "@/app/actions/fetch";
 import { Contribution as ContributionType } from "@/app/types/Contributions";
-import { getConstant } from "@/app/utils/constants";
 import { currency } from "@/app/utils/utils";
 import {
   DonorType,
@@ -16,7 +16,7 @@ export default async function Contribution({
   isSubRow?: boolean;
 }) {
   const COMPANY_ALIASES: Record<string, string> =
-    (await getConstant("companyAliases")) || {};
+    (await fetchConstant("companyAliases")) || {};
   const donorDetails: DonorType = getDonorDetails(
     contribution,
     COMPANY_ALIASES,

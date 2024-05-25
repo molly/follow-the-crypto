@@ -1,37 +1,20 @@
-import { db } from "@/app/lib/db";
-import { Committee } from "@/app/types/Committee";
+import { fetchCommitteeDonors } from "@/app/actions/fetch";
+import { CommitteeDetails } from "@/app/types/Committee";
 import { Contributions, ContributionsGroup } from "@/app/types/Contributions";
-import { ErrorType } from "@/app/types/Error";
-import { doc, getDoc } from "firebase/firestore";
+import { ErrorType, is4xx, isError } from "@/app/utils/errors";
 import Donor from "./Donor";
 import styles from "./page.module.css";
-
-async function getCommitteeDonors(
-  committee: Committee,
-): Promise<Contributions | ErrorType> {
-  try {
-    const docRef = doc(db, "contributions", committee.id);
-    const snapshot = await getDoc(docRef);
-    if (snapshot.exists()) {
-      return snapshot.data() as Contributions;
-    } else {
-      return { error: true, statusCode: 404 };
-    }
-  } catch (e) {
-    return { error: true };
-  }
-}
 
 export default async function TopDonors({
   committee,
 }: {
-  committee: Committee;
+  committee: CommitteeDetails;
 }) {
-  const data = await getCommitteeDonors(committee);
-  debugger;
+  const data = await fetchCommitteeDonors(committee.id);
 
-  if ("error" in data) {
-    if (data.statusCode && data.statusCode >= 400 && data.statusCode < 500) {
+  if (isError(data)) {
+    const error = data as ErrorType;
+    if (is4xx(error)) {
       return <div>{`Could not find donor details for ${committee.name}.`}</div>;
     } else {
       return (
@@ -40,11 +23,13 @@ export default async function TopDonors({
     }
   }
 
+  const donors = data as Contributions;
+
   return (
     <section className={styles.donorSection}>
       <h3 className={styles.donorSectionHeader}>Top donors</h3>
-      {data.groups.length ? (
-        data.groups.map((donorGroup: ContributionsGroup, ind: number) => (
+      {donors.groups.length ? (
+        donors.groups.map((donorGroup: ContributionsGroup, ind: number) => (
           <Donor key={`donor-${ind}`} donorGroup={donorGroup} />
         ))
       ) : (

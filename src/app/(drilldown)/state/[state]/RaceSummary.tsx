@@ -1,46 +1,18 @@
-import { db } from "@/app/lib/db";
 import { ElectionGroup } from "@/app/types/Elections";
-import { ErrorType } from "@/app/types/Error";
 import { RaceExpenditureGroup } from "@/app/types/Expenditures";
 import { titlecaseLastFirst } from "@/app/utils/titlecase";
 import { currency } from "@/app/utils/utils";
-import { doc, getDoc } from "firebase/firestore";
 import styles from "./page.module.css";
 
-async function getElectionData(
-  raceId: string,
-): Promise<ElectionGroup | ErrorType> {
-  try {
-    const raceParts = raceId.split("-");
-    const docRef = doc(db, "elections", "state");
-    const snapshot = await getDoc(docRef);
-    if (snapshot.exists()) {
-      const data = snapshot.data();
-      if (raceParts[0] in data) {
-        return data[raceParts[0]][
-          raceParts.slice(1).join("-")
-        ] as ElectionGroup;
-      }
-    }
-  } catch (e) {
-    return { error: true };
-  }
-  return { error: true };
-}
-
-export default async function RaceSummary({
+export default function RaceSummary({
   raceId,
   race,
+  electionData,
 }: {
   raceId: string;
   race: RaceExpenditureGroup;
+  electionData: ElectionGroup;
 }) {
-  const result = await getElectionData(raceId);
-  if ("error" in result) {
-    return <div>Could not find election data for this race</div>;
-  }
-
-  const electionData = result as ElectionGroup;
   return (
     <div>
       {electionData.candidates.map((candidate) => {

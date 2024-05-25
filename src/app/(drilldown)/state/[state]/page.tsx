@@ -1,11 +1,11 @@
+import { fetchStateExpenditures } from "@/app/actions/fetch";
 import TotalSpending from "@/app/components/TotalSpending";
 import { STATES_BY_FULL } from "@/app/data/states";
-import { db } from "@/app/lib/db";
 import sharedStyles from "@/app/shared.module.css";
 import { Expenditures } from "@/app/types/Expenditures";
+import { is4xx, isError } from "@/app/utils/errors";
 import { titlecase } from "@/app/utils/titlecase";
 import { currency } from "@/app/utils/utils";
-import { doc, getDoc } from "firebase/firestore";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ByCommittee from "./ByCommittee";
@@ -21,27 +21,6 @@ export async function generateMetadata({
   };
 }
 
-async function getStateExpenditures(
-  state: string,
-): Promise<Expenditures | { error: boolean; statusCode?: number }> {
-  try {
-    const abbr = STATES_BY_FULL[state];
-    const docRef = doc(db, "expenditures", "states");
-    const snapshot = await getDoc(docRef);
-    if (snapshot.exists()) {
-      if (snapshot.data().hasOwnProperty(abbr)) {
-        return snapshot.data()[abbr] as Expenditures;
-      } else {
-        return { error: true, statusCode: 404 };
-      }
-    } else {
-      return { error: true };
-    }
-  } catch (e) {
-    return { error: true };
-  }
-}
-
 export default async function CommitteePage({
   params,
 }: {
@@ -52,10 +31,11 @@ export default async function CommitteePage({
     notFound();
   }
 
-  let expenditures = await getStateExpenditures(titlecasedState);
+  const stateAbbr = STATES_BY_FULL[titlecasedState];
+  let data = await fetchStateExpenditures(stateAbbr);
 
   const renderError = () => {
-    if ("statusCode" in expenditures && expenditures.statusCode === 404) {
+    if (is4xx(data)) {
       return (
         <div className={sharedStyles.smallCard}>
           No spending has been recorded in this state.
@@ -67,7 +47,7 @@ export default async function CommitteePage({
   };
 
   const renderBody = async () => {
-    expenditures = expenditures as Expenditures;
+    const expenditures = data as Expenditures;
     return (
       <>
         <TotalSpending
@@ -75,7 +55,7 @@ export default async function CommitteePage({
           influenceSubject={`2024 elections in ${titlecasedState}`}
         />
         <ByCommittee expenditures={expenditures} />
-        <ByRace expenditures={expenditures} />
+        <ByRace expenditures={expenditures} stateAbbr={stateAbbr} />
       </>
     );
   };
@@ -83,7 +63,7 @@ export default async function CommitteePage({
   return (
     <>
       <h1 className={sharedStyles.titleH2}>{titlecasedState}</h1>
-      {"error" in expenditures ? renderError() : renderBody()}
+      {isError(data) ? renderError() : renderBody()}
     </>
   );
 }

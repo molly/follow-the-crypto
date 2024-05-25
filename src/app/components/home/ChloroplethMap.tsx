@@ -1,10 +1,10 @@
 "use client";
 
+import { fetchAllStateExpenditures } from "@/app/actions/fetch";
 import { STATES_BY_FULL } from "@/app/data/states";
-import { db } from "@/app/lib/db";
 import { Expenditures } from "@/app/types/Expenditures";
+import { isError } from "@/app/utils/errors";
 import * as d3 from "d3";
-import { doc, getDoc } from "firebase/firestore";
 import { FeatureCollection, GeoJsonProperties, Geometry } from "geojson";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as topojson from "topojson-client";
@@ -23,22 +23,6 @@ interface HoveredState {
 const DOMAIN = [10 ** 4, 10 ** 5, 10 ** 6, 10 ** 7, 10 ** 8];
 const LIGHT_THEME = ["#eff4ff", "#dbe6fe", "#93b4fd", "#2563eb", "#1e4baf"];
 const DARK_THEME = ["#172a54", "#1e408a", "#1e4baf", "#2563eb", "#6090fa"];
-
-async function getExpendituresByState(): Promise<
-  Record<string, Expenditures> | { error: boolean; statusCode?: number }
-> {
-  try {
-    const docRef = doc(db, "expenditures", "states");
-    const snapshot = await getDoc(docRef);
-    if (snapshot.exists()) {
-      return snapshot.data() as Record<string, Expenditures>;
-    } else {
-      return { error: true, statusCode: 404 };
-    }
-  } catch (e) {
-    return { error: true };
-  }
-}
 
 function getExpenditure(
   stateFullName: string,
@@ -71,7 +55,7 @@ export default function ChloroplethMap() {
     Expenditures
   > | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isError, setIsError] = useState<boolean>(false);
+  const [isErrored, setIsError] = useState<boolean>(false);
   const [hoveredState, setHoveredState] = useState<HoveredState | null>(null);
 
   const svgRef = useRef<SVGSVGElement>(null);
@@ -82,15 +66,12 @@ export default function ChloroplethMap() {
 
   useEffect(() => {
     (async function () {
-      const expendituresData = await getExpendituresByState();
+      const data = await fetchAllStateExpenditures();
       setIsLoading(false);
-      if ("error" in expendituresData) {
+      if (isError(data)) {
         setIsError(true);
-        return;
       } else {
-        setExpendituresByState(
-          expendituresData as Record<string, Expenditures>,
-        );
+        setExpendituresByState(data as Record<string, Expenditures>);
       }
     })();
   }, [setIsLoading, setIsError, setExpendituresByState]);
@@ -120,8 +101,10 @@ export default function ChloroplethMap() {
   return (
     <div className={styles.mapWrapper}>
       {isLoading && <div>Loading...</div>}
-      {isError && <div>Something went wrong loading state donation data.</div>}
-      {!isLoading && !isError && expendituresByState && (
+      {isErrored && (
+        <div>Something went wrong loading state donation data.</div>
+      )}
+      {!isLoading && !isErrored && expendituresByState && (
         <>
           <svg ref={svgRef} className={styles.svg} viewBox="0 0 1000 620">
             <Legend

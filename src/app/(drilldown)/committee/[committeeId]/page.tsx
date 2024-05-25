@@ -1,7 +1,9 @@
-import { Committee } from "@/app/types/Committee";
-import { getConstant } from "@/app/utils/constants";
+import { fetchCommitteeDetails } from "@/app/actions/fetch";
+import { CommitteeDetails } from "@/app/types/Committee";
+import { ErrorType, is4xx, isError } from "@/app/utils/errors";
 import type { Metadata } from "next";
-import CommitteeDetails from "./CommitteeDetails";
+
+import CommitteeDetailsSection from "./CommitteeDetailsSection";
 import TopDonors from "./TopDonors";
 
 export async function generateMetadata({
@@ -9,16 +11,14 @@ export async function generateMetadata({
 }: {
   params: { committeeId: string };
 }): Promise<Metadata> {
-  const COMMITTEES: Record<string, Committee> | null =
-    await getConstant("committees");
-  if (!COMMITTEES || !COMMITTEES[params.committeeId]) {
+  const committee = await fetchCommitteeDetails(params.committeeId);
+  if (isError(committee)) {
     return {
       title: "Follow the Crypto",
     };
   }
-  const committeeName = COMMITTEES[params.committeeId].name;
   return {
-    title: `${committeeName} | Follow the Crypto`,
+    title: `${(committee as CommitteeDetails).name} | Follow the Crypto`,
   };
 }
 
@@ -27,16 +27,22 @@ export default async function CommitteePage({
 }: {
   params: { committeeId: string };
 }) {
-  const COMMITTEES: Record<string, Committee> | null =
-    await getConstant("committees");
-  if (!COMMITTEES || !COMMITTEES[params.committeeId]) {
-    return <div>Committee not found</div>;
+  const data = await fetchCommitteeDetails(params.committeeId);
+
+  if (isError(data)) {
+    const error = data as ErrorType;
+    if (is4xx(error)) {
+      return <div>Committee not found.</div>;
+    } else {
+      return <div>Something went wrong when fetching committee details.</div>;
+    }
   }
-  const committee = COMMITTEES[params.committeeId];
+
+  const committee = data as CommitteeDetails;
 
   return (
     <>
-      <CommitteeDetails committee={committee} />
+      <CommitteeDetailsSection committee={committee} />
       <TopDonors committee={committee} />
     </>
   );

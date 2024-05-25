@@ -1,4 +1,7 @@
+import { fetchStateElections } from "@/app/actions/fetch";
+import { ElectionGroup } from "@/app/types/Elections";
 import { Expenditures } from "@/app/types/Expenditures";
+import { isError } from "@/app/utils/errors";
 import { sortRaces } from "@/app/utils/races";
 import { currency } from "@/app/utils/utils";
 import Link from "next/link";
@@ -14,27 +17,44 @@ const getRaceName = (raceId: string) => {
   }
 };
 
-export default function ByRace({
+export default async function ByRace({
   expenditures,
+  stateAbbr,
 }: {
   expenditures: Expenditures;
+  stateAbbr: string;
 }) {
+  const data = await fetchStateElections(stateAbbr);
   const races = Object.keys(expenditures.by_race).sort(sortRaces);
+
+  const renderRaces = () => {
+    const electionData = data as Record<string, ElectionGroup>;
+    return races.map(async (raceId) => {
+      const shortId = raceId.split("-").slice(1).join("-");
+      return (
+        <div key={raceId} className={styles.cardSection}>
+          <Link href={`/race/${raceId}`}>
+            <h3>{getRaceName(raceId)}</h3>
+          </Link>
+          <b>{currency(expenditures.by_race[raceId].total, true)}</b>
+          {isError(data) ? (
+            <div>Something went wrong fetching election data.</div>
+          ) : (
+            <RaceSummary
+              raceId={raceId}
+              race={expenditures.by_race[raceId]}
+              electionData={electionData[shortId]}
+            />
+          )}
+        </div>
+      );
+    });
+  };
 
   return (
     <div className={styles.raceCard}>
       <h2>By race</h2>
-      {races.map(async (raceId) => {
-        return (
-          <div key={raceId} className={styles.cardSection}>
-            <Link href={`/race/${raceId}`}>
-              <h3>{getRaceName(raceId)}</h3>
-            </Link>
-            <b>{currency(expenditures.by_race[raceId].total, true)}</b>
-            <RaceSummary raceId={raceId} race={expenditures.by_race[raceId]} />
-          </div>
-        );
-      })}
+      {isError(data) ? <div></div> : renderRaces()}
     </div>
   );
 }

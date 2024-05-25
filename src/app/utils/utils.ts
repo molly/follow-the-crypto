@@ -1,4 +1,7 @@
-export function currency(value: number, round = false) {
+export function currency(value?: number, round = false): string {
+  if (!value) {
+    return "";
+  }
   if (round) {
     value = Math.round(value);
   }
