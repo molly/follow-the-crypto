@@ -19,7 +19,7 @@ export default async function CommitteeList() {
       <ul className={sharedStyles.plainList}>
         {committees.map((committee) => (
           <li key={committee.id} className={sharedStyles.plainListItem}>
-            <Link href={`/committee/${committee.id}`}>{committee.name}</Link>
+            <Link href={`/committees/${committee.id}`}>{committee.name}</Link>
           </li>
         ))}
       </ul>

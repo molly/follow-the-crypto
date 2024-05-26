@@ -1,4 +1,4 @@
-export function currency(value?: number, round = false): string {
+export function formatCurrency(value?: number, round = false): string {
   if (!value) {
     return "";
   }
@@ -11,3 +11,14 @@ export function currency(value?: number, round = false): string {
     ...(round && { maximumFractionDigits: 0, minimumFractionDigits: 0 }),
   }).format(value);
 }
+
+export const formatDate = (date: string): string => {
+  if (!date) {
+    return "";
+  }
+  return new Date(date).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};

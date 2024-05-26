@@ -1,4 +1,4 @@
-import { currency } from "../../../utils/utils";
+import { formatCurrency, formatDate } from "../../../utils/utils";
 
 import sharedStyles from "@/app/shared.module.css";
 import { CommitteeDetails } from "@/app/types/Committee";
@@ -9,11 +9,27 @@ export default async function CommitteeDetailsSection({
 }: {
   committee: CommitteeDetails;
 }) {
+  const renderDetails = (): string => {
+    return ""
+      .concat(
+        committee.committee_type_full ? committee.committee_type_full : "",
+      )
+      .concat(
+        committee.designation_full ? ` - ${committee.designation_full}` : "",
+      )
+      .concat(` | ID: ${committee.id}`)
+      .concat(
+        committee.first_f1_date
+          ? ` | Registration date: ${formatDate(committee.first_f1_date)}`
+          : "",
+      );
+  };
+
   return (
     <>
       <section className={sharedStyles.fullWidth}>
         <h1>{committee.name}</h1>
-        <span className="secondary">{committee.committee_type_full}</span>
+        <span className="secondary">{renderDetails()}</span>
         {committee.description && (
           <div
             className={styles.description}
@@ -24,7 +40,7 @@ export default async function CommitteeDetailsSection({
       <section className={sharedStyles.smallCard}>
         <div className={styles.receiptsSection}>
           <h2 className={styles.receipts}>
-            {currency(committee.receipts, true)}
+            {formatCurrency(committee.receipts, true)}
           </h2>
           <span>raised this cycle</span>
         </div>

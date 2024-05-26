@@ -1,6 +1,6 @@
 import { Expenditures } from "@/app/types/Expenditures";
 import { sortRaces } from "@/app/utils/races";
-import { currency } from "@/app/utils/utils";
+import { formatCurrency } from "@/app/utils/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
@@ -51,7 +51,7 @@ export default function ChloroplethTooltip({
                 <b>Total spending</b>
               </td>
               <td className={styles.tooltipTableSpending}>
-                <b>{currency(expenditures?.total, true)}</b>
+                <b>{formatCurrency(expenditures?.total, true)}</b>
               </td>
             </tr>
             {races.map((k) => {
@@ -65,7 +65,7 @@ export default function ChloroplethTooltip({
                   >
                     <td className={styles.tooltipTableName}>Senate</td>
                     <td className={styles.tooltipTableSpending}>
-                      {currency(race.total, true)}
+                      {formatCurrency(race.total, true)}
                     </td>
                   </tr>
                 );
@@ -81,7 +81,7 @@ export default function ChloroplethTooltip({
                       {parseInt(race.details.candidate_office_district, 10)}
                     </td>
                     <td className={styles.tooltipTableSpending}>
-                      {currency(race.total, true)}
+                      {formatCurrency(race.total, true)}
                     </td>
                   </tr>
                 );

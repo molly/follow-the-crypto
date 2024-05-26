@@ -1,0 +1,36 @@
+.header {
+  background-color: var(--card-background);
+}
+
+.logo {
+  composes: accent-text from "@/app/shared.module.css";
+  padding: 1rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.logoText {
+  color: transparent;
+  text-decoration: none;
+}
+
+.breadcrumbsContainer {
+  display: flex;
+  padding-top: 1rem;
+  list-style: none;
+  background-color: var(--breadcrumbs-background);
+  padding: 1rem;
+}
+
+.breadcrumb {
+  color: var(--on-dark-text);
+
+  &:not(:last-child):after {
+    content: "›";
+    padding: 0 0.5rem;
+  }
+}
+
+.breadcrumbLink {
+  color: var(--on-dark-text);
+}

@@ -5,7 +5,7 @@ import sharedStyles from "@/app/shared.module.css";
 import { Expenditures } from "@/app/types/Expenditures";
 import { is4xx, isError } from "@/app/utils/errors";
 import { titlecase } from "@/app/utils/titlecase";
-import { currency } from "@/app/utils/utils";
+import { formatCurrency } from "@/app/utils/utils";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ByCommittee from "./ByCommittee";
@@ -51,7 +51,7 @@ export default async function CommitteePage({
     return (
       <>
         <TotalSpending
-          amount={currency(expenditures.total, true)}
+          amount={formatCurrency(expenditures.total, true)}
           influenceSubject={`2024 elections in ${titlecasedState}`}
         />
         <ByCommittee expenditures={expenditures} />

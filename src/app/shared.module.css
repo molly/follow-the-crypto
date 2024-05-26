@@ -1,3 +1,12 @@
+.mainGrid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 4rem 1rem;
+  padding: 0.5rem;
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
 .accent-text {
   color: transparent;
   text-shadow: 0.1rem 0.1rem var(--accent);
@@ -17,18 +26,6 @@
   composes: title;
   font-size: clamp(2rem, 8vw, 5rem);
   text-align: center;
-}
-
-.logo {
-  composes: accent-text;
-  font-size: 1.5rem;
-  padding: 1rem;
-  font-weight: bold;
-}
-
-.logoText {
-  color: transparent;
-  text-decoration: none;
 }
 
 .fullWidth {
@@ -70,6 +67,10 @@
 }
 
 @media (min-width: 500px) {
+  .mainGrid {
+    padding: 0.5rem 2rem;
+  }
+
   .highlight {
     font-size: clamp(2rem, 5vw, 3rem);
     white-space: nowrap;
@@ -77,12 +78,20 @@
 }
 
 @media (min-width: 700px) {
+  .mainGrid {
+    padding: 0.5rem 4rem;
+  }
+
   .smallCard {
     grid-column: 3/11;
   }
 }
 
 @media (min-width: 800px) {
+  .mainGrid {
+    padding: 0.5rem 6rem;
+  }
+
   .smallCard {
     grid-column: 4/10;
   }

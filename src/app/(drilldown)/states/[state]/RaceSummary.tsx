@@ -1,7 +1,7 @@
 import { ElectionGroup } from "@/app/types/Elections";
 import { RaceExpenditureGroup } from "@/app/types/Expenditures";
 import { titlecaseLastFirst } from "@/app/utils/titlecase";
-import { currency } from "@/app/utils/utils";
+import { formatCurrency } from "@/app/utils/utils";
 import styles from "./page.module.css";
 
 export default function RaceSummary({
@@ -47,12 +47,12 @@ export default function RaceSummary({
               <div className={styles.cardSubsection}>
                 {supportTotal > 0 && (
                   <div>
-                    {currency(supportTotal, true)} to <b>support</b>
+                    {formatCurrency(supportTotal, true)} to <b>support</b>
                   </div>
                 )}
                 {opposeTotal > 0 && (
                   <div>
-                    {currency(opposeTotal, true)} to <b>oppose</b>
+                    {formatCurrency(opposeTotal, true)} to <b>oppose</b>
                   </div>
                 )}
               </div>

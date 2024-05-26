@@ -1,34 +1,38 @@
 export function titlecase(str: string): string {
-  return str.replace(/([^\W_]+[^\s-]*) */g, function (txt) {
+  let cased = str.replace(/\b[\w.']+\b/g, function (txt) {
+    if (["AND", "OF", "THE", "FOR"].includes(txt)) {
+      return txt.toLowerCase();
+    }
     return txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase();
   });
+  return cased.charAt(0).toUpperCase() + cased.substring(1);
 }
 
 export function titlecaseCompany(str: string): string {
-  let titlecased = str.replace(/([^\W_]{3,}[^\s-]*) */g, function (txt) {
-    return txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase();
-  });
-  const uppercased = ["LLC", "DRW"];
-  for (const word of uppercased) {
-    titlecased = titlecased.replace(
-      new RegExp(`\\b${word}\\b`, "gi"),
-      word.toUpperCase(),
-    );
-  }
+  let titlecased = titlecase(str);
+  titlecased = titlecased.replace(
+    /\b([A-Z]|AH|TJ|LLC|DRW|DBA|CMT|RRE|USA|)\b/gi,
+    function (txt) {
+      return txt.toUpperCase();
+    },
+  );
+  titlecased = titlecased.replace(
+    /\b(Ma?c|[OD]')(\w+)\b/gi,
+    function (_, m, rest) {
+      return m + rest.charAt(0).toUpperCase() + rest.substring(1).toLowerCase();
+    },
+  );
   return titlecased;
 }
 
 export function titlecaseIndividualName(str: string): string {
-  return str
-    .split(" ")
-    .map((x) => {
-      let cased = titlecase(x);
-      if (cased.startsWith("Mc")) {
-        cased = `Mc${titlecase(cased.slice(2))}`;
-      }
-      return cased;
-    })
-    .join(" ");
+  return str.replace(/\b[\w.']+\b/, function (x) {
+    let cased = titlecase(x);
+    cased = cased.replace(/\b(Ma?c|[OD]')(\w+)\b/gi, function (_, m, rest) {
+      return m + rest.charAt(0).toUpperCase() + rest.substring(1).toLowerCase();
+    });
+    return cased;
+  });
 }
 
 export function titlecaseSuffix(str: string): string {
@@ -40,11 +44,15 @@ export function titlecaseSuffix(str: string): string {
 }
 
 export function titlecaseOccupation(str: string): string {
-  if (str.match(/^C[A-Z]{2}$/)) {
-    return str;
-  } else {
-    return titlecase(str);
-  }
+  return titlecase(str)
+    .split(" ")
+    .map((x) => {
+      if (x.match(/^[^A-Z]*([VG]P|C[A-Z]{2}|US|SRE)[^A-Z]*$/i)) {
+        return x.toUpperCase();
+      }
+      return x;
+    })
+    .join(" ");
 }
 
 export function titlecaseLastFirst(str: string): string {

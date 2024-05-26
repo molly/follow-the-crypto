@@ -1,6 +1,6 @@
 import { ContributionsGroup } from "@/app/types/Contributions";
 import { titlecaseCompany } from "@/app/utils/titlecase";
-import { currency } from "@/app/utils/utils";
+import { formatCurrency } from "@/app/utils/utils";
 import {
   IndividualDonorType,
   getDonorDetails,
@@ -32,7 +32,7 @@ export default function Donor({
     <div className={styles.donorRow}>
       <div className={styles.donorSummary}>
         <span className={styles.donorCompany}>{name}</span>
-        <span>{currency(donorGroup.total)}</span>
+        <span>{formatCurrency(donorGroup.total)}</span>
       </div>
       <div className={styles.contributionsContainer}>
         {donorGroup.contributions.map((donor, ind) => (

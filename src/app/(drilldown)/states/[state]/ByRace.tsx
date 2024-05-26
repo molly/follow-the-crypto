@@ -3,7 +3,7 @@ import { ElectionGroup } from "@/app/types/Elections";
 import { Expenditures } from "@/app/types/Expenditures";
 import { isError } from "@/app/utils/errors";
 import { sortRaces } from "@/app/utils/races";
-import { currency } from "@/app/utils/utils";
+import { formatCurrency } from "@/app/utils/utils";
 import Link from "next/link";
 import RaceSummary from "./RaceSummary";
 import styles from "./page.module.css";
@@ -36,7 +36,7 @@ export default async function ByRace({
           <Link href={`/race/${raceId}`}>
             <h3>{getRaceName(raceId)}</h3>
           </Link>
-          <b>{currency(expenditures.by_race[raceId].total, true)}</b>
+          <b>{formatCurrency(expenditures.by_race[raceId].total, true)}</b>
           {isError(data) ? (
             <div>Something went wrong fetching election data.</div>
           ) : (

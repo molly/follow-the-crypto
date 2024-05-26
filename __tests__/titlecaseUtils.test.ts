@@ -55,5 +55,7 @@ describe("titlecaseUtils", () => {
     expect(titlecaseLastFirst("SMITH, JOHN")).toBe("John Smith");
     expect(titlecaseLastFirst("LIEW, SARAH DR.")).toBe("Sarah Liew");
     expect(titlecaseLastFirst("MCDONALD, JOHN JACK")).toBe("John McDonald");
+    expect(titlecaseLastFirst("MACDONALD, JOHN JACK")).toBe("John MacDonald");
+    expect(titlecaseLastFirst("D'ANGELO, JOHN JACK")).toBe("John D'Angelo");
   });
 });

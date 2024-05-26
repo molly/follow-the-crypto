@@ -2,7 +2,7 @@ import { fetchConstant } from "@/app/actions/fetch";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { Expenditures } from "@/app/types/Expenditures";
 import { isError } from "@/app/utils/errors";
-import { currency } from "@/app/utils/utils";
+import { formatCurrency } from "@/app/utils/utils";
 import Link from "next/link";
 import styles from "./page.module.css";
 
@@ -44,7 +44,10 @@ export default async function ByCommittee({
                 <h3>{committeeId}</h3>
               )}
               <b>
-                {currency(expenditures.by_committee[committeeId].total, true)}
+                {formatCurrency(
+                  expenditures.by_committee[committeeId].total,
+                  true,
+                )}
               </b>
             </div>
           );

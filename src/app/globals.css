@@ -8,6 +8,7 @@
   --background-start: #f8fafc;
   --background-end: #e2e8f0;
   --card-background: #fefefe;
+  --breadcrumbs-background: #1e3a8a;
   --table-background-secondary: var(--background-start);
   --map-background: #ffffff;
 
@@ -16,6 +17,7 @@
   --secondary-text: #64748b;
   --link-text: var(--accent);
   --link-text-hover: #0a338a;
+  --on-dark-text: var(--off-white);
 
   --background-gradient: radial-gradient(
     circle at center,
@@ -62,11 +64,13 @@ body {
 
 a {
   color: var(--link-text);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
 }
 
 .secondary {
   color: var(--secondary-text);
-  font-size: 0.8rem;
+  font-size: 0.9rem;
 }
 
 @media (prefers-color-scheme: dark) {

@@ -1,15 +1,16 @@
-import Logo from "@/app/components/Logo";
 import "@/app/globals.css";
+import sharedStyles from "@/app/shared.module.css";
+import Header from "../components/Header";
 
-export default function RootLayout({
+export default function DrilldownLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
     <>
-      <Logo />
-      {children}
+      <Header />
+      <main className={sharedStyles.mainGrid}>{children}</main>
     </>
   );
 }

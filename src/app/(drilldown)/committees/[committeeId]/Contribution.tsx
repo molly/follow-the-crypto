@@ -1,6 +1,6 @@
 import { fetchConstant } from "@/app/actions/fetch";
 import { Contribution as ContributionType } from "@/app/types/Contributions";
-import { currency } from "@/app/utils/utils";
+import { formatCurrency, formatDate } from "@/app/utils/utils";
 import {
   DonorType,
   IndividualDonorType,
@@ -28,9 +28,7 @@ export default async function Contribution({
       return null;
     } else {
       return (
-        <span className={styles.donorDate}>
-          {` – ${new Date(date).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}`}
-        </span>
+        <span className={styles.donorDate}>{` – ${formatDate(date)}`}</span>
       );
     }
   };
@@ -73,7 +71,7 @@ export default async function Contribution({
         </div>
         {contribution.contribution_receipt_amount && (
           <span className={styles.subRowCurrency}>
-            {currency(contribution.contribution_receipt_amount)}
+            {formatCurrency(contribution.contribution_receipt_amount)}
           </span>
         )}
       </div>
@@ -127,7 +125,9 @@ export default async function Contribution({
         <div className={styles.donorSummary}>
           {donorIdentifier}
           {contribution.contribution_receipt_amount && (
-            <span>{currency(contribution.contribution_receipt_amount)}</span>
+            <span>
+              {formatCurrency(contribution.contribution_receipt_amount)}
+            </span>
           )}
         </div>
       </div>
