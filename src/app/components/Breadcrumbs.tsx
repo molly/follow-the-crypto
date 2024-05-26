@@ -20,7 +20,7 @@ export default function Breadcrumbs() {
 
   useEffect(() => {
     (async function () {
-      if (segments[0] === "committees") {
+      if (pathname.startsWith("/committees")) {
         const committeeDetails = await fetchConstant("committees");
         if (isError(committeeDetails)) {
           return;
@@ -28,7 +28,7 @@ export default function Breadcrumbs() {
         setCommittees(committeeDetails);
       }
     })();
-  }, [segments]);
+  }, [pathname]);
 
   const getSegmentText = (
     segment: string,

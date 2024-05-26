@@ -1,7 +1,7 @@
 import { fetchCommitteeDetails } from "@/app/actions/fetch";
 import { CommitteeDetails } from "@/app/types/Committee";
 import { ErrorType, is4xx, isError } from "@/app/utils/errors";
-import type { Metadata } from "next";
+import { Metadata } from "next";
 
 import CommitteeDetailsSection from "./CommitteeDetailsSection";
 import TopDonors from "./TopDonors";
