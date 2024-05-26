@@ -1,12 +1,10 @@
 "use client";
 
-import { fetchAllStateExpenditures } from "@/app/actions/fetch";
 import { STATES_BY_FULL } from "@/app/data/states";
 import { Expenditures } from "@/app/types/Expenditures";
-import { isError } from "@/app/utils/errors";
 import * as d3 from "d3";
 import { FeatureCollection, GeoJsonProperties, Geometry } from "geojson";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import * as topojson from "topojson-client";
 import { Objects, Topology } from "topojson-specification";
 import ChloroplethTooltip from "./ChloroplethTooltip";
@@ -49,13 +47,11 @@ function getFill(
   return undefined;
 }
 
-export default function ChloroplethMap() {
-  const [expendituresByState, setExpendituresByState] = useState<Record<
-    string,
-    Expenditures
-  > | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isErrored, setIsError] = useState<boolean>(false);
+export default function ChloroplethMap({
+  expendituresByState,
+}: {
+  expendituresByState: Record<string, Expenditures>;
+}) {
   const [hoveredState, setHoveredState] = useState<HoveredState | null>(null);
 
   const svgRef = useRef<SVGSVGElement>(null);
@@ -63,18 +59,6 @@ export default function ChloroplethMap() {
   const us: Topology<
     Objects<GeoJsonProperties>
   > = require("@/app/data/counties-albers-10m.json");
-
-  useEffect(() => {
-    (async function () {
-      const data = await fetchAllStateExpenditures();
-      setIsLoading(false);
-      if (isError(data)) {
-        setIsError(true);
-      } else {
-        setExpendituresByState(data as Record<string, Expenditures>);
-      }
-    })();
-  }, [setIsLoading, setIsError, setExpendituresByState]);
 
   const isDarkMode = useMemo(
     () =>
@@ -100,52 +84,44 @@ export default function ChloroplethMap() {
 
   return (
     <div className={styles.mapWrapper}>
-      {isLoading && <div>Loading...</div>}
-      {isErrored && (
-        <div>Something went wrong loading state donation data.</div>
-      )}
-      {!isLoading && !isErrored && expendituresByState && (
-        <>
-          <svg ref={svgRef} className={styles.svg} viewBox="0 0 1000 620">
-            <Legend
-              colors={isDarkMode ? DARK_THEME : LIGHT_THEME}
-              domain={DOMAIN}
-            />
-            <g>
-              {data.map((d) => {
-                const fill = getFill(
+      <svg ref={svgRef} className={styles.svg} viewBox="0 0 1000 620">
+        <Legend
+          colors={isDarkMode ? DARK_THEME : LIGHT_THEME}
+          domain={DOMAIN}
+        />
+        <g>
+          {data.map((d) => {
+            const fill = getFill(
+              d.properties?.name,
+              expendituresByState,
+              colorScale,
+            );
+            function setTooltipData() {
+              setHoveredState({
+                state: d.properties?.name,
+                expenditures: getExpenditure(
                   d.properties?.name,
-                  expendituresByState,
-                  colorScale,
-                );
-                function setTooltipData() {
-                  setHoveredState({
-                    state: d.properties?.name,
-                    expenditures: getExpenditure(
-                      d.properties?.name,
-                      expendituresByState as Record<string, Expenditures>,
-                    ),
-                    centroid: path.centroid(d.geometry),
-                    svgSize: svgRef.current?.getBoundingClientRect(),
-                  });
-                }
+                  expendituresByState as Record<string, Expenditures>,
+                ),
+                centroid: path.centroid(d.geometry),
+                svgSize: svgRef.current?.getBoundingClientRect(),
+              });
+            }
 
-                return (
-                  <path
-                    id={d.id as string}
-                    key={`state-${d.id}`}
-                    d={path(d) as string}
-                    fill={fill}
-                    onMouseEnter={setTooltipData}
-                    onClick={setTooltipData}
-                  />
-                );
-              })}
-            </g>
-          </svg>
-          <ChloroplethTooltip {...hoveredState} />
-        </>
-      )}
+            return (
+              <path
+                id={d.id as string}
+                key={`state-${d.id}`}
+                d={path(d) as string}
+                fill={fill}
+                onMouseEnter={setTooltipData}
+                onClick={setTooltipData}
+              />
+            );
+          })}
+        </g>
+      </svg>
+      <ChloroplethTooltip {...hoveredState} />
     </div>
   );
 }

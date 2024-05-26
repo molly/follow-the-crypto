@@ -39,7 +39,7 @@ export default function ChloroplethTooltip({
       >
         <h3>
           <Link
-            href={`/state/${state.toLocaleLowerCase().split(" ").join("-")}`}
+            href={`/states/${state.toLocaleLowerCase().split(" ").join("-")}`}
           >
             {state}
           </Link>
@@ -61,7 +61,7 @@ export default function ChloroplethTooltip({
                   <tr
                     key={k}
                     className={styles.tooltipTableRaceRow}
-                    onClick={() => router.push(`/race/${k}`)}
+                    onClick={() => router.push(`/races/${k}`)}
                   >
                     <td className={styles.tooltipTableName}>Senate</td>
                     <td className={styles.tooltipTableSpending}>
@@ -74,7 +74,7 @@ export default function ChloroplethTooltip({
                   <tr
                     key={k}
                     className={styles.tooltipTableRaceRow}
-                    onClick={() => router.push(`/race/${k}`)}
+                    onClick={() => router.push(`/races/${k}`)}
                   >
                     <td className={styles.tooltipTableName}>
                       House District{" "}

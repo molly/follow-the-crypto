@@ -1,5 +1,5 @@
 import TotalSpending from "./components/TotalSpending";
-import ChloroplethMap from "./components/home/ChloroplethMap";
+import MapWrapper from "./components/home/MapWrapper";
 import styles from "./page.module.css";
 import sharedStyles from "./shared.module.css";
 
@@ -15,7 +15,7 @@ export default function Home() {
       </h1>
       <TotalSpending amount="$120 million" />
       <div className={styles.mapContainer}>
-        <ChloroplethMap />
+        <MapWrapper />
       </div>
     </main>
   );
