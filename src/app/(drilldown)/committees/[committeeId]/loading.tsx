@@ -1,4 +1,4 @@
-import Skeleton from "@/app/components/Skeleton";
+import Skeleton from "@/app/components/skeletons/Skeleton";
 import sharedStyles from "@/app/shared.module.css";
 import pageStyles from "./page.module.css";
 

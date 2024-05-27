@@ -6,6 +6,7 @@ import { Metadata } from "next";
 import CommitteeDetailsSection from "./CommitteeDetailsSection";
 import TopDonors from "./TopDonors";
 
+// TODO: Page hangs if this fetch is slow
 export async function generateMetadata({
   params,
 }: {

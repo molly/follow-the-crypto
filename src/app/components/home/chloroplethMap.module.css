@@ -11,6 +11,48 @@
   fill: var(--main-text);
 }
 
+/* Skeleton */
+@keyframes pulseFill {
+  0% {
+    fill: var(--color-slate-50);
+  }
+  33% {
+    fill: var(--color-slate-100);
+  }
+  66% {
+    fill: var(--color-slate-200);
+  }
+  100% {
+    fill: var(--color-slate-300);
+  }
+}
+
+@keyframes pulseFillDark {
+  0% {
+    fill: var(--color-slate-950);
+  }
+  33% {
+    fill: var(--color-slate-900);
+  }
+  66% {
+    fill: var(--color-slate-800);
+  }
+  100% {
+    fill: var(--color-slate-700);
+  }
+}
+
+.skeletonMap {
+  fill: var(--background-start);
+  animation: pulseFill 1.2s linear alternate infinite;
+}
+
+@media (prefers-color-scheme: dark) {
+  .skeletonMap {
+    animation: pulseFillDark 1.2s linear alternate infinite;
+  }
+}
+
 /* Tooltip */
 .tooltip {
   position: absolute;
