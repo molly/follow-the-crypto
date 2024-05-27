@@ -18,7 +18,9 @@ export default function Loading() {
       <TotalSpending amount="$120 million" />
       <div className={styles.mapContainer}>
         <Suspense fallback={<USMapSkeleton />}>
-          <MapWrapper />
+          <div>
+            <MapWrapper />
+          </div>
         </Suspense>
       </div>
     </main>

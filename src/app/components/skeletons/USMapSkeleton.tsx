@@ -1,8 +1,13 @@
+import {
+  DOMAIN,
+  FILL_CLASS_NAMES,
+} from "@/app/components/home/chloroplethConstants";
 import styles from "@/app/components/home/chloroplethMap.module.css";
 import * as d3 from "d3";
 import { FeatureCollection, GeoJsonProperties, Geometry } from "geojson";
 import * as topojson from "topojson-client";
 import { Objects, Topology } from "topojson-specification";
+import Legend from "../home/Legend";
 
 export default function USMapSkeleton() {
   const us: Topology<
@@ -18,7 +23,8 @@ export default function USMapSkeleton() {
 
   return (
     <div className={styles.mapWrapper}>
-      <svg className={styles.svg} viewBox="0 0 1000 620">
+      <svg className={styles.svgSkeleton} viewBox="0 0 1000 620">
+        <Legend fillClassNames={FILL_CLASS_NAMES} domain={DOMAIN} />
         <g>
           {data.map((d) => {
             return (

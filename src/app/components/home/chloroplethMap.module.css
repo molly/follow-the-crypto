@@ -11,45 +11,63 @@
   fill: var(--main-text);
 }
 
+.legend {
+  stroke: var(--secondary-text);
+}
+
 /* Skeleton */
-@keyframes pulseFill {
-  0% {
-    fill: var(--color-slate-50);
-  }
-  33% {
-    fill: var(--color-slate-100);
-  }
-  66% {
-    fill: var(--color-slate-200);
-  }
-  100% {
-    fill: var(--color-slate-300);
-  }
+.svgSkeleton {
+  fill: transparent;
+  stroke: var(--color-slate-300);
 }
 
-@keyframes pulseFillDark {
-  0% {
-    fill: var(--color-slate-950);
-  }
-  33% {
-    fill: var(--color-slate-900);
-  }
-  66% {
-    fill: var(--color-slate-800);
-  }
-  100% {
-    fill: var(--color-slate-700);
-  }
+.stateFill0 {
+  fill: var(--map-background);
 }
 
-.skeletonMap {
-  fill: var(--background-start);
-  animation: pulseFill 1.2s linear alternate infinite;
+.stateFill1 {
+  fill: var(--color-blue-50);
+}
+
+.stateFill2 {
+  fill: var(--color-blue-100);
+}
+
+.stateFill3 {
+  fill: var(--color-blue-200);
+}
+
+.stateFill4 {
+  fill: var(--color-blue-600);
+}
+
+.stateFill5 {
+  fill: var(--color-blue-800);
 }
 
 @media (prefers-color-scheme: dark) {
   .skeletonMap {
     animation: pulseFillDark 1.2s linear alternate infinite;
+  }
+
+  .stateFill1 {
+    fill: var(--color-blue-950);
+  }
+
+  .stateFill2 {
+    fill: var(--color-blue-900);
+  }
+
+  .stateFill3 {
+    fill: var(--color-blue-800);
+  }
+
+  .stateFill4 {
+    fill: var(--color-blue-600);
+  }
+
+  .stateFill5 {
+    fill: var(--color-blue-400);
   }
 }
 

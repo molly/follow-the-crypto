@@ -35,7 +35,7 @@
   --card-background: #fefefe;
   --breadcrumbs-background: var(--color-blue-800);
   --table-background-secondary: var(--background-start);
-  --map-background: #ffffff;
+  --map-background: var(--color-white);
 
   --main-text: var(--color-slate-950);
   --text-stroke: var(--color-slate-950);

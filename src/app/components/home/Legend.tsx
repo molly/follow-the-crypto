@@ -3,10 +3,10 @@ import styles from "./chloroplethMap.module.css";
 const LEGEND_WIDTH = 300;
 
 export default function Legend({
-  colors,
+  fillClassNames,
   domain,
 }: {
-  colors: string[];
+  fillClassNames: string[];
   domain: number[];
 }) {
   const segmentWidth = LEGEND_WIDTH / (domain.length + 1);
@@ -24,7 +24,7 @@ export default function Legend({
   };
 
   return (
-    <g transform="translate(610, 30)">
+    <g className={styles.legend} transform="translate(610, 30)">
       <svg width={LEGEND_WIDTH} height={50} viewBox={`0 0 ${LEGEND_WIDTH} 50`}>
         <g>
           {domain.map((d, ind) => (
@@ -34,7 +34,7 @@ export default function Legend({
               y="18"
               width={segmentWidth}
               height={8}
-              fill={colors[ind]}
+              className={styles[fillClassNames[ind]]}
             />
           ))}
         </g>

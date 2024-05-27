@@ -3,12 +3,14 @@
 import { STATES_BY_FULL } from "@/app/data/states";
 import { Expenditures } from "@/app/types/Expenditures";
 import * as d3 from "d3";
+import { AnimatePresence, motion } from "framer-motion";
 import { FeatureCollection, GeoJsonProperties, Geometry } from "geojson";
-import { useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import * as topojson from "topojson-client";
 import { Objects, Topology } from "topojson-specification";
 import ChloroplethTooltip from "./ChloroplethTooltip";
 import Legend from "./Legend";
+import { DOMAIN, FILL_CLASS_NAMES } from "./chloroplethConstants";
 import styles from "./chloroplethMap.module.css";
 
 interface HoveredState {
@@ -17,10 +19,6 @@ interface HoveredState {
   centroid?: [number, number];
   svgSize?: DOMRect;
 }
-
-const DOMAIN = [10 ** 4, 10 ** 5, 10 ** 6, 10 ** 7, 10 ** 8];
-const LIGHT_THEME = ["#eff4ff", "#dbe6fe", "#93b4fd", "#2563eb", "#1e4baf"];
-const DARK_THEME = ["#172a54", "#1e408a", "#1e4baf", "#2563eb", "#6090fa"];
 
 function getExpenditure(
   stateFullName: string,
@@ -42,9 +40,9 @@ function getFill(
 ): string | undefined {
   const expenditures = getExpenditure(stateFullName, expendituresByState);
   if (expenditures) {
-    return colorScale(expenditures.total);
+    return styles[colorScale(expenditures.total)];
   }
-  return undefined;
+  return styles.stateFill0;
 }
 
 export default function ChloroplethMap({
@@ -60,14 +58,6 @@ export default function ChloroplethMap({
     Objects<GeoJsonProperties>
   > = require("@/app/data/counties-albers-10m.json");
 
-  const isDarkMode = useMemo(
-    () =>
-      typeof window !== "undefined" &&
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches,
-    [],
-  );
-
   const collection: FeatureCollection<Geometry, GeoJsonProperties> =
     topojson.feature(us, us.objects.states) as FeatureCollection<
       Geometry,
@@ -78,50 +68,59 @@ export default function ChloroplethMap({
   const colorScale = d3
     .scaleThreshold<number, string>()
     .domain(DOMAIN)
-    .range(isDarkMode ? DARK_THEME : LIGHT_THEME);
+    .range(FILL_CLASS_NAMES);
 
   const path = d3.geoPath();
 
   return (
-    <div className={styles.mapWrapper}>
-      <svg ref={svgRef} className={styles.svg} viewBox="0 0 1000 620">
-        <Legend
-          colors={isDarkMode ? DARK_THEME : LIGHT_THEME}
-          domain={DOMAIN}
-        />
-        <g>
-          {data.map((d) => {
-            const fill = getFill(
-              d.properties?.name,
-              expendituresByState,
-              colorScale,
-            );
-            function setTooltipData() {
-              setHoveredState({
-                state: d.properties?.name,
-                expenditures: getExpenditure(
-                  d.properties?.name,
-                  expendituresByState as Record<string, Expenditures>,
-                ),
-                centroid: path.centroid(d.geometry),
-                svgSize: svgRef.current?.getBoundingClientRect(),
-              });
-            }
+    <AnimatePresence>
+      <div className={styles.mapWrapper}>
+        <svg ref={svgRef} className={styles.svg} viewBox="0 0 1000 620">
+          <Legend fillClassNames={FILL_CLASS_NAMES} domain={DOMAIN} />
+          <g>
+            {data.map((d) => {
+              const fill = getFill(
+                d.properties?.name,
+                expendituresByState,
+                colorScale,
+              );
+              function setTooltipData() {
+                setHoveredState({
+                  state: d.properties?.name,
+                  expenditures: getExpenditure(
+                    d.properties?.name,
+                    expendituresByState as Record<string, Expenditures>,
+                  ),
+                  centroid: path.centroid(d.geometry),
+                  svgSize: svgRef.current?.getBoundingClientRect(),
+                });
+              }
 
-            return (
-              <path
-                id={d.id as string}
-                key={`state-${d.id}`}
-                d={path(d) as string}
-                fill={fill}
-                onMouseEnter={setTooltipData}
-                onClick={setTooltipData}
-              />
-            );
-          })}
-        </g>
-      </svg>
-      <ChloroplethTooltip {...hoveredState} />
-    </div>
+              return (
+                <motion.path
+                  id={d.id as string}
+                  key={`state-${d.id}`}
+                  d={path(d) as string}
+                  className={getFill(
+                    d.properties?.name,
+                    expendituresByState,
+                    colorScale,
+                  )}
+                  onMouseEnter={setTooltipData}
+                  onClick={setTooltipData}
+                  initial={{
+                    fillOpacity: 0.0,
+                    strokeOpacity: 0.2,
+                  }}
+                  animate={{ fillOpacity: 1, strokeOpacity: 1 }}
+                  transition={{ duration: 0.2 }}
+                />
+              );
+            })}
+          </g>
+        </svg>
+        <ChloroplethTooltip {...hoveredState} />
+      </div>
+    </AnimatePresence>
   );
 }
