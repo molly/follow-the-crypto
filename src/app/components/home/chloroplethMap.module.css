@@ -46,8 +46,8 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  .skeletonMap {
-    animation: pulseFillDark 1.2s linear alternate infinite;
+  .svgSkeleton {
+    stroke: var(--secondary-text);
   }
 
   .stateFill1 {
@@ -76,6 +76,7 @@
   position: absolute;
   top: 0;
   left: 0;
+  z-index: 10;
   composes: card from "../../shared.module.css";
 }
 

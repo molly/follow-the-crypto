@@ -23,7 +23,11 @@ export default function USMapSkeleton() {
 
   return (
     <div className={styles.mapWrapper}>
-      <svg className={styles.svgSkeleton} viewBox="0 0 1000 620">
+      <svg
+        className={styles.svgSkeleton}
+        viewBox="0 0 1000 620"
+        strokeOpacity={0.2}
+      >
         <Legend fillClassNames={FILL_CLASS_NAMES} domain={DOMAIN} />
         <g>
           {data.map((d) => {
@@ -31,7 +35,6 @@ export default function USMapSkeleton() {
               <path
                 id={d.id as string}
                 key={`state-${d.id}`}
-                className={styles.skeletonMap}
                 d={path(d) as string}
               />
             );

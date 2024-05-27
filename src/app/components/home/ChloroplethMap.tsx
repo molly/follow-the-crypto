@@ -2,10 +2,22 @@
 
 import { STATES_BY_FULL } from "@/app/data/states";
 import { Expenditures } from "@/app/types/Expenditures";
+import {
+  autoUpdate,
+  flip,
+  offset,
+  shift,
+  useFloating,
+} from "@floating-ui/react";
 import * as d3 from "d3";
-import { AnimatePresence, motion } from "framer-motion";
-import { FeatureCollection, GeoJsonProperties, Geometry } from "geojson";
-import { useRef, useState } from "react";
+import { motion } from "framer-motion";
+import {
+  Feature,
+  FeatureCollection,
+  GeoJsonProperties,
+  Geometry,
+} from "geojson";
+import { createRef, useCallback, useRef, useState } from "react";
 import * as topojson from "topojson-client";
 import { Objects, Topology } from "topojson-specification";
 import ChloroplethTooltip from "./ChloroplethTooltip";
@@ -16,8 +28,6 @@ import styles from "./chloroplethMap.module.css";
 interface HoveredState {
   state?: string;
   expenditures?: Expenditures;
-  centroid?: [number, number];
-  svgSize?: DOMRect;
 }
 
 function getExpenditure(
@@ -51,7 +61,7 @@ export default function ChloroplethMap({
   expendituresByState: Record<string, Expenditures>;
 }) {
   const [hoveredState, setHoveredState] = useState<HoveredState | null>(null);
-
+  const [isOpen, setIsOpen] = useState(false);
   const svgRef = useRef<SVGSVGElement>(null);
 
   const us: Topology<
@@ -72,55 +82,112 @@ export default function ChloroplethMap({
 
   const path = d3.geoPath();
 
-  return (
-    <AnimatePresence>
-      <div className={styles.mapWrapper}>
-        <svg ref={svgRef} className={styles.svg} viewBox="0 0 1000 620">
-          <Legend fillClassNames={FILL_CLASS_NAMES} domain={DOMAIN} />
-          <g>
-            {data.map((d) => {
-              const fill = getFill(
-                d.properties?.name,
-                expendituresByState,
-                colorScale,
-              );
-              function setTooltipData() {
-                setHoveredState({
-                  state: d.properties?.name,
-                  expenditures: getExpenditure(
-                    d.properties?.name,
-                    expendituresByState as Record<string, Expenditures>,
-                  ),
-                  centroid: path.centroid(d.geometry),
-                  svgSize: svgRef.current?.getBoundingClientRect(),
-                });
-              }
+  const stateRefs = useRef(
+    data.reduce(
+      (acc, d) => {
+        acc[d.id as string] = createRef();
+        return acc;
+      },
+      {} as Record<string, React.RefObject<SVGCircleElement>>,
+    ),
+  );
 
-              return (
-                <motion.path
-                  id={d.id as string}
-                  key={`state-${d.id}`}
-                  d={path(d) as string}
-                  className={getFill(
-                    d.properties?.name,
-                    expendituresByState,
-                    colorScale,
-                  )}
-                  onMouseEnter={setTooltipData}
-                  onClick={setTooltipData}
-                  initial={{
-                    fillOpacity: 0.0,
-                    strokeOpacity: 0.2,
-                  }}
-                  animate={{ fillOpacity: 1, strokeOpacity: 1 }}
-                  transition={{ duration: 0.2 }}
-                />
-              );
-            })}
-          </g>
-        </svg>
-        <ChloroplethTooltip {...hoveredState} />
-      </div>
-    </AnimatePresence>
+  const { refs, floatingStyles, context } = useFloating({
+    open: Boolean(
+      hoveredState && hoveredState.state && hoveredState.expenditures && isOpen,
+    ),
+    onOpenChange: setIsOpen,
+    middleware: [offset(10), flip(), shift()],
+    whileElementsMounted: autoUpdate,
+  });
+
+  const setTooltipData = useCallback(
+    (d: Feature<Geometry, GeoJsonProperties>) => {
+      if (
+        !d.properties?.name ||
+        (hoveredState && hoveredState.state === d.properties.name)
+      ) {
+        return;
+      }
+      const expenditures = getExpenditure(
+        d.properties?.name,
+        expendituresByState as Record<string, Expenditures>,
+      );
+      if (expenditures) {
+        refs.setReference(stateRefs.current[d.id as string].current);
+        setHoveredState({
+          state: d.properties?.name,
+          expenditures: getExpenditure(
+            d.properties?.name,
+            expendituresByState as Record<string, Expenditures>,
+          ),
+        });
+      } else {
+        setHoveredState(null);
+        setIsOpen(false);
+      }
+    },
+    [hoveredState, expendituresByState, refs],
+  );
+
+  return (
+    <div className={styles.mapWrapper}>
+      <svg ref={svgRef} className={styles.svg} viewBox="0 0 1000 620">
+        <Legend fillClassNames={FILL_CLASS_NAMES} domain={DOMAIN} />
+        {data.map((d) => {
+          const centroid = path.centroid(d);
+          return (
+            <g
+              key={d.id}
+              onMouseEnter={() => setTooltipData(d)}
+              onClick={() => setTooltipData(d)}
+              onMouseLeave={(e) => {
+                if (
+                  e.relatedTarget &&
+                  "className" in e.relatedTarget &&
+                  typeof e.relatedTarget.className === "string" &&
+                  e.relatedTarget.className.includes("chloroplethMap_tooltip")
+                ) {
+                  return;
+                }
+                setHoveredState(null);
+                setIsOpen(false);
+              }}
+            >
+              <motion.path
+                id={d.id as string}
+                key={`state-${d.id}`}
+                d={path(d) as string}
+                className={getFill(
+                  d.properties?.name,
+                  expendituresByState,
+                  colorScale,
+                )}
+                initial={{
+                  fillOpacity: 0.0,
+                  strokeOpacity: 0.2,
+                }}
+                animate={{ fillOpacity: 1, strokeOpacity: 1 }}
+                transition={{ duration: 0.2 }}
+              />
+              <circle
+                key={`state-centroid-${d.id}`}
+                ref={stateRefs.current[d.id as string]}
+                r="0"
+                cx={centroid[0]}
+                cy={centroid[1]}
+              />
+            </g>
+          );
+        })}
+      </svg>
+      <ChloroplethTooltip
+        setHoveredState={setHoveredState}
+        ref={refs.setFloating}
+        style={floatingStyles}
+        context={context}
+        {...hoveredState}
+      />
+    </div>
   );
 }

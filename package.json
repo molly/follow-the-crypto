@@ -10,7 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@floating-ui/react": "^0.26.15",
+    "@floating-ui/react": "^0.26.16",
     "firebase": "^10.12.0",
     "framer-motion": "^11.2.6",
     "next": "14.2.3",
