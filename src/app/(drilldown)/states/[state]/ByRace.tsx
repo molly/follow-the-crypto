@@ -1,13 +1,15 @@
 import { fetchStateElections } from "@/app/actions/fetch";
+import Skeleton from "@/app/components/skeletons/Skeleton";
 import { ElectionGroup } from "@/app/types/Elections";
 import { Expenditures } from "@/app/types/Expenditures";
 import { isError } from "@/app/utils/errors";
 import { sortRaces } from "@/app/utils/races";
+import { getRandomInt, range } from "@/app/utils/range";
 import { formatCurrency } from "@/app/utils/utils";
 import Link from "next/link";
+import { Suspense } from "react";
 import RaceSummary from "./RaceSummary";
 import styles from "./page.module.css";
-
 const getRaceName = (raceId: string) => {
   const raceParts = raceId.split("-");
   if (raceParts[1] === "S") {
@@ -17,7 +19,7 @@ const getRaceName = (raceId: string) => {
   }
 };
 
-export default async function ByRace({
+async function RaceCardContents({
   expenditures,
   stateAbbr,
 }: {
@@ -27,34 +29,65 @@ export default async function ByRace({
   const data = await fetchStateElections(stateAbbr);
   const races = Object.keys(expenditures.by_race).sort(sortRaces);
 
-  const renderRaces = () => {
-    const electionData = data as Record<string, ElectionGroup>;
-    return races.map(async (raceId) => {
-      const shortId = raceId.split("-").slice(1).join("-");
-      return (
-        <div key={raceId} className={styles.cardSection}>
-          <Link href={`/race/${raceId}`}>
-            <h3>{getRaceName(raceId)}</h3>
-          </Link>
-          <b>{formatCurrency(expenditures.by_race[raceId].total, true)}</b>
-          {isError(data) ? (
-            <div>Something went wrong fetching election data.</div>
-          ) : (
-            <RaceSummary
-              raceId={raceId}
-              race={expenditures.by_race[raceId]}
-              electionData={electionData[shortId]}
-            />
-          )}
-        </div>
-      );
-    });
-  };
+  if (isError(data)) {
+    return <div>Something went wrong when fetching election data.</div>;
+  }
 
+  const electionData = data as Record<string, ElectionGroup>;
+  return (
+    <>
+      {races.map(async (raceId) => {
+        const shortId = raceId.split("-").slice(1).join("-");
+        return (
+          <div key={raceId} className={styles.cardSection}>
+            <Link href={`/race/${raceId}`}>
+              <h3>{getRaceName(raceId)}</h3>
+            </Link>
+            <b>{formatCurrency(expenditures.by_race[raceId].total, true)}</b>
+            {isError(data) ? (
+              <div>Something went wrong fetching election data.</div>
+            ) : (
+              <RaceSummary
+                raceId={raceId}
+                race={expenditures.by_race[raceId]}
+                electionData={electionData[shortId]}
+              />
+            )}
+          </div>
+        );
+      })}
+    </>
+  );
+}
+
+function RaceCardContentsSkeleton() {
+  return (
+    <>
+      {range(getRandomInt(2, 4)).map((i) => (
+        <div key={`race-skeleton-${i}`} className={styles.cardSection}>
+          <Skeleton randWidth={[5, 10]} height="1.17em" />
+          {range(getRandomInt(2, 6)).map((j) => (
+            <Skeleton key={`race-skeleton-${i}-${j}`} randWidth={[5, 8]} />
+          ))}
+        </div>
+      ))}
+    </>
+  );
+}
+
+export default async function ByRace({
+  expenditures,
+  stateAbbr,
+}: {
+  expenditures: Expenditures;
+  stateAbbr: string;
+}) {
   return (
     <div className={styles.raceCard}>
       <h2>By race</h2>
-      {isError(data) ? <div></div> : renderRaces()}
+      <Suspense fallback={<RaceCardContentsSkeleton />}>
+        <RaceCardContents expenditures={expenditures} stateAbbr={stateAbbr} />
+      </Suspense>
     </div>
   );
 }

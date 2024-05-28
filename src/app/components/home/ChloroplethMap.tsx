@@ -130,6 +130,19 @@ export default function ChloroplethMap({
     [hoveredState, expendituresByState, refs],
   );
 
+  const closeTooltip = useCallback((e: MouseEvent) => {
+    if (
+      e.relatedTarget &&
+      "className" in e.relatedTarget &&
+      typeof e.relatedTarget.className === "string" &&
+      e.relatedTarget.className.includes("chloroplethMap_tooltip")
+    ) {
+      return;
+    }
+    setHoveredState(null);
+    setIsOpen(false);
+  }, []);
+
   return (
     <div className={styles.mapWrapper}>
       <svg ref={svgRef} className={styles.svg} viewBox="0 0 1000 620">
@@ -141,18 +154,7 @@ export default function ChloroplethMap({
               key={d.id}
               onMouseEnter={() => setTooltipData(d)}
               onClick={() => setTooltipData(d)}
-              onMouseLeave={(e) => {
-                if (
-                  e.relatedTarget &&
-                  "className" in e.relatedTarget &&
-                  typeof e.relatedTarget.className === "string" &&
-                  e.relatedTarget.className.includes("chloroplethMap_tooltip")
-                ) {
-                  return;
-                }
-                setHoveredState(null);
-                setIsOpen(false);
-              }}
+              onMouseLeave={(e) => closeTooltip}
             >
               <motion.path
                 id={d.id as string}

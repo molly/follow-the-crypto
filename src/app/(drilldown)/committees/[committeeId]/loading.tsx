@@ -1,16 +1,7 @@
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import sharedStyles from "@/app/shared.module.css";
+import { getRandomInt, range } from "@/app/utils/range";
 import pageStyles from "./page.module.css";
-
-function getRandomInt(min: number, max: number) {
-  const minCeiled = Math.ceil(min);
-  const maxFloored = Math.floor(max);
-  return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled);
-}
-
-function range(n: number) {
-  return Array.from({ length: n }, (x, i) => i);
-}
 
 function CardRowSkeleton() {
   return (
@@ -25,18 +16,14 @@ function CardRowSkeleton() {
       {range(5).map((x) => (
         <div className={pageStyles.donorRow} key={`row-${x}`}>
           <div className={pageStyles.donorSummary}>
-            <Skeleton
-              onCard={true}
-              height="1.2rem"
-              width={`${getRandomInt(5, 10)}rem`}
-            />
+            <Skeleton onCard={true} height="1.2rem" randWidth={[5, 10]} />
             <Skeleton onCard={true} height="1.2rem" width="8rem" />
           </div>
           <div className={pageStyles.contributionsContainer}>
             {range(getRandomInt(3, 8)).map((y) => (
               <div className={pageStyles.donorSubRow} key={`subrow-${x}-${y}`}>
-                <Skeleton onCard={true} width={`${getRandomInt(12, 28)}rem`} />
-                <Skeleton onCard={true} width={`${getRandomInt(6, 15)}rem`} />
+                <Skeleton onCard={true} randWidth={[12, 28]} />
+                <Skeleton onCard={true} randWidth={[6, 15]} />
               </div>
             ))}
           </div>

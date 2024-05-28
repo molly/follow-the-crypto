@@ -1,28 +1,26 @@
-import { fetchAllCommittees } from "@/app/actions/fetch";
+import Skeleton from "@/app/components/skeletons/Skeleton";
 import sharedStyles from "@/app/shared.module.css";
-import { CommitteeDetails } from "@/app/types/Committee";
-import { isError } from "@/app/utils/errors";
-import Link from "next/link";
+import { range } from "@/app/utils/range";
+import { Suspense } from "react";
+import CommitteeList from "./CommitteeList";
 
-export default async function CommitteeList() {
-  const data = await fetchAllCommittees();
+function CommitteeListSkeleton() {
+  return range(10).map((x) => (
+    <Skeleton
+      key={`skeleton-row-${x}`}
+      randWidth={[5, 15]}
+      style={{ marginBottom: "1rem" }}
+    />
+  ));
+}
 
-  if (isError(data)) {
-    return <div>Something went wrong when fetching committees.</div>;
-  }
-
-  const committees = data as CommitteeDetails[];
-
+export default async function CommitteesPage() {
   return (
     <section className={sharedStyles.fullWidth}>
       <h1>Committees</h1>
-      <ul className={sharedStyles.plainList}>
-        {committees.map((committee) => (
-          <li key={committee.id} className={sharedStyles.plainListItem}>
-            <Link href={`/committees/${committee.id}`}>{committee.name}</Link>
-          </li>
-        ))}
-      </ul>
+      <Suspense fallback={<CommitteeListSkeleton />}>
+        <CommitteeList />
+      </Suspense>
     </section>
   );
 }

@@ -1,5 +1,7 @@
+import { Suspense } from "react";
 import TotalSpending from "./components/TotalSpending";
 import MapWrapper from "./components/home/MapWrapper";
+import USMapSkeleton from "./components/skeletons/USMapSkeleton";
 import styles from "./page.module.css";
 import sharedStyles from "./shared.module.css";
 
@@ -15,7 +17,9 @@ export default function Home() {
       </h1>
       <TotalSpending amount="$120 million" />
       <div className={styles.mapContainer}>
-        <MapWrapper />
+        <Suspense fallback={<USMapSkeleton />}>
+          <MapWrapper />
+        </Suspense>
       </div>
     </main>
   );
