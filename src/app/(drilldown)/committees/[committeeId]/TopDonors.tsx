@@ -1,8 +1,11 @@
 import { fetchCommitteeDonors } from "@/app/actions/fetch";
 import { CommitteeDetails } from "@/app/types/Committee";
-import { Contributions, ContributionsGroup } from "@/app/types/Contributions";
+import {
+  Contributions,
+  ContributionsGroup as ContributionsGroupType,
+} from "@/app/types/Contributions";
 import { ErrorType, is4xx, isError } from "@/app/utils/errors";
-import Donor from "./Donor";
+import ContributionsGroup from "./ContributionsGroup";
 import styles from "./page.module.css";
 
 export default async function TopDonors({
@@ -29,8 +32,8 @@ export default async function TopDonors({
     <section className={styles.donorSection}>
       <h3 className={styles.donorSectionHeader}>Top donors</h3>
       {donors.groups.length ? (
-        donors.groups.map((donorGroup: ContributionsGroup, ind: number) => (
-          <Donor key={`donor-${ind}`} donorGroup={donorGroup} />
+        donors.groups.map((donorGroup: ContributionsGroupType, ind: number) => (
+          <ContributionsGroup key={`donor-${ind}`} donorGroup={donorGroup} />
         ))
       ) : (
         <div>No donors found</div>

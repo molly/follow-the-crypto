@@ -1,16 +1,44 @@
-export interface Contribution {
-  contributor_first_name?: string;
-  contributor_middle_name?: string;
-  contributor_last_name?: string;
-  contributor_suffix?: string;
-  contributor_name?: string;
-  contributor_occupation?: string;
-  contributor_employer?: string;
-  contribution_receipt_amount: number;
-  contribution_receipt_date?: string;
-  entity_type?: string;
-  redacted: boolean;
-}
+import { ScheduleA } from "./FECTypes";
+
+export type SingleContribution = { redacted?: boolean } & Pick<
+  ScheduleA,
+  | "contributor_aggregate_ytd"
+  | "contributor_first_name"
+  | "contributor_middle_name"
+  | "contributor_last_name"
+  | "contributor_suffix"
+  | "contributor_name"
+  | "contributor_occupation"
+  | "contributor_employer"
+  | "contribution_receipt_amount"
+  | "contribution_receipt_date"
+  | "entity_type"
+  | "pdf_url"
+  | "receipt_type"
+  | "receipt_type_full"
+  | "transaction_id"
+>;
+
+export type RollupContribution = {
+  redacted?: boolean;
+  oldest: string;
+  newest: string;
+  total: number;
+  total_receipt_amount: number;
+} & Pick<
+  ScheduleA,
+  | "contributor_aggregate_ytd"
+  | "contributor_first_name"
+  | "contributor_middle_name"
+  | "contributor_last_name"
+  | "contributor_suffix"
+  | "contributor_name"
+  | "contributor_occupation"
+  | "contributor_employer"
+  | "entity_type"
+>;
+
+export type Contribution = SingleContribution | RollupContribution;
 
 export interface ContributionsGroup {
   company?: string;

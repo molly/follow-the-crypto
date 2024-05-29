@@ -43,15 +43,21 @@ const fetchCollection = async (
   }
 };
 
-export const fetchConstant = cache(async (key: string) => {
-  const docRef = doc(db, "constants", key);
-  const snapshot = await getDoc(docRef);
-  if (snapshot.exists()) {
-    return snapshot.data();
-  } else {
-    return null;
-  }
-});
+export const fetchConstant = cache(
+  async <T>(key: string): Promise<T | null> => {
+    const docRef = doc(db, "constants", key);
+    const snapshot = await getDoc(docRef);
+    if (snapshot.exists()) {
+      const data = snapshot.data();
+      if (key === "individualEmployers" && "individualEmployers" in data) {
+        return data.individualEmployers as T;
+      }
+      return data as T;
+    } else {
+      return null;
+    }
+  },
+);
 
 // ----------------------------------------------------------------------
 

@@ -1,5 +1,6 @@
 import { fetchConstant } from "@/app/actions/fetch";
 import { Contribution as ContributionType } from "@/app/types/Contributions";
+import { titlecaseCompany } from "@/app/utils/titlecase";
 import { formatCurrency, formatDate } from "@/app/utils/utils";
 import {
   DonorType,
@@ -8,6 +9,122 @@ import {
 } from "../../../utils/donorDetails";
 import styles from "./page.module.css";
 
+function ContributorName({
+  contribution,
+  donorDetails,
+}: {
+  contribution: ContributionType;
+  donorDetails: IndividualDonorType;
+}) {
+  if (contribution.redacted) {
+    return <span className={styles.redactedName}>Individual</span>;
+  } else if (!donorDetails.company) {
+    return <span className={styles.donorCompany}>{donorDetails.name}</span>;
+  } else {
+    return donorDetails.name;
+  }
+}
+
+function CompanyName({
+  donorDetails,
+  inline = false,
+  contributionDate = null,
+}: {
+  donorDetails: DonorType;
+  inline?: boolean;
+  contributionDate?: JSX.Element | null;
+}) {
+  const companyName =
+    (donorDetails.companyAlias &&
+      titlecaseCompany(donorDetails.companyAlias)) ||
+    donorDetails.company;
+
+  const alias =
+    donorDetails.companyAlias &&
+    donorDetails.companyAlias !== donorDetails.company?.toUpperCase()
+      ? donorDetails.company
+      : "";
+
+  if (inline) {
+    return (
+      <>
+        <span>{companyName}</span>
+        {alias && <span className="secondary"> ({alias})</span>}
+      </>
+    );
+  }
+
+  return (
+    <div>
+      <span className={styles.donorCompany}>{companyName}</span>
+      {alias && (
+        <div className={styles.aliasAndDate}>
+          <span className="secondary">({alias})</span> {contributionDate}
+        </div>
+      )}
+      {!alias && contributionDate}
+    </div>
+  );
+}
+
+function ContributionDate({
+  contribution,
+}: {
+  contribution: ContributionType;
+}) {
+  if (
+    "contribution_receipt_date" in contribution &&
+    contribution.contribution_receipt_date
+  ) {
+    return (
+      <span
+        className={styles.donorDate}
+      >{` – ${formatDate(contribution.contribution_receipt_date)}`}</span>
+    );
+  } else if (
+    "oldest" in contribution &&
+    contribution.oldest &&
+    "newest" in contribution &&
+    contribution.newest
+  ) {
+    return (
+      <div
+        className={styles.donorDateRange}
+      >{`${contribution.total} contribution${contribution.total > 1 ? "s" : ""} from ${formatDate(contribution.oldest)} to ${formatDate(contribution.newest)}`}</div>
+    );
+  }
+  return null;
+}
+
+function ContributionAmount({
+  contribution,
+  isSubRow = false,
+}: {
+  contribution: ContributionType;
+  isSubRow?: boolean;
+}) {
+  if (
+    "contribution_receipt_amount" in contribution &&
+    contribution.contribution_receipt_amount
+  ) {
+    return (
+      <span className={isSubRow ? styles.subRowCurrency : ""}>
+        {formatCurrency(contribution.contribution_receipt_amount)}
+      </span>
+    );
+  } else if (
+    "total_receipt_amount" in contribution &&
+    contribution.total_receipt_amount
+  ) {
+    return (
+      <span className={isSubRow ? styles.subRowCurrency : ""}>
+        {formatCurrency(contribution.total_receipt_amount)}
+      </span>
+    );
+  }
+  return null;
+}
+
 export default async function Contribution({
   contribution,
   isSubRow,
@@ -15,43 +132,27 @@ export default async function Contribution({
   contribution: ContributionType;
   isSubRow?: boolean;
 }) {
-  const COMPANY_ALIASES: Record<string, string> =
-    (await fetchConstant("companyAliases")) || {};
-  const donorDetails: DonorType = getDonorDetails(
+  let [COMPANY_ALIASES, INDIVIDUAL_EMPLOYERS] = await Promise.all([
+    fetchConstant<Record<string, string>>("companyAliases") || {},
+    fetchConstant<string[]>("individualEmployers") || [],
+  ]);
+
+  const donorDetails = getDonorDetails(
     contribution,
-    COMPANY_ALIASES,
+    COMPANY_ALIASES as Record<string, string>,
+    INDIVIDUAL_EMPLOYERS as string[],
   );
-  let company, donorIdentifier;
-
-  const renderContributionDate = (date: string | null | undefined) => {
-    if (!date) {
-      return null;
-    } else {
-      return (
-        <span className={styles.donorDate}>{` – ${formatDate(date)}`}</span>
-      );
-    }
-  };
-
-  const renderContributorName = (
-    contribution: ContributionType,
-    donorDetails: IndividualDonorType,
-  ) => {
-    if (contribution.redacted) {
-      return <span className={styles.redactedName}>Individual</span>;
-    } else {
-      return donorDetails.name;
-    }
-  };
+  let donorIdentifier;
 
   if (isSubRow) {
     // SUBROW
-    company = <span>{donorDetails.company}</span>;
-
     if (donorDetails.isIndividual) {
       donorIdentifier = (
         <>
-          {renderContributorName(contribution, donorDetails)}{" "}
+          <ContributorName
+            contribution={contribution}
+            donorDetails={donorDetails}
+          />
           {donorDetails.occupation && (
             <span className={styles.donorOccupation}>
               {donorDetails.occupation}
@@ -60,62 +161,52 @@ export default async function Contribution({
         </>
       );
     } else {
-      donorIdentifier = company;
+      donorIdentifier = <CompanyName donorDetails={donorDetails} inline />;
     }
 
     return (
       <div className={styles.donorSubRow}>
         <div>
           {donorIdentifier}
-          {renderContributionDate(contribution.contribution_receipt_date)}
+          <ContributionDate contribution={contribution} />
         </div>
-        {contribution.contribution_receipt_amount && (
-          <span className={styles.subRowCurrency}>
-            {formatCurrency(contribution.contribution_receipt_amount)}
-          </span>
-        )}
+        <ContributionAmount contribution={contribution} isSubRow={true} />
       </div>
     );
   } else {
     // TOP-LEVEL ROW
-    company = (
-      <div>
-        <span className={styles.donorCompany}>
-          {donorDetails.companyAlias || donorDetails.company}
-        </span>
-        {donorDetails.companyAlias &&
-          donorDetails.companyAlias !== donorDetails.company && (
-            <div className="secondary">({donorDetails.company})</div>
-          )}
-      </div>
-    );
-
     if (donorDetails.isIndividual) {
       donorIdentifier = (
         <div>
           <div>
-            {renderContributorName(contribution, donorDetails)}{" "}
+            <ContributorName
+              contribution={contribution}
+              donorDetails={donorDetails}
+            />
             {donorDetails.occupation && (
               <span className={styles.donorOccupation}>
                 {donorDetails.occupation}
               </span>
             )}
-            {!donorDetails.company &&
-              renderContributionDate(contribution.contribution_receipt_date)}
+            {!donorDetails.company && (
+              <ContributionDate contribution={contribution} />
+            )}
           </div>
           {donorDetails.company && (
-            <div className={styles.tmp}>
-              {company}
-              {renderContributionDate(contribution.contribution_receipt_date)}
+            <div className={"oldest" in contribution ? "" : styles.donorBlock}>
+              <CompanyName donorDetails={donorDetails} />
+              <ContributionDate contribution={contribution} />
             </div>
           )}
         </div>
       );
     } else {
       donorIdentifier = (
-        <div className={styles.tmp}>
-          {company}
-          {renderContributionDate(contribution.contribution_receipt_date)}
+        <div className={"oldest" in contribution ? "" : styles.donorBlock}>
+          <CompanyName
+            donorDetails={donorDetails}
+            contributionDate={<ContributionDate contribution={contribution} />}
+          />
         </div>
       );
     }
@@ -124,11 +215,7 @@ export default async function Contribution({
       <div className={styles.donorRow}>
         <div className={styles.donorSummary}>
           {donorIdentifier}
-          {contribution.contribution_receipt_amount && (
-            <span>
-              {formatCurrency(contribution.contribution_receipt_amount)}
-            </span>
-          )}
+          <ContributionAmount contribution={contribution} />
         </div>
       </div>
     );

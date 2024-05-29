@@ -44,11 +44,10 @@
   margin-right: 0.2rem;
 }
 
-.tmp {
+.donorBlock {
   display: flex;
   flex-direction: row;
   align-items: flex-end;
-  gap: 0.5rem;
 }
 
 .contributionsContainer {
@@ -83,7 +82,20 @@
   font-weight: bold;
 }
 
+.aliasAndDate {
+  align-items: center;
+}
+
 .donorDate {
   font-size: 1rem;
-  margin-left: 0.2rem;
+  align-self: center;
+  white-space-collapse: preserve;
+}
+
+.donorDateRange {
+  margin-left: 1rem;
+}
+
+.topLevelContribution {
+  color: var(--main-text);
 }

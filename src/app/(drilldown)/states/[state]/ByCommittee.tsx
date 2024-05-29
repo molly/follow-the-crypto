@@ -37,7 +37,7 @@ async function CommitteeCardContents({
         return (
           <div key={committeeId} className={styles.cardSection}>
             {committee ? (
-              <Link href={`/committee/${committeeId}`}>
+              <Link href={`/committees/${committeeId}`}>
                 <h3>{committee.name}</h3>
               </Link>
             ) : (

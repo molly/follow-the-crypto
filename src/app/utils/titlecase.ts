@@ -11,7 +11,7 @@ export function titlecase(str: string): string {
 export function titlecaseCompany(str: string): string {
   let titlecased = titlecase(str);
   titlecased = titlecased.replace(
-    /\b([A-Z]|AH|TJ|LLC|DRW|DBA|CMT|RRE|USA|)\b/gi,
+    /\b([A-Z]|AH|TJ|GP|SV|LLC|DRW|DBA|CMT|RRE|USA|HBAR)\b/gi,
     function (txt) {
       return txt.toUpperCase();
     },

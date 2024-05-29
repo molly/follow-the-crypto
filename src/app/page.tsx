@@ -5,8 +5,6 @@ import USMapSkeleton from "./components/skeletons/USMapSkeleton";
 import styles from "./page.module.css";
 import sharedStyles from "./shared.module.css";
 
-export const revalidate = 3600;
-
 export default function Home() {
   return (
     <main className={sharedStyles.mainGrid}>
