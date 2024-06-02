@@ -12,6 +12,10 @@
   font-size: 3rem;
 }
 
+.raisedDetails {
+  margin-top: 1rem;
+}
+
 .donorSection {
   composes: fullWidthCard from "@/app/shared.module.css";
   padding: 1rem 0;

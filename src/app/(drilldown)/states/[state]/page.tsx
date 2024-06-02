@@ -1,5 +1,5 @@
 import { fetchStateExpenditures } from "@/app/actions/fetch";
-import TotalSpending from "@/app/components/TotalSpending";
+import MoneyCard from "@/app/components/MoneyCard";
 import { STATES_BY_FULL } from "@/app/data/states";
 import sharedStyles from "@/app/shared.module.css";
 import { Expenditures } from "@/app/types/Expenditures";
@@ -50,12 +50,13 @@ export default async function CommitteePage({
   return (
     <>
       <h1 className={sharedStyles.titleH2}>{titlecasedState}</h1>
-      <TotalSpending
+      <MoneyCard
         amount={formatCurrency(expenditures.total, true)}
+        verb="spent"
         influenceSubject={`2024 elections in ${titlecasedState}`}
       />
-      <ByCommittee expenditures={expenditures} />
       <ByRace expenditures={expenditures} stateAbbr={stateAbbr} />
+      <ByCommittee expenditures={expenditures} />
     </>
   );
 }

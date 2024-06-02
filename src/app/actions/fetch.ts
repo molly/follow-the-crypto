@@ -13,7 +13,7 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { cache } from "react";
-import { ElectionGroup } from "../types/Elections";
+import { ElectionsByState } from "../types/Elections";
 
 const fetchSnapshot = async (
   path: string,
@@ -121,8 +121,6 @@ export const fetchStateExpenditures = cache(
 
 // ELECTIONS -------------------------------------------------------------
 export const fetchStateElections = cache(
-  async (
-    stateAbbr: string,
-  ): Promise<Record<string, ElectionGroup> | ErrorType> =>
-    fetchSnapshot("electionsByState", stateAbbr),
+  async (stateAbbr: string): Promise<ElectionsByState | ErrorType> =>
+    fetchSnapshot("raceDetails", stateAbbr),
 );

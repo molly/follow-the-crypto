@@ -1,6 +1,52 @@
-import { Election, ElectionDates } from "./FECTypes";
+import { Candidate } from "./FECTypes";
+
+export enum Party {
+  Democratic = "D",
+  Republican = "R",
+  Libertarian = "L",
+  Green = "G",
+  Independent = "I",
+  Nonpartisan = "N",
+}
+
+export interface RaceCandidate {
+  name: string;
+  party?: Party;
+  percentage?: number;
+  won?: boolean;
+  withdrew?: boolean;
+}
+
+export enum RaceType {
+  General = "general",
+  Primary = "primary",
+  PrimaryRunoff = "primary_runoff",
+  Convention = "convention",
+}
+
+export type CandidateSummary = {
+  FEC_name: string;
+  common_name: string;
+  defeated: boolean;
+  withdrew: boolean;
+  defeated_race: RaceType;
+  oppose_total: number;
+  support_total: number;
+  races: RaceType[];
+} & Pick<Candidate, "candidate_id" | "incumbent_challenge" | "party">;
+
+export interface Race {
+  candidates: RaceCandidate[];
+  type: RaceType;
+  date: string;
+}
 
 export interface ElectionGroup {
-  candidates: Election[];
-  dates: ElectionDates[];
+  races: Race[];
+  candidates: Record<string, CandidateSummary>;
+  candidatesOrder: string[];
+}
+
+export interface ElectionsByState {
+  [raceId: string]: ElectionGroup;
 }

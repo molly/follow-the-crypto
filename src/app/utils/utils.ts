@@ -22,3 +22,36 @@ export const formatDate = (date: string): string => {
     day: "numeric",
   });
 };
+
+const NUMBERS = [
+  "zero",
+  "one",
+  "two",
+  "three",
+  "four",
+  "five",
+  "six",
+  "seven",
+  "eight",
+  "nine",
+  "ten",
+];
+export const humanizeNumber = (value: number): string => {
+  if (value < NUMBERS.length) {
+    return NUMBERS[value];
+  }
+  return value.toString();
+};
+
+export const pluralize = (
+  value: number,
+  singular: string,
+  options: { plural?: string; includeValue?: boolean; humanize?: boolean } = {},
+) => {
+  const plural = options.plural ? options.plural : `${singular}s`;
+  if (options.includeValue) {
+    const number = options.humanize ? humanizeNumber(value) : value;
+    return value === 1 ? `${number} ${singular}` : `${number} ${plural}`;
+  }
+  return value === 1 ? singular : plural;
+};

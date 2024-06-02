@@ -1,10 +1,12 @@
 import sharedStyles from "../shared.module.css";
 
-export default function TotalSpending({
+export default function MoneyCard({
   amount,
+  verb,
   influenceSubject,
 }: {
   amount: string;
+  verb: string;
   influenceSubject?: string;
 }) {
   if (!influenceSubject) {
@@ -12,7 +14,8 @@ export default function TotalSpending({
   }
   return (
     <div className={sharedStyles.smallCard}>
-      Cryptocurrency companies and associated people have spent{" "}
+      Cryptocurrency companies and associated people have {verb}
+      {""}
       <div className={sharedStyles.highlight}>{amount}</div> to influence{" "}
       {influenceSubject}.
     </div>

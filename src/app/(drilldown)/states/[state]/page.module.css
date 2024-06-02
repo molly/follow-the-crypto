@@ -1,11 +1,10 @@
 .committeeCard {
-  composes: card from "@/app/shared.module.css";
-  grid-column: 2 / 7;
+  composes: smallCard from "@/app/shared.module.css";
+  text-align: unset;
 }
 
 .raceCard {
-  composes: card from "@/app/shared.module.css";
-  grid-column: 7 / 12;
+  composes: fullWidthCard from "@/app/shared.module.css";
 }
 
 .cardSection {
@@ -14,4 +13,95 @@
 
 .cardSubsection {
   padding-left: 1rem;
+}
+
+.candidates {
+  display: grid;
+  grid-template-columns: [candidate] fit-content(50%) [support] 12ch [oppose] 12ch [notes] auto;
+  gap: 0.5rem 1rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.candidateSupportHeader {
+  grid-column: support;
+  font-weight: bold;
+  text-align: right;
+}
+
+.candidateOpposeHeader {
+  grid-column: oppose;
+  font-weight: bold;
+  text-align: right;
+}
+
+.candidateSupportOppose {
+  text-align: right;
+}
+
+.candidateInfoBlock {
+  display: flex;
+  align-items: center;
+  white-space-collapse: preserve;
+  grid-column: candidate;
+}
+
+.candidateImage {
+  border: 1px solid var(--placeholder-color);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  color: var(--placeholder-color);
+}
+
+.activeCandidateName {
+  font-weight: bold;
+}
+
+.defeatedCandidateName {
+  font-style: italic;
+  text-decoration: line-through;
+}
+
+.notes {
+  color: var(--secondary-text);
+  font-style: italic;
+}
+
+.party-R {
+  border-left: 4px solid var(--party-republican);
+}
+
+.party-D {
+  border-left: 4px solid var(--party-democrat);
+}
+
+.party-L {
+  border-left: 4px solid var(--party-libertarian);
+}
+
+.party-G {
+  border-left: 4px solid var(--party-green);
+}
+
+.party-I {
+  border-left: 4px solid var(--party-independent);
+}
+
+.party-unknown {
+  border-left: 4px solid var(--placeholder-color);
+}
+
+@media (min-width: 600px) {
+  .candidates {
+    column-gap: 2rem;
+  }
+}
+
+@media (min-width: 1000px) {
+  .raceCard {
+    grid-column: 2 / 12;
+  }
 }

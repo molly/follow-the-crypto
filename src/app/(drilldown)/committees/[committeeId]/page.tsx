@@ -1,8 +1,12 @@
-import { fetchCommitteeDetails } from "@/app/actions/fetch";
+import {
+  fetchCommitteeDetails,
+  fetchCommitteeDonors,
+} from "@/app/actions/fetch";
 import { CommitteeDetails } from "@/app/types/Committee";
-import { ErrorType, is4xx, isError } from "@/app/utils/errors";
+import { is4xx, isError } from "@/app/utils/errors";
 import { Metadata } from "next";
 
+import { Contributions } from "@/app/types/Contributions";
 import CommitteeDetailsSection from "./CommitteeDetailsSection";
 import TopDonors from "./TopDonors";
 
@@ -28,23 +32,24 @@ export default async function CommitteePage({
 }: {
   params: { committeeId: string };
 }) {
-  const data = await fetchCommitteeDetails(params.committeeId);
+  const committeeData = await fetchCommitteeDetails(params.committeeId);
+  const donorData = await fetchCommitteeDonors(params.committeeId);
 
-  if (isError(data)) {
-    const error = data as ErrorType;
-    if (is4xx(error)) {
+  if (isError(committeeData) || isError(donorData)) {
+    if (is4xx(committeeData) && is4xx(donorData)) {
       return <div>Committee not found.</div>;
     } else {
       return <div>Something went wrong when fetching committee details.</div>;
     }
   }
 
-  const committee = data as CommitteeDetails;
+  const committee = committeeData as CommitteeDetails;
+  const donors = donorData as Contributions;
 
   return (
     <>
-      <CommitteeDetailsSection committee={committee} />
-      <TopDonors committee={committee} />
+      <CommitteeDetailsSection committee={committee} donors={donors} />
+      <TopDonors donors={donors} />
     </>
   );
 }

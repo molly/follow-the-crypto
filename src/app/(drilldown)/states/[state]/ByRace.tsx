@@ -1,15 +1,18 @@
 import { fetchStateElections } from "@/app/actions/fetch";
 import Skeleton from "@/app/components/skeletons/Skeleton";
-import { ElectionGroup } from "@/app/types/Elections";
 import { Expenditures } from "@/app/types/Expenditures";
 import { isError } from "@/app/utils/errors";
 import { sortRaces } from "@/app/utils/races";
 import { getRandomInt, range } from "@/app/utils/range";
-import { formatCurrency } from "@/app/utils/utils";
+import { formatCurrency, humanizeNumber } from "@/app/utils/utils";
 import Link from "next/link";
 import { Suspense } from "react";
 import RaceSummary from "./RaceSummary";
 import styles from "./page.module.css";
+
+import { ElectionsByState } from "@/app/types/Elections";
+import { titlecase } from "@/app/utils/titlecase";
+
 const getRaceName = (raceId: string) => {
   const raceParts = raceId.split("-");
   if (raceParts[1] === "S") {
@@ -33,17 +36,24 @@ async function RaceCardContents({
     return <div>Something went wrong when fetching election data.</div>;
   }
 
-  const electionData = data as Record<string, ElectionGroup>;
+  const electionData = data as ElectionsByState;
   return (
     <>
       {races.map(async (raceId) => {
+        const race = expenditures.by_race[raceId];
         const shortId = raceId.split("-").slice(1).join("-");
+        const involvedCommittees = new Set(
+          race.expenditures.map((exp) => exp.committee_id),
+        );
+
         return (
           <div key={raceId} className={styles.cardSection}>
             <Link href={`/race/${raceId}`}>
               <h3>{getRaceName(raceId)}</h3>
             </Link>
-            <b>{formatCurrency(expenditures.by_race[raceId].total, true)}</b>
+            <span>
+              {`${titlecase(humanizeNumber(involvedCommittees.size))} cryptocurrency-focused committee${involvedCommittees.size > 1 ? "s have spent a combined" : " has spent"} ${formatCurrency(race.total, true)} on this race.`}
+            </span>
             {isError(data) ? (
               <div>Something went wrong fetching election data.</div>
             ) : (

@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import TotalSpending from "./components/TotalSpending";
+import MoneyCard from "./components/MoneyCard";
 import MapWrapper from "./components/home/MapWrapper";
 import USMapSkeleton from "./components/skeletons/USMapSkeleton";
 import styles from "./page.module.css";
@@ -13,7 +13,7 @@ export default function Home() {
         <br />
         &darr;
       </h1>
-      <TotalSpending amount="$120 million" />
+      <MoneyCard verb="raised" amount="$120 million" />
       <div className={styles.mapContainer}>
         <Suspense fallback={<USMapSkeleton />}>
           <MapWrapper />

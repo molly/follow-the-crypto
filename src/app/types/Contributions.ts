@@ -49,4 +49,6 @@ export interface ContributionsGroup {
 export interface Contributions {
   contributions_count: number;
   groups: ContributionsGroup[];
+  total_contributed: number;
+  total_transferred: number;
 }

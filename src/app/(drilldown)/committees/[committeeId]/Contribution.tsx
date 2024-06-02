@@ -49,7 +49,7 @@ function CompanyName({
     return (
       <>
         <span>{companyName}</span>
-        {alias && <span className="secondary"> ({alias})</span>}
+        {alias && <span className="secondary smaller"> ({alias})</span>}
       </>
     );
   }
@@ -59,7 +59,8 @@ function CompanyName({
       <span className={styles.donorCompany}>{companyName}</span>
       {alias && (
         <div className={styles.aliasAndDate}>
-          <span className="secondary">({alias})</span> {contributionDate}
+          <span className="secondary smaller">({alias})</span>{" "}
+          {contributionDate}
         </div>
       )}
       {!alias && contributionDate}

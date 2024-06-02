@@ -33,7 +33,6 @@ async function CommitteeCardContents({
         if (committees && committeeId in committees) {
           committee = committees[committeeId];
         }
-
         return (
           <div key={committeeId} className={styles.cardSection}>
             {committee ? (
