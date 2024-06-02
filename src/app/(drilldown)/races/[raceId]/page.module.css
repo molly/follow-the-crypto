@@ -1,0 +1,49 @@
+.candidates {
+  display: grid;
+  grid-template-columns: [candidate] fit-content(50%) [support] 12ch [oppose] 12ch [notes] auto;
+  gap: 0.5rem 1rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.candidateSupportHeader {
+  grid-column: support;
+  font-weight: bold;
+  text-align: right;
+}
+
+.candidateOpposeHeader {
+  grid-column: oppose;
+  font-weight: bold;
+  text-align: right;
+}
+
+.candidateSupportOppose {
+  text-align: right;
+}
+
+.activeCandidateName {
+  font-weight: bold;
+}
+
+.defeatedCandidateName {
+  font-style: italic;
+  text-decoration: line-through;
+}
+
+.notes {
+  color: var(--secondary-text);
+  font-style: italic;
+}
+
+@media (min-width: 600px) {
+  .candidates {
+    column-gap: 2rem;
+  }
+}
+
+@media (min-width: 1000px) {
+  .raceCard {
+    grid-column: 2 / 12;
+  }
+}

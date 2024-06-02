@@ -1,0 +1,63 @@
+.candidateInfoBlock {
+  display: flex;
+  align-items: center;
+  white-space-collapse: preserve;
+  grid-column: candidate;
+}
+
+.candidateImageWrapper {
+  flex-shrink: 0;
+  border-radius: 50%;
+  width: 58px;
+  height: 58px;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  color: var(--placeholder-color);
+}
+
+.candidateImage {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+}
+
+.placeholderImage {
+  width: 50px;
+  height: 50px;
+}
+
+.defeatedCandidateImage {
+  position: relative;
+  &:after {
+    content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 96 96" enable-background="new 0 0 96 96" xml:space="preserve"><polygon fill="red" points="96,14 82,0 48,34 14,0 0,14 34,48 0,82 14,96 48,62 82,96 96,82 62,48 "/></svg>');
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    width: 60px;
+    height: 60px;
+  }
+}
+
+.party-R {
+  border: 4px solid var(--party-republican);
+}
+
+.party-D {
+  border: 4px solid var(--party-democrat);
+}
+
+.party-L {
+  border: 4px solid var(--party-libertarian);
+}
+
+.party-G {
+  border: 4px solid var(--party-green);
+}
+
+.party-I {
+  border: 4px solid var(--party-independent);
+}
+
+.party-unknown {
+  border: 4px solid var(--placeholder-color);
+}

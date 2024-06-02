@@ -22,22 +22,26 @@ export enum RaceType {
   Primary = "primary",
   PrimaryRunoff = "primary_runoff",
   Convention = "convention",
+  Special = "special",
 }
 
 export type CandidateSummary = {
   FEC_name: string;
   common_name: string;
-  defeated: boolean;
-  withdrew: boolean;
+  defeated?: boolean;
+  withdrew?: boolean;
   defeated_race: RaceType;
   oppose_total: number;
   support_total: number;
   races: RaceType[];
+  expenditure_races?: RaceType[];
+  expenditure_committees?: string[];
 } & Pick<Candidate, "candidate_id" | "incumbent_challenge" | "party">;
 
 export interface Race {
   candidates: RaceCandidate[];
   type: RaceType;
+  party?: Party;
   date: string;
 }
 

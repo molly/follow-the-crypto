@@ -1,15 +1,8 @@
 "use client";
 import { ElectionGroup } from "@/app/types/Elections";
 import { RaceExpenditureGroup } from "@/app/types/Expenditures";
-import Candidate from "./Candidate";
+import CandidateResult from "./CandidateResult";
 import styles from "./page.module.css";
-
-const getFirstLastName = (name: string) => {
-  let nameParts = name.split(" ");
-  const firstName = nameParts[0].toUpperCase();
-  const lastName = nameParts[nameParts.length - 1].toUpperCase();
-  return [firstName, lastName];
-};
 
 export default function RaceSummary({
   raceId,
@@ -31,15 +24,9 @@ export default function RaceSummary({
         <span className={styles.candidateOpposeHeader}>Oppose</span>
       </>
       {electionData.candidatesOrder.map((candidateName) => {
-        const [firstName, lastName] = getFirstLastName(candidateName);
         const candidateSummary = electionData.candidates[candidateName];
         return (
-          <Candidate
-            key={candidateName}
-            firstName={firstName}
-            lastName={lastName}
-            candidate={candidateSummary}
-          />
+          <CandidateResult key={candidateName} candidate={candidateSummary} />
         );
       })}
     </div>
