@@ -12,13 +12,20 @@ export function formatCurrency(value?: number, round = false): string {
   }).format(value);
 }
 
-export const formatDate = (date: string): string => {
+export const formatDate = (date: Date): string => {
   if (!date) {
     return "";
   }
-  return new Date(date).toLocaleDateString("en-US", {
+  return date.toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
+};
+
+export const formatDateFromString = (date: string): string => {
+  if (!date) {
+    return "";
+  }
+  return formatDate(new Date(date));
 };

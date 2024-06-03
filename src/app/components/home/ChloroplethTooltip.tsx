@@ -70,7 +70,7 @@ function ChloroplethTooltip(
                 {state}
               </Link>
             </h3>
-            <table>
+            <table className="condensed">
               <tbody>
                 <tr>
                   <td className={styles.tooltipTableName}>

@@ -1,4 +1,4 @@
-import { formatCurrency, formatDate } from "../../../utils/utils";
+import { formatCurrency, formatDateFromString } from "../../../utils/utils";
 
 import sharedStyles from "@/app/shared.module.css";
 import { CommitteeDetails } from "@/app/types/Committee";
@@ -23,7 +23,7 @@ export default async function CommitteeDetailsSection({
       .concat(` | ID: ${committee.id}`)
       .concat(
         committee.first_f1_date
-          ? ` | Registration date: ${formatDate(committee.first_f1_date)}`
+          ? ` | Registration date: ${formatDateFromString(committee.first_f1_date)}`
           : "",
       );
   };

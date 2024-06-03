@@ -51,9 +51,9 @@ export default async function CommitteePage({
     <>
       <h1 className={sharedStyles.titleH2}>{titlecasedState}</h1>
       <MoneyCard
+        topText="Cryptocurrency companies and associated people have spent"
         amount={formatCurrency(expenditures.total, true)}
-        verb="spent"
-        influenceSubject={`2024 elections in ${titlecasedState}`}
+        bottomText={`to influence 2024 elections in ${titlecasedState}`}
       />
       <ByRace expenditures={expenditures} stateAbbr={stateAbbr} />
       <ByCommittee expenditures={expenditures} />

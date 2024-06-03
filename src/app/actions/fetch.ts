@@ -1,6 +1,10 @@
 import { db } from "@/app/lib/db";
 
-import { CommitteeConstant, CommitteeDetails } from "@/app/types/Committee";
+import {
+  AllCommitteesSummary,
+  CommitteeConstant,
+  CommitteeDetails,
+} from "@/app/types/Committee";
 import { Contributions } from "@/app/types/Contributions";
 import { ErrorType, isError } from "@/app/utils/errors";
 import { Expenditures } from "../types/Expenditures";
@@ -60,6 +64,43 @@ export const fetchConstant = cache(
 );
 
 // ----------------------------------------------------------------------
+
+// TOTALS ---------------------------------------------------------------
+export const fetchCommitteeTotalReceipts = cache(
+  async (): Promise<number | ErrorType> => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    const snapshot = await fetchSnapshot("totals", "committees");
+    if (isError(snapshot)) {
+      return snapshot as ErrorType;
+    } else {
+      return snapshot.receipts;
+    }
+  },
+);
+
+export const fetchCommitteeTotalDisbursements = cache(
+  async (): Promise<number | ErrorType> => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    const snapshot = await fetchSnapshot("totals", "committees");
+    if (isError(snapshot)) {
+      return snapshot as ErrorType;
+    } else {
+      return snapshot.disbursements;
+    }
+  },
+);
+
+// ALL COMMITTEES -------------------------------------------------------
+export const fetchSuperPACsByReceipts = cache(
+  async (): Promise<AllCommitteesSummary[] | ErrorType> => {
+    const data = await fetchSnapshot("allCommittees", "superPacs");
+    if (isError(data)) {
+      return data as ErrorType;
+    } else {
+      return data.by_receipts as AllCommitteesSummary[];
+    }
+  },
+);
 
 // COMMITTEES -----------------------------------------------------------
 

@@ -45,6 +45,12 @@
   text-align: center;
 }
 
+.smallCardSkeleton {
+  composes: smallCard;
+  display: flex;
+  justify-content: center;
+}
+
 .fullWidthCard {
   composes: card;
   grid-column: 1/13;

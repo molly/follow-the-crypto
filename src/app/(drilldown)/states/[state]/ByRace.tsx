@@ -5,8 +5,7 @@ import { CommitteeConstant } from "@/app/types/Committee";
 import { Expenditures } from "@/app/types/Expenditures";
 import { isError } from "@/app/utils/errors";
 import { humanizeList } from "@/app/utils/humanize";
-import { getFullPartyName } from "@/app/utils/party";
-import { sortRaces } from "@/app/utils/races";
+import { getRaceName, getSubraceName, sortRaces } from "@/app/utils/races";
 import { getRandomInt, range } from "@/app/utils/range";
 import { formatCurrency } from "@/app/utils/utils";
 import Link from "next/link";
@@ -20,31 +19,6 @@ import {
   Race,
 } from "@/app/types/Elections";
 import { getFirstLastName } from "@/app/utils/names";
-
-const getRaceName = (raceId: string) => {
-  const raceParts = raceId.split("-");
-  if (raceParts[1] === "S") {
-    return "Senate";
-  } else if (raceParts[1] === "H") {
-    return `House District ${parseInt(raceParts[2], 10)}`;
-  }
-};
-
-const getSubraceName = (race?: Race) => {
-  if (!race) {
-    return "";
-  }
-  if (race.type === "general") {
-    return "general election";
-  } else {
-    const party = race.party ? getFullPartyName(race.party) : null;
-    const raceName = race.type.replace("_", " ");
-    if (party) {
-      return `${party} ${raceName}`;
-    }
-    return raceName;
-  }
-};
 
 const renderAmount = (amount: number, supportOppose: string) => {
   if (amount > 0) {

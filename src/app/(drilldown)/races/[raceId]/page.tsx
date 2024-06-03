@@ -45,11 +45,12 @@ export default async function RacePage({
   const expenditures = expendituresData as Expenditures;
   const elections = electionsData as ElectionsByState;
 
-  return (
+  return elections[shortRaceId].races.map((race) => (
     <RaceSummary
-      raceId={params.raceId}
-      race={expenditures.by_race[shortRaceId]}
+      key={`${shortRaceId}-${race.type}`}
+      race={race}
       electionData={elections[shortRaceId]}
+      expenditures={expenditures.by_race[params.raceId]}
     />
-  );
+  ));
 }

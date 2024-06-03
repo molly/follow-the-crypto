@@ -1,7 +1,7 @@
 import { fetchConstant } from "@/app/actions/fetch";
 import { Contribution as ContributionType } from "@/app/types/Contributions";
 import { titlecaseCompany } from "@/app/utils/titlecase";
-import { formatCurrency, formatDate } from "@/app/utils/utils";
+import { formatCurrency, formatDateFromString } from "@/app/utils/utils";
 import {
   DonorType,
   IndividualDonorType,
@@ -80,7 +80,7 @@ function ContributionDate({
     return (
       <span
         className={styles.donorDate}
-      >{` – ${formatDate(contribution.contribution_receipt_date)}`}</span>
+      >{` – ${formatDateFromString(contribution.contribution_receipt_date)}`}</span>
     );
   } else if (
     "oldest" in contribution &&
@@ -91,7 +91,7 @@ function ContributionDate({
     return (
       <div
         className={styles.donorDateRange}
-      >{`${contribution.total} contribution${contribution.total > 1 ? "s" : ""} from ${formatDate(contribution.oldest)} to ${formatDate(contribution.newest)}`}</div>
+      >{`${contribution.total} contribution${contribution.total > 1 ? "s" : ""} from ${formatDateFromString(contribution.oldest)} to ${formatDateFromString(contribution.newest)}`}</div>
     );
   }
   return null;

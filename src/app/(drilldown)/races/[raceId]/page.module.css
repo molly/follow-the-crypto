@@ -1,9 +1,35 @@
+.raceSummaryCard {
+  composes: fullWidthCard from "@/app/shared.module.css";
+  display: grid;
+  grid-template-columns: [left] 1fr [right] 1fr;
+  gap: 2rem;
+}
+
+.raceSummaryDetails {
+  grid-column: span 2;
+}
+
+.raceCandidates {
+  grid-column: left;
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 0.5rem;
+}
+
+.spendingHeader {
+  grid-column: span 4;
+}
+
 .candidates {
+  grid-column: left;
   display: grid;
   grid-template-columns: [candidate] fit-content(50%) [support] 12ch [oppose] 12ch [notes] auto;
   gap: 0.5rem 1rem;
   align-items: center;
-  margin-top: 1rem;
+}
+
+.candidate {
+  grid-column: candidate;
 }
 
 .candidateSupportHeader {
@@ -34,6 +60,14 @@
 .notes {
   color: var(--secondary-text);
   font-style: italic;
+}
+
+.spendingBreakdown {
+  grid-column: right;
+}
+
+.noSpending {
+  grid-column: right;
 }
 
 @media (min-width: 600px) {

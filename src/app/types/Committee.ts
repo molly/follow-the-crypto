@@ -32,7 +32,25 @@ export type CommitteeDetails = CommitteeConstant &
     CommitteeTotals,
     | "contributions"
     | "contribution_refunds"
+    | "disbursements"
     | "net_contributions"
     | "receipts"
     | "independent_expenditures"
   >;
+
+export type AllCommitteesSummary = {
+  is_crypto: boolean;
+  description?: string;
+} & Pick<
+  CommitteeTotals,
+  | "committee_id"
+  | "committee_name"
+  | "committee_type"
+  | "committee_type_full"
+  | "committee_designation"
+  | "committee_designation_full"
+  | "receipts"
+  | "disbursements"
+  | "independent_expenditures"
+  | "last_cash_on_hand_end_period"
+>;

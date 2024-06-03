@@ -11,11 +11,13 @@ function getPartyClass(party?: string | null) {
 
 export default function Candidate({
   candidate,
-  candidateNameClass,
+  candidateClassName,
+  candidateNameClassName,
   defeated,
 }: {
   candidate: CandidateSummary;
-  candidateNameClass?: string;
+  candidateClassName?: string;
+  candidateNameClassName?: string;
   defeated?: boolean;
 }) {
   const [firstName, lastName] = getFirstLastName(candidate.common_name);
@@ -25,7 +27,9 @@ export default function Candidate({
   }
   return (
     <>
-      <div className={styles.candidateInfoBlock}>
+      <div
+        className={`${styles.candidateInfoBlock} ${candidateClassName || ""}`}
+      >
         <div className={candidateImageWrapperClassNames}>
           <object
             type="image/webp"
@@ -46,7 +50,9 @@ export default function Candidate({
         </div>
 
         <span>
-          <span className={candidateNameClass}>{candidate.common_name}</span>
+          <span className={candidateNameClassName}>
+            {candidate.common_name}
+          </span>
           {candidate.party && (
             <span className="secondary"> ({candidate.party})</span>
           )}

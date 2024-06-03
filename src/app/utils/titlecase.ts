@@ -25,6 +25,17 @@ export function titlecaseCompany(str: string): string {
   return titlecased;
 }
 
+export function titlecaseCommittee(str: string): string {
+  let titlecased = titlecase(str);
+  titlecased = titlecased.replace(
+    /\b(SMP|LCV|AFC|UDP|PAC|I{1,3})\b/gi,
+    function (txt) {
+      return txt.toUpperCase();
+    },
+  );
+  return titlecased;
+}
+
 export function titlecaseIndividualName(str: string): string {
   return str.replace(/\b[\w.']+\b/, function (x) {
     let cased = titlecase(x);

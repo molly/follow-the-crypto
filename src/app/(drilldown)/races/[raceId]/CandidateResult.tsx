@@ -3,43 +3,34 @@ import { CandidateSummary } from "@/app/types/Elections";
 import { formatCurrency } from "@/app/utils/utils";
 import styles from "./page.module.css";
 
-function getPartyClass(party?: string | null) {
-  if (party && party.length && ["R", "D", "L", "G", "I"].includes(party[0])) {
-    return `party-${party}`;
-  }
-  return "party-unknown";
-}
-
 export default function CandidateResult({
   candidate,
+  supportTotal,
+  opposeTotal,
 }: {
   candidate: CandidateSummary;
+  supportTotal: number;
+  opposeTotal: number;
 }) {
-  let infoBlockClassNames = `${styles.candidateInfoBlock} ${styles[getPartyClass(candidate.party)]}`;
   return (
     <>
       <Candidate
         candidate={candidate}
-        candidateNameClass={
+        candidateClassName={styles.candidate}
+        candidateNameClassName={
           candidate.defeated
             ? styles.defeatedCandidateName
             : styles.activeCandidateName
         }
       />
       <div className={styles.candidateSupportOppose}>
-        {candidate.support_total > 0 &&
-          formatCurrency(candidate.support_total, true)}
+        {supportTotal > 0 && formatCurrency(supportTotal, true)}
       </div>
       <div className={styles.candidateSupportOppose}>
-        {candidate.oppose_total > 0 &&
-          formatCurrency(candidate.oppose_total, true)}
+        {opposeTotal > 0 && formatCurrency(opposeTotal, true)}
       </div>
       <div className={styles.notes}>
         {candidate.withdrew && `Withdrew from the race.`}
-        {!candidate.withdrew &&
-          candidate.defeated &&
-          candidate.defeated_race &&
-          `Defeated in the ${candidate.defeated_race.replace("_", " ")} election.`}
       </div>
     </>
   );

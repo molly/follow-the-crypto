@@ -1,3 +1,5 @@
+import { formatCurrency } from "./utils";
+
 const NUMBERS = [
   "zero",
   "one",
@@ -16,6 +18,21 @@ export const humanizeNumber = (value: number): string => {
     return NUMBERS[value];
   }
   return value.toString();
+};
+
+// This always rounds DOWN.
+export const humanizeRoundedCurrency = (
+  value: number,
+  round = false,
+): string => {
+  if (value > 1000000) {
+    const rounded = Math.floor(value / 1000000);
+    return `$${rounded} million`;
+  } else if (value > 1000) {
+    const rounded = Math.floor(value / 1000);
+    return `$${rounded} thousand`;
+  }
+  return formatCurrency(value, true);
 };
 
 export const pluralize = (
