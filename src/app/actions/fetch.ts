@@ -7,7 +7,7 @@ import {
 } from "@/app/types/Committee";
 import { Contributions } from "@/app/types/Contributions";
 import { ErrorType, isError } from "@/app/utils/errors";
-import { Expenditures } from "../types/Expenditures";
+import { Expenditures, ExpendituresByCandidate } from "../types/Expenditures";
 
 import {
   QuerySnapshot,
@@ -160,8 +160,30 @@ export const fetchStateExpenditures = cache(
     fetchSnapshot("expendituresByState", stateAbbr),
 );
 
-// ELECTIONS -------------------------------------------------------------
+//ELECTIONS -------------------------------------------------------------
+export const fetchAllStateElections = cache(
+  async (): Promise<Record<string, ElectionsByState> | ErrorType> => {
+    const data = await fetchCollection("raceDetails");
+    if (isError(data)) {
+      return data as ErrorType;
+    } else {
+      const electionsData = data as QuerySnapshot;
+      const electionsByState: Record<string, ElectionsByState> = {};
+      electionsData.docs.forEach((doc) => {
+        electionsByState[doc.id] = doc.data() as ElectionsByState;
+      });
+      return electionsByState;
+    }
+  },
+);
+
 export const fetchStateElections = cache(
   async (stateAbbr: string): Promise<ElectionsByState | ErrorType> =>
     fetchSnapshot("raceDetails", stateAbbr),
+);
+
+// CANDIDATES -----------------------------------------------------------
+export const fetchCandidateExpenditures = cache(
+  async (): Promise<ExpendituresByCandidate | ErrorType> =>
+    fetchSnapshot("candidates", "bySpending"),
 );

@@ -1,6 +1,5 @@
 import { fetchSuperPACsByReceipts } from "@/app/actions/fetch";
 import styles from "@/app/page.module.css";
-import sharedStyles from "@/app/shared.module.css";
 import { AllCommitteesSummary } from "@/app/types/Committee";
 import { isError } from "@/app/utils/errors";
 import { titlecaseCommittee } from "@/app/utils/titlecase";
@@ -9,13 +8,16 @@ import Link from "next/link";
 
 function TableContents({ superPACs }: { superPACs: AllCommitteesSummary[] }) {
   let lastCryptoIndex = -1;
-  for (let i = 0; i < superPACs.length; i++) {
+  for (let i = superPACs.length - 1; i >= 0; i--) {
     if (superPACs[i].is_crypto) {
       lastCryptoIndex = i;
+      break;
     }
   }
-  const superPACsLimited =
-    lastCryptoIndex < 10 ? superPACs.slice(0, 10) : superPACs;
+
+  // Don't show a bunch of extra rows if they're all unrelated PACs
+  const limit = Math.ceil(lastCryptoIndex / 10) * 10;
+  const superPACsLimited = superPACs.slice(0, limit);
 
   return (
     <>
@@ -41,15 +43,17 @@ function TableContents({ superPACs }: { superPACs: AllCommitteesSummary[] }) {
             }
           >
             <td>{ind + 1}</td>
-            <td>{committeeIdentifier}</td>
-            <td className="secondary">{committee.description}</td>
-            <td className={styles.superPacMoneyCell}>
+            <td className="text-cell">{committeeIdentifier}</td>
+            <td className={`text-cell ${styles.tableCellCollapse1}`}>
+              {committee.description}
+            </td>
+            <td className="number-cell">
               {formatCurrency(committee.receipts, true)}
             </td>
-            <td className={styles.superPacMoneyCell}>
+            <td className={`number-cell ${styles.tableCellCollapse2}`}>
               {formatCurrency(committee.disbursements, true)}
             </td>
-            <td className={styles.superPacMoneyCell}>
+            <td className={`number-cell ${styles.tableCellCollapse2}`}>
               {formatCurrency(committee.last_cash_on_hand_end_period, true)}
             </td>
           </tr>
@@ -77,25 +81,41 @@ export default async function SuperPACsByReceipts() {
   }
 
   return (
-    <div className={sharedStyles.fullWidthCard}>
+    <div className={styles.superPacCard}>
       <div>
         Despite the relatively small size of the cryptocurrency industry,
-        cryptocurrency-focused super PACs have raised more than almost any other
-        super PAC.
-        <h2>All super PACs</h2>
-        <table className={styles.superPacTable}>
-          <thead>
-            <tr>
-              <th></th>
-              <th>Name</th>
-              <th>Description</th>
-              <th className={styles.superPacMoneyCell}>Receipts</th>
-              <th className={styles.superPacMoneyCell}>Disbursements</th>
-              <th className={styles.superPacMoneyCell}>Cash on hand</th>
-            </tr>
-          </thead>
-          <tbody>{tableContents}</tbody>
-        </table>
+        cryptocurrency-focused super PACs are among the most well-funded this
+        election cycle.
+        <h2 className={styles.superPacHeader}>All super PACs</h2>
+        <div className={styles.superPacTableWrapper}>
+          <table className={styles.superPacTable}>
+            <thead>
+              <tr>
+                <th></th>
+                <th className="text-cell">Name</th>
+                <th className={`text-cell ${styles.tableCellCollapse1}`}>
+                  Description
+                </th>
+                <th
+                  className={`number-cell ${styles.superPacTableCellMinWidth}`}
+                >
+                  Receipts
+                </th>
+                <th
+                  className={`number-cell ${styles.superPacTableCellMinWidth} ${styles.tableCellCollapse2}`}
+                >
+                  Disbursements
+                </th>
+                <th
+                  className={`number-cell ${styles.superPacTableCellMinWidth} ${styles.tableCellCollapse2}`}
+                >
+                  Cash on hand
+                </th>
+              </tr>
+            </thead>
+            <tbody>{tableContents}</tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

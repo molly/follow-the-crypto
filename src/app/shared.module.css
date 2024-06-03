@@ -20,6 +20,7 @@
   text-shadow: 0.25rem 0.25rem var(--accent);
   font-size: clamp(2rem, 10vw, 8rem);
   text-align: center;
+  margin: 0;
 }
 
 .titleH2 {
@@ -37,6 +38,7 @@
   padding: 1rem;
   border-radius: var(--border-radius);
   box-shadow: var(--shadow-lg);
+  border: 1px solid var(--card-border);
 }
 
 .smallCard {

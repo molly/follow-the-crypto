@@ -63,7 +63,7 @@ function ChloroplethTooltip(
             exit="hidden"
             transition={{ duration: 0.2, ease: "easeInOut" }}
           >
-            <h3>
+            <h3 className="no-margin">
               <Link
                 href={`/states/${state.toLocaleLowerCase().split(" ").join("-")}`}
               >

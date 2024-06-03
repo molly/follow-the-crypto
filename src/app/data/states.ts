@@ -105,3 +105,5 @@ export const STATES_BY_FULL: Record<string, string> = {
   Wisconsin: "WI",
   Wyoming: "WY",
 };
+
+export const SINGLE_MEMBER_STATES = ["AK", "DE", "ND", "SD", "VT", "WY"];

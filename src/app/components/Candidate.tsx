@@ -1,5 +1,6 @@
 import { CandidateSummary } from "@/app/types/Elections";
 import { getFirstLastName } from "@/app/utils/names";
+import { ExpenditureCandidateSummary } from "../types/Expenditures";
 import styles from "./candidate.module.css";
 
 function getPartyClass(party?: string | null) {
@@ -15,7 +16,7 @@ export default function Candidate({
   candidateNameClassName,
   defeated,
 }: {
-  candidate: CandidateSummary;
+  candidate: CandidateSummary | ExpenditureCandidateSummary;
   candidateClassName?: string;
   candidateNameClassName?: string;
   defeated?: boolean;

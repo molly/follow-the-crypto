@@ -1,3 +1,4 @@
+import { CandidateSummary } from "./Elections";
 import { ScheduleE } from "./FECTypes";
 
 enum CandidateOffice {
@@ -48,4 +49,14 @@ export interface Expenditures {
   by_committee: Record<string, ExpenditureGroup>;
   by_race: Record<string, RaceExpenditureGroup>;
   total: number;
+}
+
+export type ExpenditureCandidateSummary = {
+  state: string;
+  race: string;
+} & CandidateSummary;
+
+export interface ExpendituresByCandidate {
+  order: string[];
+  candidates: Record<string, ExpenditureCandidateSummary>;
 }

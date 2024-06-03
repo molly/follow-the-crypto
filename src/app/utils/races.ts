@@ -1,5 +1,6 @@
 import { Race } from "@/app/types/Elections";
 import { getFullPartyName } from "@/app/utils/party";
+import { SINGLE_MEMBER_STATES } from "../data/states";
 import { Expenditure } from "../types/Expenditures";
 
 // Senate race first, then house races ordered by district
@@ -17,10 +18,24 @@ export const sortRaces = (a: string, b: string) => {
 
 export const getRaceName = (raceId: string) => {
   const raceParts = raceId.split("-");
-  if (raceParts[1] === "S") {
+  let state, office, district;
+  if (raceParts[0].length == 1) {
+    // ShortID
+    office = raceParts[0];
+    district = raceParts.length > 1 ? raceParts[1] : null;
+  } else {
+    // Full ID with state
+    state = raceParts[0];
+    office = raceParts[1];
+    district = raceParts.length > 2 ? raceParts[2] : null;
+  }
+  if (office === "S") {
     return "Senate";
-  } else if (raceParts[1] === "H") {
-    return `House District ${parseInt(raceParts[2], 10)}`;
+  } else if (office === "H") {
+    if (!district || (state && SINGLE_MEMBER_STATES.includes(state))) {
+      return "House";
+    }
+    return `House District ${parseInt(district, 10)}`;
   }
 };
 

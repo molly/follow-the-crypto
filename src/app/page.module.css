@@ -1,3 +1,24 @@
+.titleWrapper {
+  grid-column: 1 / 13;
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+.title {
+  composes: accent-text from "@/app/shared.module.css";
+  text-shadow: 0.25rem 0.25rem var(--accent);
+  font-size: clamp(2rem, 10vw, 6rem);
+  text-align: center;
+  margin: 0 2rem;
+}
+
+.logoArrow {
+  composes: title;
+  font-weight: bold;
+  font-size: 6rem;
+}
+
 .mapContainer {
   grid-column: 1 / 13;
 }
@@ -17,15 +38,70 @@
   height: 2.4rem;
 }
 
-.superPacTable {
-  width: 100%;
-  border-collapse: collapse;
+.superPacCard,
+.influencedCard {
+  composes: fullWidthCard from "@/app/shared.module.css";
+  position: relative;
+
+  &:after {
+    position: absolute;
+    bottom: var(--border-radius);
+    left: 0;
+    pointer-events: none;
+    content: "";
+    height: 4rem;
+    width: 100%;
+    background-image: linear-gradient(
+      0deg,
+      rgba(var(--card-background-rgb), 1),
+      rgba(var(--card-background-rgb), 0)
+    );
+  }
 }
 
-.superPacMoneyCell {
-  text-align: right;
+.superPacTableWrapper,
+.influencedTableWrapper {
+  max-height: 25rem;
+  overflow-y: scroll;
+  padding-bottom: 2rem;
+}
+
+.superPacTable,
+.influencedTable {
+  width: 100%;
+}
+
+.superPacRow,
+.influencedTableRow {
+  &:nth-child(odd) {
+    background: var(--table-background-secondary);
+  }
 }
 
 .superPacCryptoRow {
-  background-color: var(--color-blue-100);
+  background-color: var(--table-highlight-color);
+}
+
+.superPacTableCellMinWidth {
+  min-width: 7rem;
+}
+
+.goalAccomplished {
+  color: green;
+}
+
+.goalFailed {
+  color: red;
+}
+
+@media (max-width: 1000px) {
+  .tableCellCollapse1 {
+    display: none;
+  }
+}
+
+@media (max-width: 800px) {
+  .tableCellCollapse2 {
+    display: none;
+  }
 }

@@ -39,7 +39,11 @@ function Defeated({
   if (!candidate.defeated) {
     return null;
   }
-  const defeatedRace = races.find((r) => r.type === candidate.defeated_race);
+  const defeatedRace = races.find(
+    (r) =>
+      r.type === candidate.defeated_race &&
+      r.candidates.some((c) => c.name === candidate.common_name),
+  );
   let raceStr;
   if (defeatedRace) {
     raceStr = getSubraceName(defeatedRace as Race);

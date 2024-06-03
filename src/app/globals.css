@@ -39,10 +39,14 @@
   --background-start: var(--color-slate-50);
   --background-end: var(--color-slate-200);
   --card-background: #fefefe;
+  --card-background-rgb: 254, 254, 254;
+  --card-border: var(--color-slate-200);
   --breadcrumbs-background: var(--color-blue-800);
-  --table-background-secondary: var(--background-start);
+  --table-background-secondary: var(--color-slate-100);
   --map-background: var(--color-white);
   --placeholder-color: var(--color-slate-300);
+  --table-color: var(--color-slate-200);
+  --table-highlight-color: var(--color-blue-100);
 
   --main-text: var(--color-slate-950);
   --text-stroke: var(--color-slate-950);
@@ -70,8 +74,12 @@
     --background-start: var(--color-slate-900);
     --background-end: var(--color-slate-950);
     --card-background: var(--color-slate-800);
+    --card-background-rgb: 30, 41, 59;
+    --card-border: var(--color-slate-700);
     --map-background: var(--card-background);
     --placeholder-color: var(--color-slate-300);
+    --table-color: var(--color-slate-700);
+    --table-highlight-color: var(--color-blue-900);
 
     --main-text: var(--color-slate-200);
     --text-stroke: var(--color-slate-200);
@@ -88,8 +96,6 @@
 
 * {
   box-sizing: border-box;
-  padding: 0;
-  margin: 0;
 }
 
 html,
@@ -104,6 +110,7 @@ body {
   background: var(--background-start);
   background-image: var(--background-gradient);
   line-height: 1.2;
+  margin: 0;
 }
 
 a {
@@ -112,16 +119,9 @@ a {
   text-underline-offset: 3px;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  margin-bottom: 1rem;
-}
-
 table {
+  border-collapse: collapse;
+
   td,
   th {
     padding: 0.5rem;
@@ -135,6 +135,25 @@ table.condensed {
   }
 }
 
+table.lined {
+  td,
+  th {
+    border: 1px solid var(--table-color);
+  }
+}
+
+.text-cell {
+  text-align: left;
+}
+
+.center-cell {
+  text-align: center;
+}
+
+.number-cell {
+  text-align: right;
+}
+
 .no-margin {
   margin-bottom: 0;
   margin-top: 0;
@@ -144,6 +163,11 @@ table.condensed {
 
 .secondary {
   color: var(--secondary-text);
+}
+
+a.unstyled {
+  color: inherit;
+  text-decoration: none;
 }
 
 .smaller {
