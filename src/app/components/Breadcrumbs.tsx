@@ -5,7 +5,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { fetchConstant } from "../actions/fetch";
+import { STATES_BY_ABBR } from "../data/states";
 import { CommitteeConstant } from "../types/Committee";
+import { getRaceName } from "../utils/races";
 import { titlecase } from "../utils/titlecase";
 import styles from "./header.module.css";
 
@@ -25,7 +27,7 @@ export default function Breadcrumbs() {
         if (isError(committeeDetails)) {
           return;
         }
-        setCommittees(committeeDetails);
+        setCommittees(committeeDetails as Record<string, CommitteeConstant>);
       }
     })();
   }, [pathname]);
@@ -40,6 +42,9 @@ export default function Breadcrumbs() {
         return segment;
       }
       return committees[segment].name;
+    } else if (segments[0] === "races" && index === 1) {
+      const state = segment.split("-")[0];
+      return `${STATES_BY_ABBR[state]} ${getRaceName(segment)} election`;
     }
     return titlecase(segment);
   };

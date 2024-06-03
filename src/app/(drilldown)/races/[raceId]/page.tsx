@@ -2,10 +2,12 @@ import {
   fetchStateElections,
   fetchStateExpenditures,
 } from "@/app/actions/fetch";
+import { STATES_BY_ABBR } from "@/app/data/states";
 import sharedStyles from "@/app/shared.module.css";
 import { ElectionsByState } from "@/app/types/Elections";
 import { Expenditures } from "@/app/types/Expenditures";
 import { is4xx, isError } from "@/app/utils/errors";
+import { getRaceName } from "@/app/utils/races";
 import type { Metadata } from "next";
 import RaceSummary from "./RaceSummary";
 
@@ -14,8 +16,9 @@ export async function generateMetadata({
 }: {
   params: { raceId: string };
 }): Promise<Metadata> {
+  const state = params.raceId.split("-")[0];
   return {
-    title: `TBD | Follow the Crypto`,
+    title: `${STATES_BY_ABBR[state]} ${getRaceName(params.raceId)} election | Follow the Crypto`,
   };
 }
 

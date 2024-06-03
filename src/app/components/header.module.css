@@ -5,6 +5,7 @@
 .logo {
   composes: accent-text from "@/app/shared.module.css";
   padding: 1rem;
+  margin: 0;
   font-size: 1.5rem;
   font-weight: bold;
 }
@@ -16,10 +17,10 @@
 
 .breadcrumbsContainer {
   display: flex;
-  padding-top: 1rem;
+  padding: 1rem;
+  margin: 0;
   list-style: none;
   background-color: var(--breadcrumbs-background);
-  padding: 1rem;
 }
 
 .breadcrumb {
