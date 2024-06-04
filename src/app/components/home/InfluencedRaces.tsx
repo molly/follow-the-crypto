@@ -1,9 +1,12 @@
+"use client";
+
+import useFade from "@/app/hooks/useFade";
 import styles from "@/app/page.module.css";
 import { range } from "@/app/utils/range";
-import { Suspense } from "react";
+import { motion, useScroll } from "framer-motion";
+import { Suspense, useRef } from "react";
 import { CandidateSkeleton } from "../Candidate";
 import Skeleton from "../skeletons/Skeleton";
-import { InfluencedRacesTableContents } from "./InfluencedRacesTableContents";
 
 function InfluencedRacesTableContentsSkeleton() {
   return range(5).map((i) => (
@@ -37,13 +40,23 @@ function InfluencedRacesTableContentsSkeleton() {
   ));
 }
 
-export async function InfluencedRaces() {
+export function InfluencedRaces({ children }: { children: React.ReactNode }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ container: containerRef });
+  const fade = useFade(scrollYProgress);
+
   return (
-    <div className={styles.influencedCard}>
+    <div className={`${styles.influencedCard}`}>
       These super PACs and other cryptocurrency-funded groups have already spent
       heavily to influence the outcome of multiple Congressional races.
       <h2>Races influenced by crypto industry money</h2>
-      <div className={styles.influencedTableWrapper}>
+      <motion.div
+        className={styles.influencedTableWrapper}
+        ref={containerRef}
+        style={{
+          maskImage: fade,
+        }}
+      >
         <table className={styles.influencedTable}>
           <thead>
             <tr>
@@ -57,11 +70,11 @@ export async function InfluencedRaces() {
           </thead>
           <tbody>
             <Suspense fallback={<InfluencedRacesTableContentsSkeleton />}>
-              <InfluencedRacesTableContents />
+              {children}
             </Suspense>
           </tbody>
         </table>
-      </div>
+      </motion.div>
     </div>
   );
 }

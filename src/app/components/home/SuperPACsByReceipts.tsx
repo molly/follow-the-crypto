@@ -1,7 +1,10 @@
-import TableContents from "@/app/components/home/SuperPACsByReceiptsTableContents";
+"use client";
+
+import useFade from "@/app/hooks/useFade";
 import styles from "@/app/page.module.css";
 import { range } from "@/app/utils/range";
-import { Suspense } from "react";
+import { motion, useScroll } from "framer-motion";
+import { Suspense, useRef } from "react";
 import Skeleton from "../skeletons/Skeleton";
 
 function TableContentsSkeleton() {
@@ -29,7 +32,15 @@ function TableContentsSkeleton() {
   });
 }
 
-export default async function SuperPACsByReceipts() {
+export default function SuperPACsByReceipts({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ container: containerRef });
+  const fade = useFade(scrollYProgress);
+
   return (
     <div className={styles.superPacCard}>
       <div>
@@ -37,7 +48,11 @@ export default async function SuperPACsByReceipts() {
         cryptocurrency-focused super PACs are among the most well-funded this
         election cycle.
         <h2 className={styles.superPacHeader}>All super PACs</h2>
-        <div className={styles.superPacTableWrapper}>
+        <motion.div
+          className={styles.superPacTableWrapper}
+          ref={containerRef}
+          style={{ maskImage: fade }}
+        >
           <table className={styles.superPacTable}>
             <thead>
               <tr>
@@ -65,11 +80,11 @@ export default async function SuperPACsByReceipts() {
             </thead>
             <tbody>
               <Suspense fallback={<TableContentsSkeleton />}>
-                <TableContents />
+                {children}
               </Suspense>
             </tbody>
           </table>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

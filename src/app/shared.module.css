@@ -74,6 +74,14 @@
   padding: 0.5rem 0;
 }
 
+.hasFade {
+  mask-size: 100% 100%;
+  mask-position:
+    0 0,
+    100% 0;
+  mask-repeat: no-repeat, no-repeat;
+}
+
 @media (min-width: 500px) {
   .mainGrid {
     padding: 0.5rem 2rem;

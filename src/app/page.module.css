@@ -43,28 +43,13 @@
 .influencedCard {
   composes: fullWidthCard from "@/app/shared.module.css";
   position: relative;
-
-  &:after {
-    position: absolute;
-    bottom: var(--border-radius);
-    left: 0;
-    pointer-events: none;
-    content: "";
-    height: 4rem;
-    width: 100%;
-    background-image: linear-gradient(
-      0deg,
-      rgba(var(--card-background-rgb), 1),
-      rgba(var(--card-background-rgb), 0)
-    );
-  }
 }
 
 .superPacTableWrapper,
 .influencedTableWrapper {
+  composes: hasFade from "@/app/shared.module.css";
   max-height: 25rem;
   overflow-y: scroll;
-  padding-bottom: 2rem;
 }
 
 .superPacTable,

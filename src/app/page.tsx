@@ -1,8 +1,10 @@
 import { Suspense } from "react";
 import { MoneyCardSkeleton } from "./components/MoneyCard";
 import { InfluencedRaces } from "./components/home/InfluencedRaces";
+import { InfluencedRacesTableContents } from "./components/home/InfluencedRacesTableContents";
 import MapWrapper from "./components/home/MapWrapper";
 import SuperPACsByReceipts from "./components/home/SuperPACsByReceipts";
+import SuperPACsByReceiptsTableContents from "./components/home/SuperPACsByReceiptsTableContents";
 import TotalDisbursements from "./components/home/TotalDisbursements";
 import TotalRaised from "./components/home/TotalRaised";
 import USMapSkeleton from "./components/skeletons/USMapSkeleton";
@@ -23,8 +25,12 @@ export default function Home() {
       <Suspense fallback={<MoneyCardSkeleton className={styles.spentCard} />}>
         <TotalDisbursements className={styles.spentCard} />
       </Suspense>
-      <SuperPACsByReceipts />
-      <InfluencedRaces />
+      <SuperPACsByReceipts>
+        <SuperPACsByReceiptsTableContents />
+      </SuperPACsByReceipts>
+      <InfluencedRaces>
+        <InfluencedRacesTableContents />
+      </InfluencedRaces>
       <div className={styles.mapContainer}>
         <Suspense fallback={<USMapSkeleton />}>
           <MapWrapper />
