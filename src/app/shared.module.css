@@ -1,7 +1,7 @@
 .mainGrid {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  gap: 4rem 1rem;
+  gap: 1rem 1rem;
   padding: 0.5rem;
   max-width: var(--max-width);
   margin: 0 auto;
@@ -97,6 +97,7 @@
 
 @media (min-width: 800px) {
   .mainGrid {
+    gap: 2rem 1rem;
     padding: 0.5rem 6rem;
   }
 

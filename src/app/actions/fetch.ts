@@ -68,7 +68,6 @@ export const fetchConstant = cache(
 // TOTALS ---------------------------------------------------------------
 export const fetchCommitteeTotalReceipts = cache(
   async (): Promise<number | ErrorType> => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
     const snapshot = await fetchSnapshot("totals", "committees");
     if (isError(snapshot)) {
       return snapshot as ErrorType;
@@ -80,7 +79,6 @@ export const fetchCommitteeTotalReceipts = cache(
 
 export const fetchCommitteeTotalDisbursements = cache(
   async (): Promise<number | ErrorType> => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
     const snapshot = await fetchSnapshot("totals", "committees");
     if (isError(snapshot)) {
       return snapshot as ErrorType;
