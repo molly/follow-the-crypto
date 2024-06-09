@@ -1,6 +1,5 @@
 import { ElectionGroup, Race } from "@/app/types/Elections";
 import { RaceExpenditureGroup } from "@/app/types/Expenditures";
-import { humanizeList } from "@/app/utils/humanize";
 import { getExpenditureRaceType, getSubraceName } from "@/app/utils/races";
 import { titlecase } from "@/app/utils/titlecase";
 import { formatDate } from "@/app/utils/utils";
@@ -53,30 +52,23 @@ export default function RaceSummary({
         <h2 className="no-margin">{titlecase(getSubraceName(race))}</h2>
         <RaceDate race={race} />
       </div>
+      <h3>Spending by cryptocurrency-focused groups</h3>
       {!hasRelatedSpending && (
-        <RaceCandidates candidates={candidateSummaries} raceType={raceType} />
+        <RaceCandidates
+          candidates={candidateSummaries}
+          raceType={raceType}
+          hasSpendingInOtherRaces={hasSpendingInOtherRaces}
+        />
       )}
 
       {hasRelatedSpending ? (
-        <>
-          <CandidateExpendituresTable
-            candidates={candidates}
-            electionData={electionData}
-            relatedExpenditures={relatedExpenditures}
-          />
-        </>
+        <CandidateExpendituresTable
+          candidates={candidates}
+          electionData={electionData}
+          relatedExpenditures={relatedExpenditures}
+        />
       ) : (
-        <div className={styles.noSpending}>
-          <h3 className={styles.spendingHeader}>
-            Spending by cryptocurrency-focused groups
-          </h3>
-          No cryptocurrency-focused groups have made expenditures pertaining to
-          this specific race
-          {hasSpendingInOtherRaces.length
-            ? `, although they have supported ${humanizeList(hasSpendingInOtherRaces.map((c) => c.common_name))} in other races for this seat`
-            : ""}
-          .
-        </div>
+        <div className={styles.noSpending}></div>
       )}
     </div>
   );

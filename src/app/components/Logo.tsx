@@ -7,7 +7,7 @@ export default function Logo() {
     <header className={sharedStyles.fullWidth}>
       <div className={styles.logo}>
         <Link className={styles.logoText} href="/">
-          ↓ Follow the Crypto
+          &darr; Follow the Crypto &darr;
         </Link>
       </div>
     </header>

@@ -13,6 +13,7 @@ import { Suspense } from "react";
 import styles from "./page.module.css";
 
 import Candidate from "@/app/components/Candidate";
+import Outcome from "@/app/components/Outcome";
 import {
   CandidateSummary,
   ElectionsByState,
@@ -26,41 +27,6 @@ const renderAmount = (amount: number, supportOppose: string) => {
   }
   return "";
 };
-
-function Defeated({
-  candidate,
-  lastName,
-  races,
-}: {
-  candidate: CandidateSummary;
-  lastName: string;
-  races: Race[];
-}) {
-  if (!candidate.defeated) {
-    return null;
-  }
-  const defeatedRace = races.find(
-    (r) =>
-      r.type === candidate.defeated_race &&
-      r.candidates.some((c) => c.name === candidate.common_name),
-  );
-  let raceStr;
-  if (defeatedRace) {
-    raceStr = getSubraceName(defeatedRace as Race);
-  } else {
-    raceStr = candidate.defeated_race.replace("_", " ");
-  }
-  const defeatStr = ` was defeated in the ${raceStr}.`;
-  if (candidate.oppose_total > 0) {
-    return (
-      <div className={styles.candidateResultWithImage}>
-        <Candidate candidate={candidate} defeated={true} />
-        <span>{defeatStr}</span>
-      </div>
-    );
-  }
-  return <div>{`${lastName} ${defeatStr}`}</div>;
-}
 
 function Influenced({
   candidate,
@@ -96,7 +62,16 @@ function Influenced({
       {candidate.withdrew && (
         <div>{`${lastName} later withdrew from the race.`}</div>
       )}
-      <Defeated candidate={candidate} lastName={lastName} races={races} />
+      <div className={styles.candidateResultWithImage}>
+        <Candidate candidate={candidate} defeated={candidate.defeated} />
+        <Outcome
+          candidate={candidate}
+          races={races}
+          inSentence={true}
+          withIcon={false}
+        />
+        .
+      </div>
     </>
   );
 }

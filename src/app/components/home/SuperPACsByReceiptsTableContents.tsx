@@ -8,11 +8,10 @@ import Link from "next/link";
 
 export default async function TableContents() {
   const superPacsData = await fetchSuperPACsByReceipts();
-  let tableContents;
   if (isError(superPacsData)) {
-    tableContents = (
-      <tr className={styles.superPacRow}>
-        <td colSpan={5}>
+    return (
+      <tr className={styles.superPacErrorRow}>
+        <td colSpan={6}>
           Something went wrong when loading the list of super PACs.
         </td>
       </tr>

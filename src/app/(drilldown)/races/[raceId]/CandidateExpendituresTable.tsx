@@ -29,7 +29,7 @@ const getCandidateSupportOppose = (
   return { supportTotal, opposeTotal };
 };
 
-export default function CandidatesSpending({
+export default function CandidateExpendituresTable({
   candidates,
   electionData,
   relatedExpenditures,
@@ -39,29 +39,33 @@ export default function CandidatesSpending({
   relatedExpenditures: Expenditure[];
 }) {
   return (
-    <div className={styles.candidates}>
-      <h3 className={styles.spendingHeader}>
-        Spending by cryptocurrency-focused groups
-      </h3>
-      <>
-        <span className={styles.candidateSupportHeader}>Support</span>
-        <span className={styles.candidateOpposeHeader}>Oppose</span>
-      </>
-      {candidates.map((candidate) => {
-        const candidateSummary = electionData.candidates[candidate.name];
-        const { supportTotal, opposeTotal } = getCandidateSupportOppose(
-          electionData.candidates[candidate.name],
-          relatedExpenditures,
-        );
-        return (
-          <CandidateResult
-            key={candidate.name}
-            candidate={candidateSummary}
-            supportTotal={supportTotal}
-            opposeTotal={opposeTotal}
-          />
-        );
-      })}
-    </div>
+    <table className={styles.candidateExpendituresTable}>
+      <thead>
+        <tr>
+          <th></th>
+          <th className="number-cell">Support</th>
+          <th className="number-cell">Oppose</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {candidates.map((candidate, ind) => {
+          const candidateSummary = electionData.candidates[candidate.name];
+          const { supportTotal, opposeTotal } = getCandidateSupportOppose(
+            electionData.candidates[candidate.name],
+            relatedExpenditures,
+          );
+          return (
+            <CandidateResult
+              key={candidate.name}
+              candidate={candidateSummary}
+              supportTotal={supportTotal}
+              opposeTotal={opposeTotal}
+              rowClass={ind < candidates.length - 1 ? styles.candidateRow : ""}
+            />
+          );
+        })}
+      </tbody>
+    </table>
   );
 }

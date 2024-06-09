@@ -1,5 +1,4 @@
 import { db } from "@/app/lib/db";
-
 import {
   AllCommitteesSummary,
   CommitteeConstant,
@@ -7,6 +6,7 @@ import {
 } from "@/app/types/Committee";
 import { Contributions } from "@/app/types/Contributions";
 import { ErrorType, isError } from "@/app/utils/errors";
+import { Ad, AdGroup } from "../types/Ads";
 import { Expenditures, ExpendituresByCandidate } from "../types/Expenditures";
 
 import {
@@ -184,4 +184,31 @@ export const fetchStateElections = cache(
 export const fetchCandidateExpenditures = cache(
   async (): Promise<ExpendituresByCandidate | ErrorType> =>
     fetchSnapshot("candidates", "bySpending"),
+);
+
+// ADS ------------------------------------------------------------------
+export const fetchAds = cache(
+  async (): Promise<Record<string, AdGroup> | ErrorType> =>
+    fetchSnapshot("ads", "google"),
+);
+
+export const fetchAdsByRace = cache(
+  async (raceId: string): Promise<Ad[] | ErrorType> => {
+    const data = await fetchSnapshot("ads", "google");
+    if (isError(data)) {
+      return data as ErrorType;
+    } else {
+      const flattenedAds = Object.values(
+        data as Record<string, AdGroup>,
+      ).reduce(
+        (acc, adGroup) => [...acc, ...Object.values(adGroup.ads)],
+        [] as Ad[],
+      );
+
+      // Return only ads pertaining to the specified race, sorted by start date
+      return flattenedAds
+        .filter((ad) => ad.race === raceId)
+        .sort((a, b) => a.date_range_start.localeCompare(b.date_range_start));
+    }
+  },
 );

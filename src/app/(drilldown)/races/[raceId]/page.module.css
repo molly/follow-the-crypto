@@ -1,51 +1,37 @@
+.columns {
+  composes: fullWidth from "@/app/shared.module.css";
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.electionsColumn,
+.adsCard {
+  flex: 1 0 50%;
+}
+
 .raceSummaryCard {
-  composes: fullWidthCard from "@/app/shared.module.css";
-  display: grid;
-  grid-template-columns: [left] 1fr [right] 1fr;
-  gap: 2rem;
+  composes: card from "@/app/shared.module.css";
+  grid-column: 1 / 7;
+  margin-bottom: 1rem;
 }
 
-.raceSummaryDetails {
-  grid-column: span 2;
+.candidateExpendituresTable {
+  width: 100%;
 }
 
-.raceCandidates {
-  grid-column: left;
-  display: grid;
-  grid-template-columns: 1fr;
-  row-gap: 0.5rem;
+.candidateRow {
+  border-bottom: 1px solid var(--table-color);
 }
 
-.spendingHeader {
-  grid-column: span 4;
+.candidateCell {
+  width: 60%;
 }
 
-.candidates {
-  grid-column: left;
-  display: grid;
-  grid-template-columns: [candidate] fit-content(50%) [support] 12ch [oppose] 12ch [notes] auto;
-  gap: 0.5rem 1rem;
-  align-items: center;
-}
-
-.candidate {
-  grid-column: candidate;
-}
-
-.candidateSupportHeader {
-  grid-column: support;
-  font-weight: bold;
-  text-align: right;
-}
-
-.candidateOpposeHeader {
-  grid-column: oppose;
-  font-weight: bold;
-  text-align: right;
-}
-
-.candidateSupportOppose {
-  text-align: right;
+.noSpendingCell {
+  vertical-align: middle;
+  text-align: center;
+  padding: 1rem;
 }
 
 .activeCandidateName {
@@ -62,12 +48,44 @@
   font-style: italic;
 }
 
-.spendingBreakdown {
-  grid-column: right;
+.adsCard {
+  composes: card from "@/app/shared.module.css";
+  grid-column: 7 / 13;
+  grid-row: 1 / 2;
 }
 
-.noSpending {
-  grid-column: right;
+.adGroup {
+  margin-top: 1rem;
+  &:not(:last-child) {
+    margin-bottom: 2rem;
+  }
+}
+
+.adEmbed {
+  width: 100%;
+  margin: 0.5rem 0;
+}
+
+.adTakedown {
+  composes: adEmbed;
+  background-color: var(--table-color);
+  aspect-ratio: 16 / 9;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  text-align: center;
+}
+
+.adTakedownWarning {
+  font-size: 4rem;
+}
+
+.adDetails {
+  &:not(:last-child) {
+    margin-right: 0.5rem;
+  }
 }
 
 @media (min-width: 600px) {
@@ -78,6 +96,6 @@
 
 @media (min-width: 1000px) {
   .raceCard {
-    grid-column: 2 / 12;
+    grid-column-start: 1;
   }
 }

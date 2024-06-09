@@ -7,31 +7,33 @@ export default function CandidateResult({
   candidate,
   supportTotal,
   opposeTotal,
+  rowClass,
 }: {
   candidate: CandidateSummary;
   supportTotal: number;
   opposeTotal: number;
+  rowClass?: string;
 }) {
   return (
-    <>
-      <Candidate
-        candidate={candidate}
-        candidateClassName={styles.candidate}
-        candidateNameClassName={
-          candidate.defeated
-            ? styles.defeatedCandidateName
-            : styles.activeCandidateName
-        }
-      />
-      <div className={styles.candidateSupportOppose}>
+    <tr className={rowClass}>
+      <td className={styles.candidateCell}>
+        <Candidate
+          candidate={candidate}
+          candidateClassName={styles.candidate}
+          candidateNameClassName={
+            candidate.defeated
+              ? styles.defeatedCandidateName
+              : styles.activeCandidateName
+          }
+        />
+      </td>
+      <td className="number-cell">
         {supportTotal > 0 && formatCurrency(supportTotal, true)}
-      </div>
-      <div className={styles.candidateSupportOppose}>
+      </td>
+      <td className="number-cell">
         {opposeTotal > 0 && formatCurrency(opposeTotal, true)}
-      </div>
-      <div className={styles.notes}>
-        {candidate.withdrew && `Withdrew from the race.`}
-      </div>
-    </>
+      </td>
+      <td>{candidate.withdrew && `Withdrew from the race.`}</td>
+    </tr>
   );
 }

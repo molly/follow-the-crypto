@@ -1,5 +1,6 @@
 .header {
   background-color: var(--card-background);
+  box-shadow: var(--shadow-md);
 }
 
 .logo {

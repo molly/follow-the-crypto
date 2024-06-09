@@ -9,7 +9,9 @@
 }
 
 .cardSection {
-  padding: 1rem 0;
+  &:not(:last-child) {
+    padding-bottom: 3rem;
+  }
 }
 
 .cardSubsection {

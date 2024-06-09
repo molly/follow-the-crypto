@@ -9,7 +9,9 @@ import { Expenditures } from "@/app/types/Expenditures";
 import { is4xx, isError } from "@/app/utils/errors";
 import { getRaceName } from "@/app/utils/races";
 import type { Metadata } from "next";
+import Ads from "./Ads";
 import RaceSummary from "./RaceSummary";
+import styles from "./page.module.css";
 
 export async function generateMetadata({
   params,
@@ -48,12 +50,22 @@ export default async function RacePage({
   const expenditures = expendituresData as Expenditures;
   const elections = electionsData as ElectionsByState;
 
-  return elections[shortRaceId].races.map((race) => (
-    <RaceSummary
-      key={`${shortRaceId}-${race.type}`}
-      race={race}
-      electionData={elections[shortRaceId]}
-      expenditures={expenditures.by_race[params.raceId]}
-    />
-  ));
+  return (
+    <div className={styles.columns}>
+      <div className={styles.electionsColumn}>
+        {elections[shortRaceId].races.map((race) => (
+          <RaceSummary
+            key={`${shortRaceId}-${race.type}`}
+            race={race}
+            electionData={elections[shortRaceId]}
+            expenditures={expenditures.by_race[params.raceId]}
+          />
+        ))}
+      </div>
+      <div className={styles.adsCard}>
+        <h2 className="no-margin">Ads</h2>
+        <Ads raceId={params.raceId} />
+      </div>
+    </div>
+  );
 }

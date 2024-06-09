@@ -18,3 +18,17 @@
 .editorInput {
   align-self: flex-start;
 }
+
+.adGrid {
+  display: grid;
+  grid-template-columns: [ad] 1fr [region] 1fr;
+  grid-gap: 1rem;
+}
+
+.adCard {
+  grid-column: ad;
+}
+
+.adRegion {
+  grid-column: region;
+}

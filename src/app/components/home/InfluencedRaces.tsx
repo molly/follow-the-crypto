@@ -59,7 +59,7 @@ export function InfluencedRaces({ children }: { children: React.ReactNode }) {
       >
         <table className={styles.influencedTable}>
           <thead>
-            <tr>
+            <tr className={styles.influencedTableHeader}>
               <th className="text-cell">Candidate</th>
               <th className="center-cell">State</th>
               <th className="center-cell">Office</th>

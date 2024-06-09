@@ -55,7 +55,7 @@ export default function SuperPACsByReceipts({
         >
           <table className={styles.superPacTable}>
             <thead>
-              <tr>
+              <tr className={styles.superPacTableHeader}>
                 <th></th>
                 <th className="text-cell">Name</th>
                 <th className={`text-cell ${styles.tableCellCollapse1}`}>

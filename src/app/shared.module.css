@@ -7,6 +7,10 @@
   margin: 0 auto;
 }
 
+.mainWithHeader {
+  margin-top: 1rem;
+}
+
 .accent-text {
   color: transparent;
   text-shadow: 0.1rem 0.1rem var(--accent);
@@ -80,6 +84,14 @@
     0 0,
     100% 0;
   mask-repeat: no-repeat, no-repeat;
+}
+
+.goalAccomplished {
+  color: green;
+}
+
+.goalFailed {
+  color: red;
 }
 
 @media (min-width: 500px) {

@@ -1,7 +1,10 @@
-import { Race } from "@/app/types/Elections";
+import { CandidateSummary, Race } from "@/app/types/Elections";
 import { getFullPartyName } from "@/app/utils/party";
 import { SINGLE_MEMBER_STATES } from "../data/states";
-import { Expenditure } from "../types/Expenditures";
+import {
+  Expenditure,
+  ExpenditureCandidateSummary,
+} from "../types/Expenditures";
 
 // Senate race first, then house races ordered by district
 export const sortRaces = (a: string, b: string) => {
@@ -77,4 +80,22 @@ export const getExpenditureRaceType = (
       return "special";
   }
   return null;
+};
+
+export const getUpcomingRace = (
+  races: Race[],
+  candidate: CandidateSummary | ExpenditureCandidateSummary,
+): Race | undefined => {
+  let nextRace;
+  const involvedRaces = races.filter((r) =>
+    r.candidates.some((c) => c.name === candidate.common_name),
+  );
+  const today = new Date().toISOString().slice(0, 10);
+  for (const r of involvedRaces) {
+    if (r.date >= today) {
+      nextRace = r;
+      break;
+    }
+  }
+  return nextRace;
 };

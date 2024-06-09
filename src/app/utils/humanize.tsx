@@ -20,6 +20,16 @@ export const humanizeNumber = (value: number): string => {
   return value.toString();
 };
 
+export const humanizeApproximateRounded = (value: number): string => {
+  if (value < 1000) {
+    return value.toString();
+  }
+  if (value < 1000000) {
+    return `${Math.floor(value / 1000)}K`;
+  }
+  return `${Math.floor(value / 1000000)}M`;
+};
+
 // This always rounds DOWN.
 export const humanizeRoundedCurrency = (
   value: number,

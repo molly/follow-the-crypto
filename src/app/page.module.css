@@ -49,12 +49,19 @@
 .influencedTableWrapper {
   composes: hasFade from "@/app/shared.module.css";
   max-height: 25rem;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .superPacTable,
 .influencedTable {
   width: 100%;
+}
+
+.superPacTableHeader,
+.influencedTableHeader {
+  position: sticky;
+  top: 0;
+  background-color: var(--card-background);
 }
 
 .superPacRow,
@@ -64,20 +71,19 @@
   }
 }
 
+.superPacErrorRow,
+.influencedErrorRow {
+  height: 10rem;
+  color: var(--secondary-text);
+  text-align: center;
+}
+
 .superPacCryptoRow {
   background-color: var(--table-highlight-color);
 }
 
 .superPacTableCellMinWidth {
   min-width: 7rem;
-}
-
-.goalAccomplished {
-  color: green;
-}
-
-.goalFailed {
-  color: red;
 }
 
 @media (max-width: 1200px) {
