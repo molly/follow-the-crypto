@@ -43,6 +43,7 @@ export interface Race {
   type: RaceType;
   party?: Party;
   date: string;
+  canceled?: boolean;
 }
 
 export interface ElectionGroup {

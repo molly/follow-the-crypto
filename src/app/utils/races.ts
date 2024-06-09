@@ -82,7 +82,21 @@ export const getExpenditureRaceType = (
   return null;
 };
 
-export const getUpcomingRace = (
+export const isUpcoming = (
+  race: Race,
+  defaultValue?: boolean,
+): boolean | null => {
+  if (!("date" in race)) {
+    if (defaultValue !== undefined) {
+      return defaultValue;
+    }
+    return null;
+  } else {
+    return new Date(race.date) > new Date();
+  }
+};
+
+export const getUpcomingRaceForCandidate = (
   races: Race[],
   candidate: CandidateSummary | ExpenditureCandidateSummary,
 ): Race | undefined => {

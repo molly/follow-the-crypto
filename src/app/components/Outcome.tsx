@@ -1,7 +1,7 @@
 import sharedStyles from "@/app/shared.module.css";
 import { CandidateSummary, Race } from "@/app/types/Elections";
 import { ExpenditureCandidateSummary } from "@/app/types/Expenditures";
-import { getSubraceName, getUpcomingRace } from "@/app/utils/races";
+import { getSubraceName, getUpcomingRaceForCandidate } from "@/app/utils/races";
 import { formatDateFromString } from "@/app/utils/utils";
 
 export default function Outcome({
@@ -42,7 +42,7 @@ export default function Outcome({
   } else if (candidate.withdrew) {
     return ` ${inSentence ? "w" : "W"}ithdrew from the election`;
   } else {
-    const nextRace = getUpcomingRace(races, candidate);
+    const nextRace = getUpcomingRaceForCandidate(races, candidate);
     if (nextRace) {
       return nextRace
         ? ` ${inSentence ? "has an u" : "U"}pcoming ${getSubraceName(nextRace)} on ${formatDateFromString(nextRace.date)}`

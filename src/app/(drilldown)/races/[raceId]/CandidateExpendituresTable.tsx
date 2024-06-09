@@ -1,6 +1,7 @@
 import {
   CandidateSummary,
   ElectionGroup,
+  Race,
   RaceCandidate,
 } from "@/app/types/Elections";
 import { Expenditure } from "@/app/types/Expenditures";
@@ -31,12 +32,17 @@ const getCandidateSupportOppose = (
 
 export default function CandidateExpendituresTable({
   candidates,
+
   electionData,
   relatedExpenditures,
+  isRaceUpcoming,
+  intermediateRaces,
 }: {
   candidates: RaceCandidate[];
   electionData: ElectionGroup;
   relatedExpenditures: Expenditure[];
+  isRaceUpcoming: boolean;
+  intermediateRaces?: Race[];
 }) {
   return (
     <table className={styles.candidateExpendituresTable}>
@@ -58,13 +64,16 @@ export default function CandidateExpendituresTable({
           return (
             <CandidateResult
               key={candidate.name}
-              candidate={candidateSummary}
+              candidate={candidate}
+              candidateSummary={candidateSummary}
               supportTotal={supportTotal}
               opposeTotal={opposeTotal}
               rowClass={ind < candidates.length - 1 ? styles.candidateRow : ""}
+              isRaceUpcoming={isRaceUpcoming}
             />
           );
         })}
+        {intermediateRaces && "dummy candidate"}
       </tbody>
     </table>
   );

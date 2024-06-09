@@ -1,0 +1,66 @@
+.superPacCard,
+.influencedCard {
+  composes: fullWidthCardWithTable from "@/app/shared.module.css";
+  position: relative;
+}
+
+.superPacCard {
+  padding-bottom: 0.5rem;
+}
+
+.superPacTableWrapper,
+.influencedTableWrapper {
+  composes: hasFade from "@/app/shared.module.css";
+  max-height: 25rem;
+  overflow-y: auto;
+}
+
+.superPacTable,
+.influencedTable {
+  width: 100%;
+}
+
+.superPacTableHeader,
+.influencedTableHeader {
+  position: sticky;
+  top: 0;
+  background-color: var(--card-background);
+}
+
+.superPacRow,
+.influencedTableRow {
+  &:nth-child(odd) {
+    background: var(--table-background-secondary);
+  }
+}
+
+.superPacErrorRow,
+.influencedErrorRow {
+  height: 10rem;
+  color: var(--secondary-text);
+  text-align: center;
+}
+
+.superPacCryptoRow {
+  background-color: var(--table-highlight-color);
+}
+
+.superPacTableCellMinWidth {
+  min-width: 7rem;
+}
+
+.tableCardContent {
+  padding: 1rem;
+}
+
+@media (max-width: 1000px) {
+  .tableCellCollapse1 {
+    display: none;
+  }
+}
+
+@media (max-width: 800px) {
+  .tableCellCollapse2 {
+    display: none;
+  }
+}

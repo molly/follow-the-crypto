@@ -2,19 +2,19 @@ import {
   fetchAllStateElections,
   fetchCandidateExpenditures,
 } from "@/app/actions/fetch";
-import styles from "@/app/page.module.css";
+import styles from "@/app/components/tables.module.css";
 import { ElectionsByState } from "@/app/types/Elections";
 import { ExpendituresByCandidate } from "@/app/types/Expenditures";
 import { isError } from "@/app/utils/errors";
 import { getRaceName } from "@/app/utils/races";
 import { formatCurrency } from "@/app/utils/utils";
 import Link from "next/link";
-import Candidate from "../Candidate";
-import Outcome from "../Outcome";
+import Candidate from "./Candidate";
+import Outcome from "./Outcome";
 
 export const revalidate = 0;
 
-export async function InfluencedRacesTableContents() {
+export default async function InfluencedRacesTableContents() {
   const [expenditureData, raceData] = await Promise.all([
     fetchCandidateExpenditures(),
     fetchAllStateElections(),

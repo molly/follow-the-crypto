@@ -7,7 +7,7 @@ import sharedStyles from "@/app/shared.module.css";
 import { ElectionsByState } from "@/app/types/Elections";
 import { Expenditures } from "@/app/types/Expenditures";
 import { is4xx, isError } from "@/app/utils/errors";
-import { getRaceName } from "@/app/utils/races";
+import { getRaceName, isUpcoming } from "@/app/utils/races";
 import type { Metadata } from "next";
 import Ads from "./Ads";
 import RaceSummary from "./RaceSummary";
@@ -49,23 +49,35 @@ export default async function RacePage({
 
   const expenditures = expendituresData as Expenditures;
   const elections = electionsData as ElectionsByState;
+  const upcomingRaces = elections[shortRaceId].races.filter((r) =>
+    isUpcoming(r),
+  );
 
   return (
-    <div className={styles.columns}>
-      <div className={styles.electionsColumn}>
-        {elections[shortRaceId].races.map((race) => (
-          <RaceSummary
-            key={`${shortRaceId}-${race.type}`}
-            race={race}
-            electionData={elections[shortRaceId]}
-            expenditures={expenditures.by_race[params.raceId]}
-          />
-        ))}
+    <>
+      <h1
+        className={`${sharedStyles.fullWidth} no-margin`}
+      >{`${STATES_BY_ABBR[stateAbbr]} ${getRaceName(params.raceId)} election`}</h1>
+      <div className={styles.columns}>
+        <div className={styles.electionsColumn}>
+          <h2 className={styles.electionsColumnHeader}>Elections</h2>
+          {elections[shortRaceId].races
+            .filter((r) => !("canceled" in r) || !r.canceled)
+            .map((race) => (
+              <RaceSummary
+                key={`${shortRaceId}-${race.type}`}
+                race={race}
+                electionData={elections[shortRaceId]}
+                expenditures={expenditures.by_race[params.raceId]}
+                upcomingRaces={upcomingRaces}
+              />
+            ))}
+        </div>
+        <div className={styles.adsCard}>
+          <h2 className={styles.adsHeader}>Ads</h2>
+          <Ads raceId={params.raceId} />
+        </div>
       </div>
-      <div className={styles.adsCard}>
-        <h2 className="no-margin">Ads</h2>
-        <Ads raceId={params.raceId} />
-      </div>
-    </div>
+    </>
   );
 }

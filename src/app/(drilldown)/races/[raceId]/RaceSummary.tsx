@@ -1,6 +1,10 @@
 import { ElectionGroup, Race } from "@/app/types/Elections";
 import { RaceExpenditureGroup } from "@/app/types/Expenditures";
-import { getExpenditureRaceType, getSubraceName } from "@/app/utils/races";
+import {
+  getExpenditureRaceType,
+  getSubraceName,
+  isUpcoming,
+} from "@/app/utils/races";
 import { titlecase } from "@/app/utils/titlecase";
 import { formatDate } from "@/app/utils/utils";
 import CandidateExpendituresTable from "./CandidateExpendituresTable";
@@ -8,7 +12,7 @@ import RaceCandidates from "./RaceCandidates";
 import styles from "./page.module.css";
 
 function RaceDate({ race }: { race: Race }) {
-  if (!("date" in race)) {
+  if (!("date" in race) || race.date === null) {
     return null;
   }
   const d = new Date(race.date);
@@ -23,10 +27,12 @@ export default function RaceSummary({
   race,
   electionData,
   expenditures,
+  upcomingRaces,
 }: {
   race: Race;
   electionData: ElectionGroup;
   expenditures: RaceExpenditureGroup;
+  upcomingRaces: Race[];
 }) {
   const raceType = race.type;
   const relatedExpenditures = expenditures.expenditures.filter(
@@ -45,19 +51,30 @@ export default function RaceSummary({
   const hasSpendingInOtherRaces = candidateSummaries.filter(
     (c) => c.support_total > 0 || c.oppose_total > 0,
   );
+  const isRaceUpcoming = isUpcoming(race, true) as boolean;
+
+  let intermediateRaces;
+  if (upcomingRaces.length > 1) {
+    if (race.type === "general") {
+      intermediateRaces = upcomingRaces.slice(1);
+    }
+  }
 
   return (
-    <div className={styles.raceSummaryCard}>
+    <div className={styles.raceSummary}>
       <div className={styles.raceSummaryDetails}>
-        <h2 className="no-margin">{titlecase(getSubraceName(race))}</h2>
+        <h3 className="no-margin">{titlecase(getSubraceName(race))}</h3>
         <RaceDate race={race} />
       </div>
-      <h3>Spending by cryptocurrency-focused groups</h3>
+      <h4>Spending by cryptocurrency-focused groups</h4>
       {!hasRelatedSpending && (
         <RaceCandidates
-          candidates={candidateSummaries}
-          raceType={raceType}
+          candidates={candidates}
+          candidateSummaries={candidateSummaries}
+          electionData={electionData}
           hasSpendingInOtherRaces={hasSpendingInOtherRaces}
+          isRaceUpcoming={isRaceUpcoming}
+          intermediateRaces={intermediateRaces}
         />
       )}
 
@@ -66,6 +83,8 @@ export default function RaceSummary({
           candidates={candidates}
           electionData={electionData}
           relatedExpenditures={relatedExpenditures}
+          isRaceUpcoming={isRaceUpcoming}
+          intermediateRaces={intermediateRaces}
         />
       ) : (
         <div className={styles.noSpending}></div>

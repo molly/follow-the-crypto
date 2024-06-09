@@ -39,10 +39,15 @@
 
 .card {
   background: var(--card-background);
-  padding: 1rem;
   border-radius: var(--border-radius);
   box-shadow: var(--shadow-lg);
   border: 1px solid var(--card-border);
+  padding: 1rem;
+}
+
+.cardWithTable {
+  composes: card;
+  padding: 0;
 }
 
 .smallCard {
@@ -59,6 +64,11 @@
 
 .fullWidthCard {
   composes: card;
+  grid-column: 1/13;
+}
+
+.fullWidthCardWithTable {
+  composes: cardWithTable;
   grid-column: 1/13;
 }
 
@@ -86,11 +96,13 @@
   mask-repeat: no-repeat, no-repeat;
 }
 
-.goalAccomplished {
+.goalAccomplished,
+.checkmark {
   color: green;
 }
 
-.goalFailed {
+.goalFailed,
+.xMark {
   color: red;
 }
 

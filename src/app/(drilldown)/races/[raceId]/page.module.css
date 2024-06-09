@@ -10,9 +10,37 @@
   flex: 1 0 50%;
 }
 
-.raceSummaryCard {
-  composes: card from "@/app/shared.module.css";
+.electionsColumn {
+  composes: cardWithTable from "@/app/shared.module.css";
+}
+
+.electionsColumnHeader {
+  padding: 1rem 1rem 0 1rem;
+}
+
+.adsHeader {
+  margin-bottom: 1.5rem;
+}
+
+.raceSummary {
   grid-column: 1 / 7;
+  padding: 1rem;
+
+  &:nth-child(even) {
+    background-color: var(--table-background-secondary);
+  }
+
+  &:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+
+  &:last-child {
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+  }
+}
+
+.raceSummaryDetails {
   margin-bottom: 1rem;
 }
 
@@ -34,7 +62,7 @@
   padding: 1rem;
 }
 
-.activeCandidateName {
+.wonCandidateName {
   font-weight: bold;
 }
 

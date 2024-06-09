@@ -1,15 +1,20 @@
 "use client";
 
+import styles from "@/app/components/tables.module.css";
 import useFade from "@/app/hooks/useFade";
-import styles from "@/app/page.module.css";
 import { range } from "@/app/utils/range";
 import { motion, useScroll } from "framer-motion";
+import Link from "next/link";
 import { Suspense, useRef } from "react";
-import { CandidateSkeleton } from "../Candidate";
-import Skeleton from "../skeletons/Skeleton";
+import { CandidateSkeleton } from "./Candidate";
+import Skeleton from "./skeletons/Skeleton";
 
-function InfluencedRacesTableContentsSkeleton() {
-  return range(5).map((i) => (
+function InfluencedRacesTableContentsSkeleton({
+  fullPage,
+}: {
+  fullPage: boolean;
+}) {
+  return range(fullPage ? 20 : 5).map((i) => (
     <tr
       key={`influenced-skeleton-row-${i}`}
       className={styles.influencedTableRow}
@@ -40,21 +45,34 @@ function InfluencedRacesTableContentsSkeleton() {
   ));
 }
 
-export function InfluencedRaces({ children }: { children: React.ReactNode }) {
+export default function InfluencedRaces({
+  children,
+  fullPage = false,
+}: {
+  children: React.ReactNode;
+  fullPage?: boolean;
+}) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ container: containerRef });
   const fade = useFade(scrollYProgress);
 
   return (
-    <div className={`${styles.influencedCard}`}>
-      These super PACs and other cryptocurrency-funded groups have already spent
-      heavily to influence the outcome of multiple Congressional races.
-      <h2>Races influenced by crypto industry money</h2>
+    <div className={styles.influencedCard}>
+      {!fullPage && (
+        <div className={styles.tableCardContent}>
+          <p>
+            These super PACs and other cryptocurrency-funded groups have already
+            spent heavily to influence the outcome of multiple Congressional
+            races.
+          </p>
+          <h2>Races influenced by crypto industry money</h2>
+        </div>
+      )}
       <motion.div
-        className={styles.influencedTableWrapper}
+        className={fullPage ? undefined : styles.influencedTableWrapper}
         ref={containerRef}
         style={{
-          maskImage: fade,
+          maskImage: fullPage ? undefined : fade,
         }}
       >
         <table className={styles.influencedTable}>
@@ -69,12 +87,21 @@ export function InfluencedRaces({ children }: { children: React.ReactNode }) {
             </tr>
           </thead>
           <tbody>
-            <Suspense fallback={<InfluencedRacesTableContentsSkeleton />}>
+            <Suspense
+              fallback={
+                <InfluencedRacesTableContentsSkeleton fullPage={fullPage} />
+              }
+            >
               {children}
             </Suspense>
           </tbody>
         </table>
       </motion.div>
+      {!fullPage && (
+        <div className={styles.tableCardContent}>
+          <Link href="/races">&raquo; View all races with crypto spending</Link>
+        </div>
+      )}
     </div>
   );
 }

@@ -37,7 +37,7 @@
   --party-independent: #ddddbb;
 
   --background-start: var(--color-slate-50);
-  --background-end: var(--color-slate-200);
+  --background-end: var(--color-slate-300);
   --card-background: #fefefe;
   --card-background-rgb: 254, 254, 254;
   --card-border: var(--color-slate-200);
@@ -131,6 +131,10 @@ a {
   color: var(--link-text);
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
+}
+
+p {
+  margin-top: 0;
 }
 
 table {

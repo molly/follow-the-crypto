@@ -1,10 +1,10 @@
 import { Suspense } from "react";
+import InfluencedRaces from "./components/InfluencedRaces";
+import InfluencedRacesTableContents from "./components/InfluencedRacesTableContents";
 import { MoneyCardSkeleton } from "./components/MoneyCard";
-import { InfluencedRaces } from "./components/home/InfluencedRaces";
-import { InfluencedRacesTableContents } from "./components/home/InfluencedRacesTableContents";
+import SuperPACsByReceipts from "./components/SuperPACsByReceipts";
+import SuperPACsByReceiptsTableContents from "./components/SuperPACsByReceiptsTableContents";
 import MapWrapper from "./components/home/MapWrapper";
-import SuperPACsByReceipts from "./components/home/SuperPACsByReceipts";
-import SuperPACsByReceiptsTableContents from "./components/home/SuperPACsByReceiptsTableContents";
 import TotalDisbursements from "./components/home/TotalDisbursements";
 import TotalRaised from "./components/home/TotalRaised";
 import USMapSkeleton from "./components/skeletons/USMapSkeleton";

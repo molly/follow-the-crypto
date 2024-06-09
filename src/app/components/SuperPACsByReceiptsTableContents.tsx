@@ -1,5 +1,5 @@
 import { fetchSuperPACsByReceipts } from "@/app/actions/fetch";
-import styles from "@/app/page.module.css";
+import styles from "@/app/components/tables.module.css";
 import { AllCommitteesSummary } from "@/app/types/Committee";
 import { isError } from "@/app/utils/errors";
 import { titlecaseCommittee } from "@/app/utils/titlecase";

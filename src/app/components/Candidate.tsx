@@ -1,4 +1,4 @@
-import { CandidateSummary } from "@/app/types/Elections";
+import { CandidateSummary, Party } from "@/app/types/Elections";
 import { getFirstLastName } from "@/app/utils/names";
 import { ExpenditureCandidateSummary } from "../types/Expenditures";
 import styles from "./candidate.module.css";
@@ -72,6 +72,47 @@ function CandidateImage({
   return <div className={candidateImageWrapperClassNames}>{imageEl}</div>;
 }
 
+export function UnknownCandidate({
+  party,
+  name,
+}: {
+  party?: Party;
+  name?: string;
+}) {
+  let candidateImageWrapperClassNames = styles.candidateImageWrapper;
+  if (party) {
+    candidateImageWrapperClassNames += ` ${styles[getPartyClass(party)]}`;
+  }
+  return (
+    <>
+      <div className={styles.candidateInfoBlock}>
+        <div className={candidateImageWrapperClassNames}>
+          <svg className={styles.placeholderImage} viewBox="0 0 340 340">
+            <g>
+              <path
+                fill="#ddd"
+                d="M169 .5C75.86 1.051.725 76.866 1.006 169.957 1.286 263.043 76.873 338.268 170 338.268s168.713-75.225 168.994-168.311C339.275 76.866 264.14 1.05 171 .5Z"
+              />
+              <foreignObject x="0" y="0" width="340" height="340">
+                <div className={styles.unknownCandidateQuestionMark}>?</div>
+              </foreignObject>
+              <title>
+                Placeholder showing a question mark to represent an unknown
+                candidate.
+              </title>
+            </g>
+          </svg>
+        </div>
+        <span>
+          <span className={styles.unknownCandidateText}>
+            {name || "Winner to be determined"}
+          </span>
+        </span>
+      </div>
+    </>
+  );
+}
+
 export default function Candidate({
   candidate,
   candidateClassName,
@@ -101,7 +142,11 @@ export default function Candidate({
             {candidate.common_name}
           </span>
           {candidate.party && (
-            <span className="secondary"> ({candidate.party})</span>
+            <span className="secondary">
+              {" "}
+              ({candidate.party}
+              {candidate.writeIn ? ", write-in" : ""})
+            </span>
           )}
         </span>
       </div>

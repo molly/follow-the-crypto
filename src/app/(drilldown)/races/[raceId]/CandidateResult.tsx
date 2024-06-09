@@ -1,30 +1,36 @@
 import Candidate from "@/app/components/Candidate";
-import { CandidateSummary } from "@/app/types/Elections";
+import { CandidateSummary, RaceCandidate } from "@/app/types/Elections";
 import { formatCurrency } from "@/app/utils/utils";
 import styles from "./page.module.css";
 
 export default function CandidateResult({
   candidate,
+  candidateSummary,
   supportTotal,
   opposeTotal,
   rowClass,
+  isRaceUpcoming,
 }: {
-  candidate: CandidateSummary;
+  candidate: RaceCandidate;
+  candidateSummary: CandidateSummary;
   supportTotal: number;
   opposeTotal: number;
   rowClass?: string;
+  isRaceUpcoming: boolean;
 }) {
+  let candidateNameClassName;
+  if ("won" in candidate && candidate.won === false) {
+    candidateNameClassName = styles.defeatedCandidateName;
+  } else if (!isRaceUpcoming) {
+    candidateNameClassName = styles.wonCandidateName;
+  }
   return (
     <tr className={rowClass}>
       <td className={styles.candidateCell}>
         <Candidate
-          candidate={candidate}
+          candidate={candidateSummary}
           candidateClassName={styles.candidate}
-          candidateNameClassName={
-            candidate.defeated
-              ? styles.defeatedCandidateName
-              : styles.activeCandidateName
-          }
+          candidateNameClassName={candidateNameClassName}
         />
       </td>
       <td className="number-cell">

@@ -25,6 +25,20 @@
   height: 50px;
 }
 
+.unknownCandidateQuestionMark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--card-background);
+  font-weight: bold;
+  font-size: 300px;
+}
+
+.unknownCandidateText {
+  color: var(--secondary-text);
+  font-style: italic;
+}
+
 .defeatedCandidateImage {
   position: relative;
   &:after {
