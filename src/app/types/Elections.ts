@@ -1,4 +1,4 @@
-import { Candidate } from "./FECTypes";
+import { Candidate, ScheduleEByCandidate } from "./FECTypes";
 
 export enum Party {
   Democratic = "D",
@@ -26,6 +26,13 @@ export enum RaceType {
   Special = "special",
 }
 
+type OutsideSpending = {
+  support_total: number;
+  oppose_total: number;
+  support: ScheduleEByCandidate[];
+  oppose: ScheduleEByCandidate[];
+};
+
 export type CandidateSummary = {
   common_name: string;
   oppose_total: number;
@@ -46,6 +53,8 @@ export type CandidateSummary = {
 
   raised_total?: number;
   spent_total?: number;
+
+  outside_spending?: OutsideSpending;
 } & Pick<Candidate, "candidate_id" | "incumbent_challenge" | "party">;
 
 export interface Race {
@@ -59,7 +68,6 @@ export interface Race {
 export interface ElectionGroup {
   races: Race[];
   candidates: Record<string, CandidateSummary>;
-  candidatesOrder: string[];
 }
 
 export interface ElectionsByState {

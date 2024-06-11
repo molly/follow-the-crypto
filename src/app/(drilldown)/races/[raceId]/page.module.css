@@ -6,8 +6,11 @@
 }
 
 .electionsColumn,
-.adsCard {
+.rightColumn {
   flex: 1 0 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .electionsColumn {
@@ -76,10 +79,70 @@
   font-style: italic;
 }
 
+/* Spending */
+.spendingCard {
+  composes: card from "@/app/shared.module.css";
+}
+
+.candidateLabel,
+.barLabel {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  text-align: right;
+  font-size: 0.4rem;
+}
+
+.candidateLabelName {
+  width: 3rem;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+.spendingLegend {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  font-size: 0.4rem;
+  overflow: visible;
+}
+
+.barLabel {
+  height: 100%;
+}
+
+.outsideLabel {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.gridLine {
+  stroke: var(--table-color);
+}
+
+.raisedBar {
+  fill: var(--color-slate-300);
+}
+
+.outside_supportBar {
+  fill: var(--color-blue-400);
+}
+
+.crypto_supportBar {
+  fill: var(--color-blue-800);
+}
+
+.outside_opposeBar {
+  fill: var(--color-red-400);
+}
+
+.crypto_opposeBar {
+  fill: var(--color-red-800);
+}
+
+/* Ads */
 .adsCard {
   composes: card from "@/app/shared.module.css";
-  grid-column: 7 / 13;
-  grid-row: 1 / 2;
 }
 
 .adGroup {

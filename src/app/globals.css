@@ -28,6 +28,9 @@
   --color-blue-900: #1e3a8a;
   --color-blue-950: #172554;
 
+  --color-red-400: #f87171;
+  --color-red-800: #991b1b;
+
   --accent: var(--color-blue-600);
 
   --party-republican: #e81b23;

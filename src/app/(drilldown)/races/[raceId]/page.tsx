@@ -11,6 +11,7 @@ import { getRaceName, isUpcomingRace } from "@/app/utils/races";
 import type { Metadata } from "next";
 import Ads from "./Ads";
 import RaceSummary from "./RaceSummary";
+import Spending from "./Spending";
 import styles from "./page.module.css";
 
 export async function generateMetadata({
@@ -71,9 +72,18 @@ export default async function RacePage({
             />
           ))}
         </div>
-        <div className={styles.adsCard}>
-          <h2 className={styles.adsHeader}>Ads</h2>
-          <Ads raceId={params.raceId} />
+        <div className={styles.rightColumn}>
+          <div className={styles.spendingCard}>
+            <h2 className={styles.spendingHeader}>Spending</h2>
+            <Spending
+              raceId={params.raceId}
+              election={elections[shortRaceId]}
+            />
+          </div>
+          <div className={styles.adsCard}>
+            <h2 className={styles.adsHeader}>Ads</h2>
+            <Ads raceId={params.raceId} />
+          </div>
         </div>
       </div>
     </>

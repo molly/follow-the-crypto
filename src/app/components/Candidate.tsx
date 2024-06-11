@@ -25,17 +25,22 @@ function CandidateImage({
   firstName,
   lastName,
   defeated,
+  chart,
 }: {
   candidate?: CandidateSummary | ExpenditureCandidateSummary;
   firstName?: string;
   lastName?: string;
   defeated?: boolean;
+  chart?: boolean;
 }) {
   let imageUrl;
   if (firstName && lastName) {
     imageUrl = `https://storage.googleapis.com/candidates/${firstName.toLocaleLowerCase()}-${lastName.toLocaleLowerCase()}.webp`;
   }
   let candidateImageWrapperClassNames = styles.candidateImageWrapper;
+  if (chart) {
+    candidateImageWrapperClassNames += ` ${styles.chartCandidateImageWrapper}`;
+  }
   if (candidate && candidate.party) {
     candidateImageWrapperClassNames += ` ${styles[getPartyClass(candidate.party)]}`;
   } else {
@@ -46,7 +51,10 @@ function CandidateImage({
   }
 
   let imageEl = (
-    <svg className={styles.placeholderImage} viewBox="0 0 340 340">
+    <svg
+      className={`${styles.placeholderImage} ${chart ? styles.chartPlaceholderImage : ""}`}
+      viewBox="0 0 340 340"
+    >
       <g>
         <path
           fill="currentColor"
@@ -62,7 +70,7 @@ function CandidateImage({
         type="image/webp"
         data={imageUrl}
         aria-label={(candidate && candidate.common_name) || ""}
-        className={styles.candidateImage}
+        className={`${styles.candidateImage} ${chart ? styles.chartCandidateImage : ""}`}
       >
         {imageEl}
       </object>
@@ -120,6 +128,7 @@ export default function Candidate({
   candidateNameClassName,
   defeated,
   writeIn,
+  chart,
 }: {
   candidate?: RaceCandidate;
   candidateSummary?: CandidateSummary | ExpenditureCandidateSummary;
@@ -127,6 +136,7 @@ export default function Candidate({
   candidateNameClassName?: string;
   defeated?: boolean;
   writeIn?: boolean;
+  chart?: boolean;
 }) {
   const name =
     candidateSummary && candidateSummary.common_name
@@ -149,17 +159,20 @@ export default function Candidate({
           firstName={firstName}
           lastName={lastName}
           defeated={defeated}
+          chart={chart}
         />
-        <span>
-          <span className={candidateNameClassName}>{name}</span>
-          {candidateSummary && candidateSummary.party && (
-            <span className="secondary">
-              {" "}
-              ({candidateSummary.party}
-              {writeIn ? ", write-in" : ""})
-            </span>
-          )}
-        </span>
+        {!chart && (
+          <span>
+            <span className={candidateNameClassName}>{name}</span>
+            {candidateSummary && candidateSummary.party && (
+              <span className="secondary">
+                {" "}
+                ({candidateSummary.party}
+                {writeIn ? ", write-in" : ""})
+              </span>
+            )}
+          </span>
+        )}
       </div>
     </>
   );
