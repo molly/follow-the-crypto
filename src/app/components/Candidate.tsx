@@ -1,4 +1,4 @@
-import { CandidateSummary, Party } from "@/app/types/Elections";
+import { CandidateSummary, Party, RaceCandidate } from "@/app/types/Elections";
 import { getFirstLastName } from "@/app/utils/names";
 import { ExpenditureCandidateSummary } from "../types/Expenditures";
 import styles from "./candidate.module.css";
@@ -115,16 +115,29 @@ export function UnknownCandidate({
 
 export default function Candidate({
   candidate,
+  candidateSummary,
   candidateClassName,
   candidateNameClassName,
   defeated,
+  writeIn,
 }: {
-  candidate: CandidateSummary | ExpenditureCandidateSummary;
+  candidate?: RaceCandidate;
+  candidateSummary?: CandidateSummary | ExpenditureCandidateSummary;
   candidateClassName?: string;
   candidateNameClassName?: string;
   defeated?: boolean;
+  writeIn?: boolean;
 }) {
-  const [firstName, lastName] = getFirstLastName(candidate.common_name);
+  const name =
+    candidateSummary && candidateSummary.common_name
+      ? candidateSummary.common_name
+      : candidate
+        ? candidate.name
+        : null;
+  if (!name) {
+    return null;
+  }
+  const [firstName, lastName] = getFirstLastName(name);
 
   return (
     <>
@@ -132,20 +145,18 @@ export default function Candidate({
         className={`${styles.candidateInfoBlock} ${candidateClassName || ""}`}
       >
         <CandidateImage
-          candidate={candidate}
+          candidate={candidateSummary}
           firstName={firstName}
           lastName={lastName}
           defeated={defeated}
         />
         <span>
-          <span className={candidateNameClassName}>
-            {candidate.common_name}
-          </span>
-          {candidate.party && (
+          <span className={candidateNameClassName}>{name}</span>
+          {candidateSummary && candidateSummary.party && (
             <span className="secondary">
               {" "}
-              ({candidate.party}
-              {candidate.writeIn ? ", write-in" : ""})
+              ({candidateSummary.party}
+              {writeIn ? ", write-in" : ""})
             </span>
           )}
         </span>

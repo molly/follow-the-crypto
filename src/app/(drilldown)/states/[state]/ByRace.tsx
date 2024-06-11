@@ -63,7 +63,7 @@ function Influenced({
         <div>{`${lastName} later withdrew from the race.`}</div>
       )}
       <div className={styles.candidateResultWithImage}>
-        <Candidate candidate={candidate} defeated={candidate.defeated} />
+        <Candidate candidateSummary={candidate} defeated={candidate.defeated} />
         <Outcome
           candidate={candidate}
           races={races}

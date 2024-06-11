@@ -5,6 +5,7 @@ import {
   Expenditure,
   ExpenditureCandidateSummary,
 } from "../types/Expenditures";
+import { isUpcomingDate } from "./utils";
 
 // Senate race first, then house races ordered by district
 export const sortRaces = (a: string, b: string) => {
@@ -82,7 +83,7 @@ export const getExpenditureRaceType = (
   return null;
 };
 
-export const isUpcoming = (
+export const isUpcomingRace = (
   race: Race,
   defaultValue?: boolean,
 ): boolean | null => {
@@ -91,9 +92,12 @@ export const isUpcoming = (
       return defaultValue;
     }
     return null;
-  } else {
-    return new Date(race.date) > new Date();
+  } else if (isUpcomingDate(race.date)) {
+    return true;
   }
+  // Edge case where election date may have passed, but results have not yet become available.
+  // In this case, we consider it to be an upcoming race.
+  return !race.candidates.some((c) => "won" in c);
 };
 
 export const getUpcomingRaceForCandidate = (
@@ -104,9 +108,8 @@ export const getUpcomingRaceForCandidate = (
   const involvedRaces = races.filter((r) =>
     r.candidates.some((c) => c.name === candidate.common_name),
   );
-  const today = new Date().toISOString().slice(0, 10);
   for (const r of involvedRaces) {
-    if (r.date >= today) {
+    if (isUpcomingRace(r)) {
       nextRace = r;
       break;
     }

@@ -19,7 +19,10 @@ export default function CandidateResult({
   isRaceUpcoming: boolean;
 }) {
   let candidateNameClassName;
-  if ("won" in candidate && candidate.won === false) {
+  if (
+    ("won" in candidate && candidate.won === false) ||
+    ("withdrew" in candidate && candidate.withdrew)
+  ) {
     candidateNameClassName = styles.defeatedCandidateName;
   } else if (!isRaceUpcoming) {
     candidateNameClassName = styles.wonCandidateName;
@@ -28,9 +31,11 @@ export default function CandidateResult({
     <tr className={rowClass}>
       <td className={styles.candidateCell}>
         <Candidate
-          candidate={candidateSummary}
+          candidate={candidate}
+          candidateSummary={candidateSummary}
           candidateClassName={styles.candidate}
           candidateNameClassName={candidateNameClassName}
+          writeIn={candidate.writeIn}
         />
       </td>
       <td className="number-cell">
@@ -39,7 +44,7 @@ export default function CandidateResult({
       <td className="number-cell">
         {opposeTotal > 0 && formatCurrency(opposeTotal, true)}
       </td>
-      <td>{candidate.withdrew && `Withdrew from the race.`}</td>
+      <td className="secondary">{candidate.withdrew && `Withdrew`}</td>
     </tr>
   );
 }

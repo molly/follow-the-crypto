@@ -2,7 +2,7 @@ import sharedStyles from "@/app/shared.module.css";
 import { CandidateSummary, Race } from "@/app/types/Elections";
 import { ExpenditureCandidateSummary } from "@/app/types/Expenditures";
 import { getSubraceName, getUpcomingRaceForCandidate } from "@/app/utils/races";
-import { formatDateFromString } from "@/app/utils/utils";
+import { formatDateFromString, isUpcomingDate } from "@/app/utils/utils";
 
 export default function Outcome({
   candidate,
@@ -44,9 +44,12 @@ export default function Outcome({
   } else {
     const nextRace = getUpcomingRaceForCandidate(races, candidate);
     if (nextRace) {
-      return nextRace
-        ? ` ${inSentence ? "has an u" : "U"}pcoming ${getSubraceName(nextRace)} on ${formatDateFromString(nextRace.date)}`
-        : "";
+      if (isUpcomingDate(nextRace.date, { inclusive: true })) {
+        return ` ${inSentence ? "has an u" : "U"}pcoming ${getSubraceName(nextRace)} on ${formatDateFromString(nextRace.date)}`;
+      } else {
+        // Edge case where election date may have passed, but results have not yet become available.
+        return ` ${inSentence ? "is a" : "A"}waiting results from ${getSubraceName(nextRace)} on ${formatDateFromString(nextRace.date)}`;
+      }
     }
   }
   return null;

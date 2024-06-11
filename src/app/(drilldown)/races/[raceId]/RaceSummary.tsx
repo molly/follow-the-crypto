@@ -3,10 +3,10 @@ import { RaceExpenditureGroup } from "@/app/types/Expenditures";
 import {
   getExpenditureRaceType,
   getSubraceName,
-  isUpcoming,
+  isUpcomingRace,
 } from "@/app/utils/races";
 import { titlecase } from "@/app/utils/titlecase";
-import { formatDate } from "@/app/utils/utils";
+import { formatDateFromString, isUpcomingDate } from "@/app/utils/utils";
 import CandidateExpendituresTable from "./CandidateExpendituresTable";
 import RaceCandidates from "./RaceCandidates";
 import styles from "./page.module.css";
@@ -15,12 +15,10 @@ function RaceDate({ race }: { race: Race }) {
   if (!("date" in race) || race.date === null) {
     return null;
   }
-  const d = new Date(race.date);
-  if (d < new Date()) {
-    return <span>Held on {formatDate(d)}.</span>;
-  } else {
-    return <span>Upcoming on {formatDate(d)}.</span>;
+  if (isUpcomingDate(race.date, { inclusive: true })) {
+    return <span>Upcoming on {formatDateFromString(race.date)}.</span>;
   }
+  return <span>Held on {formatDateFromString(race.date)}.</span>;
 }
 
 export default function RaceSummary({
@@ -40,7 +38,7 @@ export default function RaceSummary({
   );
   const candidates = race.candidates;
   const candidateSummaries = race.candidates.map(
-    (c) => electionData.candidates[c.name],
+    (c) => electionData.candidates[c.name] || {},
   );
   const hasRelatedSpending = candidateSummaries.some(
     (c) =>
@@ -51,7 +49,7 @@ export default function RaceSummary({
   const hasSpendingInOtherRaces = candidateSummaries.filter(
     (c) => c.support_total > 0 || c.oppose_total > 0,
   );
-  const isRaceUpcoming = isUpcoming(race, true) as boolean;
+  const isRaceUpcoming = isUpcomingRace(race, true) as boolean;
 
   let intermediateRaces;
   if (upcomingRaces.length > 1) {

@@ -41,7 +41,7 @@ export default async function InfluencedRacesTableContents() {
       <tr className={styles.influencedTableRow} key={candidate.common_name}>
         <td>
           <Link className="unstyled" href={raceHref}>
-            <Candidate candidate={candidate} />
+            <Candidate candidateSummary={candidate} />
           </Link>
         </td>
         <td className="center-cell">

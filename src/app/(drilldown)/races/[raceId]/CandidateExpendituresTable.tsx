@@ -73,7 +73,6 @@ export default function CandidateExpendituresTable({
             />
           );
         })}
-        {intermediateRaces && "dummy candidate"}
       </tbody>
     </table>
   );

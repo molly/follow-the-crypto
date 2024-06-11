@@ -15,6 +15,7 @@ export interface RaceCandidate {
   percentage?: number;
   won?: boolean;
   withdrew?: boolean;
+  writeIn?: boolean;
 }
 
 export enum RaceType {
@@ -26,16 +27,25 @@ export enum RaceType {
 }
 
 export type CandidateSummary = {
-  FEC_name: string;
   common_name: string;
-  defeated?: boolean;
-  withdrew?: boolean;
-  defeated_race: RaceType;
   oppose_total: number;
   support_total: number;
   races: RaceType[];
+  defeated?: boolean;
+  defeated_race?: RaceType;
+  withdrew?: boolean;
+  withdrew_race?: RaceType;
+
+  FEC_name: string;
+  candidate_id?: string;
+  incumbent_challenge?: string;
+  party?: Party;
+
   expenditure_races?: RaceType[];
   expenditure_committees?: string[];
+
+  raised_total?: number;
+  spent_total?: number;
 } & Pick<Candidate, "candidate_id" | "incumbent_challenge" | "party">;
 
 export interface Race {

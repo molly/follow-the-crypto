@@ -14,13 +14,20 @@ function NoSpendingCell({
   candidates,
   isRaceUpcoming,
   hasSpendingInOtherRaces,
+  intermediateRaces,
 }: {
   candidates: CandidateSummary[];
   isRaceUpcoming: boolean;
   hasSpendingInOtherRaces: CandidateSummary[];
+  intermediateRaces?: Race[];
 }) {
   return (
-    <td className={styles.noSpendingCell} rowSpan={candidates.length}>
+    <td
+      className={styles.noSpendingCell}
+      rowSpan={
+        candidates.length + (intermediateRaces ? intermediateRaces.length : 0)
+      }
+    >
       <span>
         {`No cryptocurrency-focused groups ${isRaceUpcoming ? "have " : ""}made expenditures
     pertaining to this specific race`}
@@ -69,7 +76,9 @@ export default function RaceCandidates({
       <tbody>
         {candidates.map((candidate, ind) => {
           const summary = electionData.candidates[candidate.name];
-          const defeated = "won" in candidate && candidate.won === false;
+          const defeated =
+            ("won" in candidate && candidate.won === false) ||
+            ("withdrew" in candidate && candidate.withdrew);
           let candidateNameClassName;
           if (defeated) {
             candidateNameClassName = styles.defeatedCandidateName;
@@ -85,8 +94,10 @@ export default function RaceCandidates({
                 className={`${styles.candidateCell} ${!isLastRow ? styles.candidateRow : ""}`}
               >
                 <Candidate
-                  candidate={summary}
+                  candidate={candidate}
+                  candidateSummary={summary}
                   candidateNameClassName={candidateNameClassName}
+                  writeIn={candidate.writeIn}
                 />
               </td>
               {ind === 0 && (
@@ -94,16 +105,19 @@ export default function RaceCandidates({
                   candidates={candidateSummaries}
                   isRaceUpcoming={isRaceUpcoming}
                   hasSpendingInOtherRaces={hasSpendingInOtherRaces}
+                  intermediateRaces={intermediateRaces}
                 />
               )}
             </tr>
           );
         })}
         {intermediateRaces &&
-          intermediateRaces.map((r) => {
+          intermediateRaces.map((r, ind) => {
             return (
-              <tr key={r.type}>
-                <td className={styles.candidateCell}>
+              <tr key={`${r.type}-${r.party}-winner`}>
+                <td
+                  className={`${styles.candidateCell} ${ind < intermediateRaces.length - 1 ? styles.candidateRow : ""}`}
+                >
                   <UnknownCandidate
                     party={r.party}
                     name={`${getSubraceName(r)} winner`}
