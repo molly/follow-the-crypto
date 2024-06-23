@@ -37,7 +37,6 @@
 .superPacErrorRow,
 .influencedErrorRow {
   height: 10rem;
-  color: var(--secondary-text);
   text-align: center;
 }
 

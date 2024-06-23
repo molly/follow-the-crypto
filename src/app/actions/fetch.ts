@@ -10,7 +10,7 @@ import { Ad, AdGroup } from "../types/Ads";
 import { Expenditures, ExpendituresByCandidate } from "../types/Expenditures";
 
 import {
-  QuerySnapshot,
+  DocumentData,
   collection,
   doc,
   getDoc,
@@ -38,13 +38,14 @@ const fetchSnapshot = async (
 
 const fetchCollection = async (
   collectionName: string,
-): Promise<QuerySnapshot | ErrorType> => {
-  try {
-    const docRef = collection(db, collectionName);
-    return getDocs(docRef);
-  } catch (e) {
+): Promise<DocumentData | ErrorType> => {
+  const docRef = collection(db, collectionName);
+  const snapshot = await getDocs(docRef);
+  // TODO: Better error checking when I'm not on a plane; this doesn't throw.
+  if (snapshot.docs.length === 0) {
     return { error: true };
   }
+  return snapshot.docs;
 };
 
 export const fetchConstant = cache(
@@ -109,8 +110,8 @@ export const fetchAllCommittees = cache(
     if (isError(data)) {
       return data as ErrorType;
     } else {
-      const committeesData = data as QuerySnapshot;
-      const committees = committeesData.docs.map((doc) =>
+      const committeesData = data as DocumentData[];
+      const committees = committeesData.map((doc) =>
         doc.data(),
       ) as CommitteeDetails[];
       committees.sort((a, b) => (b.receipts || 0) - (a.receipts || 0));
@@ -142,9 +143,9 @@ export const fetchAllStateExpenditures = cache(
     if (isError(data)) {
       return data as ErrorType;
     } else {
-      const expendituresData = data as QuerySnapshot;
+      const expendituresData = data as DocumentData[];
       const expendituresByState: Record<string, Expenditures> = {};
-      expendituresData.docs.forEach((doc) => {
+      expendituresData.forEach((doc) => {
         expendituresByState[doc.id] = doc.data() as Expenditures;
       });
       return expendituresByState;
@@ -165,9 +166,9 @@ export const fetchAllStateElections = cache(
     if (isError(data)) {
       return data as ErrorType;
     } else {
-      const electionsData = data as QuerySnapshot;
+      const electionsData = data as DocumentData[];
       const electionsByState: Record<string, ElectionsByState> = {};
-      electionsData.docs.forEach((doc) => {
+      electionsData.forEach((doc) => {
         electionsByState[doc.id] = doc.data() as ElectionsByState;
       });
       return electionsByState;

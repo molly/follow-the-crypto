@@ -10,6 +10,7 @@ import { getRaceName } from "@/app/utils/races";
 import { formatCurrency } from "@/app/utils/utils";
 import Link from "next/link";
 import Candidate from "./Candidate";
+import ErrorText from "./ErrorText";
 import Outcome from "./Outcome";
 
 export const revalidate = 0;
@@ -23,8 +24,10 @@ export default async function InfluencedRacesTableContents() {
     return (
       <tr className={styles.influencedErrorRow}>
         <td colSpan={6}>
-          Something went wrong when loading the list of races influenced by
-          crypto industry money.
+          <ErrorText
+            subject="the list of races influenced by
+          crypto industry money"
+          />
         </td>
       </tr>
     );

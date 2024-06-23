@@ -15,10 +15,20 @@
   stroke: var(--secondary-text);
 }
 
-/* Skeleton */
 .svgSkeleton {
   fill: transparent;
   stroke: var(--color-slate-300);
+}
+
+.mapLoadingError {
+  composes: card from "@/app/shared.module.css";
+  position: absolute;
+  max-width: 15rem;
+  transform: translate(50%, -50%);
+}
+
+.stateFillError {
+  fill: rgba(0, 0, 0, 0);
 }
 
 .stateFill0 {

@@ -5,6 +5,7 @@ import { isError } from "@/app/utils/errors";
 import { titlecaseCommittee } from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
 import Link from "next/link";
+import ErrorText from "./ErrorText";
 
 export default async function TableContents() {
   const superPacsData = await fetchSuperPACsByReceipts();
@@ -12,7 +13,7 @@ export default async function TableContents() {
     return (
       <tr className={styles.superPacErrorRow}>
         <td colSpan={6}>
-          Something went wrong when loading the list of super PACs.
+          <ErrorText subject="the list of super PACs" />
         </td>
       </tr>
     );
@@ -62,9 +63,6 @@ export default async function TableContents() {
             </td>
             <td className="number-cell">
               {formatCurrency(committee.receipts, true)}
-            </td>
-            <td className={`number-cell ${styles.tableCellCollapse2}`}>
-              {formatCurrency(committee.disbursements, true)}
             </td>
             <td className={`number-cell ${styles.tableCellCollapse2}`}>
               {formatCurrency(committee.last_cash_on_hand_end_period, true)}

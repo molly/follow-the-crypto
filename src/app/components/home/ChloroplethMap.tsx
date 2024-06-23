@@ -2,6 +2,7 @@
 
 import { STATES_BY_FULL } from "@/app/data/states";
 import { Expenditures } from "@/app/types/Expenditures";
+import { ErrorType, isError } from "@/app/utils/errors";
 import {
   autoUpdate,
   flip,
@@ -20,6 +21,7 @@ import {
 import { createRef, useCallback, useRef, useState } from "react";
 import * as topojson from "topojson-client";
 import { Objects, Topology } from "topojson-specification";
+import ErrorText from "../ErrorText";
 import ChloroplethTooltip from "./ChloroplethTooltip";
 import Legend from "./Legend";
 import { DOMAIN, FILL_CLASS_NAMES } from "./chloroplethConstants";
@@ -32,12 +34,12 @@ interface HoveredState {
 
 function getExpenditure(
   stateFullName: string,
-  expendituresByState: Record<string, Expenditures>,
+  expendituresByState: Record<string, Expenditures> | ErrorType,
 ): Expenditures | undefined {
-  if (stateFullName) {
+  if (!isError(expendituresByState) && stateFullName) {
     const stateAbbr = STATES_BY_FULL[stateFullName];
     if (stateAbbr && stateAbbr in expendituresByState) {
-      return expendituresByState[stateAbbr];
+      return (expendituresByState as Record<string, Expenditures>)[stateAbbr];
     }
   }
   return undefined;
@@ -45,9 +47,12 @@ function getExpenditure(
 
 function getFill(
   stateFullName: string,
-  expendituresByState: Record<string, Expenditures>,
+  expendituresByState: Record<string, Expenditures> | ErrorType,
   colorScale: d3.ScaleThreshold<number, string>,
 ): string | undefined {
+  if (isError(expendituresByState)) {
+    return styles.stateFillError;
+  }
   const expenditures = getExpenditure(stateFullName, expendituresByState);
   if (expenditures) {
     return styles[colorScale(expenditures.total)];
@@ -58,7 +63,7 @@ function getFill(
 export default function ChloroplethMap({
   expendituresByState,
 }: {
-  expendituresByState: Record<string, Expenditures>;
+  expendituresByState: Record<string, Expenditures> | ErrorType;
 }) {
   const [hoveredState, setHoveredState] = useState<HoveredState | null>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -104,6 +109,7 @@ export default function ChloroplethMap({
   const setTooltipData = useCallback(
     (d: Feature<Geometry, GeoJsonProperties>) => {
       if (
+        isError(expendituresByState) ||
         !d.properties?.name ||
         (hoveredState && hoveredState.state === d.properties.name)
       ) {
@@ -183,6 +189,11 @@ export default function ChloroplethMap({
           );
         })}
       </svg>
+      {isError(expendituresByState) && (
+        <div className={styles.mapLoadingError}>
+          <ErrorText subject="expenditures by state" />
+        </div>
+      )}
       <ChloroplethTooltip
         setHoveredState={setHoveredState}
         ref={refs.setFloating}

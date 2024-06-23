@@ -1,7 +1,9 @@
 import { fetchCommitteeTotalDisbursements } from "@/app/actions/fetch";
 import styles from "@/app/page.module.css";
+import sharedStyles from "@/app/shared.module.css";
 import { isError } from "@/app/utils/errors";
 import { humanizeRoundedCurrency } from "@/app/utils/humanize";
+import ErrorText from "../ErrorText";
 import MoneyCard from "../MoneyCard";
 
 export default async function TotalDisbursements({
@@ -11,7 +13,14 @@ export default async function TotalDisbursements({
 }) {
   const disbursementsData = await fetchCommitteeTotalDisbursements();
   if (isError(disbursementsData)) {
-    return <div>Error fetching data</div>;
+    return (
+      <div className={`secondary ${sharedStyles.smallCard} ${className}`}>
+        <ErrorText
+          subject="the total disbursements by
+        cryptocurrency companies and associated people"
+        />
+      </div>
+    );
   }
   const disbursements = disbursementsData as number;
   return (

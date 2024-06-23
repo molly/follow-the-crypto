@@ -70,11 +70,6 @@ export default function SuperPACsByReceipts({
               <th
                 className={`number-cell ${styles.superPacTableCellMinWidth} ${styles.tableCellCollapse2}`}
               >
-                Disbursements
-              </th>
-              <th
-                className={`number-cell ${styles.superPacTableCellMinWidth} ${styles.tableCellCollapse2}`}
-              >
                 Cash on hand
               </th>
             </tr>
