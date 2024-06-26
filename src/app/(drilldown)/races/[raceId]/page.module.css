@@ -107,6 +107,10 @@
   overflow: visible;
 }
 
+.cryptoSpendingLabel {
+  fill: transparent;
+}
+
 .barLabel {
   height: 100%;
 }
@@ -120,8 +124,18 @@
   stroke: var(--main-text);
 }
 
+.gridLabel {
+  fill: var(--main-text);
+}
+
 .gridLine {
   stroke: var(--table-color);
+}
+
+.spendingBar {
+  cursor: pointer;
+  stroke-width: 0.5;
+  stroke: var(--color-slate-600);
 }
 
 .raisedBar {
@@ -129,30 +143,28 @@
 }
 
 .outside_supportBar {
-  fill: var(--color-blue-400);
-}
-
-.crypto_supportBar {
-  fill: var(--color-blue-800);
+  fill: var(--color-green-400);
 }
 
 .outside_opposeBar {
   fill: var(--color-red-400);
 }
 
-.crypto_opposeBar {
-  fill: var(--color-red-800);
+.barLabelCointainer {
+  cursor: pointer;
+  pointer-events: none;
 }
 
 .barLabel {
   display: flex;
   align-items: center;
   font-size: 0.35rem;
+  color: var(--main-text);
 }
 
 .barLabelSupport {
   padding: 0.05rem;
-  background-color: var(--color-blue-400);
+  background-color: var(--color-green-400);
 }
 
 .barLabelOppose {
@@ -166,6 +178,10 @@
 
 .hugLeft {
   justify-content: flex-start;
+}
+
+.labelOnBackground {
+  color: var(--main-text);
 }
 
 /* Ads */
@@ -216,5 +232,39 @@
 @media (min-width: 1000px) {
   .raceCard {
     grid-column-start: 1;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .mainGridLine {
+    stroke: var(--color-slate-400);
+  }
+
+  .raisedBar {
+    fill: var(--color-slate-500);
+  }
+
+  .cryptoSpendingLabel {
+    fill: var(--color-slate-300);
+  }
+
+  .spendingBar {
+    stroke: var(--color-slate-300);
+  }
+
+  .outside_supportBar {
+    fill: var(--color-green-700);
+  }
+
+  .barLabelSupport {
+    background-color: var(--color-green-700);
+  }
+
+  .outside_opposeBar {
+    fill: var(--color-red-800);
+  }
+
+  .barLabelOppose {
+    background-color: var(--color-red-800);
   }
 }

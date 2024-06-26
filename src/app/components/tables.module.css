@@ -52,6 +52,10 @@
   padding: 1rem;
 }
 
+.viewMoreLink:not(:last-child) {
+  margin-right: 1rem;
+}
+
 @media (max-width: 1000px) {
   .tableCellCollapse1 {
     display: none;

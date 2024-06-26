@@ -1,6 +1,10 @@
+"use client";
+
 import Candidate from "@/app/components/Candidate";
 import { CandidateSummary, ElectionGroup } from "@/app/types/Elections";
 import * as d3 from "d3";
+import { motion } from "framer-motion";
+import { useState } from "react";
 import styles from "./page.module.css";
 
 const CHART_WIDTH = 300;
@@ -50,20 +54,38 @@ function BarLabel({
   }
 
   return (
-    <foreignObject
+    <motion.foreignObject
       x={textStart}
       y={y}
       width={BAR_LABEL_MIN_WIDTH}
       height={height}
+      style={{ cursor: "pointer", pointerEvents: "none" }}
+      initial={{
+        opacity: 0,
+      }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.2 }}
     >
-      <div className={`${styles.barLabel} ${styles[hug]}`}>
+      <div
+        className={`${styles.barLabelContainer} ${styles.barLabel} ${styles[hug]}`}
+      >
         <div className={width > BAR_LABEL_MIN_WIDTH ? backgroundClass : ""}>
           {label}
         </div>
       </div>
-    </foreignObject>
+    </motion.foreignObject>
   );
 }
+
+type SpendingHoverState = {
+  candidate: string;
+  bar:
+    | "raised"
+    | "outside_support"
+    | "outside_oppose"
+    | "crypto_support"
+    | "crypto_oppose";
+};
 
 export default function Spending({
   raceId,
@@ -72,6 +94,8 @@ export default function Spending({
   raceId: string;
   election: ElectionGroup;
 }) {
+  const [hovered, setHovered] = useState<SpendingHoverState | null>(null);
+
   // Get unique list of candidates, ordered by amount raised
   const candidateNames = Object.keys(election.candidates).sort(
     (a, b) =>
@@ -79,9 +103,9 @@ export default function Spending({
       getTotalSpending(election.candidates[a]),
   );
 
-  const CHART_HEIGHT = candidateNames.length * 40;
+  const CHART_HEIGHT = Math.max(150, candidateNames.length * 40);
 
-  // TODO: Cache
+  // TODO: Cache or precompute and store in DB
   const data = candidateNames.map((candidate) => {
     const summary = election.candidates[candidate];
     const candidateData = {
@@ -118,7 +142,7 @@ export default function Spending({
     .scaleLinear()
     .domain(xDomain)
     .range([CANDIDATE_LABEL_WIDTH, CHART_WIDTH - MARGIN_RIGHT]);
-  const gridLabelFormatter = d3.format("$.2s");
+  const gridLabelFormatter = (d: number) => d3.format("$.2s")(Math.abs(d));
   const textOffset = y.bandwidth() / 2;
   return (
     <div>
@@ -131,7 +155,7 @@ export default function Spending({
             patternTransform="rotate(45)"
             patternUnits="userSpaceOnUse"
           >
-            <rect width={HATCH_SIZE / 2} height={HATCH_SIZE} fill="#334155" />
+            <rect width={HATCH_SIZE / 2} height={HATCH_SIZE} fill="#0f172a" />
           </pattern>
         </defs>
         {x.ticks(5).map((value, ind) => {
@@ -150,6 +174,7 @@ export default function Spending({
                 y={CHART_HEIGHT - GRID_LABEL_HEIGHT + 10}
                 textAnchor="middle"
                 fontSize={7}
+                className={styles.gridLabel}
               >
                 {gridLabelFormatter(value)}
               </text>
@@ -181,99 +206,189 @@ export default function Spending({
           return (
             <g key={candidate}>
               {raised && (
-                <g>
-                  <rect
+                <g
+                  onMouseEnter={() => setHovered({ candidate, bar: "raised" })}
+                  onMouseLeave={() => setHovered(null)}
+                >
+                  <motion.rect
                     x={x0 + GRIDLINE_WIDTH / 2}
                     y={yCandidate}
                     width={xRaisedWidth - GRIDLINE_WIDTH / 2}
                     height={y.bandwidth()}
-                    className={styles.raisedBar}
+                    className={`${styles.raisedBar} ${styles.spendingBar}`}
+                    initial={false}
+                    animate={{
+                      strokeOpacity:
+                        hovered !== null &&
+                        hovered.candidate === candidate &&
+                        hovered.bar === "raised"
+                          ? 1
+                          : 0,
+                    }}
                   />
-                  <BarLabel
-                    x={xRaised}
-                    width={xRaisedWidth}
-                    y={yCandidate}
-                    height={y.bandwidth()}
-                    label={gridLabelFormatter(raised)}
-                  />
+                  {hovered !== null &&
+                    hovered.candidate === candidate &&
+                    hovered.bar === "raised" && (
+                      <BarLabel
+                        x={xRaised}
+                        width={xRaisedWidth}
+                        y={yCandidate}
+                        height={y.bandwidth()}
+                        label={gridLabelFormatter(raised)}
+                      />
+                    )}
                 </g>
               )}
               {outside_support && (
-                <g>
-                  <rect
+                <g
+                  onMouseEnter={() =>
+                    setHovered({ candidate, bar: "outside_support" })
+                  }
+                  onMouseLeave={() => setHovered(null)}
+                >
+                  <motion.rect
                     x={xRaised}
                     y={yCandidate}
                     width={xOutsideSupportWidth}
                     height={y.bandwidth()}
-                    className={styles.outside_supportBar}
+                    className={`${styles.outside_supportBar} ${styles.spendingBar}`}
+                    initial={false}
+                    animate={{
+                      strokeOpacity:
+                        hovered !== null &&
+                        hovered.candidate === candidate &&
+                        hovered.bar === "outside_support"
+                          ? 1
+                          : 0,
+                    }}
                   />
                   {crypto_support && (
-                    <g>
-                      <rect
+                    <g
+                      onMouseEnter={() =>
+                        setHovered({ candidate, bar: "crypto_support" })
+                      }
+                      onMouseLeave={() => setHovered(null)}
+                    >
+                      <motion.rect
                         x={xRaised}
                         y={yCandidate}
                         width={xCryptoSupportWidth}
                         height={y.bandwidth()}
                         fill="url(#hatch)"
+                        className={styles.spendingBar}
+                        initial={false}
+                        animate={{
+                          strokeOpacity:
+                            hovered !== null &&
+                            hovered.candidate === candidate &&
+                            hovered.bar === "crypto_support"
+                              ? 1
+                              : 0,
+                        }}
                       />
-                      <BarLabel
-                        x={xRaised + xCryptoSupportWidth}
-                        width={xCryptoSupportWidth}
-                        y={yCandidate}
-                        height={y.bandwidth()}
-                        label={gridLabelFormatter(crypto_support)}
-                        backgroundClass={styles.barLabelSupport}
-                      />
+                      {hovered !== null &&
+                        hovered.candidate === candidate &&
+                        hovered.bar === "crypto_support" && (
+                          <BarLabel
+                            x={xRaised + xCryptoSupportWidth}
+                            width={xCryptoSupportWidth}
+                            y={yCandidate}
+                            height={y.bandwidth()}
+                            label={gridLabelFormatter(crypto_support)}
+                            backgroundClass={styles.barLabelSupport}
+                          />
+                        )}
                     </g>
                   )}
-                  <BarLabel
-                    x={xRaised + xOutsideSupportWidth}
-                    width={xOutsideSupportWidth}
-                    y={yCandidate}
-                    height={y.bandwidth()}
-                    label={gridLabelFormatter(outside_support)}
-                    backgroundClass={styles.barLabelSupport}
-                  />
+                  {hovered !== null &&
+                    hovered.candidate === candidate &&
+                    hovered.bar === "outside_support" && (
+                      <BarLabel
+                        x={xRaised + xOutsideSupportWidth}
+                        width={xOutsideSupportWidth}
+                        y={yCandidate}
+                        height={y.bandwidth()}
+                        label={gridLabelFormatter(outside_support)}
+                        backgroundClass={styles.barLabelSupport}
+                      />
+                    )}
                 </g>
               )}
               {outside_oppose && (
-                <g>
-                  <rect
+                <g
+                  onMouseEnter={() =>
+                    setHovered({ candidate, bar: "outside_oppose" })
+                  }
+                  onMouseLeave={() => setHovered(null)}
+                >
+                  <motion.rect
                     x={xOutsideOpposeStart}
                     y={yCandidate}
                     width={xOutsideOpposeWidth}
                     height={y.bandwidth()}
-                    className={styles.outside_opposeBar}
+                    className={`${styles.outside_opposeBar} ${styles.spendingBar}`}
+                    initial={false}
+                    animate={{
+                      strokeOpacity:
+                        hovered !== null &&
+                        hovered.candidate === candidate &&
+                        hovered.bar === "outside_oppose"
+                          ? 1
+                          : 0,
+                    }}
                   />
                   {crypto_oppose && (
-                    <g>
-                      <rect
+                    <g
+                      onMouseEnter={() =>
+                        setHovered({ candidate, bar: "crypto_oppose" })
+                      }
+                      onMouseLeave={() => setHovered(null)}
+                    >
+                      <motion.rect
                         x={xCryptoOpposeStart}
                         y={yCandidate}
                         width={xCryptoOpposeWidth}
                         height={y.bandwidth()}
                         fill="url(#hatch)"
+                        className={styles.spendingBar}
+                        initial={false}
+                        animate={{
+                          strokeOpacity:
+                            hovered !== null &&
+                            hovered.candidate === candidate &&
+                            hovered.bar === "crypto_oppose"
+                              ? 1
+                              : 0,
+                        }}
                       />
-                      <BarLabel
-                        x={xCryptoOpposeStart}
-                        width={xCryptoOpposeWidth}
-                        y={yCandidate}
-                        height={y.bandwidth()}
-                        label={gridLabelFormatter(crypto_oppose)}
-                        negative={true}
-                        backgroundClass={styles.barLabelOppose}
-                      />
+                      {hovered !== null &&
+                        hovered.candidate === candidate &&
+                        hovered.bar === "crypto_oppose" && (
+                          <BarLabel
+                            x={xCryptoOpposeStart}
+                            width={xCryptoOpposeWidth}
+                            y={yCandidate}
+                            height={y.bandwidth()}
+                            label={gridLabelFormatter(crypto_oppose)}
+                            negative={true}
+                            backgroundClass={styles.barLabelOppose}
+                          />
+                        )}
                     </g>
                   )}
-                  <BarLabel
-                    x={xOutsideOpposeStart}
-                    width={xOutsideOpposeWidth}
-                    y={yCandidate}
-                    height={y.bandwidth()}
-                    negative={true}
-                    label={gridLabelFormatter(outside_oppose)}
-                    backgroundClass={styles.barLabelOppose}
-                  />
+                  {hovered !== null &&
+                    hovered.candidate === candidate &&
+                    hovered.bar === "outside_oppose" && (
+                      <BarLabel
+                        x={xOutsideOpposeStart}
+                        width={xOutsideOpposeWidth}
+                        y={yCandidate}
+                        height={y.bandwidth()}
+                        negative={true}
+                        label={gridLabelFormatter(outside_oppose)}
+                        backgroundClass={styles.barLabelOppose}
+                      />
+                    )}
                 </g>
               )}
               <foreignObject
@@ -339,6 +454,13 @@ export default function Spending({
             </foreignObject>
           </g>
           <g transform={`translate(${(CHART_WIDTH * 3) / 4}, 0)`}>
+            <rect
+              x={0}
+              y={LEGEND_Y}
+              width={10}
+              height={10}
+              className={styles.cryptoSpendingLabel}
+            />
             <rect
               x={0}
               y={LEGEND_Y}

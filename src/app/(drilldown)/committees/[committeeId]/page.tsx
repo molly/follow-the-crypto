@@ -34,7 +34,6 @@ export default async function CommitteePage({
 }) {
   const committeeData = await fetchCommitteeDetails(params.committeeId);
   const donorData = await fetchCommitteeDonors(params.committeeId);
-  console.log(donorData);
 
   if (isError(committeeData) || isError(donorData)) {
     if (is4xx(committeeData) || is4xx(donorData)) {

@@ -90,6 +90,17 @@ export const fetchCommitteeTotalDisbursements = cache(
 );
 
 // ALL COMMITTEES -------------------------------------------------------
+export const fetchPACsByReceipts = cache(
+  async (): Promise<AllCommitteesSummary[] | ErrorType> => {
+    const data = await fetchSnapshot("allCommittees", "allPacs");
+    if (isError(data)) {
+      return data as ErrorType;
+    } else {
+      return data.by_receipts as AllCommitteesSummary[];
+    }
+  },
+);
+
 export const fetchSuperPACsByReceipts = cache(
   async (): Promise<AllCommitteesSummary[] | ErrorType> => {
     const data = await fetchSnapshot("allCommittees", "superPacs");

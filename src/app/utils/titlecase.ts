@@ -26,9 +26,18 @@ export function titlecaseCompany(str: string): string {
 }
 
 export function titlecaseCommittee(str: string): string {
+  if (str === "ACTBLUE") {
+    return "ActBlue";
+  }
+  if (str === "WINRED") {
+    return "WinRed";
+  }
+  if (str.includes(" DBA ")) {
+    str = str.split(" DBA ")[0];
+  }
   let titlecased = titlecase(str);
   titlecased = titlecased.replace(
-    /\b(SMP|LCV|AFC|UDP|PAC|RSLC|NEA|I{1,3})\b/gi,
+    /\b(SMP|LCV|AF(C|P)|UDP|PAC|RSLC|NEA|I{1,3}|DNC|D(C|S)CC|NR(S|C)C|FF|HMP|SFA|SEIU|COPE|AB)\b/gi,
     function (txt) {
       return txt.toUpperCase();
     },

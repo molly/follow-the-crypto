@@ -31,6 +31,9 @@
   --color-red-400: #f87171;
   --color-red-800: #991b1b;
 
+  --color-green-400: #4ade80;
+  --color-green-700: #15803d;
+
   --accent: var(--color-blue-600);
 
   --party-republican: #e81b23;
@@ -175,6 +178,10 @@ table.lined {
   text-align: right;
 }
 
+.no-wrap {
+  white-space: nowrap;
+}
+
 iframe {
   border-width: 0;
 }
@@ -190,6 +197,14 @@ iframe {
   color: var(--secondary-text);
 }
 
+.small {
+  font-size: 0.9rem;
+}
+
+.smaller {
+  font-size: 0.8rem;
+}
+
 a.unstyled {
   color: inherit;
   text-decoration: none;
@@ -197,10 +212,6 @@ a.unstyled {
 
 .bold {
   font-weight: bold;
-}
-
-.smaller {
-  font-size: 0.9rem;
 }
 
 @media (prefers-color-scheme: dark) {

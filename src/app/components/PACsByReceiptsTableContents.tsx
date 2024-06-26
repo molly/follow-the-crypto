@@ -1,0 +1,93 @@
+import styles from "@/app/components/tables.module.css";
+import { AllCommitteesSummary } from "@/app/types/Committee";
+import { ErrorType, isError } from "@/app/utils/errors";
+import { titlecaseCommittee } from "@/app/utils/titlecase";
+import { formatCurrency } from "@/app/utils/utils";
+import Link from "next/link";
+import ErrorText from "./ErrorText";
+
+export default async function PACsByReceiptsTableContents({
+  data,
+  type,
+  fullPage = false,
+}: {
+  data: AllCommitteesSummary[] | ErrorType;
+  type: string;
+  fullPage?: boolean;
+}) {
+  if (isError(data)) {
+    return (
+      <tr className={styles.superPacErrorRow}>
+        <td colSpan={6}>
+          <ErrorText subject={`the list of ${type} PACs`} />
+        </td>
+      </tr>
+    );
+  }
+
+  const PACs = data as AllCommitteesSummary[];
+  let PACsToShow;
+
+  if (fullPage) {
+    PACsToShow = PACs;
+  } else {
+    let lastCryptoIndex = -1;
+    for (let i = PACs.length - 1; i >= 0; i--) {
+      if (PACs[i].is_crypto) {
+        lastCryptoIndex = i;
+        break;
+      }
+    }
+
+    // Don't show a bunch of extra rows if they're all unrelated PACs
+    const limit = Math.ceil(lastCryptoIndex / 10) * 10;
+    PACsToShow = PACs.slice(0, limit);
+  }
+
+  return (
+    <>
+      {PACsToShow.map((committee, ind) => {
+        const committeeName = committee.committee_name
+          ? titlecaseCommittee(committee.committee_name)
+          : "";
+        let committeeIdentifier: string | JSX.Element = committeeName;
+        if (committee.is_crypto) {
+          committeeIdentifier = (
+            <Link href={`/committees/${committee.committee_id}`}>
+              <b>{committeeName}</b>
+            </Link>
+          );
+        }
+        return (
+          <tr
+            key={committee.committee_id}
+            className={
+              committee.is_crypto
+                ? styles.superPacCryptoRow
+                : styles.superPacRow
+            }
+          >
+            <td>{ind + 1}</td>
+            <td className="text-cell">{committeeIdentifier}</td>
+            <td className={`text-cell ${styles.tableCellCollapse1}`}>
+              {committee.description}
+            </td>
+            {type === "all" && (
+              <td className={`text-cell ${styles.tableCellCollapse1}`}>
+                <span className="no-wrap">
+                  {committee.committee_type_full?.split(" (")[0].split(" -")[0]}
+                </span>
+              </td>
+            )}
+            <td className="number-cell">
+              {formatCurrency(committee.receipts, true)}
+            </td>
+            <td className={`number-cell ${styles.tableCellCollapse2}`}>
+              {formatCurrency(committee.last_cash_on_hand_end_period, true)}
+            </td>
+          </tr>
+        );
+      })}
+    </>
+  );
+}

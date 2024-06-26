@@ -22,7 +22,10 @@ export default function Breadcrumbs() {
 
   useEffect(() => {
     (async function () {
-      if (pathname.startsWith("/committees")) {
+      if (
+        pathname.startsWith("/committees") &&
+        !pathname.startsWith("/committees/ranking/")
+      ) {
         const committeeDetails = await fetchConstant("committees");
         if (isError(committeeDetails)) {
           return;
@@ -37,7 +40,7 @@ export default function Breadcrumbs() {
     index: number,
     segments: string[],
   ): string => {
-    if (segments[0] === "committees" && index === 1) {
+    if (segments[0] === "committees" && index === 1 && segment !== "ranking") {
       if (!committees || !(segment in committees)) {
         return segment;
       }
