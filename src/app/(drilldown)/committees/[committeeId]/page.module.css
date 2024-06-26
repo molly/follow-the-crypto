@@ -10,6 +10,7 @@
 .receipts {
   composes: accent-text from "@/app/shared.module.css";
   font-size: 3rem;
+  margin-bottom: 0;
 }
 
 .raisedDetails {

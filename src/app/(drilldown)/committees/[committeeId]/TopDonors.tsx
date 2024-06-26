@@ -14,7 +14,7 @@ export default async function TopDonors({ donors }: { donors: Contributions }) {
           <ContributionsGroup key={`donor-${ind}`} donorGroup={donorGroup} />
         ))
       ) : (
-        <div>No donors found</div>
+        <div className={`secondary ${styles.donorRow}`}>No donors found.</div>
       )}
     </section>
   );

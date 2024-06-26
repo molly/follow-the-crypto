@@ -33,6 +33,7 @@ export type CommitteeDetails = CommitteeConstant &
     | "contributions"
     | "contribution_refunds"
     | "disbursements"
+    | "last_cash_on_hand_end_period"
     | "net_contributions"
     | "receipts"
     | "independent_expenditures"

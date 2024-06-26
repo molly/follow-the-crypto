@@ -11,7 +11,9 @@ export default async function CommitteeList() {
     return <div>Something went wrong when fetching committees.</div>;
   }
 
-  const committees = data as CommitteeDetails[];
+  const committees = (data as CommitteeDetails[]).filter(
+    (c) => c.contributions && c.contributions > 0,
+  );
 
   return (
     <ul className={sharedStyles.plainList}>

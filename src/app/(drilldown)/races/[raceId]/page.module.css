@@ -84,9 +84,9 @@
   composes: card from "@/app/shared.module.css";
 }
 
-.candidateLabel,
-.barLabel {
+.candidateLabel {
   display: flex;
+  height: 100%;
   align-items: center;
   justify-content: flex-end;
   text-align: right;
@@ -116,6 +116,10 @@
   text-align: left;
 }
 
+.mainGridLine {
+  stroke: var(--main-text);
+}
+
 .gridLine {
   stroke: var(--table-color);
 }
@@ -138,6 +142,30 @@
 
 .crypto_opposeBar {
   fill: var(--color-red-800);
+}
+
+.barLabel {
+  display: flex;
+  align-items: center;
+  font-size: 0.35rem;
+}
+
+.barLabelSupport {
+  padding: 0.05rem;
+  background-color: var(--color-blue-400);
+}
+
+.barLabelOppose {
+  padding: 0.05rem;
+  background-color: var(--color-red-400);
+}
+
+.hugRight {
+  justify-content: flex-end;
+}
+
+.hugLeft {
+  justify-content: flex-start;
 }
 
 /* Ads */

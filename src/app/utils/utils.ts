@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
 
 export function formatCurrency(value?: number, round = false): string {
-  if (!value) {
+  if (value === undefined || value === null) {
     return "";
   }
   if (round) {

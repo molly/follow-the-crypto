@@ -28,6 +28,7 @@ export default async function CommitteeDetailsSection({
       );
   };
 
+  const total = donors.total_contributed + donors.total_transferred;
   return (
     <>
       <section className={sharedStyles.fullWidth}>
@@ -43,10 +44,7 @@ export default async function CommitteeDetailsSection({
       <section className={sharedStyles.smallCard}>
         <div className={styles.receiptsSection}>
           <h2 className={styles.receipts}>
-            {formatCurrency(
-              donors.total_contributed + donors.total_transferred,
-              true,
-            )}
+            {formatCurrency(total || 0, true)}
           </h2>
           <span>raised this cycle.</span>
           {donors.total_transferred > 0 && (
