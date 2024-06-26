@@ -8,6 +8,7 @@ import { Metadata } from "next";
 
 import { Contributions } from "@/app/types/Contributions";
 import CommitteeDetailsSection from "./CommitteeDetailsSection";
+import RecentExpenditures from "./RecentExpenditures";
 import TopDonors from "./TopDonors";
 
 // TODO: Page hangs if this fetch is slow
@@ -50,6 +51,7 @@ export default async function CommitteePage({
     <>
       <CommitteeDetailsSection committee={committee} donors={donors} />
       <TopDonors donors={donors} />
+      <RecentExpenditures committee={committee} />
     </>
   );
 }

@@ -45,7 +45,10 @@ export function titlecaseCommittee(str: string): string {
   return titlecased;
 }
 
-export function titlecaseIndividualName(str: string): string {
+export function titlecaseIndividualName(str?: string | null): string {
+  if (!str) {
+    return "";
+  }
   return str.replace(/\b[\w.']+\b/, function (x) {
     let cased = titlecase(x);
     cased = cased.replace(/\b(Ma?c|[OD]')(\w+)\b/gi, function (_, m, rest) {

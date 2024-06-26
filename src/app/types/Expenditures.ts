@@ -25,9 +25,11 @@ export type Expenditure = { committee_id: number } & Pick<
   | "candidate_party"
   | "category_code"
   | "category_code_full"
+  | "dissemination_date"
   | "election_type"
   | "payee_name"
   | "support_oppose_indicator"
+  | "transaction_id"
 >;
 
 interface ExpenditureGroup {
@@ -49,6 +51,10 @@ export interface Expenditures {
   by_committee: Record<string, ExpenditureGroup>;
   by_race: Record<string, RaceExpenditureGroup>;
   total: number;
+}
+
+export interface RecentCommitteeExpenditures {
+  recent: Expenditure[];
 }
 
 export type ExpenditureCandidateSummary = {

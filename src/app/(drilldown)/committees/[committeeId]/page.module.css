@@ -18,7 +18,8 @@
 }
 
 .donorSection {
-  composes: fullWidthCard from "@/app/shared.module.css";
+  composes: card from "@/app/shared.module.css";
+  grid-column: 1 / 9;
   padding: 1rem 0;
 }
 
@@ -27,12 +28,13 @@
   font-size: 1.5rem;
 }
 
-.donorRow {
+.donorRow,
+.recentExpenditureRow {
   display: flex;
   flex-direction: column;
   padding: 1rem;
 
-  &:nth-child(odd) {
+  &:nth-child(even) {
     background: var(--table-background-secondary);
   }
 }
@@ -103,4 +105,23 @@
 
 .topLevelContribution {
   color: var(--main-text);
+}
+
+/* Recent expenditures */
+.recentExpendituresSection {
+  composes: card from "@/app/shared.module.css";
+  grid-column: 9/13;
+  padding: 1rem 0;
+}
+
+.expenditureNameAndAmount {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  margin: 0.5rem 0;
+}
+
+.expenditureDescription {
+  font-size: 0.9rem;
+  font-style: italic;
 }

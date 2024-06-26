@@ -7,7 +7,11 @@ import {
 import { Contributions } from "@/app/types/Contributions";
 import { ErrorType, isError } from "@/app/utils/errors";
 import { Ad, AdGroup } from "../types/Ads";
-import { Expenditures, ExpendituresByCandidate } from "../types/Expenditures";
+import {
+  Expenditures,
+  ExpendituresByCandidate,
+  RecentCommitteeExpenditures,
+} from "../types/Expenditures";
 
 import {
   DocumentData,
@@ -168,6 +172,14 @@ export const fetchAllStateExpenditures = cache(
 export const fetchStateExpenditures = cache(
   async (stateAbbr: string): Promise<Expenditures | ErrorType> =>
     fetchSnapshot("expendituresByState", stateAbbr),
+);
+
+// Fetch expenditures for a specific committee
+export const fetchRecentCommitteeExpenditures = cache(
+  async (
+    committeeId: string,
+  ): Promise<Record<string, RecentCommitteeExpenditures> | ErrorType> =>
+    fetchSnapshot("expenditures", "committee"),
 );
 
 //ELECTIONS -------------------------------------------------------------
