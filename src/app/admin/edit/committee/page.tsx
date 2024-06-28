@@ -2,7 +2,6 @@
 
 import { uncachedFetchCommittees } from "@/app/actions/fetch";
 import { db } from "@/app/lib/db";
-import sharedStyles from "@/app/shared.module.css";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { isError } from "@/app/utils/errors";
 import { doc, setDoc } from "firebase/firestore";
@@ -129,7 +128,7 @@ export default function CommitteeEditor({}) {
 
   return (
     <>
-      <h1 className={sharedStyles.fullWidth}>Editor</h1>
+      <h1>Editor</h1>
       <section className={styles.editorCard}>
         <select
           className={styles.editorSelect}

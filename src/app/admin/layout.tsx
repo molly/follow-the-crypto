@@ -8,7 +8,7 @@ export default function AdminLayout({
 }>) {
   return (
     <AuthProvider>
-      <main className={sharedStyles.mainGrid}>{children}</main>
+      <main className={sharedStyles.mainLayout}>{children}</main>
     </AuthProvider>
   );
 }

@@ -11,7 +11,7 @@ export default function DrilldownLayout({
     <>
       <Header />
       <main
-        className={`${sharedStyles.mainGrid} ${sharedStyles.mainWithHeader}`}
+        className={`${sharedStyles.mainLayout} ${sharedStyles.mainWithHeader}`}
       >
         {children}
       </main>

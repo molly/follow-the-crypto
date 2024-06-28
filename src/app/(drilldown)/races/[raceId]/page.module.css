@@ -120,7 +120,7 @@
   text-align: left;
 }
 
-.mainGridLine {
+.mainLayoutLine {
   stroke: var(--main-text);
 }
 
@@ -236,7 +236,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  .mainGridLine {
+  .mainLayoutLine {
     stroke: var(--color-slate-400);
   }
 

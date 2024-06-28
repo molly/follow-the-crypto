@@ -36,7 +36,7 @@ function CardRowSkeleton() {
 export default function Loading() {
   return (
     <>
-      <div className={sharedStyles.fullWidth}>
+      <div>
         <Skeleton height="1.5rem" width="20rem" />
         <Skeleton height="0.9em" width="50em" />
         <Skeleton height="3em" />

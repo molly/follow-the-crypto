@@ -174,7 +174,13 @@ export const fetchStateExpenditures = cache(
     fetchSnapshot("expendituresByState", stateAbbr),
 );
 
-// Fetch expenditures for a specific committee
+// Fetch recent expenditures by any committee
+export const fetchAllRecentExpenditures = cache(
+  async (): Promise<RecentCommitteeExpenditures | ErrorType> =>
+    fetchSnapshot("expenditures", "all"),
+);
+
+// Fetch recent expenditures for a specific committee
 export const fetchRecentCommitteeExpenditures = cache(
   async (
     committeeId: string,

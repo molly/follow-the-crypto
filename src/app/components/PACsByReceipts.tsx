@@ -1,11 +1,8 @@
-"use client";
-
 import styles from "@/app/components/tables.module.css";
-import useFade from "@/app/hooks/useFade";
 import { range } from "@/app/utils/range";
-import { motion, useScroll } from "framer-motion";
 import Link from "next/link";
-import { Suspense, useRef } from "react";
+import { Suspense } from "react";
+import OverflowSection from "./OverflowSection";
 import Skeleton from "./skeletons/Skeleton";
 
 function TableContentsSkeleton() {
@@ -42,10 +39,6 @@ export default function PACsByReceipts({
   type: string;
   fullPage?: boolean;
 }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ container: containerRef });
-  const fade = useFade(scrollYProgress);
-
   return (
     <div className={styles.superPacCard}>
       <div className={styles.tableCardContent}>
@@ -67,11 +60,7 @@ export default function PACsByReceipts({
           </p>
         )}
       </div>
-      <motion.div
-        className={fullPage ? undefined : styles.superPacTableWrapper}
-        ref={containerRef}
-        style={{ maskImage: fullPage ? undefined : fade }}
-      >
+      <OverflowSection fullPage={fullPage} headerHeight="2.2rem">
         <table className={styles.superPacTable}>
           <thead>
             <tr className={styles.superPacTableHeader}>
@@ -99,7 +88,7 @@ export default function PACsByReceipts({
             <Suspense fallback={<TableContentsSkeleton />}>{children}</Suspense>
           </tbody>
         </table>
-      </motion.div>
+      </OverflowSection>
       {!fullPage && (
         <div className={styles.tableCardContent}>
           {type === "super" && (

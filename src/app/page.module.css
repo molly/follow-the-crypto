@@ -1,5 +1,4 @@
 .titleWrapper {
-  grid-column: 1 / 13;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -20,16 +19,21 @@
   font-size: 6rem;
 }
 
-.mapContainer {
-  grid-column: 1 / 13;
+.totalsRow {
+  display: grid;
+  gap: inherit;
+  grid-template-columns: repeat(2, minmax(10rem, 25rem));
+  margin: 0 auto;
 }
 
-.raisedCard {
-  grid-column: 3 / 7;
-}
-
-.spentCard {
-  grid-column: 7 / 11;
+.mainCards {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: repeat(2, 40rem);
+  grid-template-areas:
+    "influencedCard expenditures"
+    "superPacCard expenditures";
 }
 
 .spentTopSection {
@@ -39,19 +43,21 @@
   height: 2.4rem;
 }
 
-@media (max-width: 1200px) {
-  .raisedCard {
-    grid-column: 1 / 7;
-  }
-
-  .spentCard {
-    grid-column: 7 / 13;
-  }
+.recentExpenditures {
+  composes: cardWithTable from "@/app/shared.module.css";
+  grid-area: expenditures;
+  position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
-@media (max-width: 600px) {
-  .raisedCard,
-  .spentCard {
-    grid-column: 3 / 11;
+.recentExpendituresWrapper {
+  max-height: unset;
+  height: 100%;
+}
+
+@media (max-width: 768px) {
+  .totalsRow {
+    grid-template-columns: minmax(10rem, 25rem);
   }
 }

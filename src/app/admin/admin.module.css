@@ -1,5 +1,5 @@
 .editorCard {
-  composes: fullWidthCard from "@/app/shared.module.css";
+  composes: card from "@/app/shared.module.css";
   display: flex;
   flex-direction: column;
 }

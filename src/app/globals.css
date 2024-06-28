@@ -1,5 +1,5 @@
 :root {
-  --max-width: 90rem;
+  --max-width: 2000px;
   --border-radius: 8px;
 
   --color-black: #000;
@@ -184,6 +184,16 @@ table.lined {
 
 iframe {
   border-width: 0;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  gap: inherit;
+}
+
+.margin-0-auto {
+  margin: 0 auto;
 }
 
 .no-margin {

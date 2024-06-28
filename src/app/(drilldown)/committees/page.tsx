@@ -1,5 +1,4 @@
 import Skeleton from "@/app/components/skeletons/Skeleton";
-import sharedStyles from "@/app/shared.module.css";
 import { range } from "@/app/utils/range";
 import { Suspense } from "react";
 import CommitteeList from "./CommitteeList";
@@ -16,7 +15,7 @@ function CommitteeListSkeleton() {
 
 export default async function CommitteesPage() {
   return (
-    <section className={sharedStyles.fullWidth}>
+    <section>
       <h1>Committees</h1>
       <Suspense fallback={<CommitteeListSkeleton />}>
         <CommitteeList />

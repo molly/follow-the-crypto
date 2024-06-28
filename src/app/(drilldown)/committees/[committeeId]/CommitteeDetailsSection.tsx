@@ -31,7 +31,7 @@ export default async function CommitteeDetailsSection({
   const total = donors.total_contributed + donors.total_transferred;
   return (
     <>
-      <section className={sharedStyles.fullWidth}>
+      <section>
         <h1>{committee.name}</h1>
         <span className="secondary smaller">{renderDetails()}</span>
         {committee.description && (
@@ -41,22 +41,24 @@ export default async function CommitteeDetailsSection({
           ></div>
         )}
       </section>
-      <section className={sharedStyles.smallCard}>
-        <div className={styles.receiptsSection}>
-          <h2 className={styles.receipts}>
-            {formatCurrency(total || 0, true)}
-          </h2>
-          <span>raised this cycle.</span>
-          {donors.total_transferred > 0 && (
-            <div className={styles.raisedDetails}>
-              <div>
-                {`${formatCurrency(donors.total_contributed, true)} came from direct contributions.`}
+      <section className="margin-0-auto">
+        <div className={sharedStyles.smallCard}>
+          <div className={styles.receiptsSection}>
+            <h2 className={styles.receipts}>
+              {formatCurrency(total || 0, true)}
+            </h2>
+            <span>raised this cycle.</span>
+            {donors.total_transferred > 0 && (
+              <div className={styles.raisedDetails}>
+                <div>
+                  {`${formatCurrency(donors.total_contributed, true)} came from direct contributions.`}
+                </div>
+                <div>
+                  {`${formatCurrency(donors.total_transferred, true)} came from transfers from other committees.`}
+                </div>
               </div>
-              <div>
-                {`${formatCurrency(donors.total_transferred, true)} came from transfers from other committees.`}
-              </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </section>
     </>

@@ -1,12 +1,9 @@
-"use client";
-
 import styles from "@/app/components/tables.module.css";
-import useFade from "@/app/hooks/useFade";
 import { range } from "@/app/utils/range";
-import { motion, useScroll } from "framer-motion";
 import Link from "next/link";
-import { Suspense, useRef } from "react";
+import { Suspense } from "react";
 import { CandidateSkeleton } from "./Candidate";
+import OverflowSection from "./OverflowSection";
 import Skeleton from "./skeletons/Skeleton";
 
 function InfluencedRacesTableContentsSkeleton({
@@ -52,10 +49,6 @@ export default function InfluencedRaces({
   children: React.ReactNode;
   fullPage?: boolean;
 }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ container: containerRef });
-  const fade = useFade(scrollYProgress);
-
   return (
     <div className={styles.influencedCard}>
       {!fullPage && (
@@ -68,13 +61,7 @@ export default function InfluencedRaces({
           <h2>Races influenced by crypto industry money</h2>
         </div>
       )}
-      <motion.div
-        className={fullPage ? undefined : styles.influencedTableWrapper}
-        ref={containerRef}
-        style={{
-          maskImage: fullPage ? undefined : fade,
-        }}
-      >
+      <OverflowSection fullPage={fullPage} headerHeight="2.2rem">
         <table className={styles.influencedTable}>
           <thead>
             <tr className={styles.influencedTableHeader}>
@@ -96,7 +83,7 @@ export default function InfluencedRaces({
             </Suspense>
           </tbody>
         </table>
-      </motion.div>
+      </OverflowSection>
       {!fullPage && (
         <div className={styles.tableCardContent}>
           <Link href="/races">&raquo; View all races with crypto spending</Link>

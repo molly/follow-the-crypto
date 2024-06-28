@@ -1,17 +1,27 @@
 .superPacCard,
-.influencedCard {
-  composes: fullWidthCardWithTable from "@/app/shared.module.css";
+.influencedCard,
+.recentExpendituresCard {
+  composes: cardWithTable from "@/app/shared.module.css";
   position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.influencedCard {
+  grid-area: influencedCard;
+}
+
+.superPacCard {
+  grid-area: superPacCard;
 }
 
 .superPacCard {
   padding-bottom: 0.5rem;
 }
 
-.superPacTableWrapper,
-.influencedTableWrapper {
+.overflowWrapper {
   composes: hasFade from "@/app/shared.module.css";
-  max-height: 25rem;
+  max-height: 100%;
   overflow-y: auto;
 }
 

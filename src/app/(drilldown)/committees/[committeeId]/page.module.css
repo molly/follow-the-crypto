@@ -2,6 +2,10 @@
   margin-top: 1rem;
 }
 
+.committeeWrapper {
+  align-items: flex-start;
+}
+
 .receiptsSection {
   composes: fullWidth from "@/app/shared.module.css";
   text-align: center;
@@ -19,7 +23,7 @@
 
 .donorSection {
   composes: card from "@/app/shared.module.css";
-  grid-column: 1 / 9;
+  width: 66%;
   padding: 1rem 0;
 }
 
@@ -28,8 +32,7 @@
   font-size: 1.5rem;
 }
 
-.donorRow,
-.recentExpenditureRow {
+.donorRow {
   display: flex;
   flex-direction: column;
   padding: 1rem;
@@ -105,23 +108,4 @@
 
 .topLevelContribution {
   color: var(--main-text);
-}
-
-/* Recent expenditures */
-.recentExpendituresSection {
-  composes: card from "@/app/shared.module.css";
-  grid-column: 9/13;
-  padding: 1rem 0;
-}
-
-.expenditureNameAndAmount {
-  display: flex;
-  justify-content: space-between;
-  font-weight: bold;
-  margin: 0.5rem 0;
-}
-
-.expenditureDescription {
-  font-size: 0.9rem;
-  font-style: italic;
 }

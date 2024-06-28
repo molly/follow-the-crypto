@@ -1,7 +1,7 @@
-.mainGrid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 1rem 1rem;
+.mainLayout {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
   padding: 0.5rem;
   max-width: var(--max-width);
   margin: 0 auto;
@@ -20,7 +20,6 @@
 
 .title {
   composes: accent-text;
-  grid-column: 1 / 13;
   text-shadow: 0.25rem 0.25rem var(--accent);
   font-size: clamp(2rem, 10vw, 8rem);
   text-align: center;
@@ -31,10 +30,6 @@
   composes: title;
   font-size: clamp(2rem, 8vw, 5rem);
   text-align: center;
-}
-
-.fullWidth {
-  grid-column: 1 / 13;
 }
 
 .card {
@@ -52,24 +47,15 @@
 
 .smallCard {
   composes: card;
-  grid-column: 2 / 12;
   text-align: center;
+  min-width: 10rem;
+  max-width: 25rem;
 }
 
 .smallCardSkeleton {
   composes: smallCard;
   display: flex;
   justify-content: center;
-}
-
-.fullWidthCard {
-  composes: card;
-  grid-column: 1/13;
-}
-
-.fullWidthCardWithTable {
-  composes: cardWithTable;
-  grid-column: 1/13;
 }
 
 .highlight {
@@ -107,7 +93,7 @@
 }
 
 @media (min-width: 500px) {
-  .mainGrid {
+  .mainLayout {
     padding: 0.5rem 2rem;
   }
 
@@ -118,28 +104,14 @@
 }
 
 @media (min-width: 700px) {
-  .mainGrid {
+  .mainLayout {
     padding: 0.5rem 4rem;
-  }
-
-  .smallCard {
-    grid-column: 3/11;
   }
 }
 
 @media (min-width: 800px) {
-  .mainGrid {
+  .mainLayout {
     gap: 2rem 1rem;
     padding: 0.5rem 6rem;
-  }
-
-  .smallCard {
-    grid-column: 4/10;
-  }
-}
-
-@media (min-width: 1200px) {
-  .smallCard {
-    grid-column: 5/9;
   }
 }

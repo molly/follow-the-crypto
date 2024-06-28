@@ -8,8 +8,9 @@ import { Metadata } from "next";
 
 import { Contributions } from "@/app/types/Contributions";
 import CommitteeDetailsSection from "./CommitteeDetailsSection";
-import RecentExpenditures from "./RecentExpenditures";
+import CommitteeRecentExpenditures from "./CommitteeRecentExpenditures";
 import TopDonors from "./TopDonors";
+import styles from "./page.module.css";
 
 // TODO: Page hangs if this fetch is slow
 export async function generateMetadata({
@@ -50,8 +51,10 @@ export default async function CommitteePage({
   return (
     <>
       <CommitteeDetailsSection committee={committee} donors={donors} />
-      <TopDonors donors={donors} />
-      <RecentExpenditures committee={committee} />
+      <div className={`${styles.committeeWrapper} row`}>
+        <TopDonors donors={donors} />
+        <CommitteeRecentExpenditures committee={committee} />
+      </div>
     </>
   );
 }

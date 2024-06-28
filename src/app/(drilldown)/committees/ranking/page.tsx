@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default async function RankingListPage() {
   return (
-    <section className={sharedStyles.fullWidth}>
+    <section>
       <h1>Most highly funded PACs</h1>
       <ul className={sharedStyles.plainList}>
         <li className={sharedStyles.plainListItem}>

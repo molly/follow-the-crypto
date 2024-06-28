@@ -167,7 +167,9 @@ export default function Spending({
                 y1={CHART_HEIGHT - GRID_LABEL_HEIGHT}
                 y2={LEGEND_HEIGHT}
                 strokeWidth={GRIDLINE_WIDTH}
-                className={value === 0 ? styles.mainGridLine : styles.gridLine}
+                className={
+                  value === 0 ? styles.mainLayoutLine : styles.gridLine
+                }
               />
               <text
                 x={x(value)}
