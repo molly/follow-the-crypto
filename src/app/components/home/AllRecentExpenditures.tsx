@@ -2,7 +2,7 @@ import { fetchAllRecentExpenditures, fetchConstant } from "@/app/actions/fetch";
 import tableStyles from "@/app/components/tables.module.css";
 import styles from "@/app/page.module.css";
 import { CommitteeConstant } from "@/app/types/Committee";
-import { RecentCommitteeExpenditures } from "@/app/types/Expenditures";
+import { Expenditure } from "@/app/types/Expenditures";
 import { isError } from "@/app/utils/errors";
 import { Suspense } from "react";
 import RecentExpenditures from "../RecentExpenditures";
@@ -19,10 +19,10 @@ async function AllRecentExpendituresContent() {
     return <div>Something went wrong when fetching recent expenditures.</div>;
   }
 
-  const allRecentExpenditures = expendituresData as RecentCommitteeExpenditures;
+  const allRecentExpenditures = expendituresData as Expenditure[];
   return (
     <RecentExpendituresContent
-      expenditures={allRecentExpenditures["recent"]}
+      expenditures={allRecentExpenditures}
       committees={committeeConstantData as Record<string, CommitteeConstant>}
     />
   );

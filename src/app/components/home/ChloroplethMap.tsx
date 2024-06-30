@@ -1,7 +1,7 @@
 "use client";
 
 import { STATES_BY_FULL } from "@/app/data/states";
-import { Expenditures } from "@/app/types/Expenditures";
+import { StateExpenditures } from "@/app/types/Expenditures";
 import { ErrorType, isError } from "@/app/utils/errors";
 import {
   autoUpdate,
@@ -29,17 +29,19 @@ import styles from "./chloroplethMap.module.css";
 
 interface HoveredState {
   state?: string;
-  expenditures?: Expenditures;
+  expenditures?: StateExpenditures;
 }
 
 function getExpenditure(
   stateFullName: string,
-  expendituresByState: Record<string, Expenditures> | ErrorType,
-): Expenditures | undefined {
+  expendituresByState: Record<string, StateExpenditures> | ErrorType,
+): StateExpenditures | undefined {
   if (!isError(expendituresByState) && stateFullName) {
     const stateAbbr = STATES_BY_FULL[stateFullName];
     if (stateAbbr && stateAbbr in expendituresByState) {
-      return (expendituresByState as Record<string, Expenditures>)[stateAbbr];
+      return (expendituresByState as Record<string, StateExpenditures>)[
+        stateAbbr
+      ];
     }
   }
   return undefined;
@@ -47,7 +49,7 @@ function getExpenditure(
 
 function getFill(
   stateFullName: string,
-  expendituresByState: Record<string, Expenditures> | ErrorType,
+  expendituresByState: Record<string, StateExpenditures> | ErrorType,
   colorScale: d3.ScaleThreshold<number, string>,
 ): string | undefined {
   if (isError(expendituresByState)) {
@@ -63,7 +65,7 @@ function getFill(
 export default function ChloroplethMap({
   expendituresByState,
 }: {
-  expendituresByState: Record<string, Expenditures> | ErrorType;
+  expendituresByState: Record<string, StateExpenditures> | ErrorType;
 }) {
   const [hoveredState, setHoveredState] = useState<HoveredState | null>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -117,7 +119,7 @@ export default function ChloroplethMap({
       }
       const expenditures = getExpenditure(
         d.properties?.name,
-        expendituresByState as Record<string, Expenditures>,
+        expendituresByState as Record<string, StateExpenditures>,
       );
       if (expenditures) {
         refs.setReference(stateRefs.current[d.id as string].current);
@@ -125,7 +127,7 @@ export default function ChloroplethMap({
           state: d.properties?.name,
           expenditures: getExpenditure(
             d.properties?.name,
-            expendituresByState as Record<string, Expenditures>,
+            expendituresByState as Record<string, StateExpenditures>,
           ),
         });
       } else {

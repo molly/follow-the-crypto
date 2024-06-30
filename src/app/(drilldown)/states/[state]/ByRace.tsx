@@ -2,7 +2,7 @@ import { fetchConstant, fetchStateElections } from "@/app/actions/fetch";
 import { CommitteeLink } from "@/app/components/CommitteeLink";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import { CommitteeConstant } from "@/app/types/Committee";
-import { Expenditures } from "@/app/types/Expenditures";
+import { StateExpenditures } from "@/app/types/Expenditures";
 import { isError } from "@/app/utils/errors";
 import { humanizeList } from "@/app/utils/humanize";
 import { getRaceName, getSubraceName, sortRaces } from "@/app/utils/races";
@@ -80,7 +80,7 @@ async function RaceCardContents({
   expenditures,
   stateAbbr,
 }: {
-  expenditures: Expenditures;
+  expenditures: StateExpenditures;
   stateAbbr: string;
 }) {
   const [electionData, committeeData] = await Promise.all([
@@ -161,7 +161,7 @@ export default async function ByRace({
   expenditures,
   stateAbbr,
 }: {
-  expenditures: Expenditures;
+  expenditures: StateExpenditures;
   stateAbbr: string;
 }) {
   return (

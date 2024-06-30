@@ -2,7 +2,7 @@ import { fetchStateExpenditures } from "@/app/actions/fetch";
 import MoneyCard from "@/app/components/MoneyCard";
 import { STATES_BY_FULL } from "@/app/data/states";
 import sharedStyles from "@/app/shared.module.css";
-import { Expenditures } from "@/app/types/Expenditures";
+import { StateExpenditures } from "@/app/types/Expenditures";
 import { is4xx, isError } from "@/app/utils/errors";
 import { titlecase } from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
@@ -45,7 +45,7 @@ export default async function CommitteePage({
     return <div>Something went wrong when getting expenditure data.</div>;
   }
 
-  const expenditures = data as Expenditures;
+  const expenditures = data as StateExpenditures;
 
   return (
     <>

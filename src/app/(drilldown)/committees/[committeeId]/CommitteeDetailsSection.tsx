@@ -54,7 +54,7 @@ export default async function CommitteeDetailsSection({
                   {`${formatCurrency(donors.total_contributed, true)} came from direct contributions.`}
                 </div>
                 <div>
-                  {`${formatCurrency(donors.total_transferred, true)} came from transfers from other committees.`}
+                  {`${formatCurrency(donors.total_transferred, true)} were transferred from other committees.`}
                 </div>
               </div>
             )}

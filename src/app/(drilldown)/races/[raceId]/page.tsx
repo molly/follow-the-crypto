@@ -5,7 +5,7 @@ import {
 import { STATES_BY_ABBR } from "@/app/data/states";
 import sharedStyles from "@/app/shared.module.css";
 import { ElectionsByState } from "@/app/types/Elections";
-import { Expenditures } from "@/app/types/Expenditures";
+import { StateExpenditures } from "@/app/types/Expenditures";
 import { is4xx, isError } from "@/app/utils/errors";
 import { getRaceName, isUpcomingRace } from "@/app/utils/races";
 import type { Metadata } from "next";
@@ -48,7 +48,7 @@ export default async function RacePage({
     return <div>Something went wrong when getting expenditure data.</div>;
   }
 
-  const expenditures = expendituresData as Expenditures;
+  const expenditures = expendituresData as StateExpenditures;
   const elections = electionsData as ElectionsByState;
   const upcomingRaces = elections[shortRaceId].races.filter((r) =>
     isUpcomingRace(r),

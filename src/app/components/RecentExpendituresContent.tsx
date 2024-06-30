@@ -36,7 +36,7 @@ function getRaceId(expenditure: Expenditure, withState = false) {
   let raceId = "";
   if (withState) {
     raceId = `${expenditure.candidate_office_state}-${expenditure.candidate_office}`;
-  } else {
+  } else if (expenditure.candidate_office) {
     raceId = expenditure.candidate_office;
   }
   if (

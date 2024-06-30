@@ -1,4 +1,4 @@
-import { Expenditures } from "@/app/types/Expenditures";
+import { StateExpenditures } from "@/app/types/Expenditures";
 import { sortRaces } from "@/app/utils/races";
 import { formatCurrency } from "@/app/utils/utils";
 
@@ -12,7 +12,7 @@ import styles from "./chloroplethMap.module.css";
 function ChloroplethTooltip(
   props: {
     state?: string;
-    expenditures?: Expenditures;
+    expenditures?: StateExpenditures;
     floatingStyles: React.CSSProperties;
     context: FloatingContext;
     setHoveredState: (state: object | null) => void;

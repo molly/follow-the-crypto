@@ -8,9 +8,10 @@ import { Contributions } from "@/app/types/Contributions";
 import { ErrorType, isError } from "@/app/utils/errors";
 import { Ad, AdGroup } from "../types/Ads";
 import {
-  Expenditures,
+  Expenditure,
   ExpendituresByCandidate,
-  RecentCommitteeExpenditures,
+  RecentExpenditures,
+  StateExpenditures,
 } from "../types/Expenditures";
 
 import {
@@ -153,39 +154,49 @@ export const uncachedFetchCommittees = async (): Promise<
 
 // EXPENDITURES ----------------------------------------------------------
 export const fetchAllStateExpenditures = cache(
-  async (): Promise<Record<string, Expenditures> | ErrorType> => {
-    const data = await fetchCollection("expendituresByState");
-    if (isError(data)) {
-      return data as ErrorType;
-    } else {
-      const expendituresData = data as DocumentData[];
-      const expendituresByState: Record<string, Expenditures> = {};
-      expendituresData.forEach((doc) => {
-        expendituresByState[doc.id] = doc.data() as Expenditures;
-      });
-      return expendituresByState;
-    }
-  },
+  async (): Promise<Record<string, StateExpenditures> | ErrorType> =>
+    fetchSnapshot("expenditures", "states"),
 );
 
 // Fetch expenditures for a specific state
 export const fetchStateExpenditures = cache(
-  async (stateAbbr: string): Promise<Expenditures | ErrorType> =>
-    fetchSnapshot("expendituresByState", stateAbbr),
+  async (stateAbbr: string): Promise<StateExpenditures | ErrorType> => {
+    const data = await fetchSnapshot("expenditures", "states");
+    if (isError(data)) {
+      return data as ErrorType;
+    } else {
+      return (data as Record<string, StateExpenditures>)[stateAbbr];
+    }
+  },
 );
 
 // Fetch recent expenditures by any committee
 export const fetchAllRecentExpenditures = cache(
-  async (): Promise<RecentCommitteeExpenditures | ErrorType> =>
-    fetchSnapshot("expenditures", "all"),
+  async (): Promise<Expenditure[] | ErrorType> => {
+    const data = await fetchSnapshot("expenditures", "recent");
+    if (isError(data)) {
+      return data as ErrorType;
+    } else {
+      return (data as RecentExpenditures)["all"];
+    }
+  },
 );
 
 // Fetch recent expenditures for a specific committee
 export const fetchRecentCommitteeExpenditures = cache(
-  async (
-    committeeId: string,
-  ): Promise<Record<string, RecentCommitteeExpenditures> | ErrorType> =>
-    fetchSnapshot("expenditures", "committee"),
+  async (committeeId: string): Promise<Expenditure[] | ErrorType> => {
+    const data = await fetchSnapshot("expenditures", "recent");
+    if (isError(data)) {
+      return data as ErrorType;
+    } else {
+      const committeeData = (data as RecentExpenditures)["by_committee"];
+      if (committeeId in committeeData) {
+        return committeeData[committeeId];
+      } else {
+        return [];
+      }
+    }
+  },
 );
 
 //ELECTIONS -------------------------------------------------------------
