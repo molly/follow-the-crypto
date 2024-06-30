@@ -1,7 +1,7 @@
 "use client";
 
 import { STATES_BY_FULL } from "@/app/data/states";
-import { StateExpenditures } from "@/app/types/Expenditures";
+import { MapData, StateTotals } from "@/app/types/MapData";
 import { ErrorType, isError } from "@/app/utils/errors";
 import {
   autoUpdate,
@@ -29,19 +29,17 @@ import styles from "./chloroplethMap.module.css";
 
 interface HoveredState {
   state?: string;
-  expenditures?: StateExpenditures;
+  expenditures?: StateTotals;
 }
 
 function getExpenditure(
   stateFullName: string,
-  expendituresByState: Record<string, StateExpenditures> | ErrorType,
-): StateExpenditures | undefined {
-  if (!isError(expendituresByState) && stateFullName) {
+  mapData: MapData | ErrorType,
+): StateTotals | undefined {
+  if (!isError(mapData) && stateFullName) {
     const stateAbbr = STATES_BY_FULL[stateFullName];
-    if (stateAbbr && stateAbbr in expendituresByState) {
-      return (expendituresByState as Record<string, StateExpenditures>)[
-        stateAbbr
-      ];
+    if (stateAbbr && stateAbbr in mapData) {
+      return (mapData as MapData)[stateAbbr];
     }
   }
   return undefined;
@@ -49,13 +47,13 @@ function getExpenditure(
 
 function getFill(
   stateFullName: string,
-  expendituresByState: Record<string, StateExpenditures> | ErrorType,
+  mapData: MapData | ErrorType,
   colorScale: d3.ScaleThreshold<number, string>,
 ): string | undefined {
-  if (isError(expendituresByState)) {
+  if (isError(mapData)) {
     return styles.stateFillError;
   }
-  const expenditures = getExpenditure(stateFullName, expendituresByState);
+  const expenditures = getExpenditure(stateFullName, mapData);
   if (expenditures) {
     return styles[colorScale(expenditures.total)];
   }
@@ -63,9 +61,9 @@ function getFill(
 }
 
 export default function ChloroplethMap({
-  expendituresByState,
+  mapData,
 }: {
-  expendituresByState: Record<string, StateExpenditures> | ErrorType;
+  mapData: MapData | ErrorType;
 }) {
   const [hoveredState, setHoveredState] = useState<HoveredState | null>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -111,31 +109,25 @@ export default function ChloroplethMap({
   const setTooltipData = useCallback(
     (d: Feature<Geometry, GeoJsonProperties>) => {
       if (
-        isError(expendituresByState) ||
+        isError(mapData) ||
         !d.properties?.name ||
         (hoveredState && hoveredState.state === d.properties.name)
       ) {
         return;
       }
-      const expenditures = getExpenditure(
-        d.properties?.name,
-        expendituresByState as Record<string, StateExpenditures>,
-      );
+      const expenditures = getExpenditure(d.properties?.name, mapData);
       if (expenditures) {
         refs.setReference(stateRefs.current[d.id as string].current);
         setHoveredState({
           state: d.properties?.name,
-          expenditures: getExpenditure(
-            d.properties?.name,
-            expendituresByState as Record<string, StateExpenditures>,
-          ),
+          expenditures: getExpenditure(d.properties?.name, mapData),
         });
       } else {
         setHoveredState(null);
         setIsOpen(false);
       }
     },
-    [hoveredState, expendituresByState, refs],
+    [hoveredState, mapData, refs],
   );
 
   const closeTooltip = useCallback((e: MouseEvent) => {
@@ -168,11 +160,7 @@ export default function ChloroplethMap({
                 id={d.id as string}
                 key={`state-${d.id}`}
                 d={path(d) as string}
-                className={getFill(
-                  d.properties?.name,
-                  expendituresByState,
-                  colorScale,
-                )}
+                className={getFill(d.properties?.name, mapData, colorScale)}
                 initial={{
                   fillOpacity: 0.0,
                   strokeOpacity: 0.2,
@@ -191,7 +179,7 @@ export default function ChloroplethMap({
           );
         })}
       </svg>
-      {isError(expendituresByState) && (
+      {isError(mapData) && (
         <div className={styles.mapLoadingError}>
           <ErrorText subject="expenditures by state" />
         </div>

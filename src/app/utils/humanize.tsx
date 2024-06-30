@@ -65,6 +65,12 @@ export function humanizeList<T>(values: T[]): T | JSX.Element | null {
   }
   if (filtered.length === 1) {
     return filtered[0];
+  } else if (filtered.length === 2) {
+    return (
+      <>
+        {filtered[0]} and {filtered[1]}
+      </>
+    );
   }
   const last = filtered.pop();
   const elements = [];

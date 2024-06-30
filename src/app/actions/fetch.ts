@@ -9,10 +9,13 @@ import { ErrorType, isError } from "@/app/utils/errors";
 import { Ad, AdGroup } from "../types/Ads";
 import {
   Expenditure,
+  ExpenditureId,
   ExpendituresByCandidate,
+  PopulatedStateExpenditures,
   RecentExpenditures,
   StateExpenditures,
 } from "../types/Expenditures";
+import { MapData } from "../types/MapData";
 
 import {
   DocumentData,
@@ -23,6 +26,7 @@ import {
 } from "firebase/firestore";
 import { cache } from "react";
 import { ElectionsByState } from "../types/Elections";
+import { hydrateStateExpenditures } from "./hydrate";
 
 const fetchSnapshot = async (
   path: string,
@@ -153,19 +157,54 @@ export const uncachedFetchCommittees = async (): Promise<
 > => fetchSnapshot("constants", "committees");
 
 // EXPENDITURES ----------------------------------------------------------
-export const fetchAllStateExpenditures = cache(
-  async (): Promise<Record<string, StateExpenditures> | ErrorType> =>
-    fetchSnapshot("expenditures", "states"),
+export const fetchAllExpenditures = cache(
+  async (): Promise<Record<ExpenditureId, Expenditure> | ErrorType> =>
+    fetchSnapshot("expenditures", "all"),
 );
+
+export const fetchMapData = cache(async (): Promise<MapData | ErrorType> => {
+  const data = await fetchSnapshot("expenditures", "states");
+  if (isError(data)) {
+    return data as ErrorType;
+  } else {
+    const stateData = data as Record<string, StateExpenditures>;
+    const mapData: MapData = {};
+    for (const state of Object.keys(stateData)) {
+      mapData[state] = {
+        total: stateData[state].total,
+        by_race: {},
+      };
+      stateData[state].total = stateData[state].total || 0;
+      for (const raceId of Object.keys(stateData[state].by_race)) {
+        mapData[state].by_race[raceId] = stateData[state].by_race[raceId].total;
+      }
+    }
+    return mapData;
+  }
+});
 
 // Fetch expenditures for a specific state
 export const fetchStateExpenditures = cache(
-  async (stateAbbr: string): Promise<StateExpenditures | ErrorType> => {
+  async (
+    stateAbbr: string,
+  ): Promise<PopulatedStateExpenditures | ErrorType> => {
     const data = await fetchSnapshot("expenditures", "states");
     if (isError(data)) {
       return data as ErrorType;
     } else {
-      return (data as Record<string, StateExpenditures>)[stateAbbr];
+      const statesExpenditures = data as Record<string, StateExpenditures>;
+      const stateExpenditures = statesExpenditures[stateAbbr];
+      const allExpendituresData = await fetchAllExpenditures();
+      if (isError(allExpendituresData)) {
+        return allExpendituresData as ErrorType;
+      } else {
+        // Populate expenditures
+        const allExpenditures = allExpendituresData as Record<
+          ExpenditureId,
+          Expenditure
+        >;
+        return hydrateStateExpenditures(stateExpenditures, allExpenditures);
+      }
     }
   },
 );
@@ -177,7 +216,19 @@ export const fetchAllRecentExpenditures = cache(
     if (isError(data)) {
       return data as ErrorType;
     } else {
-      return (data as RecentExpenditures)["all"];
+      const allRecentExpenditureIds = (data as RecentExpenditures)["all"];
+      const allRecentExpendituresData = await fetchAllExpenditures();
+      if (isError(allRecentExpendituresData)) {
+        return allRecentExpendituresData as ErrorType;
+      } else {
+        const allRecentExpenditures = allRecentExpendituresData as Record<
+          ExpenditureId,
+          Expenditure
+        >;
+        return allRecentExpenditureIds.map(
+          (expenditureId) => allRecentExpenditures[expenditureId],
+        );
+      }
     }
   },
 );

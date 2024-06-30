@@ -1,7 +1,7 @@
-import { StateExpenditures } from "@/app/types/Expenditures";
-import { sortRaces } from "@/app/utils/races";
+import { getRaceName, sortRaces } from "@/app/utils/races";
 import { formatCurrency } from "@/app/utils/utils";
 
+import { StateTotals } from "@/app/types/MapData";
 import { FloatingContext, FloatingFocusManager } from "@floating-ui/react";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
@@ -12,7 +12,7 @@ import styles from "./chloroplethMap.module.css";
 function ChloroplethTooltip(
   props: {
     state?: string;
-    expenditures?: StateExpenditures;
+    expenditures?: StateTotals;
     floatingStyles: React.CSSProperties;
     context: FloatingContext;
     setHoveredState: (state: object | null) => void;
@@ -81,37 +81,20 @@ function ChloroplethTooltip(
                   </td>
                 </tr>
                 {races.map((k) => {
-                  const race = expenditures.by_race[k];
-                  if (race.details.candidate_office === "S") {
-                    return (
-                      <tr
-                        key={k}
-                        className={styles.tooltipTableRaceRow}
-                        onClick={() => router.push(`/races/${k}`)}
-                      >
-                        <td className={styles.tooltipTableName}>Senate</td>
-                        <td className={styles.tooltipTableSpending}>
-                          {formatCurrency(race.total, true)}
-                        </td>
-                      </tr>
-                    );
-                  } else {
-                    return (
-                      <tr
-                        key={k}
-                        className={styles.tooltipTableRaceRow}
-                        onClick={() => router.push(`/races/${k}`)}
-                      >
-                        <td className={styles.tooltipTableName}>
-                          House District{" "}
-                          {parseInt(race.details.candidate_office_district, 10)}
-                        </td>
-                        <td className={styles.tooltipTableSpending}>
-                          {formatCurrency(race.total, true)}
-                        </td>
-                      </tr>
-                    );
-                  }
+                  const total = expenditures.by_race[k];
+                  const raceName = getRaceName(k);
+                  return (
+                    <tr
+                      key={k}
+                      className={styles.tooltipTableRaceRow}
+                      onClick={() => router.push(`/races/${k}`)}
+                    >
+                      <td className={styles.tooltipTableName}>{raceName}</td>
+                      <td className={styles.tooltipTableSpending}>
+                        {formatCurrency(total, true)}
+                      </td>
+                    </tr>
+                  );
                 })}
               </tbody>
             </table>

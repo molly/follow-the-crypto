@@ -1,7 +1,7 @@
-import { fetchAllStateExpenditures } from "@/app/actions/fetch";
+import { fetchMapData } from "@/app/actions/fetch";
 import ChloroplethMap from "./ChloroplethMap";
 
 export default async function MapWrapper() {
-  const data = await fetchAllStateExpenditures();
-  return <ChloroplethMap expendituresByState={data} />;
+  const data = await fetchMapData();
+  return <ChloroplethMap mapData={data} />;
 }

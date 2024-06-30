@@ -7,7 +7,11 @@ enum CandidateOffice {
   House = "H",
 }
 
-export type Expenditure = { committee_id: number; subrace: string } & Pick<
+export type Expenditure = {
+  committee_id: number;
+  subrace: string;
+  uid: string;
+} & Pick<
   ScheduleE,
   | "expenditure_amount"
   | "candidate_office_state"
@@ -32,7 +36,14 @@ export type Expenditure = { committee_id: number; subrace: string } & Pick<
   | "transaction_id"
 >;
 
+export type ExpenditureId = string;
+
 interface ExpenditureGroup {
+  expenditures: ExpenditureId[];
+  total: number;
+}
+
+interface PopulatedExpenditureGroup {
   expenditures: Expenditure[];
   total: number;
 }
@@ -44,7 +55,11 @@ interface RaceDetails {
 
 export interface RaceExpenditureGroup extends ExpenditureGroup {
   details: RaceDetails;
-  expenditures: Expenditure[];
+}
+
+export interface PopulatedRaceExpenditureGroup
+  extends PopulatedExpenditureGroup {
+  details: RaceDetails;
 }
 
 export interface StateExpenditures {
@@ -53,9 +68,15 @@ export interface StateExpenditures {
   total: number;
 }
 
+export interface PopulatedStateExpenditures {
+  by_committee: Record<string, PopulatedExpenditureGroup>;
+  by_race: Record<string, PopulatedRaceExpenditureGroup>;
+  total: number;
+}
+
 export interface RecentExpenditures {
-  all: Expenditure[];
-  by_committee: Record<string, Expenditure[]>;
+  all: ExpenditureId[];
+  by_committee: Record<string, ExpenditureId>;
 }
 
 export interface Expenditures {

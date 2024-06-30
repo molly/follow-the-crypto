@@ -1,10 +1,6 @@
 import { ElectionGroup, Race } from "@/app/types/Elections";
-import { RaceExpenditureGroup } from "@/app/types/Expenditures";
-import {
-  getExpenditureRaceType,
-  getSubraceName,
-  isUpcomingRace,
-} from "@/app/utils/races";
+import { PopulatedRaceExpenditureGroup } from "@/app/types/Expenditures";
+import { getSubraceName, isUpcomingRace } from "@/app/utils/races";
 import { titlecase } from "@/app/utils/titlecase";
 import { formatDateFromString, isUpcomingDate } from "@/app/utils/utils";
 import CandidateExpendituresTable from "./CandidateExpendituresTable";
@@ -29,12 +25,12 @@ export default function RaceSummary({
 }: {
   race: Race;
   electionData: ElectionGroup;
-  expenditures: RaceExpenditureGroup;
+  expenditures: PopulatedRaceExpenditureGroup;
   upcomingRaces: Race[];
 }) {
   const raceType = race.type;
   const relatedExpenditures = expenditures.expenditures.filter(
-    (e) => getExpenditureRaceType(e) === raceType,
+    (e) => e.subrace === raceType,
   );
   const candidates = race.candidates;
   const candidateSummaries = race.candidates.map(
@@ -82,7 +78,6 @@ export default function RaceSummary({
           electionData={electionData}
           relatedExpenditures={relatedExpenditures}
           isRaceUpcoming={isRaceUpcoming}
-          intermediateRaces={intermediateRaces}
         />
       ) : (
         <div className={styles.noSpending}></div>

@@ -1,10 +1,7 @@
 import { CandidateSummary, Race } from "@/app/types/Elections";
 import { getFullPartyName } from "@/app/utils/party";
 import { SINGLE_MEMBER_STATES } from "../data/states";
-import {
-  Expenditure,
-  ExpenditureCandidateSummary,
-} from "../types/Expenditures";
+import { ExpenditureCandidateSummary } from "../types/Expenditures";
 import { isUpcomingDate } from "./utils";
 
 // Senate race first, then house races ordered by district
@@ -57,30 +54,6 @@ export const getSubraceName = (race?: Race) => {
     }
     return raceName;
   }
-};
-
-export const getExpenditureRaceType = (
-  expenditure: Expenditure,
-): string | null => {
-  const electionType = expenditure.election_type
-    ? expenditure.election_type[0]
-    : null;
-  if (!electionType) {
-    return null;
-  }
-  switch (electionType) {
-    case "G":
-      return "general";
-    case "P":
-      return "primary";
-    case "R":
-      return "primary_runoff";
-    case "C":
-      return "convention";
-    case "S":
-      return "special";
-  }
-  return null;
 };
 
 export const isUpcomingRace = (
