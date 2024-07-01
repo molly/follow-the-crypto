@@ -1,3 +1,4 @@
+import { ExpendituresByParty } from "./Expenditures";
 import { CommitteeDetail, CommitteeTotals } from "./FECTypes";
 
 export type CommitteeConstant = {
@@ -6,8 +7,9 @@ export type CommitteeConstant = {
   description?: TrustedHTML;
 };
 
-export type CommitteeDetails = CommitteeConstant &
-  Pick<
+export type CommitteeDetails = CommitteeConstant & {
+  by_party?: ExpendituresByParty;
+} & Pick<
     CommitteeDetail,
     | "affiliated_committee_name"
     | "candidate_ids"

@@ -76,13 +76,21 @@ export interface PopulatedStateExpenditures {
 
 export interface RecentExpenditures {
   all: ExpenditureId[];
-  by_committee: Record<string, ExpenditureId>;
+  by_committee: Record<string, ExpenditureId[]>;
+}
+
+export interface ExpendituresByParty {
+  dem_oppose: number;
+  dem_support: number;
+  rep_oppose: number;
+  rep_support: number;
 }
 
 export interface Expenditures {
   all: Expenditure[];
   recent: RecentExpenditures;
   states: StateExpenditures;
+  by_party: ExpendituresByParty;
 }
 
 export type ExpenditureCandidateSummary = {

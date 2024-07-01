@@ -30,8 +30,9 @@
   display: grid;
   gap: 1rem;
   grid-template-columns: 2fr 1fr;
-  grid-template-rows: repeat(2, 40rem);
+  grid-template-rows: 20rem 20rem 40rem;
   grid-template-areas:
+    "influencedCard byParty"
     "influencedCard expenditures"
     "superPacCard expenditures";
 }

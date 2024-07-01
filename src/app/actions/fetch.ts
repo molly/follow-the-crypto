@@ -11,6 +11,7 @@ import {
   Expenditure,
   ExpenditureId,
   ExpendituresByCandidate,
+  ExpendituresByParty,
   PopulatedStateExpenditures,
   RecentExpenditures,
   StateExpenditures,
@@ -237,15 +238,35 @@ export const fetchAllRecentExpenditures = cache(
 export const fetchRecentCommitteeExpenditures = cache(
   async (committeeId: string): Promise<Expenditure[] | ErrorType> => {
     const data = await fetchSnapshot("expenditures", "recent");
+    const allRecentExpendituresData = await fetchAllExpenditures();
     if (isError(data)) {
       return data as ErrorType;
+    } else if (isError(allRecentExpendituresData)) {
+      return allRecentExpendituresData as ErrorType;
     } else {
       const committeeData = (data as RecentExpenditures)["by_committee"];
+      const allRecentExpenditures = allRecentExpendituresData as Record<
+        string,
+        Expenditure
+      >;
       if (committeeId in committeeData) {
-        return committeeData[committeeId];
+        return committeeData[committeeId].map(
+          (expenditureId) => allRecentExpenditures[expenditureId],
+        );
       } else {
         return [];
       }
+    }
+  },
+);
+
+export const fetchAllExpenditureTotalsByParty = cache(
+  async (): Promise<ExpendituresByParty | ErrorType> => {
+    const data = await fetchSnapshot("expenditures", "by_party");
+    if (isError(data)) {
+      return data as ErrorType;
+    } else {
+      return data as ExpendituresByParty;
     }
   },
 );

@@ -100,6 +100,9 @@
     --skeleton-end: #212e42;
     --skeleton-on-card-start: var(--color-slate-700);
     --skeleton-on-card-end: #37465b;
+
+    --party-republican: #a61117;
+    --party-democrat: #0000e6;
   }
 }
 
