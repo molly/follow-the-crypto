@@ -6,6 +6,12 @@
   align-items: flex-start;
 }
 
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  gap: inherit;
+}
+
 .receiptsSection {
   composes: fullWidth from "@/app/shared.module.css";
   text-align: center;
@@ -108,4 +114,15 @@
 
 .topLevelContribution {
   color: var(--main-text);
+}
+
+.committeeDisbursementsList {
+  list-style: none;
+  padding: 0;
+}
+
+.committeeDisbursementsListItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.25em 0;
 }

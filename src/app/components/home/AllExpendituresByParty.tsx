@@ -1,10 +1,10 @@
 import { fetchAllExpenditureTotalsByParty } from "@/app/actions/fetch";
+import SpendingByParty from "@/app/components/SpendingByParty";
 import styles from "@/app/components/expendituresByParty.module.css";
 import { ExpendituresByParty } from "@/app/types/Expenditures";
 import { isError } from "@/app/utils/errors";
 import { Suspense } from "react";
 import ErrorText from "../ErrorText";
-import SpendingByParty from "../SpendingByParty";
 
 async function AllExpendituresByPartyContent() {
   const data = await fetchAllExpenditureTotalsByParty();

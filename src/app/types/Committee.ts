@@ -1,5 +1,5 @@
 import { ExpendituresByParty } from "./Expenditures";
-import { CommitteeDetail, CommitteeTotals } from "./FECTypes";
+import { CommitteeDetail, CommitteeTotals, ScheduleB } from "./FECTypes";
 
 export type CommitteeConstant = {
   id: string;
@@ -7,8 +7,24 @@ export type CommitteeConstant = {
   description?: TrustedHTML;
 };
 
+export type CommitteeDisbursement = Pick<
+  ScheduleB,
+  "disbursement_amount" | "disbursement_date" | "pdf_url" | "recipient_name"
+>;
+
+export type CommitteeDisbursementGroup = {
+  disbursements: CommitteeDisbursement[];
+  total: number;
+  recipient_name: string;
+};
+
+export type DisbursementsByCommittee = {
+  [committee_id: string]: CommitteeDisbursementGroup;
+};
+
 export type CommitteeDetails = CommitteeConstant & {
   by_party?: ExpendituresByParty;
+  disbursements_by_committee: DisbursementsByCommittee;
 } & Pick<
     CommitteeDetail,
     | "affiliated_committee_name"

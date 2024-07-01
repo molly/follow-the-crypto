@@ -88,13 +88,13 @@ export const fetchCommitteeTotalReceipts = cache(
   },
 );
 
-export const fetchCommitteeTotalDisbursements = cache(
+export const fetchCommitteeTotalExpenditures = cache(
   async (): Promise<number | ErrorType> => {
-    const snapshot = await fetchSnapshot("totals", "committees");
+    const snapshot = await fetchSnapshot("expenditures", "total");
     if (isError(snapshot)) {
       return snapshot as ErrorType;
     } else {
-      return snapshot.disbursements;
+      return snapshot.total;
     }
   },
 );
@@ -271,7 +271,7 @@ export const fetchAllExpenditureTotalsByParty = cache(
   },
 );
 
-//ELECTIONS -------------------------------------------------------------
+// ELECTIONS -------------------------------------------------------------
 export const fetchAllStateElections = cache(
   async (): Promise<Record<string, ElectionsByState> | ErrorType> => {
     const data = await fetchCollection("raceDetails");

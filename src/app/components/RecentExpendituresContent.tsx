@@ -91,7 +91,7 @@ export default function RecentExpendituresContent({
           )}
         </div>
         <div className={styles.expenditureNameAndAmount}>
-          <span>
+          <span className={styles.expenditureTarget}>
             <span className="bold">
               {`${
                 expenditure.support_oppose_indicator === "S"

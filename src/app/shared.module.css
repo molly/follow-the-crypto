@@ -93,10 +93,6 @@
 }
 
 @media (min-width: 500px) {
-  .mainLayout {
-    padding: 0.5rem 2rem;
-  }
-
   .highlight {
     font-size: clamp(2rem, 5vw, 3rem);
     white-space: nowrap;
@@ -111,7 +107,6 @@
 
 @media (min-width: 800px) {
   .mainLayout {
-    gap: 2rem 1rem;
     padding: 0.5rem 6rem;
   }
 }

@@ -8,6 +8,8 @@ import { Metadata } from "next";
 
 import { Contributions } from "@/app/types/Contributions";
 import CommitteeDetailsSection from "./CommitteeDetailsSection";
+import CommitteeDisbursements from "./CommitteeDisbursements";
+import CommitteeExpendituresByParty from "./CommitteeExpendituresByParty";
 import CommitteeRecentExpenditures from "./CommitteeRecentExpenditures";
 import TopDonors from "./TopDonors";
 import styles from "./page.module.css";
@@ -53,7 +55,11 @@ export default async function CommitteePage({
       <CommitteeDetailsSection committee={committee} donors={donors} />
       <div className={`${styles.committeeWrapper} row`}>
         <TopDonors donors={donors} />
-        <CommitteeRecentExpenditures committee={committee} />
+        <div className={styles.rightColumn}>
+          <CommitteeExpendituresByParty committee={committee} />
+          <CommitteeDisbursements committee={committee} />
+          <CommitteeRecentExpenditures committee={committee} />
+        </div>
       </div>
     </>
   );

@@ -7,7 +7,7 @@ import SuperPACsByReceiptsTableContents from "./components/SuperPACsByReceiptsTa
 import AllExpendituresByParty from "./components/home/AllExpendituresByParty";
 import AllRecentExpenditures from "./components/home/AllRecentExpenditures";
 import MapWrapper from "./components/home/MapWrapper";
-import TotalDisbursements from "./components/home/TotalDisbursements";
+import TotalExpenditures from "./components/home/TotalExpenditures";
 import TotalRaised from "./components/home/TotalRaised";
 import USMapSkeleton from "./components/skeletons/USMapSkeleton";
 import styles from "./page.module.css";
@@ -28,7 +28,7 @@ export default function Home() {
           <TotalRaised className={styles.raisedCard} />
         </Suspense>
         <Suspense fallback={<MoneyCardSkeleton className={styles.spentCard} />}>
-          <TotalDisbursements className={styles.spentCard} />
+          <TotalExpenditures className={styles.spentCard} />
         </Suspense>
       </div>
       <div className={styles.mainCards}>

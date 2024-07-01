@@ -19,6 +19,10 @@
   margin: 0.5rem 0;
 }
 
+.expenditureTarget {
+  margin-right: 0.25rem;
+}
+
 .expenditureDescription {
   font-size: 0.9rem;
   font-style: italic;
