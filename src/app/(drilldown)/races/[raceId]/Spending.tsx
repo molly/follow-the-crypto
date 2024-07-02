@@ -4,7 +4,8 @@ import Candidate from "@/app/components/Candidate";
 import { CandidateSummary, ElectionGroup } from "@/app/types/Elections";
 import * as d3 from "d3";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import useResizeObserver from "use-resize-observer";
 import styles from "./page.module.css";
 
 const CHART_WIDTH = 300;
@@ -31,6 +32,7 @@ function BarLabel({
   y,
   height,
   label,
+  shouldUseXLFont,
   negative,
   backgroundClass,
 }: {
@@ -39,25 +41,27 @@ function BarLabel({
   y: number;
   height: number;
   label: string;
+  shouldUseXLFont?: boolean;
   negative?: boolean;
   backgroundClass?: string;
 }) {
   let textStart, hug;
+  const minWidth = shouldUseXLFont
+    ? BAR_LABEL_MIN_WIDTH * 1.5
+    : BAR_LABEL_MIN_WIDTH;
   if (negative) {
-    textStart =
-      width > BAR_LABEL_MIN_WIDTH ? x + 1 : x - BAR_LABEL_MIN_WIDTH - 1;
-    hug = width > BAR_LABEL_MIN_WIDTH ? "hugLeft" : "hugRight";
+    textStart = width > minWidth ? x + 1 : x - minWidth - 1;
+    hug = width > minWidth ? "hugLeft" : "hugRight";
   } else {
-    textStart =
-      width > BAR_LABEL_MIN_WIDTH ? x - BAR_LABEL_MIN_WIDTH - 1 : x + 1;
-    hug = width > BAR_LABEL_MIN_WIDTH ? "hugRight" : "hugLeft";
+    textStart = width > minWidth ? x - minWidth - 1 : x + 1;
+    hug = width > minWidth ? "hugRight" : "hugLeft";
   }
 
   return (
     <motion.foreignObject
       x={textStart}
       y={y}
-      width={BAR_LABEL_MIN_WIDTH}
+      width={minWidth}
       height={height}
       style={{ cursor: "pointer", pointerEvents: "none" }}
       initial={{
@@ -67,11 +71,9 @@ function BarLabel({
       transition={{ duration: 0.2 }}
     >
       <div
-        className={`${styles.barLabelContainer} ${styles.barLabel} ${styles[hug]}`}
+        className={`${styles.barLabelContainer} ${styles.barLabel} ${styles[hug]} ${shouldUseXLFont ? styles.xlFont : ""}`}
       >
-        <div className={width > BAR_LABEL_MIN_WIDTH ? backgroundClass : ""}>
-          {label}
-        </div>
+        <div className={width > minWidth ? backgroundClass : ""}>{label}</div>
       </div>
     </motion.foreignObject>
   );
@@ -87,66 +89,85 @@ type SpendingHoverState = {
     | "crypto_oppose";
 };
 
-export default function Spending({
-  raceId,
-  election,
-}: {
-  raceId: string;
-  election: ElectionGroup;
-}) {
+export default function Spending({ election }: { election: ElectionGroup }) {
   const [hovered, setHovered] = useState<SpendingHoverState | null>(null);
+  const { ref, width = 400 } = useResizeObserver<SVGSVGElement>();
 
   // Get unique list of candidates, ordered by amount raised
-  const candidateNames = Object.keys(election.candidates).sort(
-    (a, b) =>
-      getTotalSpending(election.candidates[b]) -
-      getTotalSpending(election.candidates[a]),
+  const candidateNames = useMemo(
+    () =>
+      Object.keys(election.candidates).sort(
+        (a, b) =>
+          getTotalSpending(election.candidates[b]) -
+          getTotalSpending(election.candidates[a]),
+      ),
+    [election.candidates],
   );
 
-  const CHART_HEIGHT = Math.max(150, candidateNames.length * 40);
+  const shouldUseXLFont = useMemo(() => width < 500, [width]);
 
-  // TODO: Cache or precompute and store in DB
-  const data = candidateNames.map((candidate) => {
-    const summary = election.candidates[candidate];
-    const candidateData = {
-      raised: 0,
-      outside_support: 0,
-      outside_oppose: 0,
-      crypto_support: 0,
-      crypto_oppose: 0,
-    };
-    if (!summary) {
-      return candidateData;
-    }
-    candidateData.raised = summary.raised_total || 0;
-    candidateData.crypto_support = summary.support_total || 0;
-    candidateData.crypto_oppose = summary.oppose_total || 0;
-    if ("outside_spending" in summary && summary.outside_spending) {
-      candidateData.outside_support =
-        summary.outside_spending.support_total || 0;
-      candidateData.outside_oppose = summary.outside_spending.oppose_total || 0;
-    }
-    return candidateData;
-  });
+  const CHART_HEIGHT = useMemo(
+    () => Math.max(150, candidateNames.length * 40),
+    [candidateNames],
+  );
 
-  const xDomain = [
-    -(d3.max(data, (d) => d.outside_oppose) || 0),
-    d3.max(data, (d) => d.raised + d.outside_support) || 0,
-  ];
-  const y = d3
-    .scaleBand()
-    .range([LEGEND_HEIGHT, CHART_HEIGHT - GRID_LABEL_HEIGHT])
-    .domain(candidateNames)
-    .padding(0.5);
-  const x = d3
-    .scaleLinear()
-    .domain(xDomain)
-    .range([CANDIDATE_LABEL_WIDTH, CHART_WIDTH - MARGIN_RIGHT]);
+  const data = useMemo(
+    () =>
+      candidateNames.map((candidate) => {
+        const summary = election.candidates[candidate];
+        const candidateData = {
+          raised: 0,
+          outside_support: 0,
+          outside_oppose: 0,
+          crypto_support: 0,
+          crypto_oppose: 0,
+        };
+        if (!summary) {
+          return candidateData;
+        }
+        candidateData.raised = summary.raised_total || 0;
+        candidateData.crypto_support = summary.support_total || 0;
+        candidateData.crypto_oppose = summary.oppose_total || 0;
+        if ("outside_spending" in summary && summary.outside_spending) {
+          candidateData.outside_support =
+            summary.outside_spending.support_total || 0;
+          candidateData.outside_oppose =
+            summary.outside_spending.oppose_total || 0;
+        }
+        return candidateData;
+      }),
+    [candidateNames, election.candidates],
+  );
+
+  const xDomain = useMemo(
+    () => [
+      -(d3.max(data, (d) => d.outside_oppose) || 0),
+      d3.max(data, (d) => d.raised + d.outside_support) || 0,
+    ],
+    [data],
+  );
+  const y = useMemo(
+    () =>
+      d3
+        .scaleBand()
+        .range([LEGEND_HEIGHT, CHART_HEIGHT - GRID_LABEL_HEIGHT])
+        .domain(candidateNames)
+        .padding(0.5),
+    [candidateNames, CHART_HEIGHT],
+  );
+  const x = useMemo(
+    () =>
+      d3
+        .scaleLinear()
+        .domain(xDomain)
+        .range([CANDIDATE_LABEL_WIDTH, CHART_WIDTH - MARGIN_RIGHT]),
+    [xDomain],
+  );
   const gridLabelFormatter = (d: number) => d3.format("$.2s")(Math.abs(d));
-  const textOffset = y.bandwidth() / 2;
+
   return (
     <div>
-      <svg viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`}>
+      <svg viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`} ref={ref}>
         <defs>
           <pattern
             id="hatch"
@@ -175,7 +196,7 @@ export default function Spending({
                 x={x(value)}
                 y={CHART_HEIGHT - GRID_LABEL_HEIGHT + 10}
                 textAnchor="middle"
-                fontSize={7}
+                fontSize={shouldUseXLFont ? 10 : 7}
                 className={styles.gridLabel}
               >
                 {gridLabelFormatter(value)}
@@ -237,6 +258,7 @@ export default function Spending({
                         y={yCandidate}
                         height={y.bandwidth()}
                         label={gridLabelFormatter(raised)}
+                        shouldUseXLFont={shouldUseXLFont}
                       />
                     )}
                 </g>
@@ -297,6 +319,7 @@ export default function Spending({
                             y={yCandidate}
                             height={y.bandwidth()}
                             label={gridLabelFormatter(crypto_support)}
+                            shouldUseXLFont={shouldUseXLFont}
                             backgroundClass={styles.barLabelSupport}
                           />
                         )}
@@ -311,6 +334,7 @@ export default function Spending({
                         y={yCandidate}
                         height={y.bandwidth()}
                         label={gridLabelFormatter(outside_support)}
+                        shouldUseXLFont={shouldUseXLFont}
                         backgroundClass={styles.barLabelSupport}
                       />
                     )}
@@ -372,6 +396,7 @@ export default function Spending({
                             y={yCandidate}
                             height={y.bandwidth()}
                             label={gridLabelFormatter(crypto_oppose)}
+                            shouldUseXLFont={shouldUseXLFont}
                             negative={true}
                             backgroundClass={styles.barLabelOppose}
                           />
@@ -386,6 +411,7 @@ export default function Spending({
                         width={xOutsideOpposeWidth}
                         y={yCandidate}
                         height={y.bandwidth()}
+                        shouldUseXLFont={shouldUseXLFont}
                         negative={true}
                         label={gridLabelFormatter(outside_oppose)}
                         backgroundClass={styles.barLabelOppose}
@@ -399,7 +425,9 @@ export default function Spending({
                 y={yCandidate - y.bandwidth() / 2}
                 height={y.bandwidth() * 2}
               >
-                <div className={styles.candidateLabel}>
+                <div
+                  className={`${styles.candidateLabel} ${shouldUseXLFont ? styles.xlFont : ""}`}
+                >
                   <Candidate
                     candidateSummary={
                       candidate in election.candidates
@@ -424,7 +452,11 @@ export default function Spending({
               className={styles.raisedBar}
             />
             <foreignObject x={12} y={LEGEND_Y - 5} width={65} height={20}>
-              <div className={styles.spendingLegend}>Raised by candidate</div>
+              <div
+                className={`${styles.spendingLegend} ${shouldUseXLFont ? styles.xlFont : ""}`}
+              >
+                Raised by candidate
+              </div>
             </foreignObject>
           </g>
           <g transform={`translate(${CHART_WIDTH / 4}, 0)`}>
@@ -436,7 +468,9 @@ export default function Spending({
               className={styles.outside_supportBar}
             />
             <foreignObject x={12} y={LEGEND_Y - 5} width={65} height={20}>
-              <div className={styles.spendingLegend}>
+              <div
+                className={`${styles.spendingLegend} ${shouldUseXLFont ? styles.xlFont : ""}`}
+              >
                 Outside spending to support
               </div>
             </foreignObject>
@@ -450,7 +484,9 @@ export default function Spending({
               className={styles.outside_opposeBar}
             />
             <foreignObject x={12} y={LEGEND_Y - 5} width={65} height={20}>
-              <div className={styles.spendingLegend}>
+              <div
+                className={`${styles.spendingLegend} ${shouldUseXLFont ? styles.xlFont : ""}`}
+              >
                 Outside spending to oppose
               </div>
             </foreignObject>
@@ -471,7 +507,11 @@ export default function Spending({
               fill="url(#hatch)"
             />
             <foreignObject x={12} y={LEGEND_Y - 5} width={65} height={20}>
-              <div className={styles.spendingLegend}>Crypto spending</div>
+              <div
+                className={`${styles.spendingLegend} ${shouldUseXLFont ? styles.xlFont : ""}`}
+              >
+                Crypto spending
+              </div>
             </foreignObject>
           </g>
         </g>

@@ -5,7 +5,7 @@ import {
 import { STATES_BY_ABBR } from "@/app/data/states";
 import sharedStyles from "@/app/shared.module.css";
 import { ElectionsByState } from "@/app/types/Elections";
-import { StateExpenditures } from "@/app/types/Expenditures";
+import { PopulatedStateExpenditures } from "@/app/types/Expenditures";
 import { is4xx, isError } from "@/app/utils/errors";
 import { getRaceName, isUpcomingRace } from "@/app/utils/races";
 import type { Metadata } from "next";
@@ -48,7 +48,7 @@ export default async function RacePage({
     return <div>Something went wrong when getting expenditure data.</div>;
   }
 
-  const expenditures = expendituresData as StateExpenditures;
+  const expenditures = expendituresData as PopulatedStateExpenditures;
   const elections = electionsData as ElectionsByState;
   const upcomingRaces = elections[shortRaceId].races.filter((r) =>
     isUpcomingRace(r),
@@ -56,10 +56,10 @@ export default async function RacePage({
 
   return (
     <>
-      <h1
-        className={`${sharedStyles.fullWidth} no-margin`}
-      >{`${STATES_BY_ABBR[stateAbbr]} ${getRaceName(params.raceId)} election`}</h1>
       <div className={styles.columns}>
+        <div className={styles.headerWrapper}>
+          <h1 className="margin-0">{`${STATES_BY_ABBR[stateAbbr]} ${getRaceName(params.raceId)} election`}</h1>
+        </div>
         <div className={styles.electionsColumn}>
           <h2 className={styles.electionsColumnHeader}>Elections</h2>
           {elections[shortRaceId].races.map((race) => (

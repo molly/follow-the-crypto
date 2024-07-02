@@ -1,8 +1,16 @@
 .columns {
-  composes: fullWidth from "@/app/shared.module.css";
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-start;
+  justify-content: center;
+  max-width: 100rem;
+  margin: 0 auto;
   gap: 1rem;
+}
+
+.headerWrapper {
+  width: 100%;
+  justify-self: flex-start;
 }
 
 .electionsColumn,
@@ -10,6 +18,8 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-width: 40rem;
+  max-width: 60rem;
   gap: 1rem;
 }
 
@@ -88,6 +98,10 @@
   composes: card from "@/app/shared.module.css";
 }
 
+.xlFont {
+  font-size: 0.5rem !important;
+}
+
 .candidateLabel {
   display: flex;
   height: 100%;
@@ -113,10 +127,6 @@
 
 .cryptoSpendingLabel {
   fill: transparent;
-}
-
-.barLabel {
-  height: 100%;
 }
 
 .outsideLabel {
@@ -154,7 +164,7 @@
   fill: var(--color-red-400);
 }
 
-.barLabelCointainer {
+.barLabelContainer {
   cursor: pointer;
   pointer-events: none;
 }
@@ -162,6 +172,7 @@
 .barLabel {
   display: flex;
   align-items: center;
+  height: 100%;
   font-size: 0.35rem;
   color: var(--main-text);
 }
@@ -227,15 +238,18 @@
   }
 }
 
-@media (min-width: 600px) {
-  .candidates {
-    column-gap: 2rem;
+@media (max-width: 1375px) {
+  .columns {
+    max-width: 60rem;
+    flex-direction: column;
+    margin: 0 auto;
   }
-}
 
-@media (min-width: 1000px) {
-  .raceCard {
-    grid-column-start: 1;
+  .electionsColumn,
+  .rightColumn {
+    width: 100%;
+    max-width: unset;
+    min-width: 10rem;
   }
 }
 
