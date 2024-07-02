@@ -1,3 +1,10 @@
+.inheritBorderRadius {
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
+}
+
 .superPacCard,
 .influencedCard,
 .recentExpendituresCard {
@@ -25,16 +32,24 @@
   overflow-y: auto;
 }
 
+.noOverflow {
+  composes: inheritBorderRadius;
+  padding-bottom: 0.5rem;
+}
+
 .superPacTable,
 .influencedTable {
+  composes: inheritBorderRadius;
   width: 100%;
 }
 
 .superPacTableHeader,
 .influencedTableHeader {
+  composes: inheritBorderRadius;
   position: sticky;
   top: 0;
   background-color: var(--card-background);
+  border-radius: inherit;
 }
 
 .superPacRow,
@@ -64,6 +79,17 @@
 
 .viewMoreLink:not(:last-child) {
   margin-right: 1rem;
+}
+
+/* Fallback for very small viewports */
+.influencedRow {
+  composes: influencedTableRow;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  white-space-collapse: preserve;
+  padding: 0.5rem 0;
+  gap: 0.5rem 0;
 }
 
 @media (max-width: 1000px) {

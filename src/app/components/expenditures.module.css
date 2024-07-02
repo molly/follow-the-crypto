@@ -25,6 +25,8 @@
 
 .expendituresBarLabel {
   text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
   padding: 0.25rem;
   font-size: 0.9rem;
   color: var(--color-slate-200);

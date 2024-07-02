@@ -38,6 +38,14 @@ export default function SpendingByParty({
   const yRange = y.range();
   const gridLabelFormatter = (d: number) => d3.format("$.2s")(Math.abs(d));
 
+  const renderLabel = (label: string, width: number) => {
+    return (
+      <span title={label}>
+        {width > 100 ? label : width > 50 ? label.slice(0, 3) : label[0]}
+      </span>
+    );
+  };
+
   return (
     <div className={styles.svgWrapper}>
       <svg
@@ -76,17 +84,18 @@ export default function SpendingByParty({
                     `${party}_${supportOppose}` as ExpendituresByPartyKey;
                   const spending = expenditures[key];
                   const height = y(0) - y(spending);
+                  const xBandwidth = x.bandwidth();
                   return (
                     <g key={key}>
                       <rect
                         x={x(party)}
                         y={y(spending)}
-                        width={x.bandwidth()}
+                        width={xBandwidth}
                         height={height}
                         className={styles[party]}
                       />
                       <text
-                        x={(x(party) || 0) + x.bandwidth() / 2}
+                        x={(x(party) || 0) + xBandwidth / 2}
                         fontSize={14}
                         y={y(spending) - 5}
                         textAnchor="middle"
@@ -96,12 +105,15 @@ export default function SpendingByParty({
                       {height > 20 && (
                         <foreignObject
                           x={x(party) || 0}
-                          width={x.bandwidth()}
+                          width={xBandwidth}
                           height={height - 5}
                           y={y(spending) + 5}
                         >
                           <div className={styles.expendituresBarLabel}>
-                            {party === "rep" ? "Republicans" : "Democrats"}
+                            {party === "rep" &&
+                              renderLabel("Republicans", xBandwidth)}
+                            {party === "dem" &&
+                              renderLabel("Democrats", xBandwidth)}
                           </div>
                         </foreignObject>
                       )}

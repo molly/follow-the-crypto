@@ -15,12 +15,12 @@ export function CandidateSkeleton({ onCard }: { onCard?: boolean }) {
   return (
     <div className={styles.candidateInfoBlock}>
       <CandidateImage />
-      <Skeleton randWidth={[5, 12]} style={{ margin: 0 }} onCard={onCard} />
+      <Skeleton width="10rem" style={{ margin: 0 }} onCard={onCard} />
     </div>
   );
 }
 
-function CandidateImage({
+export function CandidateImage({
   candidate,
   firstName,
   lastName,
@@ -129,6 +129,7 @@ export default function Candidate({
   defeated,
   writeIn,
   chart,
+  imageOnly,
 }: {
   candidate?: RaceCandidate;
   candidateSummary?: CandidateSummary | ExpenditureCandidateSummary;
@@ -137,6 +138,7 @@ export default function Candidate({
   defeated?: boolean;
   writeIn?: boolean;
   chart?: boolean;
+  imageOnly?: boolean;
 }) {
   const name =
     candidateSummary && candidateSummary.common_name
@@ -148,19 +150,25 @@ export default function Candidate({
     return null;
   }
   const [firstName, lastName] = getFirstLastName(name);
+  const candidateImage = (
+    <CandidateImage
+      candidate={candidateSummary}
+      firstName={firstName}
+      lastName={lastName}
+      defeated={defeated}
+      chart={chart}
+    />
+  );
+  if (imageOnly) {
+    return candidateImage;
+  }
 
   return (
     <>
       <div
         className={`${styles.candidateInfoBlock} ${candidateClassName || ""}`}
       >
-        <CandidateImage
-          candidate={candidateSummary}
-          firstName={firstName}
-          lastName={lastName}
-          defeated={defeated}
-          chart={chart}
-        />
+        {candidateImage}
         {!chart && (
           <span>
             <span className={candidateNameClassName}>{name}</span>

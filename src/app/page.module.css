@@ -22,19 +22,21 @@
 .totalsRow {
   display: grid;
   gap: inherit;
-  grid-template-columns: repeat(2, minmax(10rem, 25rem));
+  grid-template-columns: 1fr;
   margin: 0 auto;
 }
 
 .mainCards {
   display: grid;
   gap: 1rem;
-  grid-template-columns: 2fr 1fr;
-  grid-template-rows: 20rem 20rem 40rem;
+  grid-template-columns: minmax(20rem, 1fr);
+  grid-template-rows: repeat(2, 20rem) repeat(3, 40rem);
   grid-template-areas:
-    "influencedCard byParty"
-    "influencedCard byCommittee"
-    "superPacCard expenditures";
+    "byParty"
+    "byCommittee"
+    "influencedCard"
+    "superPacCard"
+    "expenditures";
 }
 
 .spentTopSection {
@@ -45,10 +47,8 @@
 }
 
 .expendituresByCommitteeCard {
-  composes: card from "@/app/shared.module.css";
+  composes: card from "@/app/components/expenditures.module.css";
   grid-area: byCommittee;
-  display: flex;
-  flex-direction: column;
 }
 
 .recentExpenditures {
@@ -64,8 +64,31 @@
   height: 100%;
 }
 
-@media (max-width: 768px) {
+@media (min-width: 576px) {
   .totalsRow {
-    grid-template-columns: minmax(10rem, 25rem);
+    grid-template-columns: repeat(2, minmax(10rem, 25rem));
+  }
+}
+
+@media (min-width: 768px) {
+  .mainCards {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 20rem repeat(3, 40rem);
+    grid-template-areas:
+      "byParty byCommittee"
+      "influencedCard influencedCard"
+      "superPacCard superPacCard"
+      "expenditures expenditures";
+  }
+}
+
+@media (min-width: 1200px) {
+  .mainCards {
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 20rem 20rem 40rem;
+    grid-template-areas:
+      "influencedCard byParty"
+      "influencedCard byCommittee"
+      "superPacCard expenditures";
   }
 }

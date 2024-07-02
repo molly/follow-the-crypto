@@ -173,6 +173,11 @@ table.lined {
   text-align: left;
 }
 
+.long-text-cell {
+  text-align: left;
+  min-width: 10rem;
+}
+
 .center-cell {
   text-align: center;
 }

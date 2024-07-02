@@ -99,13 +99,19 @@
   }
 }
 
-@media (min-width: 700px) {
+@media (min-width: 1200px) {
+  .mainLayout {
+    padding: 0.5rem 2rem;
+  }
+}
+
+@media (min-width: 1600px) {
   .mainLayout {
     padding: 0.5rem 4rem;
   }
 }
 
-@media (min-width: 800px) {
+@media (min-width: 2000px) {
   .mainLayout {
     padding: 0.5rem 6rem;
   }

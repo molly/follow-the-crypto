@@ -20,7 +20,7 @@ export default function OverflowSection({
 
   return (
     <motion.div
-      className={fullPage ? undefined : styles.overflowWrapper}
+      className={fullPage ? styles.noOverflow : styles.overflowWrapper}
       ref={containerRef}
       style={{
         maskImage: fullPage ? undefined : fade,

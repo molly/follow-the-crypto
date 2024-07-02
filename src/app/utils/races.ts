@@ -36,7 +36,7 @@ export const getRaceName = (raceId: string) => {
     if (!district || (state && SINGLE_MEMBER_STATES.includes(state))) {
       return "House";
     }
-    return `House District ${parseInt(district, 10)}`;
+    return `House District ${parseInt(district, 10)}`;
   }
 };
 

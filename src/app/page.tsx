@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import InfluencedRaces from "./components/InfluencedRaces";
-import InfluencedRacesTableContents from "./components/InfluencedRacesTableContents";
 import { MoneyCardSkeleton } from "./components/MoneyCard";
 import SuperPACsByReceipts from "./components/PACsByReceipts";
 import SuperPACsByReceiptsTableContents from "./components/SuperPACsByReceiptsTableContents";
@@ -35,9 +34,7 @@ export default function Home() {
       <div className={styles.mainCards}>
         <AllExpendituresByParty />
         <AllExpendituresByCommittee />
-        <InfluencedRaces>
-          <InfluencedRacesTableContents />
-        </InfluencedRaces>
+        <InfluencedRaces />
         <SuperPACsByReceipts type="super">
           <SuperPACsByReceiptsTableContents />
         </SuperPACsByReceipts>

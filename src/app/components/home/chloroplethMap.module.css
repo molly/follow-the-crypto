@@ -48,10 +48,18 @@
 }
 
 .stateFill4 {
-  fill: var(--color-blue-600);
+  fill: var(--color-blue-300);
 }
 
 .stateFill5 {
+  fill: var(--color-blue-400);
+}
+
+.stateFill6 {
+  fill: var(--color-blue-600);
+}
+
+.stateFill7 {
   fill: var(--color-blue-800);
 }
 
@@ -60,24 +68,42 @@
     stroke: var(--secondary-text);
   }
 
+  .stateFill1,
+  .stateFill2,
+  .stateFill3,
+  .stateFill4,
+  .stateFill5,
+  .stateFill6,
+  .stateFill7 {
+    fill: var(--color-blue-400);
+  }
+
   .stateFill1 {
-    fill: var(--color-blue-950);
+    fill-opacity: 0.2;
   }
 
   .stateFill2 {
-    fill: var(--color-blue-900);
+    fill-opacity: 0.3;
   }
 
   .stateFill3 {
-    fill: var(--color-blue-800);
+    fill-opacity: 0.4;
   }
 
   .stateFill4 {
-    fill: var(--color-blue-600);
+    fill-opacity: 0.5;
   }
 
   .stateFill5 {
-    fill: var(--color-blue-400);
+    fill-opacity: 0.6;
+  }
+
+  .stateFill6 {
+    fill-opacity: 0.8;
+  }
+
+  .stateFill7 {
+    fill-opacity: 1;
   }
 }
 
