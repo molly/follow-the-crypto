@@ -1,5 +1,5 @@
 import SpendingByParty from "@/app/components/SpendingByParty";
-import styles from "@/app/components/expendituresByParty.module.css";
+import styles from "@/app/components/expenditures.module.css";
 import { CommitteeDetails } from "@/app/types/Committee";
 
 export default function CommitteeExpendituresByParty({

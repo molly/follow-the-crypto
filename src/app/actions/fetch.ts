@@ -75,7 +75,6 @@ export const fetchConstant = cache(
 );
 
 // ----------------------------------------------------------------------
-
 // TOTALS ---------------------------------------------------------------
 export const fetchCommitteeTotalReceipts = cache(
   async (): Promise<number | ErrorType> => {
@@ -88,13 +87,39 @@ export const fetchCommitteeTotalReceipts = cache(
   },
 );
 
-export const fetchCommitteeTotalExpenditures = cache(
+export const fetchAllCommitteeTotalExpenditures = cache(
   async (): Promise<number | ErrorType> => {
     const snapshot = await fetchSnapshot("expenditures", "total");
     if (isError(snapshot)) {
       return snapshot as ErrorType;
     } else {
-      return snapshot.total;
+      return snapshot.all;
+    }
+  },
+);
+
+export const fetchAllCommitteeExpenditures = cache(
+  async (): Promise<Record<string, number> | ErrorType> => {
+    const snapshot = await fetchSnapshot("expenditures", "total");
+    if (isError(snapshot)) {
+      return snapshot as ErrorType;
+    } else {
+      return snapshot.by_committee;
+    }
+  },
+);
+
+export const fetchCommitteeTotalExpenditures = cache(
+  async (committeeId: string): Promise<number | ErrorType> => {
+    const snapshot = await fetchSnapshot("expenditures", "total");
+    if (isError(snapshot)) {
+      return snapshot as ErrorType;
+    } else {
+      if (committeeId in snapshot.by_committee) {
+        return snapshot.by_committee[committeeId];
+      } else {
+        return 0;
+      }
     }
   },
 );

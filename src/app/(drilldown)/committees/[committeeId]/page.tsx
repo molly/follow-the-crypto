@@ -36,8 +36,10 @@ export default async function CommitteePage({
 }: {
   params: { committeeId: string };
 }) {
-  const committeeData = await fetchCommitteeDetails(params.committeeId);
-  const donorData = await fetchCommitteeDonors(params.committeeId);
+  const [committeeData, donorData] = await Promise.all([
+    fetchCommitteeDetails(params.committeeId),
+    fetchCommitteeDonors(params.committeeId),
+  ]);
 
   if (isError(committeeData) || isError(donorData)) {
     if (is4xx(committeeData) || is4xx(donorData)) {

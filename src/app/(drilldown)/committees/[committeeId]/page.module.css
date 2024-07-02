@@ -6,6 +6,12 @@
   align-items: flex-start;
 }
 
+.moneyCardRow {
+  display: grid;
+  gap: inherit;
+  grid-template-columns: repeat(2, minmax(10rem, 25rem));
+  margin: 0 auto;
+}
 .rightColumn {
   display: flex;
   flex-direction: column;

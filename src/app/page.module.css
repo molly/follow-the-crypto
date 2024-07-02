@@ -33,7 +33,7 @@
   grid-template-rows: 20rem 20rem 40rem;
   grid-template-areas:
     "influencedCard byParty"
-    "influencedCard expenditures"
+    "influencedCard byCommittee"
     "superPacCard expenditures";
 }
 
@@ -42,6 +42,13 @@
   align-items: center;
   justify-content: center;
   height: 2.4rem;
+}
+
+.expendituresByCommitteeCard {
+  composes: card from "@/app/shared.module.css";
+  grid-area: byCommittee;
+  display: flex;
+  flex-direction: column;
 }
 
 .recentExpenditures {

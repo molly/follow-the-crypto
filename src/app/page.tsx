@@ -4,6 +4,7 @@ import InfluencedRacesTableContents from "./components/InfluencedRacesTableConte
 import { MoneyCardSkeleton } from "./components/MoneyCard";
 import SuperPACsByReceipts from "./components/PACsByReceipts";
 import SuperPACsByReceiptsTableContents from "./components/SuperPACsByReceiptsTableContents";
+import AllExpendituresByCommittee from "./components/home/AllExpendituresByCommittee";
 import AllExpendituresByParty from "./components/home/AllExpendituresByParty";
 import AllRecentExpenditures from "./components/home/AllRecentExpenditures";
 import MapWrapper from "./components/home/MapWrapper";
@@ -33,6 +34,7 @@ export default function Home() {
       </div>
       <div className={styles.mainCards}>
         <AllExpendituresByParty />
+        <AllExpendituresByCommittee />
         <InfluencedRaces>
           <InfluencedRacesTableContents />
         </InfluencedRaces>

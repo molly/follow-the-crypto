@@ -1,4 +1,4 @@
-import { fetchCommitteeTotalExpenditures } from "@/app/actions/fetch";
+import { fetchAllCommitteeTotalExpenditures } from "@/app/actions/fetch";
 import styles from "@/app/page.module.css";
 import sharedStyles from "@/app/shared.module.css";
 import { isError } from "@/app/utils/errors";
@@ -11,7 +11,7 @@ export default async function TotalDisbursements({
 }: {
   className?: string;
 }) {
-  const expendituresData = await fetchCommitteeTotalExpenditures();
+  const expendituresData = await fetchAllCommitteeTotalExpenditures();
   if (isError(expendituresData)) {
     return (
       <div className={`secondary ${sharedStyles.smallCard} ${className}`}>

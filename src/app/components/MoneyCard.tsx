@@ -23,9 +23,9 @@ export default function MoneyCard({
   bottomText,
   className,
 }: {
-  amount: string;
+  amount: string | JSX.Element;
   topText: string | JSX.Element;
-  bottomText: string | JSX.Element;
+  bottomText?: string | JSX.Element;
   className?: string;
 }) {
   return (

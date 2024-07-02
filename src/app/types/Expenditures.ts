@@ -86,11 +86,17 @@ export interface ExpendituresByParty {
   rep_support: number;
 }
 
+export interface ExpenditureTotals {
+  all: number;
+  by_committee: Record<string, number>;
+}
+
 export interface Expenditures {
   all: Expenditure[];
   recent: RecentExpenditures;
   states: StateExpenditures;
   by_party: ExpendituresByParty;
+  total: ExpenditureTotals;
 }
 
 export type ExpenditureCandidateSummary = {

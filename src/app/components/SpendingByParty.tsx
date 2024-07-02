@@ -3,7 +3,7 @@
 import * as d3 from "d3";
 import useResizeObserver from "use-resize-observer";
 import { ExpendituresByParty } from "../types/Expenditures";
-import styles from "./expendituresByParty.module.css";
+import styles from "./expenditures.module.css";
 
 type Party = "rep" | "dem";
 type SupportOppose = "support" | "oppose";
@@ -15,7 +15,7 @@ export default function SpendingByParty({
 }: {
   expenditures: ExpendituresByParty;
 }) {
-  const { ref, width = 300, height = 200 } = useResizeObserver<SVGSVGElement>();
+  const { ref, width = 400, height = 200 } = useResizeObserver<SVGSVGElement>();
 
   const MARGIN_BOTTOM = 20;
   const MARGIN_TOP = 15;
@@ -94,15 +94,16 @@ export default function SpendingByParty({
                         {gridLabelFormatter(spending)}
                       </text>
                       {height > 20 && (
-                        <text
-                          x={(x(party) || 0) + x.bandwidth() / 2}
-                          fontSize={14}
-                          y={y(spending) + 15}
-                          textAnchor="middle"
-                          fill="white"
+                        <foreignObject
+                          x={x(party) || 0}
+                          width={x.bandwidth()}
+                          height={height - 5}
+                          y={y(spending) + 5}
                         >
-                          {party === "rep" ? "Republicans" : "Democrats"}
-                        </text>
+                          <div className={styles.expendituresBarLabel}>
+                            {party === "rep" ? "Republicans" : "Democrats"}
+                          </div>
+                        </foreignObject>
                       )}
                     </g>
                   );
