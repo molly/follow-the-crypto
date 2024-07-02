@@ -55,7 +55,7 @@ export default async function CommitteePage({
   return (
     <>
       <CommitteeDetailsSection committee={committee} donors={donors} />
-      <div className={`${styles.committeeWrapper} row`}>
+      <div className={styles.committeeWrapper}>
         <TopDonors donors={donors} />
         <div className={styles.rightColumn}>
           <CommitteeExpendituresByParty committee={committee} />

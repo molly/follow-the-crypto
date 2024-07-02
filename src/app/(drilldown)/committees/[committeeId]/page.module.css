@@ -3,6 +3,8 @@
 }
 
 .committeeWrapper {
+  display: flex;
+  gap: inherit;
   align-items: flex-start;
 }
 
@@ -12,6 +14,7 @@
   grid-template-columns: repeat(2, minmax(10rem, 25rem));
   margin: 0 auto;
 }
+
 .rightColumn {
   display: flex;
   flex-direction: column;
@@ -93,11 +96,6 @@
 .donorOccupation {
   color: var(--secondary-text);
   font-style: italic;
-
-  &:before {
-    content: " | ";
-    font-style: normal;
-  }
 }
 
 .donorCompany {
@@ -131,4 +129,57 @@
   display: flex;
   justify-content: space-between;
   padding: 0.25em 0;
+}
+
+@media (max-width: 576px) {
+  .moneyCardRow {
+    grid-template-columns: minmax(16rem, 25rem);
+  }
+
+  .donorSubRow {
+    margin-left: 0;
+    align-items: flex-start;
+  }
+
+  .donorBlock {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .donorOccupation,
+  .donorDate {
+    display: block;
+    align-self: unset;
+  }
+}
+
+@media (min-width: 577px) {
+  .donorOccupation {
+    &:before {
+      content: " | ";
+      font-style: normal;
+    }
+  }
+
+  .donorDate {
+    &:before {
+      content: " – ";
+      font-style: normal;
+    }
+  }
+}
+
+@media (max-width: 1375px) {
+  .committeeWrapper {
+    width: 100%;
+    min-width: 20rem;
+    max-width: 60rem;
+    flex-direction: column;
+    margin: 0 auto;
+  }
+
+  .donorSection,
+  .rightColumn {
+    width: 100%;
+  }
 }

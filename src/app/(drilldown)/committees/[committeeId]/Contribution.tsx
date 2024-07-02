@@ -80,7 +80,7 @@ function ContributionDate({
     return (
       <span
         className={styles.donorDate}
-      >{` – ${formatDateFromString(contribution.contribution_receipt_date)}`}</span>
+      >{`${formatDateFromString(contribution.contribution_receipt_date)}`}</span>
     );
   } else if (
     "oldest" in contribution &&
