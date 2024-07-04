@@ -75,10 +75,7 @@ export default async function RacePage({
         <div className={styles.rightColumn}>
           <div className={styles.spendingCard}>
             <h2 className={styles.spendingHeader}>Spending</h2>
-            <Spending
-              raceId={params.raceId}
-              election={elections[shortRaceId]}
-            />
+            <Spending election={elections[shortRaceId]} />
           </div>
           <div className={styles.adsCard}>
             <h2 className={styles.adsHeader}>Ads</h2>

@@ -68,6 +68,7 @@ export default function SpendingByParty({
                 fontSize={12}
                 textAnchor="end"
                 alignmentBaseline="middle"
+                aria-hidden={true}
               >
                 {gridLabelFormatter(tick)}
               </text>
@@ -93,12 +94,14 @@ export default function SpendingByParty({
                         width={xBandwidth}
                         height={height}
                         className={styles[party]}
+                        aria-label={`~${gridLabelFormatter(spending)} spent to ${supportOppose} ${party === "rep" ? "Republican" : "Democratic"} candidates`}
                       />
                       <text
                         x={(x(party) || 0) + xBandwidth / 2}
                         fontSize={14}
                         y={y(spending) - 5}
                         textAnchor="middle"
+                        aria-hidden={true}
                       >
                         {gridLabelFormatter(spending)}
                       </text>
@@ -108,6 +111,7 @@ export default function SpendingByParty({
                           width={xBandwidth}
                           height={height - 5}
                           y={y(spending) + 5}
+                          aria-hidden={true}
                         >
                           <div className={styles.expendituresBarLabel}>
                             {party === "rep" &&
@@ -128,6 +132,7 @@ export default function SpendingByParty({
                     fontWeight="bold"
                     textAnchor="middle"
                     y={MARGIN_BOTTOM - 5}
+                    aria-hidden={true}
                   >
                     {supportOppose === "support" ? "Support" : "Oppose"}
                   </text>

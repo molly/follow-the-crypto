@@ -5,8 +5,18 @@ import {
   CommitteeDetails,
 } from "@/app/types/Committee";
 import { Contributions } from "@/app/types/Contributions";
+import { getAdDate } from "@/app/utils/ads";
 import { ErrorType, isError } from "@/app/utils/errors";
+import {
+  DocumentData,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+} from "firebase/firestore";
+import { cache } from "react";
 import { Ad, AdGroup } from "../types/Ads";
+import { ElectionsByState } from "../types/Elections";
 import {
   Expenditure,
   ExpenditureId,
@@ -17,16 +27,6 @@ import {
   StateExpenditures,
 } from "../types/Expenditures";
 import { MapData } from "../types/MapData";
-
-import {
-  DocumentData,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-} from "firebase/firestore";
-import { cache } from "react";
-import { ElectionsByState } from "../types/Elections";
 import { hydrateStateExpenditures } from "./hydrate";
 
 const fetchSnapshot = async (
@@ -325,20 +325,18 @@ export const fetchCandidateExpenditures = cache(
 );
 
 // ADS ------------------------------------------------------------------
-export const fetchAds = cache(
+export const fetchGoogleAds = cache(
   async (): Promise<Record<string, AdGroup> | ErrorType> =>
-    fetchSnapshot("ads", "google"),
+    fetchSnapshot("ads", "by_committee"),
 );
 
 export const fetchAdsByRace = cache(
   async (raceId: string): Promise<Ad[] | ErrorType> => {
-    const data = await fetchSnapshot("ads", "google");
+    const data = await fetchSnapshot("ads", "by_committee");
     if (isError(data)) {
       return data as ErrorType;
     } else {
-      const flattenedAds = Object.values(
-        data as Record<string, AdGroup>,
-      ).reduce(
+      let flattenedAds = Object.values(data as Record<string, AdGroup>).reduce(
         (acc, adGroup) => [...acc, ...Object.values(adGroup.ads)],
         [] as Ad[],
       );
@@ -346,7 +344,7 @@ export const fetchAdsByRace = cache(
       // Return only ads pertaining to the specified race, sorted by start date
       return flattenedAds
         .filter((ad) => ad.race === raceId)
-        .sort((a, b) => a.date_range_start.localeCompare(b.date_range_start));
+        .sort((a, b) => getAdDate(b).localeCompare(getAdDate(a)));
     }
   },
 );

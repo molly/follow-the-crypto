@@ -2,7 +2,7 @@ import { fetchStateExpenditures } from "@/app/actions/fetch";
 import MoneyCard from "@/app/components/MoneyCard";
 import { STATES_BY_FULL } from "@/app/data/states";
 import sharedStyles from "@/app/shared.module.css";
-import { StateExpenditures } from "@/app/types/Expenditures";
+import { PopulatedStateExpenditures } from "@/app/types/Expenditures";
 import { is4xx, isError } from "@/app/utils/errors";
 import { titlecase } from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
@@ -10,6 +10,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ByCommittee from "./ByCommittee";
 import ByRace from "./ByRace";
+import styles from "./page.module.css";
 
 export async function generateMetadata({
   params,
@@ -45,18 +46,22 @@ export default async function CommitteePage({
     return <div>Something went wrong when getting expenditure data.</div>;
   }
 
-  const expenditures = data as StateExpenditures;
+  const expenditures = data as PopulatedStateExpenditures;
 
   return (
     <>
       <h1 className={sharedStyles.titleH2}>{titlecasedState}</h1>
-      <MoneyCard
-        topText="Cryptocurrency companies and associated people have spent"
-        amount={formatCurrency(expenditures.total, true)}
-        bottomText={`to influence 2024 elections in ${titlecasedState}`}
-      />
-      <ByRace expenditures={expenditures} stateAbbr={stateAbbr} />
-      <ByCommittee expenditures={expenditures} />
+      <div className={styles.moneyCardSection}>
+        <MoneyCard
+          topText="Cryptocurrency companies and associated people have spent"
+          amount={formatCurrency(expenditures.total, true)}
+          bottomText={`to influence 2024 elections in ${titlecasedState}`}
+        />
+      </div>
+      <div className={styles.raceAndCommitteeSection}>
+        <ByRace expenditures={expenditures} stateAbbr={stateAbbr} />
+        <ByCommittee expenditures={expenditures} />
+      </div>
     </>
   );
 }

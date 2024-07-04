@@ -36,6 +36,7 @@ export default function CandidateResult({
           candidateClassName={styles.candidate}
           candidateNameClassName={candidateNameClassName}
           writeIn={candidate.writeIn}
+          noMargins={true}
         />
       </td>
       <td className="number-cell">

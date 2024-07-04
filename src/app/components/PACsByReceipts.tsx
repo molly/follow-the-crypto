@@ -60,7 +60,7 @@ export default function PACsByReceipts({
           </p>
         )}
       </div>
-      <OverflowSection fullPage={fullPage} headerHeight="2.2rem">
+      <OverflowSection fullPage={fullPage} headerHeight={2.2}>
         <table className={styles.superPacTable}>
           <thead>
             <tr className={styles.superPacTableHeader}>
@@ -100,15 +100,18 @@ export default function PACsByReceipts({
               <Link href="/committees/ranking/all">list of all PACs</Link>.
             </p>
           )}
-          <Link
-            className={styles.viewMoreLink}
-            href="/committees/ranking/super"
-          >
-            &raquo; View ranking of super PACs
-          </Link>
-          <Link className={styles.viewMoreLink} href="/committees/ranking/all">
-            &raquo; View ranking of all PACs
-          </Link>
+          <div className={styles.viewMoreLinks}>
+            <div className={styles.viewMoreLink}>
+              <Link href="/committees/ranking/super">
+                &raquo; View ranking of super PACs
+              </Link>
+            </div>
+            <div className={styles.viewMoreLink}>
+              <Link href="/committees/ranking/all">
+                &raquo; View ranking of all PACs
+              </Link>
+            </div>
+          </div>
         </div>
       )}
     </div>

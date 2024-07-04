@@ -98,7 +98,7 @@ function CandidateRow({
             href={raceHref}
           >{`${STATES_BY_ABBR[candidate.state]} ${raceName}`}</Link>
           .
-          <div>
+          <div className={styles.influencedRowOutcome}>
             <Outcome candidate={candidate} races={race.races} withIcon={true} />
           </div>
         </div>
@@ -174,7 +174,7 @@ export default function InfluencedRacesContents({
     return <OverflowSection fullPage={fullPage}>{contents}</OverflowSection>;
   }
   return (
-    <OverflowSection fullPage={fullPage} headerHeight="2.2rem">
+    <OverflowSection fullPage={fullPage} headerHeight={2.2}>
       <table className={styles.influencedTable}>
         <thead className={styles.inheritBorderRadius}>
           <tr className={styles.influencedTableHeader}>

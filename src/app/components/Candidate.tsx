@@ -26,12 +26,14 @@ export function CandidateImage({
   lastName,
   defeated,
   chart,
+  noMargins = false,
 }: {
   candidate?: CandidateSummary | ExpenditureCandidateSummary;
   firstName?: string;
   lastName?: string;
   defeated?: boolean;
   chart?: boolean;
+  noMargins?: boolean;
 }) {
   let imageUrl;
   if (firstName && lastName) {
@@ -40,6 +42,9 @@ export function CandidateImage({
   let candidateImageWrapperClassNames = styles.candidateImageWrapper;
   if (chart) {
     candidateImageWrapperClassNames += ` ${styles.chartCandidateImageWrapper}`;
+  }
+  if (noMargins) {
+    candidateImageWrapperClassNames += ` ${styles.noMargins}`;
   }
   if (candidate && candidate.party) {
     candidateImageWrapperClassNames += ` ${styles[getPartyClass(candidate.party)]}`;
@@ -130,6 +135,7 @@ export default function Candidate({
   writeIn,
   chart,
   imageOnly,
+  noMargins,
 }: {
   candidate?: RaceCandidate;
   candidateSummary?: CandidateSummary | ExpenditureCandidateSummary;
@@ -139,6 +145,7 @@ export default function Candidate({
   writeIn?: boolean;
   chart?: boolean;
   imageOnly?: boolean;
+  noMargins?: boolean;
 }) {
   const name =
     candidateSummary && candidateSummary.common_name
@@ -157,6 +164,7 @@ export default function Candidate({
       lastName={lastName}
       defeated={defeated}
       chart={chart}
+      noMargins={noMargins}
     />
   );
   if (imageOnly) {

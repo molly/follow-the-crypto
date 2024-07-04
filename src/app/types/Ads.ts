@@ -1,9 +1,16 @@
-export type AdConstant = {
-  race: string;
-  videoUrl?: string;
+export type Source = {
+  href: string;
+  publisher: string;
 };
 
-export type Ad = {
+export type GoogleAdConstant = {
+  race: string;
+  videoUrl?: string;
+  extraDetails?: React.ReactNode;
+  coverage?: Source[];
+};
+
+export type GoogleAd = {
   ad_id: string;
   ad_type: string;
   ad_url: string;
@@ -19,7 +26,23 @@ export type Ad = {
   spend_range_max_usd: number;
   spend_range_min_usd: number;
   spend_usd: string | null;
-} & AdConstant;
+  type: "google";
+} & GoogleAdConstant;
+
+export type ImageAd = {
+  alt?: string;
+  committee_id: string;
+  coverage?: Source[];
+  date: string;
+  extraDetails?: string;
+  humanDate?: string;
+  race: string;
+  source: string;
+  src: string;
+  type: "image";
+};
+
+export type Ad = GoogleAd | ImageAd;
 
 export type AdGroup = {
   GATC_id: string;

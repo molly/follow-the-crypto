@@ -77,6 +77,13 @@
   padding: 1rem;
 }
 
+.viewMoreLinks {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  gap: 0.25rem;
+}
+
 .viewMoreLink:not(:last-child) {
   margin-right: 1rem;
 }
@@ -88,8 +95,12 @@
   flex-direction: row;
   align-items: center;
   white-space-collapse: preserve;
-  padding: 0.5rem 0;
+  padding: 0.5rem 0.5rem 0.5rem 0;
   gap: 0.5rem 0;
+}
+
+.influencedRowOutcome {
+  margin-top: 0.5rem;
 }
 
 @media (max-width: 1000px) {

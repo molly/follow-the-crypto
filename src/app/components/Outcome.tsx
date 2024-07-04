@@ -33,10 +33,8 @@ export default function Outcome({
     return (
       <>
         {goalMark}
-        <span>
-          {` ${inSentence ? "was d" : "D"}efeated in the `}
-          {getSubraceName(defeatedRace)}
-        </span>
+        {` ${inSentence ? "was d" : "D"}efeated in the `}
+        {getSubraceName(defeatedRace)}
       </>
     );
   } else if (candidate.withdrew) {

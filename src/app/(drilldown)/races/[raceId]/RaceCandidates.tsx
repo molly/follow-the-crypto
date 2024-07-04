@@ -98,6 +98,7 @@ export default function RaceCandidates({
                   candidateSummary={summary}
                   candidateNameClassName={candidateNameClassName}
                   writeIn={candidate.writeIn}
+                  noMargins={true}
                 />
               </td>
               {ind === 0 && (

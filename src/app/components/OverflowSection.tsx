@@ -8,11 +8,11 @@ import { useRef } from "react";
 export default function OverflowSection({
   children,
   fullPage = false,
-  headerHeight = "0",
+  headerHeight = 0,
 }: {
   children: React.ReactNode;
   fullPage?: boolean;
-  headerHeight?: string;
+  headerHeight?: number; // rem
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ container: containerRef });

@@ -115,6 +115,7 @@
   width: 3rem;
   word-wrap: break-word;
   hyphens: auto;
+  overflow: hidden;
 }
 
 .spendingLegend {
@@ -202,6 +203,9 @@
 /* Ads */
 .adsCard {
   composes: card from "@/app/shared.module.css";
+  display: flex;
+  flex-direction: column;
+  max-height: 60rem;
 }
 
 .adGroup {
@@ -232,10 +236,19 @@
   font-size: 4rem;
 }
 
+.adDetailsWrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .adDetails {
   &:not(:last-child) {
     margin-right: 0.5rem;
   }
+}
+
+.adImage {
+  max-width: 100%;
 }
 
 @media (max-width: 1375px) {

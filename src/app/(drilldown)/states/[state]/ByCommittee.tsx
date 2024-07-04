@@ -1,7 +1,7 @@
 import { fetchConstant } from "@/app/actions/fetch";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import { CommitteeConstant } from "@/app/types/Committee";
-import { StateExpenditures } from "@/app/types/Expenditures";
+import { PopulatedStateExpenditures } from "@/app/types/Expenditures";
 import { isError } from "@/app/utils/errors";
 import { formatCurrency } from "@/app/utils/utils";
 import Link from "next/link";
@@ -11,7 +11,7 @@ import styles from "./page.module.css";
 async function CommitteeCardContents({
   expenditures,
 }: {
-  expenditures: StateExpenditures;
+  expenditures: PopulatedStateExpenditures;
 }) {
   const data = await fetchConstant("committees");
   const committees = isError(data)
@@ -67,7 +67,7 @@ function CommitteeCardContentsSkeleton() {
 export default async function ByCommittee({
   expenditures,
 }: {
-  expenditures: StateExpenditures;
+  expenditures: PopulatedStateExpenditures;
 }) {
   return (
     <div className={styles.committeeCard}>

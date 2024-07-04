@@ -1,11 +1,20 @@
+.moneyCardSection {
+  margin: 0 auto;
+}
+
+.raceAndCommitteeSection {
+  display: flex;
+  gap: inherit;
+}
+
 .raceCard {
   composes: card from "@/app/shared.module.css";
-  grid-column: 1 / 7;
+  width: 50%;
 }
 
 .committeeCard {
   composes: card from "@/app/shared.module.css";
-  grid-column: 7 / 13;
+  width: 50%;
 }
 
 .cardSection {
@@ -23,4 +32,15 @@
   align-items: center;
   white-space-collapse: preserve;
   margin-top: 1rem;
+}
+
+@media (max-width: 767px) {
+  .raceAndCommitteeSection {
+    flex-direction: column;
+  }
+
+  .raceCard,
+  .committeeCard {
+    width: 100%;
+  }
 }

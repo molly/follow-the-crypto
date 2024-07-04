@@ -11,7 +11,10 @@ export default async function CommitteeDisbursements({
 }: {
   committee: CommitteeDetails;
 }) {
-  if (!committee.disbursements_by_committee) {
+  if (
+    !committee.disbursements_by_committee ||
+    !Object.keys(committee.disbursements_by_committee).length
+  ) {
     return null;
   }
 
@@ -57,6 +60,7 @@ export default async function CommitteeDisbursements({
               {formatCurrency(
                 committee.disbursements_by_committee[recipientCommitteeId]
                   .total,
+                true,
               )}
             </span>
           </li>

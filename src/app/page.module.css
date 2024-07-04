@@ -7,16 +7,23 @@
 
 .title {
   composes: accent-text from "@/app/shared.module.css";
-  text-shadow: 0.25rem 0.25rem var(--accent);
-  font-size: clamp(2rem, 10vw, 6rem);
-  text-align: center;
+  display: flex;
+  justify-content: center;
   margin: 0 2rem;
 }
 
+.titleH1 {
+  display: block;
+  text-align: center;
+  font-size: clamp(2rem, 5vw, 6rem);
+  margin: 0;
+}
+
 .logoArrow {
-  composes: title;
+  composes: accent-text from "@/app/shared.module.css";
+  display: flex;
   font-weight: bold;
-  font-size: 6rem;
+  font-size: clamp(2rem, 5vw, 6rem);
 }
 
 .totalsRow {
@@ -67,6 +74,11 @@
 @media (min-width: 576px) {
   .totalsRow {
     grid-template-columns: repeat(2, minmax(10rem, 25rem));
+  }
+
+  .titleH1,
+  .logoArrow {
+    text-shadow: 0.25rem 0.25rem var(--accent);
   }
 }
 

@@ -2,7 +2,7 @@ import { fetchConstant, fetchStateElections } from "@/app/actions/fetch";
 import { CommitteeLink } from "@/app/components/CommitteeLink";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import { CommitteeConstant } from "@/app/types/Committee";
-import { StateExpenditures } from "@/app/types/Expenditures";
+import { PopulatedStateExpenditures } from "@/app/types/Expenditures";
 import { isError } from "@/app/utils/errors";
 import { humanizeList } from "@/app/utils/humanize";
 import { getRaceName, getSubraceName, sortRaces } from "@/app/utils/races";
@@ -63,7 +63,12 @@ function Influenced({
         <div>{`${lastName} later withdrew from the race.`}</div>
       )}
       <div className={styles.candidateResultWithImage}>
-        <Candidate candidateSummary={candidate} defeated={candidate.defeated} />
+        <Candidate
+          candidateSummary={candidate}
+          defeated={candidate.defeated}
+          imageOnly={true}
+        />
+        {candidate.common_name}
         <Outcome
           candidate={candidate}
           races={races}
@@ -80,7 +85,7 @@ async function RaceCardContents({
   expenditures,
   stateAbbr,
 }: {
-  expenditures: StateExpenditures;
+  expenditures: PopulatedStateExpenditures;
   stateAbbr: string;
 }) {
   const [electionData, committeeData] = await Promise.all([
@@ -161,7 +166,7 @@ export default async function ByRace({
   expenditures,
   stateAbbr,
 }: {
-  expenditures: StateExpenditures;
+  expenditures: PopulatedStateExpenditures;
   stateAbbr: string;
 }) {
   return (

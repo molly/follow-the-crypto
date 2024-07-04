@@ -28,6 +28,10 @@
   height: 50px;
 }
 
+.noMargins {
+  margin-left: 0;
+}
+
 .chartCandidateImage,
 .chartPlaceholderImage {
   width: 20px !important;

@@ -1,5 +1,5 @@
 import InformationalTooltip from "@/app/components/InformationalTooltip";
-import { Ad } from "@/app/types/Ads";
+import { GoogleAd as GoogleAdType } from "@/app/types/Ads";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { humanizeApproximateRounded } from "@/app/utils/humanize";
 import { formatCurrency, formatDateFromString } from "@/app/utils/utils";
@@ -45,7 +45,7 @@ export default function GoogleAd({
   ad,
   committees,
 }: {
-  ad: Ad;
+  ad: GoogleAdType;
   committees: Record<string, CommitteeConstant>;
 }) {
   const name = ad.fec_id in committees ? committees[ad.fec_id].name : ad.fec_id;
@@ -64,7 +64,7 @@ export default function GoogleAd({
     cost = `Up to ${formatCurrency(ad.spend_range_max_usd, true)}`;
   }
   return (
-    <div key={ad.ad_id} className={styles.adGroup}>
+    <div className={styles.adGroup}>
       <h3 className="no-margin">
         <Link href={`/committees/${ad.fec_id}`}>{name}</Link>
       </h3>
@@ -76,7 +76,24 @@ export default function GoogleAd({
           </div>
         )}
         {ad.videoUrl && <Embed url={ad.videoUrl} />}
-        <div>
+        <div className={styles.adDetailsWrapper}>
+          {(ad.extraDetails || ad.coverage) && (
+            <p>
+              {ad.extraDetails && (
+                <span dangerouslySetInnerHTML={{ __html: ad.extraDetails }} />
+              )}{" "}
+              {ad.coverage && ad.coverage.length && (
+                <span>
+                  News coverage:{" "}
+                  {ad.coverage.map((source) => (
+                    <a key={source.href} href={source.href}>
+                      <i>{source.publisher}</i>
+                    </a>
+                  ))}
+                </span>
+              )}
+            </p>
+          )}
           {cost && (
             <span className={styles.adDetails}>
               <b>

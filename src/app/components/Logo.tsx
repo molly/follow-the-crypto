@@ -6,7 +6,8 @@ export default function Logo() {
     <header>
       <div className={styles.logo}>
         <Link className={styles.logoText} href="/">
-          &darr; Follow the Crypto &darr;
+          <span aria-hidden={true}>&darr;</span> Follow the Crypto{" "}
+          <span aria-hidden={true}>&darr;</span>
         </Link>
       </div>
     </header>

@@ -17,9 +17,15 @@ export default function Home() {
   return (
     <main className={sharedStyles.mainLayout}>
       <div className={styles.titleWrapper}>
-        <span className={styles.logoArrow}>&darr;</span>
-        <h1 className={styles.title}>Follow the crypto</h1>
-        <span className={styles.logoArrow}>&darr;</span>
+        <span className={styles.logoArrow} aria-hidden={true}>
+          &darr;
+        </span>
+        <div className={styles.title}>
+          <h1 className={styles.titleH1}>Follow the crypto</h1>
+        </div>
+        <span className={styles.logoArrow} aria-hidden={true}>
+          &darr;
+        </span>
       </div>
       <div className={styles.totalsRow}>
         <Suspense
