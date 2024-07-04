@@ -7,20 +7,27 @@ import { Suspense } from "react";
 import ErrorText from "../ErrorText";
 import ExpendituresSkeleton from "../skeletons/ExpendituresSkeleton";
 
-async function AllExpendituresByPartyContent() {
+async function AllExpendituresByPartyContent({ labelId }: { labelId: string }) {
   const data = await fetchAllExpenditureTotalsByParty();
   if (isError(data)) {
     return <ErrorText subject="expenditures by party" />;
   }
-  return <SpendingByParty expenditures={data as ExpendituresByParty} />;
+  return (
+    <SpendingByParty
+      expenditures={data as ExpendituresByParty}
+      labelId={labelId}
+    />
+  );
 }
 
 export default function AllExpendituresByParty() {
   return (
     <section className={styles.card}>
-      <h2>All crypto industry expenditures by party</h2>
+      <h2 id="expenditures-by-party-label">
+        All crypto industry expenditures by party
+      </h2>
       <Suspense fallback={<ExpendituresSkeleton />}>
-        <AllExpendituresByPartyContent />
+        <AllExpendituresByPartyContent labelId="expenditures-by-party-label" />
       </Suspense>
     </section>
   );

@@ -89,7 +89,13 @@ type SpendingHoverState = {
     | "crypto_oppose";
 };
 
-export default function Spending({ election }: { election: ElectionGroup }) {
+export default function Spending({
+  election,
+  labelId,
+}: {
+  election: ElectionGroup;
+  labelId: string;
+}) {
   const [hovered, setHovered] = useState<SpendingHoverState | null>(null);
   const { ref, width = 400 } = useResizeObserver<SVGSVGElement>();
 
@@ -167,7 +173,12 @@ export default function Spending({ election }: { election: ElectionGroup }) {
 
   return (
     <div>
-      <svg viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`} ref={ref}>
+      <svg
+        viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`}
+        ref={ref}
+        role="group"
+        aria-labelledby={labelId}
+      >
         <defs>
           <pattern
             id="hatch"

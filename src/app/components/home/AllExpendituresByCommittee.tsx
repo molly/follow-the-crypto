@@ -10,7 +10,11 @@ import ErrorText from "../ErrorText";
 import ExpendituresSkeleton from "../skeletons/ExpendituresSkeleton";
 import AllExpendituresByCommitteeChart from "./AllExpendituresByCommitteeChart";
 
-async function AllExpendituresByCommitteeContent() {
+async function AllExpendituresByCommitteeContent({
+  labelId,
+}: {
+  labelId: string;
+}) {
   const [expendituresData, committeeConstantData] = await Promise.all([
     fetchAllCommitteeExpenditures(),
     fetchConstant<Record<string, CommitteeConstant>>("committees"),
@@ -23,6 +27,7 @@ async function AllExpendituresByCommitteeContent() {
     <AllExpendituresByCommitteeChart
       expenditures={expendituresData as Record<string, number>}
       committeeConstants={committeeConstants}
+      labelId={labelId}
     />
   );
 }
@@ -30,9 +35,9 @@ async function AllExpendituresByCommitteeContent() {
 export default function AllExpendituresByCommittee() {
   return (
     <section className={styles.expendituresByCommitteeCard}>
-      <h2>Expenditures by committee</h2>
+      <h2 id="expenditures-by-committee-label">Expenditures by committee</h2>
       <Suspense fallback={<ExpendituresSkeleton />}>
-        <AllExpendituresByCommitteeContent />
+        <AllExpendituresByCommitteeContent labelId="expenditures-by-committee-label" />
       </Suspense>
     </section>
   );

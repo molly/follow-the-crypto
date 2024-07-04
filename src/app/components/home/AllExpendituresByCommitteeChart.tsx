@@ -19,9 +19,11 @@ const SCALE_BLUES = [
 export default function SpendingByCommittee({
   expenditures,
   committeeConstants,
+  labelId,
 }: {
   expenditures: Record<string, number>;
   committeeConstants: Record<string, CommitteeConstant>;
+  labelId: string;
 }) {
   const { ref, width = 400, height = 200 } = useResizeObserver<SVGSVGElement>();
   const router = useRouter();
@@ -57,10 +59,17 @@ export default function SpendingByCommittee({
         viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`}
         preserveAspectRatio="none"
         className={styles.svg}
+        role="group"
+        aria-labelledby={labelId}
       >
         <g transform={`translate(0, ${MARGIN_TOP})`}>
           {y.ticks(5).map((tick) => (
-            <g key={`xTick-${tick}`} transform={`translate(0,${y(tick)})`}>
+            <g
+              key={`xTick-${tick}`}
+              transform={`translate(0,${y(tick)})`}
+              role="presentation"
+              aria-hidden={true}
+            >
               <line
                 key={tick}
                 x1={MARGIN_LEFT - 5}
@@ -77,15 +86,25 @@ export default function SpendingByCommittee({
               </text>
             </g>
           ))}
-          <g transform={`translate(${MARGIN_LEFT}, 0)`}>
+          <g
+            transform={`translate(${MARGIN_LEFT}, 0)`}
+            role="list"
+            aria-label="bar graph"
+          >
             {committees.map((committee) => {
               const spending = expenditures[committee];
               const height = y(0) - y(spending);
+              const committeeName =
+                committee in committeeConstants
+                  ? committeeConstants[committee].name
+                  : committee;
               return (
                 <g
                   key={committee}
                   onClick={() => router.push(`/committees/${committee}`)}
                   style={{ cursor: "pointer" }}
+                  role="listitem"
+                  aria-label={`~${gridLabelFormatter(spending)} spent by ${committeeName}`}
                 >
                   <rect
                     x={x(committee)}
@@ -93,12 +112,14 @@ export default function SpendingByCommittee({
                     width={x.bandwidth()}
                     height={height}
                     fill={color(committee)}
+                    aria-hidden={true}
                   />
                   <text
                     x={(x(committee) || 0) + x.bandwidth() / 2}
                     fontSize={14}
                     y={y(spending) - 5}
                     textAnchor="middle"
+                    aria-hidden={true}
                   >
                     {gridLabelFormatter(spending)}
                   </text>
@@ -108,21 +129,24 @@ export default function SpendingByCommittee({
                       width={x.bandwidth()}
                       height={height - 5}
                       y={y(spending) + 5}
+                      aria-hidden={true}
                     >
                       <div
                         className={styles.expendituresBarLabel}
                         style={{ color: getLabelColor(color(committee)) }}
                       >
-                        {committee in committeeConstants
-                          ? committeeConstants[committee].name
-                          : committee}
+                        {committeeName}
                       </div>
                     </foreignObject>
                   )}
                 </g>
               );
             })}
-            <g transform={`translate(0, ${BOUNDS_HEIGHT})`}>
+            <g
+              transform={`translate(0, ${BOUNDS_HEIGHT})`}
+              role="presentation"
+              aria-hidden={true}
+            >
               <path
                 className={styles.axis}
                 d={["M", xRange[0], 0, "L", xRange[1], 0].join(" ")}
@@ -135,6 +159,8 @@ export default function SpendingByCommittee({
               d={["M", 0, yRange[0], "L", 0, yRange[1]].join(" ")}
               fill="none"
               stroke="currentColor"
+              role="presentation"
+              aria-hidden={true}
             />
           </g>
         </g>

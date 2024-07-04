@@ -11,9 +11,12 @@ export default function CommitteeExpendituresByParty({
 
   return (
     <section className={styles.card}>
-      <h2>Expenditures</h2>
+      <h2 id="expenditures-label">Expenditures</h2>
       {expenditures ? (
-        <SpendingByParty expenditures={expenditures} />
+        <SpendingByParty
+          expenditures={expenditures}
+          labelId="expenditures-label"
+        />
       ) : (
         <p>No expenditures found.</p>
       )}

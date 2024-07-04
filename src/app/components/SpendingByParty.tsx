@@ -12,8 +12,10 @@ type ExpendituresByPartyKey = `${Party}_${SupportOppose}`;
 
 export default function SpendingByParty({
   expenditures,
+  labelId,
 }: {
   expenditures: ExpendituresByParty;
+  labelId: string;
 }) {
   const { ref, width = 400, height = 200 } = useResizeObserver<SVGSVGElement>();
 
@@ -53,10 +55,17 @@ export default function SpendingByParty({
         viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`}
         preserveAspectRatio="none"
         className={styles.svg}
+        role="group"
+        aria-labelledby={labelId}
       >
         <g transform={`translate(0, ${MARGIN_TOP})`}>
           {y.ticks(5).map((tick) => (
-            <g key={`xTick-${tick}`} transform={`translate(0,${y(tick)})`}>
+            <g
+              key={`xTick-${tick}`}
+              transform={`translate(0,${y(tick)})`}
+              role="presentation"
+              aria-hidden={true}
+            >
               <line
                 key={tick}
                 x1={MARGIN_LEFT - 5}
@@ -68,13 +77,16 @@ export default function SpendingByParty({
                 fontSize={12}
                 textAnchor="end"
                 alignmentBaseline="middle"
-                aria-hidden={true}
               >
                 {gridLabelFormatter(tick)}
               </text>
             </g>
           ))}
-          <g transform={`translate(${MARGIN_LEFT}, 0)`}>
+          <g
+            transform={`translate(${MARGIN_LEFT}, 0)`}
+            role="list"
+            aria-label="bar graph"
+          >
             {["support", "oppose"].map((supportOppose) => (
               <g
                 key={supportOppose}
@@ -87,7 +99,7 @@ export default function SpendingByParty({
                   const height = y(0) - y(spending);
                   const xBandwidth = x.bandwidth();
                   return (
-                    <g key={key}>
+                    <g key={key} role="listitem">
                       <rect
                         x={x(party)}
                         y={y(spending)}
@@ -111,6 +123,7 @@ export default function SpendingByParty({
                           width={xBandwidth}
                           height={height - 5}
                           y={y(spending) + 5}
+                          role="presentation"
                           aria-hidden={true}
                         >
                           <div className={styles.expendituresBarLabel}>
@@ -126,20 +139,25 @@ export default function SpendingByParty({
                 })}
                 <g
                   transform={`translate(${fx.bandwidth() / 2},${BOUNDS_HEIGHT})`}
+                  role="presentation"
+                  aria-hidden={true}
                 >
                   <text
                     fontSize={14}
                     fontWeight="bold"
                     textAnchor="middle"
                     y={MARGIN_BOTTOM - 5}
-                    aria-hidden={true}
                   >
                     {supportOppose === "support" ? "Support" : "Oppose"}
                   </text>
                 </g>
               </g>
             ))}
-            <g transform={`translate(0, ${BOUNDS_HEIGHT})`}>
+            <g
+              transform={`translate(0, ${BOUNDS_HEIGHT})`}
+              role="presentation"
+              aria-hidden={true}
+            >
               <path
                 className={styles.axis}
                 d={["M", xRange[0], 0, "L", xRange[1], 0].join(" ")}
@@ -152,6 +170,8 @@ export default function SpendingByParty({
               d={["M", 0, yRange[0], "L", 0, yRange[1]].join(" ")}
               fill="none"
               stroke="currentColor"
+              role="presentation"
+              aria-hidden={true}
             />
           </g>
         </g>
