@@ -26,21 +26,11 @@
   padding-bottom: 0.5rem;
 }
 
-.overflowWrapper {
-  composes: hasFade from "@/app/shared.module.css";
-  max-height: 100%;
-  overflow-y: auto;
-}
-
-.noOverflow {
-  composes: inheritBorderRadius;
-  padding-bottom: 0.5rem;
-}
-
 .superPacTable,
 .influencedTable {
   composes: inheritBorderRadius;
   width: 100%;
+  flex-grow: 1;
 }
 
 .superPacTableHeader,
@@ -89,11 +79,18 @@
 }
 
 /* Fallback for very small viewports */
+.influencedList {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
 .influencedRow {
   composes: influencedTableRow;
   display: flex;
   flex-direction: row;
   align-items: center;
+  flex-grow: 1;
   white-space-collapse: preserve;
   padding: 0.5rem 0.5rem 0.5rem 0;
   gap: 0.5rem 0;

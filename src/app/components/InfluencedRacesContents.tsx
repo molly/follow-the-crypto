@@ -18,7 +18,6 @@ import { STATES_BY_ABBR } from "../data/states";
 import Candidate, { CandidateSkeleton } from "./Candidate";
 import ErrorText from "./ErrorText";
 import Outcome from "./Outcome";
-import OverflowSection from "./OverflowSection";
 import Skeleton from "./skeletons/Skeleton";
 
 const renderPlaintextSpending = (candidate: ExpenditureCandidateSummary) => {
@@ -32,7 +31,7 @@ const renderPlaintextSpending = (candidate: ExpenditureCandidateSummary) => {
 };
 
 function InfluencedRacesContentsSkeleton({ fullPage }: { fullPage: boolean }) {
-  return range(fullPage ? 20 : 6).map((i) => (
+  return range(fullPage ? 20 : 5).map((i) => (
     <div key={`influenced-race-skeleton-${i}`} className={styles.influencedRow}>
       <CandidateSkeleton onCard={true} />
       <Skeleton
@@ -155,10 +154,13 @@ export default function InfluencedRacesContents({
   }
 
   const { order, candidates } = expenditures as ExpendituresByCandidate;
-
   const raceDetails = raceDetailsData as Record<string, ElectionsByState>;
+  let rows = order;
+  if (!fullPage) {
+    rows = order.slice(0, 5);
+  }
 
-  const contents = order.map((candidateName) => {
+  const contents = rows.map((candidateName) => {
     const candidate = candidates[candidateName];
     return (
       <CandidateRow
@@ -171,27 +173,25 @@ export default function InfluencedRacesContents({
   });
 
   if (small) {
-    return <OverflowSection fullPage={fullPage}>{contents}</OverflowSection>;
+    return <div className={styles.influencedList}>{contents}</div>;
   }
   return (
-    <OverflowSection fullPage={fullPage} headerHeight={2.2}>
-      <table className={styles.influencedTable}>
-        <thead className={styles.inheritBorderRadius}>
-          <tr className={styles.influencedTableHeader}>
-            <th className={`${styles.inheritBorderRadius} text-cell`}>
-              Candidate
-            </th>
-            <th className="center-cell">State</th>
-            <th className="center-cell">Office</th>
-            <th className="number-cell">Support</th>
-            <th className="number-cell">Oppose</th>
-            <th className={`${styles.inheritBorderRadius} long-text-cell`}>
-              Outcome
-            </th>
-          </tr>
-        </thead>
-        <tbody className={styles.inheritBorderRadius}>{contents}</tbody>
-      </table>
-    </OverflowSection>
+    <table className={styles.influencedTable}>
+      <thead className={styles.inheritBorderRadius}>
+        <tr className={styles.influencedTableHeader}>
+          <th className={`${styles.inheritBorderRadius} text-cell`}>
+            Candidate
+          </th>
+          <th className="center-cell">State</th>
+          <th className="center-cell">Office</th>
+          <th className="number-cell">Support</th>
+          <th className="number-cell">Oppose</th>
+          <th className={`${styles.inheritBorderRadius} long-text-cell`}>
+            Outcome
+          </th>
+        </tr>
+      </thead>
+      <tbody className={styles.inheritBorderRadius}>{contents}</tbody>
+    </table>
   );
 }

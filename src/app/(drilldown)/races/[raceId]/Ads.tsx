@@ -1,5 +1,4 @@
 import { fetchAdsByRace, fetchConstant } from "@/app/actions/fetch";
-import OverflowSection from "@/app/components/OverflowSection";
 import { Ad } from "@/app/types/Ads";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { isError } from "@/app/utils/errors";
@@ -22,14 +21,10 @@ export default async function Ads({ raceId }: { raceId: string }) {
   if (ads.length === 0) {
     return <div>No known ads.</div>;
   }
-  return (
-    <OverflowSection>
-      {ads.map((ad) => {
-        if (ad.type === "google") {
-          return <GoogleAd ad={ad} committees={committees} key={ad.ad_id} />;
-        }
-        return <ImageAd ad={ad} committees={committees} key={ad.src} />;
-      })}
-    </OverflowSection>
-  );
+  return ads.map((ad) => {
+    if (ad.type === "google") {
+      return <GoogleAd ad={ad} committees={committees} key={ad.ad_id} />;
+    }
+    return <ImageAd ad={ad} committees={committees} key={ad.src} />;
+  });
 }

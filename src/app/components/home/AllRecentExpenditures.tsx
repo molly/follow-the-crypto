@@ -1,5 +1,4 @@
 import { fetchAllRecentExpenditures, fetchConstant } from "@/app/actions/fetch";
-import tableStyles from "@/app/components/tables.module.css";
 import styles from "@/app/page.module.css";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { Expenditure } from "@/app/types/Expenditures";
@@ -22,7 +21,7 @@ async function AllRecentExpendituresContent() {
   const allRecentExpenditures = expendituresData as Expenditure[];
   return (
     <RecentExpendituresContent
-      expenditures={allRecentExpenditures}
+      expenditures={allRecentExpenditures.slice(0, 5)}
       committees={committeeConstantData as Record<string, CommitteeConstant>}
     />
   );
@@ -30,10 +29,7 @@ async function AllRecentExpendituresContent() {
 
 export default async function AllRecentExpenditures() {
   return (
-    <RecentExpenditures
-      className={styles.recentExpenditures}
-      expendituresClassName={`${tableStyles.overflowWrapper} ${styles.recentExpendituresWrapper}`}
-    >
+    <RecentExpenditures className={styles.recentExpenditures}>
       <Suspense fallback={<RecentExpendituresContentSkeleton />}>
         <AllRecentExpendituresContent />
       </Suspense>

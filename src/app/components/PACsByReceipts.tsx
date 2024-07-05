@@ -2,7 +2,6 @@ import styles from "@/app/components/tables.module.css";
 import { range } from "@/app/utils/range";
 import Link from "next/link";
 import { Suspense } from "react";
-import OverflowSection from "./OverflowSection";
 import Skeleton from "./skeletons/Skeleton";
 
 function TableContentsSkeleton() {
@@ -60,35 +59,31 @@ export default function PACsByReceipts({
           </p>
         )}
       </div>
-      <OverflowSection fullPage={fullPage} headerHeight={2.2}>
-        <table className={styles.superPacTable}>
-          <thead>
-            <tr className={styles.superPacTableHeader}>
-              <th></th>
-              <th className="text-cell">Name</th>
-              <th className={`text-cell ${styles.tableCellCollapse1}`}>
-                Description
-              </th>
-              {type === "all" && (
-                <th className={`text-cell ${styles.tableCellCollapse1}`}>
-                  Type
-                </th>
-              )}
-              <th className={`number-cell ${styles.superPacTableCellMinWidth}`}>
-                Receipts
-              </th>
-              <th
-                className={`number-cell ${styles.superPacTableCellMinWidth} ${styles.tableCellCollapse2}`}
-              >
-                Cash on hand
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <Suspense fallback={<TableContentsSkeleton />}>{children}</Suspense>
-          </tbody>
-        </table>
-      </OverflowSection>
+      <table className={styles.superPacTable}>
+        <thead>
+          <tr className={styles.superPacTableHeader}>
+            <th></th>
+            <th className="text-cell">Name</th>
+            <th className={`text-cell ${styles.tableCellCollapse1}`}>
+              Description
+            </th>
+            {type === "all" && (
+              <th className={`text-cell ${styles.tableCellCollapse1}`}>Type</th>
+            )}
+            <th className={`number-cell ${styles.superPacTableCellMinWidth}`}>
+              Receipts
+            </th>
+            <th
+              className={`number-cell ${styles.superPacTableCellMinWidth} ${styles.tableCellCollapse2}`}
+            >
+              Cash on hand
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <Suspense fallback={<TableContentsSkeleton />}>{children}</Suspense>
+        </tbody>
+      </table>
       {!fullPage && (
         <div className={styles.tableCardContent}>
           {type === "super" && (

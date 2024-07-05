@@ -205,7 +205,6 @@
   composes: card from "@/app/shared.module.css";
   display: flex;
   flex-direction: column;
-  max-height: 60rem;
 }
 
 .adGroup {

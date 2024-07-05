@@ -31,16 +31,22 @@ export default async function PACsByReceiptsTableContents({
   if (fullPage) {
     PACsToShow = PACs;
   } else {
+    let firstCryptoIndex = -1;
     let lastCryptoIndex = -1;
-    for (let i = PACs.length - 1; i >= 0; i--) {
+    for (let i = 0; i < PACs.length; i++) {
       if (PACs[i].is_crypto) {
+        if (firstCryptoIndex === -1) {
+          firstCryptoIndex = i;
+        }
         lastCryptoIndex = i;
-        break;
       }
     }
 
     // Don't show a bunch of extra rows if they're all unrelated PACs
-    const limit = Math.ceil(lastCryptoIndex / 10) * 10;
+    let limit = Math.ceil(lastCryptoIndex / 10) * 10;
+    if (!fullPage) {
+      limit = Math.ceil(firstCryptoIndex / 10) * 10;
+    }
     PACsToShow = PACs.slice(0, limit);
   }
 
