@@ -2,7 +2,7 @@
 
 import styles from "@/app/components/tables.module.css";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useBreakpoint } from "../hooks/useBreakpoint";
 import InfluencedRacesContents from "./InfluencedRacesContents";
 
 export default function InfluencedRaces({
@@ -10,12 +10,7 @@ export default function InfluencedRaces({
 }: {
   fullPage?: boolean;
 }) {
-  const [useCompact, setUseCompact] = useState(false);
-  useEffect(() => {
-    if (window && window.innerWidth < 650) {
-      setUseCompact(true);
-    }
-  }, [setUseCompact]);
+  const useCompact = useBreakpoint(650);
 
   return (
     <div className={styles.influencedCard}>

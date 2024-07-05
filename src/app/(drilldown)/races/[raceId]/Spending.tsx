@@ -1,10 +1,11 @@
 "use client";
 
 import Candidate from "@/app/components/Candidate";
+import { useBreakpoint } from "@/app/hooks/useBreakpoint";
 import { CandidateSummary, ElectionGroup } from "@/app/types/Elections";
 import * as d3 from "d3";
 import { motion } from "framer-motion";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import styles from "./page.module.css";
 
 const CHART_WIDTH = 300;
@@ -96,13 +97,7 @@ export default function Spending({
   labelId: string;
 }) {
   const [hovered, setHovered] = useState<SpendingHoverState | null>(null);
-  const [shouldUseXLFont, setShouldUseXLFont] = useState(false);
-
-  useEffect(() => {
-    if (window && window.innerWidth < 500) {
-      setShouldUseXLFont(true);
-    }
-  }, [setShouldUseXLFont]);
+  const shouldUseXLFont = useBreakpoint(500);
 
   // Get unique list of candidates, ordered by amount raised
   const candidateNames = useMemo(
