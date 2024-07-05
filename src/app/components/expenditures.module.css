@@ -15,6 +15,10 @@
   fill: var(--main-text);
 }
 
+.svgText {
+  fill: var(--main-text);
+}
+
 .rep {
   fill: var(--party-republican);
 }

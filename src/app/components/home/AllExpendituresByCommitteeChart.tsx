@@ -115,6 +115,7 @@ export default function SpendingByCommittee({
                       x={(x(committee) || 0) + x.bandwidth() / 2}
                       fontSize={14}
                       y={y(spending) - 5}
+                      className={styles.svgText}
                       textAnchor="middle"
                       aria-hidden={true}
                     >
