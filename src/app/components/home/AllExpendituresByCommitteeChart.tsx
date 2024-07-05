@@ -101,44 +101,44 @@ export default function SpendingByCommittee({
               return (
                 <g
                   key={committee}
-                  onClick={() => router.push(`/committees/${committee}`)}
                   style={{ cursor: "pointer" }}
-                  role="listitem"
+                  role="link"
                   aria-label={`~${gridLabelFormatter(spending)} spent by ${committeeName}`}
                 >
-                  <rect
-                    x={x(committee)}
-                    y={y(spending)}
-                    width={x.bandwidth()}
-                    height={height}
-                    fill={color(committee)}
-                    aria-hidden={true}
-                  />
-                  <text
-                    x={(x(committee) || 0) + x.bandwidth() / 2}
-                    fontSize={14}
-                    y={y(spending) - 5}
-                    textAnchor="middle"
-                    aria-hidden={true}
-                  >
-                    {gridLabelFormatter(spending)}
-                  </text>
-                  {height > 20 && (
-                    <foreignObject
-                      x={x(committee) || 0}
+                  <a href={`/committees/${committee}`}>
+                    <rect
+                      x={x(committee)}
+                      y={y(spending)}
                       width={x.bandwidth()}
-                      height={height - 5}
-                      y={y(spending) + 5}
+                      height={height}
+                      fill={color(committee)}
+                    />
+                    <text
+                      x={(x(committee) || 0) + x.bandwidth() / 2}
+                      fontSize={14}
+                      y={y(spending) - 5}
+                      textAnchor="middle"
                       aria-hidden={true}
                     >
-                      <div
-                        className={styles.expendituresBarLabel}
-                        style={{ color: getLabelColor(color(committee)) }}
+                      {gridLabelFormatter(spending)}
+                    </text>
+                    {height > 20 && (
+                      <foreignObject
+                        x={x(committee) || 0}
+                        width={x.bandwidth()}
+                        height={height - 5}
+                        y={y(spending) + 5}
+                        aria-hidden={true}
                       >
-                        {committeeName}
-                      </div>
-                    </foreignObject>
-                  )}
+                        <div
+                          className={styles.expendituresBarLabel}
+                          style={{ color: getLabelColor(color(committee)) }}
+                        >
+                          {committeeName}
+                        </div>
+                      </foreignObject>
+                    )}
+                  </a>
                 </g>
               );
             })}

@@ -24,7 +24,12 @@ export default function Legend({
   };
 
   return (
-    <g className={styles.legend} transform="translate(610, 30)">
+    <g
+      className={styles.legend}
+      transform="translate(610, 30)"
+      role="presentation"
+      aria-hidden={true}
+    >
       <svg width={LEGEND_WIDTH} height={50} viewBox={`0 0 ${LEGEND_WIDTH} 50`}>
         <g>
           {domain.map((d, ind) => (

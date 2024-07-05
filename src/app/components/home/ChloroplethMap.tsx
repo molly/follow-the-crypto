@@ -3,6 +3,7 @@
 import { STATES_BY_FULL } from "@/app/data/states";
 import { MapData, StateTotals } from "@/app/types/MapData";
 import { ErrorType, isError } from "@/app/utils/errors";
+import { formatCurrency } from "@/app/utils/utils";
 import {
   autoUpdate,
   flip,
@@ -18,7 +19,7 @@ import {
   GeoJsonProperties,
   Geometry,
 } from "geojson";
-import { createRef, useCallback, useRef, useState } from "react";
+import { MouseEvent, createRef, useCallback, useRef, useState } from "react";
 import * as topojson from "topojson-client";
 import { Objects, Topology } from "topojson-specification";
 import ErrorText from "../ErrorText";
@@ -130,8 +131,9 @@ export default function ChloroplethMap({
     [hoveredState, mapData, refs],
   );
 
-  const closeTooltip = useCallback((e: MouseEvent) => {
+  const closeTooltip = useCallback((e?: MouseEvent) => {
     if (
+      e &&
       e.relatedTarget &&
       "className" in e.relatedTarget &&
       typeof e.relatedTarget.className === "string" &&
@@ -145,16 +147,30 @@ export default function ChloroplethMap({
 
   return (
     <div className={styles.mapWrapper}>
-      <svg ref={svgRef} className={styles.svg} viewBox="0 0 1000 620">
+      <svg
+        ref={svgRef}
+        className={styles.svg}
+        viewBox="0 0 1000 620"
+        role="group"
+        aria-label="Map of the US showing cryptocurrency-related spending by state"
+      >
         <Legend fillClassNames={FILL_CLASS_NAMES} domain={DOMAIN} />
         {data.map((d) => {
           const centroid = path.centroid(d);
+          const stateFullName = d.properties?.name;
+          const expenditures = getExpenditure(stateFullName, mapData);
           return (
             <g
               key={d.id}
               onMouseEnter={() => setTooltipData(d)}
               onClick={() => setTooltipData(d)}
-              onMouseLeave={(e) => closeTooltip}
+              onFocus={() => setTooltipData(d)}
+              onBlur={() => closeTooltip()}
+              onMouseLeave={(e) => closeTooltip(e)}
+              aria-haspopup={true}
+              tabIndex={0}
+              aria-label={`${expenditures ? formatCurrency(expenditures.total, true) : "$0"} spent in ${stateFullName}`}
+              aria-describedby={`tooltip-${stateFullName}`}
             >
               <motion.path
                 id={d.id as string}
@@ -185,10 +201,12 @@ export default function ChloroplethMap({
         </div>
       )}
       <ChloroplethTooltip
+        id={hoveredState?.state ? `tooltip-${hoveredState.state}` : undefined}
         setHoveredState={setHoveredState}
         ref={refs.setFloating}
         style={floatingStyles}
         context={context}
+        tabIndex={0}
         {...hoveredState}
       />
     </div>
