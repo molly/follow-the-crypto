@@ -4,7 +4,7 @@ import { CommitteeConstant } from "@/app/types/Committee";
 import { getLabelColor } from "@/app/utils/colors";
 import * as d3 from "d3";
 import { useRouter } from "next/navigation";
-import useResizeObserver from "use-resize-observer";
+import { useEffect, useRef, useState } from "react";
 
 const SCALE_BLUES = [
   "#1e3a8a",
@@ -25,7 +25,18 @@ export default function SpendingByCommittee({
   committeeConstants: Record<string, CommitteeConstant>;
   labelId: string;
 }) {
-  const { ref, width = 400, height = 200 } = useResizeObserver<SVGSVGElement>();
+  const ref = useRef<SVGSVGElement>(null);
+  const [width, setWidth] = useState<number>(400);
+  const [height, setHeight] = useState<number>(300);
+
+  useEffect(() => {
+    if (!ref.current) {
+      return;
+    }
+    const rect = ref.current.getBoundingClientRect();
+    setWidth(rect.width);
+    setHeight(rect.height);
+  }, [ref]);
   const router = useRouter();
 
   const MARGIN_BOTTOM = 20;

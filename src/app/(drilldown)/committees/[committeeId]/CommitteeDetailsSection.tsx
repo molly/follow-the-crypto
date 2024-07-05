@@ -34,7 +34,7 @@ export default async function CommitteeDetailsSection({
     <>
       <section>
         <h1>{committee.name}</h1>
-        <span className="secondary smaller">{renderDetails()}</span>
+        <span className="secondary small">{renderDetails()}</span>
         {committee.description && (
           <div
             className={styles.description}

@@ -98,13 +98,11 @@ export default function PACsByReceipts({
           <div className={styles.viewMoreLinks}>
             <div className={styles.viewMoreLink}>
               <Link href="/committees/ranking/super">
-                &raquo; View ranking of super PACs
+                &raquo; All super PACs
               </Link>
             </div>
             <div className={styles.viewMoreLink}>
-              <Link href="/committees/ranking/all">
-                &raquo; View ranking of all PACs
-              </Link>
+              <Link href="/committees/ranking/all">&raquo; All PACs</Link>
             </div>
           </div>
         </div>

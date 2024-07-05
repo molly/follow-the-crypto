@@ -4,8 +4,7 @@ import Candidate from "@/app/components/Candidate";
 import { CandidateSummary, ElectionGroup } from "@/app/types/Elections";
 import * as d3 from "d3";
 import { motion } from "framer-motion";
-import { useMemo, useState } from "react";
-import useResizeObserver from "use-resize-observer";
+import { useEffect, useMemo, useState } from "react";
 import styles from "./page.module.css";
 
 const CHART_WIDTH = 300;
@@ -97,7 +96,13 @@ export default function Spending({
   labelId: string;
 }) {
   const [hovered, setHovered] = useState<SpendingHoverState | null>(null);
-  const { ref, width = 400 } = useResizeObserver<SVGSVGElement>();
+  const [shouldUseXLFont, setShouldUseXLFont] = useState(false);
+
+  useEffect(() => {
+    if (window && window.innerWidth < 500) {
+      setShouldUseXLFont(true);
+    }
+  }, [setShouldUseXLFont]);
 
   // Get unique list of candidates, ordered by amount raised
   const candidateNames = useMemo(
@@ -109,8 +114,6 @@ export default function Spending({
       ),
     [election.candidates],
   );
-
-  const shouldUseXLFont = useMemo(() => width < 500, [width]);
 
   const CHART_HEIGHT = useMemo(
     () => Math.max(150, candidateNames.length * 40),
@@ -175,7 +178,6 @@ export default function Spending({
     <div>
       <svg
         viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`}
-        ref={ref}
         role="group"
         aria-labelledby={labelId}
       >

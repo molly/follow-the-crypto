@@ -1,7 +1,7 @@
 "use client";
 
 import * as d3 from "d3";
-import useResizeObserver from "use-resize-observer";
+import { useEffect, useRef, useState } from "react";
 import { ExpendituresByParty } from "../types/Expenditures";
 import styles from "./expenditures.module.css";
 
@@ -17,13 +17,24 @@ export default function SpendingByParty({
   expenditures: ExpendituresByParty;
   labelId: string;
 }) {
-  const { ref, width = 400, height = 200 } = useResizeObserver<SVGSVGElement>();
+  const ref = useRef<SVGSVGElement>(null);
+  const [width, setWidth] = useState<number>(400);
+  const [height, setHeight] = useState<number>(300);
+
+  useEffect(() => {
+    if (!ref.current) {
+      return;
+    }
+    const rect = ref.current.getBoundingClientRect();
+    setWidth(rect.width);
+    setHeight(rect.height);
+  }, [ref]);
 
   const MARGIN_BOTTOM = 20;
   const MARGIN_TOP = 15;
   const MARGIN_LEFT = 40;
-  const CHART_WIDTH = width;
-  const CHART_HEIGHT = height;
+  const CHART_WIDTH = 400;
+  const CHART_HEIGHT = 200;
   const BOUNDS_WIDTH = CHART_WIDTH - MARGIN_LEFT;
   const BOUNDS_HEIGHT = CHART_HEIGHT - MARGIN_BOTTOM - MARGIN_TOP;
 
