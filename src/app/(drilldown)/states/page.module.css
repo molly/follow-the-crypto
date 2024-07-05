@@ -1,0 +1,31 @@
+.page {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.mapContainer {
+  width: 100%;
+  max-width: 75rem;
+  margin: 0 auto;
+}
+
+.statesTableCard {
+  composes: card from "@/app/shared.module.css";
+  min-width: 25rem;
+}
+
+.statesTable {
+  width: 100%;
+}
+
+.headerRow {
+  font-weight: bold;
+}
+
+@media (min-width: 576px) {
+  .mapContainer {
+    padding: 2rem;
+  }
+}

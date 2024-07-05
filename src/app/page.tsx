@@ -46,7 +46,7 @@ export default function Home() {
         </SuperPACsByReceipts>
         <AllRecentExpenditures />
       </div>
-      <div className={styles.mapContainer}>
+      <div>
         <Suspense fallback={<USMapSkeleton />}>
           <MapWrapper />
         </Suspense>
