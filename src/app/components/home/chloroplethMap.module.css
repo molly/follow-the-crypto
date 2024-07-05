@@ -9,10 +9,15 @@
 
 .svgText {
   fill: var(--main-text);
+  stroke: none;
 }
 
 .legend {
   stroke: var(--secondary-text);
+}
+
+.activeState {
+  font-weight: bold;
 }
 
 .svgSkeleton {
@@ -63,6 +68,25 @@
   fill: var(--color-blue-800);
 }
 
+.stateFill1,
+.stateFill2,
+.stateFill3,
+.stateFill4,
+.stateFill5,
+.stateFill6,
+.stateFill7 {
+  cursor: pointer;
+}
+
+.stateLink {
+  &:hover,
+  &:focus,
+  &:active {
+    filter: brightness(0.9);
+    outline: none;
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   .svgSkeleton {
     stroke: var(--secondary-text);
@@ -105,34 +129,12 @@
   .stateFill7 {
     fill-opacity: 1;
   }
-}
 
-/* Tooltip */
-.tooltip {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 10;
-  composes: card from "../../shared.module.css";
-}
-
-.tooltipTotalSpending {
-  font-weight: bold;
-}
-
-.tooltipTableRaceRow {
-  color: var(--link-text);
-  cursor: pointer;
-  &:hover {
-    color: var(--link-text-hover);
+  .stateLink {
+    &:hover,
+    &:focus,
+    &:active {
+      filter: brightness(1.3);
+    }
   }
-}
-
-.tooltipTableName {
-  white-space: nowrap;
-}
-
-.tooltipTableSpending {
-  padding-left: 1rem;
-  text-align: right;
 }

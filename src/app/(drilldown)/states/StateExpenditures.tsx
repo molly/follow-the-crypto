@@ -17,21 +17,21 @@ export function StateExpendituresSkeleton() {
         <>
           <tr key={`state-skeleton-${i}`}>
             <td colSpan={2}>
-              <Skeleton width="5rem" onCard={true} />
+              <Skeleton width="8rem" onCard={true} />
             </td>
             <td>
-              <Skeleton width="3rem" onCard={true} style={{ float: "right" }} />
+              <Skeleton width="6rem" onCard={true} style={{ float: "right" }} />
             </td>
           </tr>
           {range(3).map((j) => (
             <tr key={`race-skeleton-${i}-${j}`}>
               <td></td>
               <td>
-                <Skeleton width="6rem" onCard={true} />
+                <Skeleton width="10rem" onCard={true} />
               </td>
               <td>
                 <Skeleton
-                  width="3rem"
+                  width="5rem"
                   onCard={true}
                   style={{ float: "right" }}
                 />

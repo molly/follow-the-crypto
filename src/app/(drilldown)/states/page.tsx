@@ -15,7 +15,7 @@ export default function Page() {
         </Suspense>
       </div>
       <section className={styles.statesTableCard}>
-        <h2>States</h2>
+        <h2>Crypto-related spending by state</h2>
         <table className={styles.statesTable}>
           <thead>
             <tr>
