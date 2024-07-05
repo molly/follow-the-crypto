@@ -9,7 +9,11 @@ import RecentExpendituresContent, {
   RecentExpendituresContentSkeleton,
 } from "../RecentExpendituresContent";
 
-async function AllRecentExpendituresContent() {
+async function AllRecentExpendituresContent({
+  fullPage,
+}: {
+  fullPage?: boolean;
+}) {
   const [expendituresData, committeeConstantData] = await Promise.all([
     fetchAllRecentExpenditures(),
     fetchConstant("committees"),
@@ -21,17 +25,27 @@ async function AllRecentExpendituresContent() {
   const allRecentExpenditures = expendituresData as Expenditure[];
   return (
     <RecentExpendituresContent
-      expenditures={allRecentExpenditures.slice(0, 5)}
+      expenditures={
+        fullPage ? allRecentExpenditures : allRecentExpenditures.slice(0, 5)
+      }
       committees={committeeConstantData as Record<string, CommitteeConstant>}
     />
   );
 }
 
-export default async function AllRecentExpenditures() {
+export default async function AllRecentExpenditures({
+  fullPage,
+}: {
+  fullPage?: boolean;
+}) {
   return (
-    <RecentExpenditures className={styles.recentExpenditures}>
+    <RecentExpenditures
+      className={styles.recentExpenditures}
+      noHeader={fullPage}
+      fullPage={fullPage}
+    >
       <Suspense fallback={<RecentExpendituresContentSkeleton />}>
-        <AllRecentExpendituresContent />
+        <AllRecentExpendituresContent fullPage={fullPage} />
       </Suspense>
     </RecentExpenditures>
   );

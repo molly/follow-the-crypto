@@ -31,7 +31,7 @@ export default async function CommitteeRecentExpenditures({
   committee: CommitteeDetails;
 }) {
   return (
-    <RecentExpenditures>
+    <RecentExpenditures fullPage={true}>
       <Suspense fallback={<RecentExpendituresContentSkeleton />}>
         <CommitteeRecentExpendituresContent committee={committee} />
       </Suspense>

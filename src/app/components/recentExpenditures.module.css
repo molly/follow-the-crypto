@@ -27,3 +27,7 @@
   font-size: 0.9rem;
   font-style: italic;
 }
+
+.tableCardContent {
+  padding: 1rem;
+}
