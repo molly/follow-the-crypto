@@ -1,3 +1,9 @@
+.page {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
 .companyLogoAndName {
   display: flex;
   flex-direction: row;
@@ -55,6 +61,7 @@
 
 .contributionSection {
   composes: card from "@/app/shared.module.css";
+  width: 66%;
   padding: 1rem 0;
 }
 
@@ -128,4 +135,10 @@
 
 .committeeDetail:not(:last-child):after {
   content: " | ";
+}
+
+.spendingByPartySection {
+  composes: card from "@/app/shared.module.css";
+  width: 33%;
+  padding: 1rem;
 }

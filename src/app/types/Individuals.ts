@@ -13,10 +13,12 @@ export interface IndividualConstant {
 
 export type IndividualContributions = {
   associatedCompany?: string;
+  party_summary: Record<string, number>;
   contributions: Record<string, IndividualOrCompanyContributionGroup>;
 };
 
 export type HydratedIndividualContributions = {
   associatedCompany?: string;
+  party_summary: Record<string, number>;
   contributions: HydratedIndividualOrCompanyContributionGroup[];
 };

@@ -232,6 +232,30 @@ a.unstyled {
   font-weight: bold;
 }
 
+.rep {
+  fill: var(--party-republican);
+}
+
+.dem {
+  fill: var(--party-democrat);
+}
+
+.lib {
+  fill: var(--party-libertarian);
+}
+
+.gre {
+  fill: var(--party-green);
+}
+
+.ind {
+  fill: var(--party-independent);
+}
+
+.unk {
+  fill: var(--color-slate-400);
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;

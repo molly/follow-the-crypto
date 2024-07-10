@@ -19,14 +19,6 @@
   fill: var(--main-text);
 }
 
-.rep {
-  fill: var(--party-republican);
-}
-
-.dem {
-  fill: var(--party-democrat);
-}
-
 .expendituresBarLabel {
   text-align: center;
   overflow: hidden;

@@ -11,6 +11,7 @@ import {
 } from "@/app/types/Individuals";
 import { isError } from "@/app/utils/errors";
 import ContributionsGroup from "./ContributionsGroup";
+import SpendingByParty from "./SpendingByParty";
 import styles from "./page.module.css";
 
 export default async function CompanyPage({
@@ -31,8 +32,8 @@ export default async function CompanyPage({
   const individual = (individualData as Record<string, IndividualConstant>)[
     params.individual
   ];
-  const contributions = (contributionsData as HydratedIndividualContributions)
-    .contributions;
+  const { contributions, party_summary } =
+    contributionsData as HydratedIndividualContributions;
 
   return (
     <>
@@ -48,26 +49,37 @@ export default async function CompanyPage({
           </div>
         </div>
       </section>
-      <section className={styles.contributionSection}>
-        <h3 className={styles.contributionSectionHeader}>Contributions</h3>
-        {contributions.length ? (
-          contributions.map(
-            (
-              contributionGroup: HydratedIndividualOrCompanyContributionGroup,
-              ind: number,
-            ) => (
-              <ContributionsGroup
-                key={`contrib-group-${ind}`}
-                contributionsGroup={contributionGroup}
-              />
-            ),
-          )
-        ) : (
-          <div className={`secondary ${styles.contributionRow}`}>
-            No contributions yet.
-          </div>
-        )}
-      </section>
+      <div className={styles.page}>
+        <section className={styles.contributionSection}>
+          <h3 className={styles.contributionSectionHeader}>Contributions</h3>
+          {contributions.length ? (
+            contributions.map(
+              (
+                contributionGroup: HydratedIndividualOrCompanyContributionGroup,
+                ind: number,
+              ) => (
+                <ContributionsGroup
+                  key={`contrib-group-${ind}`}
+                  contributionsGroup={contributionGroup}
+                />
+              ),
+            )
+          ) : (
+            <div className={`secondary ${styles.contributionRow}`}>
+              No contributions yet.
+            </div>
+          )}
+        </section>
+        <section className={styles.spendingByPartySection}>
+          <h2 id="spending-by-party">Contributions by party</h2>
+          {party_summary && (
+            <SpendingByParty
+              partySummary={party_summary}
+              labelId="spending-by-party"
+            />
+          )}
+        </section>
+      </div>
     </>
   );
 }

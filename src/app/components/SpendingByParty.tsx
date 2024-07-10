@@ -105,7 +105,7 @@ export default function SpendingByParty({
                         y={y(spending)}
                         width={xBandwidth}
                         height={height}
-                        className={styles[party]}
+                        className={party}
                         aria-label={`~${gridLabelFormatter(spending)} spent to ${supportOppose} ${party === "rep" ? "Republican" : "Democratic"} candidates`}
                       />
                       <text

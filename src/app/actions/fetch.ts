@@ -411,7 +411,7 @@ export const fetchIndividualContributions = cache(
       );
     });
     return {
-      associatedCompany: individualDataObj.associatedCompany,
+      ...individualDataObj,
       contributions: sortedContributions,
     };
   },
