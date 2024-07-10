@@ -25,21 +25,36 @@ export function titlecaseCompany(str: string): string {
   return titlecased;
 }
 
-export function titlecaseCommittee(str: string): string {
+export function titlecaseCommittee(
+  str: string,
+  removeDba: boolean = true,
+): string {
   if (str === "ACTBLUE") {
     return "ActBlue";
   }
   if (str === "WINRED") {
     return "WinRed";
   }
-  if (str.includes(" DBA ")) {
-    str = str.split(" DBA ")[0];
+  if (removeDba && str.includes(" DBA ")) {
+    str = str.split(" DBA ")[1];
   }
   let titlecased = titlecase(str);
   titlecased = titlecased.replace(
-    /\b(SMP|LCV|AF(C|P)|UDP|PAC|RSLC|NEA|I{1,3}|DNC|D(C|S)CC|NR(S|C)C|FF|HMP|SFA|SEIU|COPE|AB|ACLU)\b/gi,
+    /\b(SMP|LCV|AF(C|P)|UDP|PAC|RSLC|NEA|I{1,3}|DNC|D(C|S)CC|NR(S|C)C|FF|HMP|SFA|SEIU|COPE|AB|ACLU|BA|NY22|DBA|CHC|JD|GSD)\b/gi,
     function (txt) {
       return txt.toUpperCase();
+    },
+  );
+  titlecased = titlecased.replace(/^(.*?) for Congress$/, function (_, name) {
+    return `${titlecaseIndividualName(name)} for Congress`;
+  });
+  titlecased = titlecased.replace(/(.*?) for Us/, function (_, name) {
+    return `${titlecaseIndividualName(name)} for US`;
+  });
+  titlecased = titlecased.replace(
+    /((?:^|\W)\w{2}) Senate/,
+    function (_, state) {
+      return `${state.toUpperCase()} Senate`;
     },
   );
   return titlecased;
@@ -49,7 +64,7 @@ export function titlecaseIndividualName(str?: string | null): string {
   if (!str) {
     return "";
   }
-  return str.replace(/\b[\w.']+\b/, function (x) {
+  return str.replace(/\b[\w.']+\b/g, function (x) {
     let cased = titlecase(x);
     cased = cased.replace(/\b(Ma?c|[OD]')(\w+)\b/gi, function (_, m, rest) {
       return m + rest.charAt(0).toUpperCase() + rest.substring(1).toLowerCase();

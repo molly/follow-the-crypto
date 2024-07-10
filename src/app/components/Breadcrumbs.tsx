@@ -48,6 +48,8 @@ export default function Breadcrumbs() {
     } else if (segments[0] === "races" && index === 1) {
       const state = segment.split("-")[0];
       return `${STATES_BY_ABBR[state]} ${getRaceName(segment)} election`;
+    } else if (segments[0] === "individuals" && index === 1) {
+      return titlecase(segment.replace("-", " "));
     }
     return titlecase(segment);
   };

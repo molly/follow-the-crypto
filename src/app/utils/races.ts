@@ -30,7 +30,9 @@ export const getRaceName = (raceId: string) => {
     office = raceParts[1];
     district = raceParts.length > 2 ? raceParts[2] : null;
   }
-  if (office === "S") {
+  if (office === "P") {
+    return "President";
+  } else if (office === "S") {
     return "Senate";
   } else if (office === "H") {
     if (!district || (state && SINGLE_MEMBER_STATES.includes(state))) {

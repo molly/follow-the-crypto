@@ -1,7 +1,10 @@
-export const getFullPartyName = (party: string): string => {
+export const getFullPartyName = (
+  party: string,
+  adjective: boolean = true,
+): string => {
   switch (party) {
     case "D":
-      return "Democratic";
+      return adjective ? "Democratic" : "Democrat";
     case "R":
       return "Republican";
     case "L":
@@ -11,7 +14,7 @@ export const getFullPartyName = (party: string): string => {
     case "I":
       return "Independent";
     case "N":
-      return "non-partisan";
+      return adjective ? "non-partisan" : "No party affiliation";
     default:
       return party;
   }

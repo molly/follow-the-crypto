@@ -1,4 +1,5 @@
 import { fetchConstant } from "@/app/actions/fetch";
+import MaybeLink from "@/app/components/MaybeLink";
 import { Contribution as ContributionType } from "@/app/types/Contributions";
 import { titlecaseCompany } from "@/app/utils/titlecase";
 import { formatCurrency, formatDateFromString } from "@/app/utils/utils";
@@ -19,7 +20,11 @@ function ContributorName({
   if (contribution.redacted) {
     return <span className={styles.redactedName}>Individual</span>;
   } else if (!donorDetails.company) {
-    return <span className={styles.donorCompany}>{donorDetails.name}</span>;
+    return (
+      <span className={styles.donorCompany}>
+        <MaybeLink href={contribution.link}>{donorDetails.name}</MaybeLink>
+      </span>
+    );
   } else {
     return donorDetails.name;
   }
@@ -27,10 +32,12 @@ function ContributorName({
 
 function CompanyName({
   donorDetails,
+  link,
   inline = false,
   contributionDate = null,
 }: {
   donorDetails: DonorType;
+  link?: string;
   inline?: boolean;
   contributionDate?: JSX.Element | null;
 }) {
@@ -56,7 +63,9 @@ function CompanyName({
 
   return (
     <div>
-      <span className={styles.donorCompany}>{companyName}</span>
+      <span className={styles.donorCompany}>
+        <MaybeLink href={link}>{companyName}</MaybeLink>
+      </span>
       {alias && (
         <div className={styles.aliasAndDate}>
           <span className="secondary smaller">({alias})</span>{" "}
@@ -162,7 +171,13 @@ export default async function Contribution({
         </>
       );
     } else {
-      donorIdentifier = <CompanyName donorDetails={donorDetails} inline />;
+      donorIdentifier = (
+        <CompanyName
+          donorDetails={donorDetails}
+          link={contribution.link}
+          inline
+        />
+      );
     }
 
     return (
@@ -195,7 +210,10 @@ export default async function Contribution({
           </div>
           {donorDetails.company && (
             <div className={"oldest" in contribution ? "" : styles.donorBlock}>
-              <CompanyName donorDetails={donorDetails} />
+              <CompanyName
+                donorDetails={donorDetails}
+                link={contribution.link}
+              />
               <ContributionDate contribution={contribution} />
             </div>
           )}
@@ -206,6 +224,7 @@ export default async function Contribution({
         <div className={"oldest" in contribution ? "" : styles.donorBlock}>
           <CompanyName
             donorDetails={donorDetails}
+            link={contribution.link}
             contributionDate={<ContributionDate contribution={contribution} />}
           />
         </div>

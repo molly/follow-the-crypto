@@ -4,7 +4,11 @@ import {
   CommitteeConstant,
   CommitteeDetails,
 } from "@/app/types/Committee";
-import { Contributions } from "@/app/types/Contributions";
+import {
+  Contributions,
+  HydratedIndividualOrCompanyContributionGroup,
+  RecipientDetails,
+} from "@/app/types/Contributions";
 import { getAdDate } from "@/app/utils/ads";
 import { ErrorType, isError } from "@/app/utils/errors";
 import {
@@ -16,6 +20,7 @@ import {
 } from "firebase/firestore";
 import { cache } from "react";
 import { Ad, AdGroup } from "../types/Ads";
+import { Company, RawCompanyContributions } from "../types/Companies";
 import { ElectionsByState } from "../types/Elections";
 import {
   Expenditure,
@@ -26,6 +31,10 @@ import {
   RecentExpenditures,
   StateExpenditures,
 } from "../types/Expenditures";
+import {
+  HydratedIndividualContributions,
+  IndividualContributions,
+} from "../types/Individuals";
 import { MapData } from "../types/MapData";
 import { hydrateStateExpenditures } from "./hydrate";
 
@@ -346,5 +355,64 @@ export const fetchAdsByRace = cache(
         .filter((ad) => ad.race === raceId)
         .sort((a, b) => getAdDate(b).localeCompare(getAdDate(a)));
     }
+  },
+);
+
+// COMPANIES ------------------------------------------------------------
+export const fetchCompany = cache(
+  async (company: string): Promise<Company | ErrorType> =>
+    fetchSnapshot("companies", company),
+);
+
+export const fetchCompanyContributions = cache(
+  async (company: string): Promise<RawCompanyContributions | ErrorType> =>
+    fetchSnapshot("rawCompanyContributions", company),
+);
+
+// INDIVIDUALS ------------------------------------------------------------
+export const fetchIndividualContributions = cache(
+  async (
+    individual: string,
+  ): Promise<HydratedIndividualContributions | ErrorType> => {
+    const [individualData, recipientsData] = await Promise.all([
+      fetchSnapshot("individuals", individual),
+      fetchSnapshot("allRecipients", "recipients"),
+    ]);
+    if (isError(individualData)) {
+      return individualData as ErrorType;
+    }
+    if (isError(recipientsData)) {
+      return recipientsData as ErrorType;
+    }
+
+    const individualDataObj = individualData as IndividualContributions;
+    const recipientsDataObj = recipientsData as Record<
+      string,
+      RecipientDetails
+    >;
+
+    const resultsObj: Record<
+      string,
+      HydratedIndividualOrCompanyContributionGroup
+    > = {};
+    for (const committeeId of Object.keys(individualDataObj.contributions)) {
+      resultsObj[committeeId] = Object.assign(
+        {},
+        individualDataObj.contributions[committeeId],
+        recipientsDataObj[committeeId],
+      );
+    }
+
+    const sortedContributions = Object.values(resultsObj).sort((a, b) => {
+      const totalDifference = (b.total || 0) - (a.total || 0);
+      if (totalDifference !== 0) return totalDifference;
+      return (a.committee_name || "zzz").localeCompare(
+        b.committee_name || "zzz",
+      );
+    });
+    return {
+      associatedCompany: individualDataObj.associatedCompany,
+      contributions: sortedContributions,
+    };
   },
 );

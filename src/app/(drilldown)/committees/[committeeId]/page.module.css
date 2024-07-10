@@ -8,6 +8,12 @@
   align-items: flex-start;
 }
 
+.committeeName {
+  composes: titleH3 from "@/app/shared.module.css";
+  margin: 0;
+  text-align: left;
+}
+
 .moneyCardRow {
   display: grid;
   gap: inherit;

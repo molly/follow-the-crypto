@@ -82,9 +82,19 @@ export default function ChloroplethMap({
         {data.map((d) => {
           const stateFullName = d.properties?.name;
           const expenditures = getExpenditure(stateFullName, mapData);
+          if (!expenditures || !expenditures.total) {
+            return (
+              <path
+                key={d.id}
+                aria-label={`${expenditures ? formatCurrency(expenditures.total, true) : "$0"} spent in ${stateFullName}`}
+                d={path(d) as string}
+                className={getFill(d.properties?.name, mapData, colorScale)}
+              />
+            );
+          }
           return (
             <Link
-              href={`/states/${stateFullName.toLowerCase()}`}
+              href={`/states/${stateFullName.toLowerCase().replace(" ", "-")}`}
               key={d.id}
               onMouseEnter={() => setActiveState(stateFullName)}
               onMouseLeave={() => setActiveState(null)}
