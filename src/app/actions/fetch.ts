@@ -4,11 +4,7 @@ import {
   CommitteeConstant,
   CommitteeDetails,
 } from "@/app/types/Committee";
-import {
-  Contributions,
-  HydratedIndividualOrCompanyContributionGroup,
-  RecipientDetails,
-} from "@/app/types/Contributions";
+import { Contributions, RecipientDetails } from "@/app/types/Contributions";
 import { getAdDate } from "@/app/utils/ads";
 import { ErrorType, isError } from "@/app/utils/errors";
 import {
@@ -20,7 +16,7 @@ import {
 } from "firebase/firestore";
 import { cache } from "react";
 import { Ad, AdGroup } from "../types/Ads";
-import { Company, RawCompanyContributions } from "../types/Companies";
+import { Company, HydratedCompany } from "../types/Companies";
 import { ElectionsByState } from "../types/Elections";
 import {
   Expenditure,
@@ -36,7 +32,10 @@ import {
   IndividualContributions,
 } from "../types/Individuals";
 import { MapData } from "../types/MapData";
-import { hydrateStateExpenditures } from "./hydrate";
+import {
+  hydrateIndividualContributions,
+  hydrateStateExpenditures,
+} from "./hydrate";
 
 const fetchSnapshot = async (
   path: string,
@@ -360,13 +359,30 @@ export const fetchAdsByRace = cache(
 
 // COMPANIES ------------------------------------------------------------
 export const fetchCompany = cache(
-  async (company: string): Promise<Company | ErrorType> =>
-    fetchSnapshot("companies", company),
-);
+  async (company: string): Promise<HydratedCompany | ErrorType> => {
+    const [companyData, recipientsData] = await Promise.all([
+      fetchSnapshot("companies", company),
+      fetchSnapshot("allRecipients", "recipients"),
+    ]);
+    if (isError(companyData)) {
+      return companyData as ErrorType;
+    }
+    if (isError(companyData)) {
+      return recipientsData as ErrorType;
+    }
 
-export const fetchCompanyContributions = cache(
-  async (company: string): Promise<RawCompanyContributions | ErrorType> =>
-    fetchSnapshot("rawCompanyContributions", company),
+    const companyDataObj = companyData as Company;
+    const recipientsDataObj = recipientsData as Record<
+      string,
+      RecipientDetails
+    >;
+
+    const hydrated = hydrateIndividualContributions(
+      companyDataObj,
+      recipientsDataObj,
+    ) as HydratedCompany;
+    return hydrated;
+  },
 );
 
 // INDIVIDUALS ------------------------------------------------------------
@@ -391,28 +407,6 @@ export const fetchIndividualContributions = cache(
       RecipientDetails
     >;
 
-    const resultsObj: Record<
-      string,
-      HydratedIndividualOrCompanyContributionGroup
-    > = {};
-    for (const committeeId of Object.keys(individualDataObj.contributions)) {
-      resultsObj[committeeId] = Object.assign(
-        {},
-        individualDataObj.contributions[committeeId],
-        recipientsDataObj[committeeId],
-      );
-    }
-
-    const sortedContributions = Object.values(resultsObj).sort((a, b) => {
-      const totalDifference = (b.total || 0) - (a.total || 0);
-      if (totalDifference !== 0) return totalDifference;
-      return (a.committee_name || "zzz").localeCompare(
-        b.committee_name || "zzz",
-      );
-    });
-    return {
-      ...individualDataObj,
-      contributions: sortedContributions,
-    };
+    return hydrateIndividualContributions(individualDataObj, recipientsDataObj);
   },
 );

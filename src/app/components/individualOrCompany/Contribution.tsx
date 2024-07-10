@@ -4,10 +4,30 @@ import {
   HydratedIndividualOrCompanyContributionGroup,
   IndividualOrCompanyContribution,
 } from "@/app/types/Contributions";
-import { titlecaseCommittee } from "@/app/utils/titlecase";
+import {
+  titlecaseCommittee,
+  titlecaseIndividualName,
+} from "@/app/utils/titlecase";
 import { formatCurrency, formatDateFromString } from "@/app/utils/utils";
 import CommitteeDetails from "./CommitteeDetails";
-import styles from "./page.module.css";
+import styles from "./individualOrCompany.module.css";
+
+function Contributor({
+  contribution,
+}: {
+  contribution: IndividualOrCompanyContribution;
+}) {
+  if (contribution.isIndividual && contribution.individual) {
+    return (
+      <span className={styles.contributionSource}>
+        {`${titlecaseIndividualName(
+          contribution.individual.replaceAll("-", " "),
+        )} – `}
+      </span>
+    );
+  }
+  return null;
+}
 
 function ContributionDate({
   contribution,
@@ -63,6 +83,7 @@ export default function Contribution({
     return (
       <div className={styles.contributionSubRow}>
         <div>
+          <Contributor contribution={contribution} />
           <ContributionDate contribution={contribution} />
         </div>
         <ContributionAmount contribution={contribution} isSubRow={true} />
@@ -81,6 +102,10 @@ export default function Contribution({
           <ContributionAmount contribution={contribution} />
         </div>
         <CommitteeDetails contributionsGroup={contributionsGroup} />
+        <div>
+          <Contributor contribution={contribution} />
+          <ContributionDate contribution={contribution} />
+        </div>
       </div>
     );
   }

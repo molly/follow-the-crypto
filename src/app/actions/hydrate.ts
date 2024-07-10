@@ -1,9 +1,19 @@
+import { Company, HydratedCompany } from "../types/Companies";
+import {
+  HydratedIndividualOrCompanyContributionGroup,
+  RecipientDetails,
+} from "../types/Contributions";
 import {
   Expenditure,
   ExpenditureId,
   PopulatedStateExpenditures,
   StateExpenditures,
 } from "../types/Expenditures";
+import {
+  HydratedIndividualContributions,
+  IndividualContributions,
+} from "../types/Individuals";
+
 export function hydrateStateExpenditures(
   stateExpenditures: StateExpenditures,
   allExpenditures: Record<ExpenditureId, Expenditure>,
@@ -41,4 +51,31 @@ export function hydrateStateExpenditures(
       );
   }
   return populatedStateExpenditures;
+}
+
+export function hydrateIndividualContributions(
+  data: IndividualContributions | Company,
+  recipientsData: Record<string, RecipientDetails>,
+): HydratedIndividualContributions | HydratedCompany {
+  let resultsObj: Record<string, HydratedIndividualOrCompanyContributionGroup> =
+    {};
+  for (const committeeId of Object.keys(data.contributions)) {
+    resultsObj[committeeId] = Object.assign(
+      {},
+      data.contributions[
+        committeeId
+      ] as HydratedIndividualOrCompanyContributionGroup,
+      recipientsData[committeeId] as RecipientDetails,
+    );
+  }
+
+  const sortedContributions = Object.values(resultsObj).sort((a, b) => {
+    const totalDifference = (b.total || 0) - (a.total || 0);
+    if (totalDifference !== 0) return totalDifference;
+    return (a.committee_name || "zzz").localeCompare(b.committee_name || "zzz");
+  });
+  return {
+    ...data,
+    contributions: sortedContributions,
+  };
 }

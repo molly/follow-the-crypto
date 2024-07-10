@@ -4,7 +4,7 @@ import { HydratedIndividualOrCompanyContributionGroup } from "@/app/types/Contri
 import { getFullPartyName } from "@/app/utils/party";
 import { getRaceName } from "@/app/utils/races";
 import { titlecaseLastFirst } from "@/app/utils/titlecase";
-import styles from "./page.module.css";
+import styles from "./individualOrCompany.module.css";
 
 function isSingleCandidateCommittee(
   contributionsGroup: HydratedIndividualOrCompanyContributionGroup,

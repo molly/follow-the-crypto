@@ -49,6 +49,7 @@
   --card-border: var(--color-slate-200);
   --breadcrumbs-background: var(--color-blue-800);
   --map-background: var(--color-white);
+  --logo-background: var(--card-background);
   --placeholder-color: var(--color-slate-300);
   --table-color: var(--color-slate-200);
   --table-highlight-color: var(--color-blue-100);
@@ -85,6 +86,7 @@
     --card-background-rgb: 30, 41, 59;
     --card-border: var(--color-slate-700);
     --map-background: var(--card-background);
+    --logo-background: var(--color-slate-400);
     --placeholder-color: var(--color-slate-300);
     --table-color: var(--color-slate-700);
     --table-highlight-color: var(--color-blue-900);

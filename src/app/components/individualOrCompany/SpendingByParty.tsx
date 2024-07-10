@@ -1,11 +1,10 @@
 "use client";
 
 import { useComponentSize } from "@/app/hooks/useComponentSize";
-import { PartiesSummary } from "@/app/types/Contributions";
 import { getFullPartyName } from "@/app/utils/party";
 import * as d3 from "d3";
 import { useMemo } from "react";
-import styles from "./page.module.css";
+import styles from "./individualOrCompany.module.css";
 
 const PARTY_ORDER: Record<string, number> = {
   DEM: 0,
@@ -46,7 +45,7 @@ export default function SpendingByParty({
   partySummary,
   labelId,
 }: {
-  partySummary: PartiesSummary;
+  partySummary: Record<string, number>;
   labelId: string;
 }) {
   const { ref, width, height } = useComponentSize({ width: 400, height: 300 });

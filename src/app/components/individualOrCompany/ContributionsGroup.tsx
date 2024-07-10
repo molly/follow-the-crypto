@@ -4,7 +4,7 @@ import { titlecaseCommittee } from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
 import CommitteeDetails from "./CommitteeDetails";
 import Contribution from "./Contribution";
-import styles from "./page.module.css";
+import styles from "./individualOrCompany.module.css";
 
 export default function ContributionsGroup({
   contributionsGroup,

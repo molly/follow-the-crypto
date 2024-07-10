@@ -4,17 +4,45 @@ import {
   fetchIndividualContributions,
 } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
+import ContributionsGroup from "@/app/components/individualOrCompany/ContributionsGroup";
+import SpendingByParty from "@/app/components/individualOrCompany/SpendingByParty";
 import { HydratedIndividualOrCompanyContributionGroup } from "@/app/types/Contributions";
 import {
   HydratedIndividualContributions,
   IndividualConstant,
 } from "@/app/types/Individuals";
 import { isError } from "@/app/utils/errors";
-import ContributionsGroup from "./ContributionsGroup";
-import SpendingByParty from "./SpendingByParty";
+import { titlecaseCompany } from "@/app/utils/titlecase";
+import Link from "next/link";
 import styles from "./page.module.css";
 
-export default async function CompanyPage({
+function renderSubhead(
+  individual: IndividualConstant,
+  associatedCompany?: string,
+) {
+  let subhead = [];
+  if (individual.title) {
+    if (!associatedCompany && !individual.company) {
+      return <span>{individual.title}</span>;
+    }
+    subhead.push(<span>{`${individual.title} at `}</span>);
+  }
+  if (associatedCompany) {
+    if (!individual.title) {
+      subhead.push(<span>Associated with </span>);
+    }
+    subhead.push(
+      <Link href={`/companies/${associatedCompany}`}>
+        {titlecaseCompany(associatedCompany.replace("-", " "))}
+      </Link>,
+    );
+  } else if (individual.company) {
+    subhead.push(<span>{individual.company}</span>);
+  }
+  return subhead;
+}
+
+export default async function IndividualPage({
   params,
 }: {
   params: { individual: string };
@@ -32,7 +60,7 @@ export default async function CompanyPage({
   const individual = (individualData as Record<string, IndividualConstant>)[
     params.individual
   ];
-  const { contributions, party_summary } =
+  const { associatedCompany, contributions, party_summary } =
     contributionsData as HydratedIndividualContributions;
 
   return (
@@ -46,6 +74,9 @@ export default async function CompanyPage({
           />
           <div>
             <h1 className={styles.companyName}>{individual.name}</h1>
+            <div className="secondary">
+              {renderSubhead(individual, associatedCompany)}
+            </div>
           </div>
         </div>
       </section>

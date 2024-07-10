@@ -59,6 +59,8 @@ export type IndividualOrCompanyContribution = {
   committee_name?: string;
   efiled?: boolean;
   link?: string;
+  isIndividual?: boolean;
+  individual?: string;
 } & Pick<
   Committee,
   | "candidate_ids"
