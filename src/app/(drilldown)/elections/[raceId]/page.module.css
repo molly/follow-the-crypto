@@ -18,7 +18,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-width: 40rem;
+  min-width: 30rem;
   max-width: 60rem;
   gap: 1rem;
 }
@@ -37,7 +37,6 @@
 }
 
 .raceSummary {
-  grid-column: 1 / 7;
   padding: 1rem;
 
   &:nth-child(even) {
@@ -235,6 +234,7 @@
 .adDetailsWrapper {
   display: flex;
   flex-wrap: wrap;
+  margin-bottom: 0.5rem;
 }
 
 .adDetails {
@@ -247,7 +247,7 @@
   max-width: 100%;
 }
 
-@media (max-width: 1375px) {
+@media (max-width: 1000px) {
   .columns {
     max-width: 60rem;
     flex-direction: column;

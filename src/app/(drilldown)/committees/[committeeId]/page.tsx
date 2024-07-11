@@ -1,68 +1,77 @@
-import {
-  fetchCommitteeDetails,
-  fetchCommitteeDonors,
-} from "@/app/actions/fetch";
-import { CommitteeDetails } from "@/app/types/Committee";
-import { is4xx, isError } from "@/app/utils/errors";
 import { Metadata } from "next";
 
-import { Contributions } from "@/app/types/Contributions";
-import CommitteeDetailsSection from "./CommitteeDetailsSection";
+import { MoneyCardSkeleton } from "@/app/components/MoneyCard";
+import { SpendingByPartySkeleton } from "@/app/components/SpendingByParty";
+import COMMITTEES from "@/app/data/committees";
+import sharedStyles from "@/app/shared.module.css";
+import { Suspense } from "react";
+import CommitteeDetailsSection, {
+  CommitteeDetailsSkeleton,
+} from "./CommitteeDetailsSection";
 import CommitteeDisbursements from "./CommitteeDisbursements";
 import CommitteeExpendituresByParty from "./CommitteeExpendituresByParty";
+import CommitteeExpendituresTotal from "./CommitteeExpendituresTotal";
+import CommitteeRaised from "./CommitteeRaised";
 import CommitteeRecentExpenditures from "./CommitteeRecentExpenditures";
-import TopDonors from "./TopDonors";
+import TopDonors, { TopDonorsSkeleton } from "./TopDonors";
 import styles from "./page.module.css";
 
-// TODO: Page hangs if this fetch is slow
-export async function generateMetadata({
+export function generateMetadata({
   params,
 }: {
   params: { committeeId: string };
-}): Promise<Metadata> {
-  const committee = await fetchCommitteeDetails(params.committeeId);
-  if (isError(committee)) {
-    return {
-      title: "Follow the Crypto",
-    };
-  }
+}): Metadata {
+  let committeeName =
+    params.committeeId in COMMITTEES
+      ? COMMITTEES[params.committeeId]
+      : params.committeeId;
   return {
-    title: `${(committee as CommitteeDetails).name} | Follow the Crypto`,
+    title: `${committeeName} | Follow the Crypto`,
+    description: `Election activity by the ${committeeName} PAC`,
   };
 }
 
-export default async function CommitteePage({
+export default function CommitteePage({
   params,
 }: {
   params: { committeeId: string };
 }) {
-  const [committeeData, donorData] = await Promise.all([
-    fetchCommitteeDetails(params.committeeId),
-    fetchCommitteeDonors(params.committeeId),
-  ]);
-
-  if (isError(committeeData) || isError(donorData)) {
-    if (is4xx(committeeData) || is4xx(donorData)) {
-      return <div>Committee not found.</div>;
-    } else {
-      return <div>Something went wrong when fetching committee details.</div>;
-    }
-  }
-
-  const committee = committeeData as CommitteeDetails;
-  const donors = donorData as Contributions;
-
   return (
-    <>
-      <CommitteeDetailsSection committee={committee} donors={donors} />
+    <div className={styles.page}>
+      <Suspense fallback={<CommitteeDetailsSkeleton />}>
+        <CommitteeDetailsSection committeeId={params.committeeId} />
+      </Suspense>
+      <section className={styles.moneyCardRow}>
+        <Suspense fallback={<MoneyCardSkeleton />}>
+          <CommitteeRaised committeeId={params.committeeId} />
+        </Suspense>
+        <Suspense fallback={<MoneyCardSkeleton />}>
+          <CommitteeExpendituresTotal committeeId={params.committeeId} />
+        </Suspense>
+      </section>
       <div className={styles.committeeWrapper}>
-        <TopDonors donors={donors} />
+        <Suspense fallback={<TopDonorsSkeleton />}>
+          <TopDonors committeeId={params.committeeId} />
+        </Suspense>
         <div className={styles.rightColumn}>
-          <CommitteeExpendituresByParty committee={committee} />
-          <CommitteeDisbursements committee={committee} />
-          <CommitteeRecentExpenditures committee={committee} />
+          <div className={styles.constrainedWrapper}>
+            <section
+              className={`${sharedStyles.card} ${styles.constrainWidth}`}
+            >
+              <h2 id="expenditures-label">Expenditures</h2>
+              <Suspense fallback={<SpendingByPartySkeleton />}>
+                <CommitteeExpendituresByParty
+                  committeeId={params.committeeId}
+                />
+              </Suspense>
+            </section>
+            <Suspense fallback={null}>
+              <CommitteeDisbursements committeeId={params.committeeId} />
+            </Suspense>
+          </div>
+          <CommitteeRecentExpenditures committeeId={params.committeeId} />
         </div>
       </div>
-    </>
+    </div>
   );
 }

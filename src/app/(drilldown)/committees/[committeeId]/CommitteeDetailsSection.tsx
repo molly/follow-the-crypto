@@ -1,18 +1,38 @@
-import { formatCurrency, formatDateFromString } from "../../../utils/utils";
+import { formatDateFromString } from "../../../utils/utils";
 
-import MoneyCard from "@/app/components/MoneyCard";
+import { fetchCommitteeDetails } from "@/app/actions/fetch";
+import Skeleton from "@/app/components/skeletons/Skeleton";
 import { CommitteeDetails } from "@/app/types/Committee";
-import { Contributions } from "@/app/types/Contributions";
-import CommitteeExpendituresTotal from "./CommitteeExpendituresTotal";
+import { is4xx, isError } from "@/app/utils/errors";
 import styles from "./page.module.css";
 
+export function CommitteeDetailsSkeleton() {
+  return (
+    <div>
+      <Skeleton height="1.75rem" width="10rem" />
+      <Skeleton width="90%" />
+      <Skeleton width="60%" />
+    </div>
+  );
+}
+
 export default async function CommitteeDetailsSection({
-  committee,
-  donors,
+  committeeId,
 }: {
-  committee: CommitteeDetails;
-  donors: Contributions;
+  committeeId: string;
 }) {
+  const committeeData = await fetchCommitteeDetails(committeeId);
+
+  if (isError(committeeData)) {
+    if (is4xx(committeeData)) {
+      return <div>Committee not found.</div>;
+    } else {
+      return <div>Something went wrong when fetching committee details.</div>;
+    }
+  }
+
+  const committee = committeeData as CommitteeDetails;
+
   const renderDetails = (): string => {
     return ""
       .concat(
@@ -29,7 +49,6 @@ export default async function CommitteeDetailsSection({
       );
   };
 
-  const total = donors.total_contributed + donors.total_transferred;
   return (
     <>
       <section>
@@ -42,25 +61,7 @@ export default async function CommitteeDetailsSection({
           ></div>
         )}
       </section>
-      <section className={styles.moneyCardRow}>
-        <MoneyCard
-          amount={formatCurrency(total || 0, true)}
-          topText={<span>{`${committee.name} has raised`}</span>}
-          bottomText={
-            donors.total_transferred > 0 ? (
-              <div className={styles.raisedDetails}>
-                <div>
-                  {`${formatCurrency(donors.total_contributed, true)} came from direct contributions.`}
-                </div>
-                <div>
-                  {`${formatCurrency(donors.total_transferred, true)} was transferred from other committees.`}
-                </div>
-              </div>
-            ) : undefined
-          }
-        />
-        <CommitteeExpendituresTotal committeeId={committee.id} />
-      </section>
+      <section className={styles.moneyCardRow}></section>
     </>
   );
 }

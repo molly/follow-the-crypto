@@ -1,4 +1,7 @@
-import { fetchRecentCommitteeExpenditures } from "@/app/actions/fetch";
+import {
+  fetchCommitteeDetails,
+  fetchRecentCommitteeExpenditures,
+} from "@/app/actions/fetch";
 import RecentExpenditures from "@/app/components/RecentExpenditures";
 import RecentExpendituresContent, {
   RecentExpendituresContentSkeleton,
@@ -9,31 +12,35 @@ import { isError } from "@/app/utils/errors";
 import { Suspense } from "react";
 
 export async function CommitteeRecentExpendituresContent({
-  committee,
+  committeeId,
 }: {
-  committee: CommitteeDetails;
+  committeeId: string;
 }) {
-  const data = await fetchRecentCommitteeExpenditures(committee.id);
-  if (isError(data)) {
+  const [committeeData, expendituresData] = await Promise.all([
+    fetchCommitteeDetails(committeeId),
+    fetchRecentCommitteeExpenditures(committeeId),
+  ]);
+  if (isError(expendituresData) || isError(committeeData)) {
     return <div>Something went wrong when fetching recent expenditures.</div>;
   }
 
-  const committeeExpenditures = data as Expenditure[];
+  const committeeExpenditures = expendituresData as Expenditure[];
+  const committee = committeeData as CommitteeDetails;
   if (!committeeExpenditures.length) {
     return <div>No recent expenditures found for this committee.</div>;
   }
   return <RecentExpendituresContent expenditures={committeeExpenditures} />;
 }
 
-export default async function CommitteeRecentExpenditures({
-  committee,
+export default function CommitteeRecentExpenditures({
+  committeeId,
 }: {
-  committee: CommitteeDetails;
+  committeeId: string;
 }) {
   return (
     <RecentExpenditures fullPage={true}>
       <Suspense fallback={<RecentExpendituresContentSkeleton />}>
-        <CommitteeRecentExpendituresContent committee={committee} />
+        <CommitteeRecentExpendituresContent committeeId={committeeId} />
       </Suspense>
     </RecentExpenditures>
   );

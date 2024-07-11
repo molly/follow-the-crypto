@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // Note: Intentionally does not handle window resize
 export function useComponentSize(
@@ -6,7 +6,7 @@ export function useComponentSize(
 ) {
   const [size, setSize] = useState<{ width: number; height: number }>(defaults);
   const ref = useRef<any>();
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!ref.current) {
       return;
     }
@@ -14,6 +14,7 @@ export function useComponentSize(
     if (rect.width !== size.width || rect.height !== size.height) {
       setSize({ width: rect.width, height: rect.height });
     }
-  }, [size]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return { ref, ...size };
 }

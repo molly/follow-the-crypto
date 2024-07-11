@@ -56,6 +56,7 @@
   --table-highlight-color: var(--color-blue-100);
   --table-background-secondary: var(--color-slate-100);
   --sidebar-border: var(--color-slate-400);
+  --chart-skeleton: var(--color-slate-200);
 
   --main-text: var(--color-slate-950);
   --text-stroke: var(--color-slate-950);
@@ -93,6 +94,7 @@
     --table-color: var(--color-slate-700);
     --table-highlight-color: var(--color-blue-900);
     --table-background-secondary: var(--color-slate-900);
+    --chart-skeleton: var(--color-slate-700);
 
     --main-text: var(--color-slate-200);
     --text-stroke: var(--color-slate-200);
@@ -155,6 +157,7 @@ p {
   flex-direction: column;
   width: 100%;
   max-width: var(--single-column-max-width);
+  padding: 0 1rem;
 }
 
 table {

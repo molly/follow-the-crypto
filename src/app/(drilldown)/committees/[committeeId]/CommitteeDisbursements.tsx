@@ -1,16 +1,33 @@
 import { fetchConstant } from "@/app/actions/fetch";
-import sharedStyles from "@/app/shared.module.css";
 import { CommitteeConstant, CommitteeDetails } from "@/app/types/Committee";
 import { titlecaseCommittee } from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
 import Link from "next/link";
 import styles from "./page.module.css";
 
+import { fetchCommitteeDetails } from "@/app/actions/fetch";
+import { is4xx, isError } from "@/app/utils/errors";
+
 export default async function CommitteeDisbursements({
-  committee,
+  committeeId,
 }: {
-  committee: CommitteeDetails;
+  committeeId: string;
 }) {
+  const [committeeData, committeeConstantData] = await Promise.all([
+    fetchCommitteeDetails(committeeId),
+    fetchConstant<Record<string, CommitteeConstant>>("committees"),
+  ]);
+
+  if (isError(committeeData)) {
+    if (is4xx(committeeData)) {
+      return <div>Committee not found.</div>;
+    } else {
+      return <div>Something went wrong when fetching committee details.</div>;
+    }
+  }
+
+  const committee = committeeData as CommitteeDetails;
+
   if (
     !committee.disbursements_by_committee ||
     !Object.keys(committee.disbursements_by_committee).length
@@ -18,8 +35,6 @@ export default async function CommitteeDisbursements({
     return null;
   }
 
-  const committeeConstantData =
-    await fetchConstant<Record<string, CommitteeConstant>>("committees");
   const committeeConstants = committeeConstantData || {};
 
   const recipientCommitteeIds = Object.keys(
@@ -47,7 +62,7 @@ export default async function CommitteeDisbursements({
   }
 
   return (
-    <section className={sharedStyles.card}>
+    <section className={styles.disbursementsCard}>
       <h2>Transfers to other committees</h2>
       <ul className={styles.committeeDisbursementsList}>
         {sortedRecipientCommitteeIds.map((recipientCommitteeId) => (

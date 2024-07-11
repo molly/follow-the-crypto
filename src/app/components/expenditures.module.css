@@ -3,6 +3,7 @@
   grid-area: byParty;
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
 }
 
 .svgWrapper {
@@ -26,4 +27,8 @@
   padding: 0.25rem;
   font-size: 0.9rem;
   color: var(--color-slate-200);
+}
+
+.skeletonBar {
+  fill: var(--chart-skeleton);
 }

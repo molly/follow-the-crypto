@@ -1,4 +1,5 @@
 import { fetchAllCommittees } from "@/app/actions/fetch";
+import ErrorText from "@/app/components/ErrorText";
 import sharedStyles from "@/app/shared.module.css";
 import { CommitteeDetails } from "@/app/types/Committee";
 import { isError } from "@/app/utils/errors";
@@ -8,7 +9,7 @@ export default async function CommitteeList() {
   const data = await fetchAllCommittees();
 
   if (isError(data)) {
-    return <div>Something went wrong when fetching committees.</div>;
+    return <ErrorText subject="the list of committees" />;
   }
 
   const committees = (data as CommitteeDetails[]).filter(

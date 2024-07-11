@@ -1,3 +1,10 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: inherit;
+}
+
 .description {
   margin-top: 1rem;
 }
@@ -40,6 +47,21 @@
 
 .raisedDetails {
   margin-top: 1rem;
+}
+
+.constrainedWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: inherit;
+  width: 100%;
+}
+
+.constrainWidth {
+  max-width: 40rem;
+  width: 100%;
+  height: 100%;
 }
 
 .donorSection {
@@ -126,6 +148,12 @@
   color: var(--main-text);
 }
 
+.disbursementsCard {
+  composes: card from "@/app/shared.module.css";
+  composes: constrainWidth;
+  align-self: flex-start;
+}
+
 .committeeDisbursementsList {
   list-style: none;
   padding: 0;
@@ -175,7 +203,13 @@
   }
 }
 
-@media (max-width: 1375px) {
+@media (min-width: 768px) and (max-width: 1000px) {
+  .constrainedWrapper {
+    flex-direction: row;
+  }
+}
+
+@media (max-width: 1000px) {
   .committeeWrapper {
     width: 100%;
     min-width: 20rem;

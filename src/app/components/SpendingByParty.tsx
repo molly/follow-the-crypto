@@ -10,6 +10,124 @@ type SupportOppose = "support" | "oppose";
 
 type ExpendituresByPartyKey = `${Party}_${SupportOppose}`;
 
+const MARGIN_BOTTOM = 20;
+const MARGIN_TOP = 15;
+const MARGIN_LEFT = 40;
+
+export function SpendingByPartySkeleton() {
+  const maxExpenditure = 2000000;
+  const yDomain = [0, maxExpenditure + maxExpenditure * 0.05]; // Add a little breathing room to the chart
+  const fx = d3
+    .scaleBand()
+    .domain(["support", "oppose"])
+    .range([0, 340])
+    .paddingInner(0.1);
+  const x = d3.scaleBand().domain(["rep", "dem"]).range([0, fx.bandwidth()]);
+  const y = d3.scaleLinear().domain(yDomain).range([260, 0]);
+  const xRange = fx.range();
+  const yRange = y.range();
+
+  const DUMMY_DATA = {
+    dem_support: 1000000,
+    dem_oppose: 500000,
+    rep_support: 2000000,
+    rep_oppose: 1500000,
+  };
+
+  return (
+    <div className={styles.svgWrapper}>
+      <svg
+        viewBox={`0 0 400 300`}
+        preserveAspectRatio="none"
+        className={styles.svg}
+        role="group"
+      >
+        <g transform={`translate(0, ${MARGIN_TOP})`}>
+          {y.ticks(5).map((tick) => (
+            <g
+              key={`xTick-${tick}`}
+              transform={`translate(0,${y(tick)})`}
+              role="presentation"
+              aria-hidden={true}
+            >
+              <line
+                key={tick}
+                x1={MARGIN_LEFT - 5}
+                x2={MARGIN_LEFT}
+                stroke="currentColor"
+              />
+            </g>
+          ))}
+          <g
+            transform={`translate(${MARGIN_LEFT}, 0)`}
+            role="list"
+            aria-label="bar graph"
+          >
+            {["support", "oppose"].map((supportOppose) => (
+              <g
+                key={supportOppose}
+                transform={`translate(${fx(supportOppose)},0)`}
+              >
+                {["dem", "rep"].map((party) => {
+                  const key =
+                    `${party}_${supportOppose}` as ExpendituresByPartyKey;
+                  const spending = DUMMY_DATA[key];
+                  const height = y(0) - y(spending);
+                  const xBandwidth = x.bandwidth();
+                  return (
+                    <rect
+                      key={key}
+                      x={x(party)}
+                      y={y(spending)}
+                      width={xBandwidth}
+                      height={height}
+                      className={styles.skeletonBar}
+                    />
+                  );
+                })}
+                <g
+                  transform={`translate(${fx.bandwidth() / 2},260)`}
+                  role="presentation"
+                  aria-hidden={true}
+                >
+                  <text
+                    fontSize={14}
+                    fontWeight="bold"
+                    textAnchor="middle"
+                    y={MARGIN_BOTTOM - 5}
+                  >
+                    {supportOppose === "support" ? "Support" : "Oppose"}
+                  </text>
+                </g>
+              </g>
+            ))}
+            <g
+              transform={`translate(0, 260)`}
+              role="presentation"
+              aria-hidden={true}
+            >
+              <path
+                className={styles.axis}
+                d={["M", xRange[0], 0, "L", xRange[1], 0].join(" ")}
+                fill="none"
+                stroke="currentColor"
+              />
+            </g>
+            <path
+              className={styles.axis}
+              d={["M", 0, yRange[0], "L", 0, yRange[1]].join(" ")}
+              fill="none"
+              stroke="currentColor"
+              role="presentation"
+              aria-hidden={true}
+            />
+          </g>
+        </g>
+      </svg>
+    </div>
+  );
+}
+
 export default function SpendingByParty({
   expenditures,
   labelId,
@@ -19,9 +137,6 @@ export default function SpendingByParty({
 }) {
   const { ref, width, height } = useComponentSize({ width: 400, height: 300 });
 
-  const MARGIN_BOTTOM = 20;
-  const MARGIN_TOP = 15;
-  const MARGIN_LEFT = 40;
   const CHART_WIDTH = width;
   const CHART_HEIGHT = height;
   const BOUNDS_WIDTH = CHART_WIDTH - MARGIN_LEFT;

@@ -1,6 +1,7 @@
 import { STATES_BY_ABBR } from "@/app/data/states";
 import { getRaceName } from "@/app/utils/races";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Suspense } from "react";
 import Ads from "./Ads";
 import Elections, { ElectionsSkeleton } from "./Elections";
@@ -47,6 +48,12 @@ export default function RacePage({ params }: { params: { raceId: string } }) {
           <div className={styles.adsCard}>
             <h2 className="no-margin">Ads</h2>
             <Ads raceId={params.raceId} />
+            <div className="small">
+              These are mostly tracked by hand, and so some advertisements may
+              be missing. Have you seen a cryptocurrency PAC-funded
+              advertisement pertaining to this election?{" "}
+              <Link href="/contribute/ad">Send it in!</Link>
+            </div>
           </div>
         </div>
       </div>

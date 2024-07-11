@@ -76,48 +76,53 @@ export default function GoogleAd({
           </div>
         )}
         {ad.videoUrl && <Embed url={ad.videoUrl} />}
-        <div className={styles.adDetailsWrapper}>
-          {(ad.extraDetails || ad.coverage) && (
-            <p>
-              {ad.extraDetails && (
-                <span dangerouslySetInnerHTML={{ __html: ad.extraDetails }} />
-              )}{" "}
-              {ad.coverage && ad.coverage.length && (
-                <span>
-                  News coverage:{" "}
-                  {ad.coverage.map((source) => (
-                    <a key={source.href} href={source.href}>
-                      <i>{source.publisher}</i>
-                    </a>
-                  ))}
-                </span>
-              )}
-            </p>
-          )}
-          {cost && (
-            <span className={styles.adDetails}>
-              <b>
-                Cost to run:
-                <InformationalTooltip>
-                  <span>
-                    This is the amount paid to Google to serve the ad, but does
-                    not include other costs (such as production costs).
-                  </span>
-                </InformationalTooltip>
-              </b>{" "}
-              {cost}
-            </span>
-          )}
-          {ad.impressions && (
-            <span className={styles.adDetails}>
-              <b>Impressions:</b> {formatImpressions(ad.impressions)}
-            </span>
-          )}
-        </div>
-        <a href={ad.ad_url}>
-          <span>More details in Google&rsquo;s Ad Transparency Center</span>
-        </a>
+        {(ad.extraDetails || ad.coverage) && (
+          <div className={styles.adDetailsWrapper}>
+            {ad.extraDetails && (
+              <span
+                className={styles.adDetails}
+                dangerouslySetInnerHTML={{ __html: ad.extraDetails }}
+              />
+            )}{" "}
+            {ad.coverage && ad.coverage.length && (
+              <span className={styles.adDetails}>
+                News coverage:{" "}
+                {ad.coverage.map((source) => (
+                  <a key={source.href} href={source.href}>
+                    <i>{source.publisher}</i>
+                  </a>
+                ))}
+              </span>
+            )}
+          </div>
+        )}
+        {(cost || ad.impressions) && (
+          <div className={styles.adDetailsWrapper}>
+            {cost && (
+              <span className={styles.adDetails}>
+                <b>
+                  Cost to run:
+                  <InformationalTooltip>
+                    <span>
+                      This is the amount paid to Google to serve the ad, but
+                      does not include other costs (such as production costs).
+                    </span>
+                  </InformationalTooltip>
+                </b>{" "}
+                {cost}
+              </span>
+            )}
+            {ad.impressions && (
+              <span className={styles.adDetails}>
+                <b>Impressions:</b> {formatImpressions(ad.impressions)}
+              </span>
+            )}
+          </div>
+        )}
       </div>
+      <a href={ad.ad_url}>
+        <span>More details in Google&rsquo;s Ad Transparency Center</span>
+      </a>
     </div>
   );
 }
