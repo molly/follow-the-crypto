@@ -160,6 +160,10 @@ p {
   padding: 0 1rem;
 }
 
+.full-width {
+  width: 100%;
+}
+
 table {
   border-collapse: collapse;
 

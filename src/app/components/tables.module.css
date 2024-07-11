@@ -12,14 +12,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-}
-
-.influencedCard {
-  grid-area: influencedCard;
-}
-
-.superPacCard {
-  grid-area: superPacCard;
+  width: 100%;
 }
 
 .superPacTable,

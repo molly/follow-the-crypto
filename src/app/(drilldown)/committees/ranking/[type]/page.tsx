@@ -7,7 +7,7 @@ export default async function PACRankingPage({
   params: { type: string };
 }) {
   return (
-    <section>
+    <section className="full-width">
       <h1>Committees</h1>
       <PACsByReceipts type={params.type} fullPage={true}>
         <PacList type={params.type} />

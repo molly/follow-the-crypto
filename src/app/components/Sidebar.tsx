@@ -166,6 +166,36 @@ export default function Sidebar() {
                   All elections
                 </Link>
               </motion.li>
+              <motion.li
+                variants={itemVariants}
+                className={styles.sidebarHeader}
+              >
+                Money raised compared to other committees
+              </motion.li>
+              <motion.li
+                variants={itemVariants}
+                className={styles.sidebarListItem}
+              >
+                <Link
+                  className={styles.sidebarLink}
+                  onClick={() => setCollapsed(true)}
+                  href="/committees/ranking/super"
+                >
+                  Super PACs
+                </Link>
+              </motion.li>
+              <motion.li
+                variants={itemVariants}
+                className={styles.sidebarListItem}
+              >
+                <Link
+                  className={styles.sidebarLink}
+                  onClick={() => setCollapsed(true)}
+                  href="/committees/ranking/all"
+                >
+                  All committees
+                </Link>
+              </motion.li>
             </ul>
           </nav>
         )}
