@@ -45,8 +45,15 @@
   padding: 1rem;
 }
 
-.cardContent {
-  padding: 0 1rem;
+.errorCardContent {
+  height: 100%;
+  padding: 0 1rem 1rem 1rem;
+}
+
+.errorCardContentStandalone {
+  height: 100%;
+  padding: 1rem;
+  min-height: 5rem;
 }
 
 .cardWithTable {

@@ -17,7 +17,9 @@ export default function ImageAd({
     <div className={styles.adGroup}>
       <h3 className="no-margin">
         <Link href={`/committees/${ad.committee_id}`}>
-          {committees[ad.committee_id].name}
+          {ad.committee_id in committees
+            ? committees[ad.committee_id].name
+            : ad.committee_id}
         </Link>
       </h3>
       <div>

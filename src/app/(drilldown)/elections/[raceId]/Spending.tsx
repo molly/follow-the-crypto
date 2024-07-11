@@ -1,6 +1,7 @@
 "use client";
 
-import Candidate from "@/app/components/Candidate";
+import Candidate, { CandidateImage } from "@/app/components/Candidate";
+import Skeleton from "@/app/components/skeletons/Skeleton";
 import { useBreakpoint } from "@/app/hooks/useBreakpoint";
 import { CandidateSummary, ElectionGroup } from "@/app/types/Elections";
 import * as d3 from "d3";
@@ -89,6 +90,109 @@ type SpendingHoverState = {
     | "crypto_oppose";
 };
 
+type DummyData = {
+  raised: number;
+  outside_oppose: number;
+};
+
+export function SpendingSkeleton() {
+  const CHART_HEIGHT = 150;
+  const DUMMY_DATA: Record<string, DummyData> = {
+    "1": {
+      raised: 4500000,
+      outside_oppose: 950000,
+    },
+    "2": {
+      raised: 3000000,
+      outside_oppose: 200000,
+    },
+    "3": {
+      raised: 100000,
+      outside_oppose: 0,
+    },
+  };
+
+  const xDomain = [-1000000, 5000000];
+  const y = d3
+    .scaleBand()
+    .range([LEGEND_HEIGHT, CHART_HEIGHT - GRID_LABEL_HEIGHT])
+    .domain(["1", "2", "3"])
+    .padding(0.5);
+  const x = d3
+    .scaleLinear()
+    .domain(xDomain)
+    .range([CANDIDATE_LABEL_WIDTH, CHART_WIDTH - MARGIN_RIGHT]);
+
+  return (
+    <div>
+      <svg viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`} role="group">
+        {x.ticks(5).map((value, ind) => {
+          return (
+            <g key={`tick-${ind}`}>
+              <line
+                x1={x(value)}
+                x2={x(value)}
+                y1={CHART_HEIGHT - GRID_LABEL_HEIGHT}
+                y2={LEGEND_HEIGHT}
+                strokeWidth={GRIDLINE_WIDTH}
+                className={
+                  value === 0 ? styles.mainLayoutLine : styles.gridLine
+                }
+              />
+            </g>
+          );
+        })}
+        {["1", "2", "3"].map((candidate, ind) => {
+          const { raised, outside_oppose } = DUMMY_DATA[candidate];
+          const yCandidate = y(candidate) || 0;
+          const x0 = x(0);
+          const xRaised = x(raised);
+          const xRaisedWidth = Math.max(1, xRaised - x0);
+          const xOutsideOpposeStart = Math.min(x0 - 1, x(-outside_oppose));
+          const xOutsideOpposeWidth =
+            Math.max(1, x(outside_oppose) - x0) - GRIDLINE_WIDTH / 2;
+          return (
+            <g key={candidate}>
+              <rect
+                x={x0 + GRIDLINE_WIDTH / 2}
+                y={yCandidate}
+                width={xRaisedWidth - GRIDLINE_WIDTH / 2}
+                height={y.bandwidth()}
+                className={styles.raisedBar}
+              />
+              {outside_oppose && (
+                <rect
+                  x={xOutsideOpposeStart}
+                  y={yCandidate}
+                  width={xOutsideOpposeWidth}
+                  height={y.bandwidth()}
+                  className={styles.raisedBar}
+                />
+              )}
+
+              <foreignObject
+                x={0}
+                width={CANDIDATE_LABEL_WIDTH - 25}
+                y={yCandidate - y.bandwidth() / 2}
+                height={y.bandwidth() * 2}
+              >
+                <div className={styles.candidateLabel}>
+                  <CandidateImage chart={true} />
+                  <Skeleton
+                    height="8px"
+                    width="5rem"
+                    style={{ marginBottom: 0 }}
+                  />
+                </div>
+              </foreignObject>
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
+
 export default function Spending({
   election,
   labelId,
@@ -168,7 +272,6 @@ export default function Spending({
     [xDomain],
   );
   const gridLabelFormatter = (d: number) => d3.format("$.2s")(Math.abs(d));
-
   return (
     <div>
       <svg

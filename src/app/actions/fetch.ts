@@ -225,6 +225,8 @@ export const fetchStateExpenditures = cache(
     const data = await fetchSnapshot("expenditures", "states");
     if (isError(data)) {
       return data as ErrorType;
+    } else if (!(stateAbbr in data)) {
+      return { error: true, statusCode: 404 };
     } else {
       const statesExpenditures = data as Record<string, StateExpenditures>;
       const stateExpenditures = statesExpenditures[stateAbbr];

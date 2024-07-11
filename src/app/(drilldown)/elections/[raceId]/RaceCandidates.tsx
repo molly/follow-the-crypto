@@ -29,7 +29,7 @@ function NoSpendingCell({
       }
     >
       <span>
-        {`No cryptocurrency-focused groups ${isRaceUpcoming ? "have " : ""}made expenditures
+        {`No cryptocurrency-focused PACs ${isRaceUpcoming ? "have " : ""}made expenditures
     pertaining to this specific race`}
       </span>
       {hasSpendingInOtherRaces.length > 0 && (

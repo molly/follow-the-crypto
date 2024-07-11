@@ -45,7 +45,7 @@ export default function Breadcrumbs() {
         return segment;
       }
       return committees[segment].name;
-    } else if (segments[0] === "races" && index === 1) {
+    } else if (segments[0] === "elections" && index === 1) {
       const state = segment.split("-")[0];
       return `${STATES_BY_ABBR[state]} ${getRaceName(segment)} election`;
     } else if (

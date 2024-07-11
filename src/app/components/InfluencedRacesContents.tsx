@@ -3,6 +3,7 @@ import {
   fetchCandidateExpenditures,
 } from "@/app/actions/fetch";
 import styles from "@/app/components/tables.module.css";
+import sharedStyles from "@/app/shared.module.css";
 import { ElectionGroup, ElectionsByState } from "@/app/types/Elections";
 import {
   ExpenditureCandidateSummary,
@@ -140,7 +141,7 @@ export default function InfluencedRacesContents({
 
   if (isError(expenditures) || isError(raceDetailsData)) {
     return (
-      <div className={styles.influencedError}>
+      <div className={sharedStyles.errorCardContentStandalone}>
         <ErrorText subject="the list of races" />
       </div>
     );

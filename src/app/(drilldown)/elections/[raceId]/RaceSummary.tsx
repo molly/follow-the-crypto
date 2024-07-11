@@ -60,7 +60,7 @@ export default function RaceSummary({
         <h3 className="no-margin">{titlecase(getSubraceName(race))}</h3>
         <RaceDate race={race} />
       </div>
-      <h4>Spending by cryptocurrency-focused groups</h4>
+      <h4>Spending by cryptocurrency-focused PACs</h4>
       {!hasRelatedSpending && (
         <RaceCandidates
           candidates={candidates}

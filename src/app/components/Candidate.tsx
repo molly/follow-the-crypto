@@ -74,7 +74,7 @@ export function CandidateImage({
       <object
         type="image/webp"
         data={imageUrl}
-        aria-label={(candidate && candidate.common_name) || ""}
+        aria-label={(candidate && candidate.common_name) || "Candidate image"}
         className={`${styles.candidateImage} ${chart ? styles.chartCandidateImage : ""}`}
       >
         {imageEl}

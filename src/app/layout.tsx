@@ -3,7 +3,7 @@ import { Source_Sans_3 } from "next/font/google";
 import Sidebar from "./components/Sidebar";
 import "./globals.css";
 
-export const revalidate = 3600;
+export const revalidate = 0;
 const sourceSans = Source_Sans_3({ subsets: ["latin"] });
 
 export const metadata: Metadata = {

@@ -1,58 +1,29 @@
-import {
-  fetchStateElections,
-  fetchStateExpenditures,
-} from "@/app/actions/fetch";
 import { STATES_BY_ABBR } from "@/app/data/states";
-import sharedStyles from "@/app/shared.module.css";
-import { ElectionsByState } from "@/app/types/Elections";
-import { PopulatedStateExpenditures } from "@/app/types/Expenditures";
-import { is4xx, isError } from "@/app/utils/errors";
-import { getRaceName, isUpcomingRace } from "@/app/utils/races";
+import { getRaceName } from "@/app/utils/races";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Ads from "./Ads";
-import RaceSummary from "./RaceSummary";
-import Spending from "./Spending";
+import Elections, { ElectionsSkeleton } from "./Elections";
+import { SpendingSkeleton } from "./Spending";
+import SpendingCard from "./SpendingCard";
 import styles from "./page.module.css";
 
-export async function generateMetadata({
+export function generateMetadata({
   params,
 }: {
   params: { raceId: string };
-}): Promise<Metadata> {
+}): Metadata {
   const state = params.raceId.split("-")[0];
+  const raceName = `${STATES_BY_ABBR[state]} ${getRaceName(params.raceId)}`;
   return {
-    title: `${STATES_BY_ABBR[state]} ${getRaceName(params.raceId)} election | Follow the Crypto`,
+    title: `${raceName} election | Follow the Crypto`,
+    description: `Cryptocurrency industry spending to influence the ${raceName} election.`,
   };
 }
 
-export default async function RacePage({
-  params,
-}: {
-  params: { raceId: string };
-}) {
+export default function RacePage({ params }: { params: { raceId: string } }) {
   const raceIdSplit = params.raceId.split("-");
-  const shortRaceId = raceIdSplit.slice(1).join("-");
   const stateAbbr = raceIdSplit[0];
-
-  let expendituresData = await fetchStateExpenditures(stateAbbr);
-  const electionsData = await fetchStateElections(stateAbbr);
-
-  if (isError(expendituresData) || isError(electionsData)) {
-    if (is4xx(expendituresData) && is4xx(electionsData)) {
-      return (
-        <div className={sharedStyles.smallCard}>
-          No spending has been recorded in this state.
-        </div>
-      );
-    }
-    return <div>Something went wrong when getting expenditure data.</div>;
-  }
-
-  const expenditures = expendituresData as PopulatedStateExpenditures;
-  const elections = electionsData as ElectionsByState;
-  const upcomingRaces = elections[shortRaceId].races.filter((r) =>
-    isUpcomingRace(r),
-  );
 
   return (
     <>
@@ -62,28 +33,19 @@ export default async function RacePage({
         </div>
         <div className={styles.electionsColumn}>
           <h2 className={styles.electionsColumnHeader}>Elections</h2>
-          {elections[shortRaceId].races.map((race) => (
-            <RaceSummary
-              key={`${shortRaceId}-${race.type}`}
-              race={race}
-              electionData={elections[shortRaceId]}
-              expenditures={expenditures.by_race[params.raceId]}
-              upcomingRaces={upcomingRaces}
-            />
-          ))}
+          <Suspense fallback={<ElectionsSkeleton />}>
+            <Elections raceId={params.raceId} />
+          </Suspense>
         </div>
         <div className={styles.rightColumn}>
           <div className={styles.spendingCard}>
-            <h2 className={styles.spendingHeader} id="spending-label">
-              Spending
-            </h2>
-            <Spending
-              election={elections[shortRaceId]}
-              labelId="spending-label"
-            />
+            <h2 id="spending-label">Spending</h2>
+            <Suspense fallback={<SpendingSkeleton />}>
+              <SpendingCard raceId={params.raceId} />
+            </Suspense>
           </div>
           <div className={styles.adsCard}>
-            <h2 className={styles.adsHeader}>Ads</h2>
+            <h2 className="no-margin">Ads</h2>
             <Ads raceId={params.raceId} />
           </div>
         </div>

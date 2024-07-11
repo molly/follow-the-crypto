@@ -40,6 +40,7 @@ export const getRaceName = (raceId: string) => {
     }
     return `House District ${parseInt(district, 10)}`;
   }
+  return "";
 };
 
 export const getSubraceName = (race?: Race) => {

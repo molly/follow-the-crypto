@@ -1,4 +1,5 @@
 import { fetchAdsByRace, fetchConstant } from "@/app/actions/fetch";
+import ErrorText from "@/app/components/ErrorText";
 import { Ad } from "@/app/types/Ads";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { isError } from "@/app/utils/errors";
@@ -12,14 +13,19 @@ export default async function Ads({ raceId }: { raceId: string }) {
   ]);
 
   if (isError(adsData)) {
-    return <div>Something went wrong when fetching ads.</div>;
+    return <ErrorText subject="ads related to this election" />;
   }
 
   const ads = adsData as Ad[];
-  const committees = committeeConstantData as Record<string, CommitteeConstant>;
+  const committees = (committeeConstantData || {}) as Record<
+    string,
+    CommitteeConstant
+  >;
 
   if (ads.length === 0) {
-    return <div>No known ads.</div>;
+    return (
+      <div className="secondary">No known ads related to this election.</div>
+    );
   }
   return ads.map((ad) => {
     if (ad.type === "google") {

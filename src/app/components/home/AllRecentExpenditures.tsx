@@ -22,7 +22,7 @@ async function AllRecentExpendituresContent({
   ]);
   if (isError(expendituresData)) {
     return (
-      <div className={sharedStyles.cardContent}>
+      <div className={sharedStyles.errorCardContent}>
         <ErrorText subject="recent expenditures" />
       </div>
     );
