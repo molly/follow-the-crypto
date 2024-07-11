@@ -2,6 +2,7 @@ import SpendingByParty from "@/app/components/SpendingByParty";
 import { CommitteeDetails } from "@/app/types/Committee";
 
 import { fetchCommitteeDetails } from "@/app/actions/fetch";
+import ErrorText from "@/app/components/ErrorText";
 import { is4xx, isError } from "@/app/utils/errors";
 
 export default async function CommitteeExpendituresByParty({
@@ -13,9 +14,9 @@ export default async function CommitteeExpendituresByParty({
 
   if (isError(committeeData)) {
     if (is4xx(committeeData)) {
-      return <div>Committee not found.</div>;
+      return <div className="secondary">Committee not found.</div>;
     } else {
-      return <div>Something went wrong when fetching committee details.</div>;
+      return <ErrorText subject="the expenditures by this committee" />;
     }
   }
 

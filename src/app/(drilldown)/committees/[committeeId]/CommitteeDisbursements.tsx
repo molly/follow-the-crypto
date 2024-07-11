@@ -6,7 +6,7 @@ import Link from "next/link";
 import styles from "./page.module.css";
 
 import { fetchCommitteeDetails } from "@/app/actions/fetch";
-import { is4xx, isError } from "@/app/utils/errors";
+import { isError } from "@/app/utils/errors";
 
 export default async function CommitteeDisbursements({
   committeeId,
@@ -19,11 +19,7 @@ export default async function CommitteeDisbursements({
   ]);
 
   if (isError(committeeData)) {
-    if (is4xx(committeeData)) {
-      return <div>Committee not found.</div>;
-    } else {
-      return <div>Something went wrong when fetching committee details.</div>;
-    }
+    return null;
   }
 
   const committee = committeeData as CommitteeDetails;

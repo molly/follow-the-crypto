@@ -4,7 +4,9 @@ import {
   fetchCommitteeDetails,
   fetchCommitteeDonors,
 } from "@/app/actions/fetch";
+import ErrorText from "@/app/components/ErrorText";
 import MoneyCard from "@/app/components/MoneyCard";
+import sharedStyles from "@/app/shared.module.css";
 import { CommitteeDetails } from "@/app/types/Committee";
 import { Contributions } from "@/app/types/Contributions";
 import { is4xx, isError } from "@/app/utils/errors";
@@ -21,11 +23,13 @@ export default async function CommitteeRaised({
   ]);
 
   if (isError(committeeData) || isError(donorData)) {
+    let errorText;
     if (is4xx(committeeData) || is4xx(donorData)) {
-      return <div>Committee not found.</div>;
+      errorText = <span className="secondary">Committee not found.</span>;
     } else {
-      return <div>Something went wrong when fetching committee details.</div>;
+      errorText = <ErrorText subject="the amount raised by this committee" />;
     }
+    return <div className={sharedStyles.smallCard}>{errorText}</div>;
   }
 
   const committee = committeeData as CommitteeDetails;

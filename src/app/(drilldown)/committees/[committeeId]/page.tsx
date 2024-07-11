@@ -50,9 +50,12 @@ export default function CommitteePage({
         </Suspense>
       </section>
       <div className={styles.committeeWrapper}>
-        <Suspense fallback={<TopDonorsSkeleton />}>
-          <TopDonors committeeId={params.committeeId} />
-        </Suspense>
+        <section className={styles.donorSection}>
+          <h3 className={styles.donorSectionHeader}>Top donors</h3>
+          <Suspense fallback={<TopDonorsSkeleton />}>
+            <TopDonors committeeId={params.committeeId} />
+          </Suspense>
+        </section>
         <div className={styles.rightColumn}>
           <div className={styles.constrainedWrapper}>
             <section

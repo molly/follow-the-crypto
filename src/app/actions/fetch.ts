@@ -126,7 +126,7 @@ export const fetchCommitteeTotalExpenditures = cache(
       if (committeeId in snapshot.by_committee) {
         return snapshot.by_committee[committeeId];
       } else {
-        return 0;
+        return { error: true, statusCode: 404 };
       }
     }
   },
