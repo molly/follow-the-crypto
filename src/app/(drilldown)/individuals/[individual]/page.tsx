@@ -6,20 +6,37 @@ import {
 import ErrorText from "@/app/components/ErrorText";
 import ContributionsGroup from "@/app/components/individualOrCompany/ContributionsGroup";
 import SpendingByParty from "@/app/components/individualOrCompany/SpendingByParty";
+import sharedStyles from "@/app/shared.module.css";
 import { HydratedIndividualOrCompanyContributionGroup } from "@/app/types/Contributions";
 import {
   HydratedIndividualContributions,
   IndividualConstant,
 } from "@/app/types/Individuals";
 import { isError } from "@/app/utils/errors";
-import { titlecaseCompany } from "@/app/utils/titlecase";
+import { titlecase, titlecaseCompany } from "@/app/utils/titlecase";
+import { Metadata } from "next";
 import Link from "next/link";
 import styles from "./page.module.css";
 
-function renderSubhead(
-  individual: IndividualConstant,
-  associatedCompany?: string,
-) {
+export function generateMetadata({
+  params,
+}: {
+  params: { individual: string };
+}): Metadata {
+  const individualName = titlecase(params.individual.replaceAll("-", " "));
+  return {
+    title: `${individualName} | Follow the Crypto`,
+    description: `Election spending by ${individualName}.`,
+  };
+}
+
+function Subhead({
+  individual,
+  associatedCompany,
+}: {
+  individual: IndividualConstant;
+  associatedCompany?: string;
+}) {
   let subhead = [];
   if (individual.title) {
     if (!associatedCompany && !individual.company) {
@@ -33,7 +50,7 @@ function renderSubhead(
     }
     subhead.push(
       <Link href={`/companies/${associatedCompany}`}>
-        {titlecaseCompany(associatedCompany.replace("-", " "))}
+        {titlecaseCompany(associatedCompany.replaceAll("-", " "))}
       </Link>,
     );
   } else if (individual.company) {
@@ -65,18 +82,19 @@ export default async function IndividualPage({
 
   return (
     <>
-      <section>
-        <div className={styles.companyLogoAndName}>
-          <img
-            src={`https://storage.googleapis.com/follow-the-crypto-misc-assets/${params.individual}.webp`}
-            alt={`${individual.name} photo`}
-            className={styles.individualImage}
-          />
-          <div>
-            <h1 className={styles.companyName}>{individual.name}</h1>
-            <div className="secondary">
-              {renderSubhead(individual, associatedCompany)}
-            </div>
+      <section className={styles.imageAndName}>
+        <img
+          src={`https://storage.googleapis.com/follow-the-crypto-misc-assets/${params.individual}.webp`}
+          alt={`${individual.name} photo`}
+          className={styles.individualImage}
+        />
+        <div>
+          <h1 className={styles.individualName}>{individual.name}</h1>
+          <div className="secondary">
+            <Subhead
+              individual={individual}
+              associatedCompany={associatedCompany}
+            />
           </div>
         </div>
       </section>
@@ -101,15 +119,19 @@ export default async function IndividualPage({
             </div>
           )}
         </section>
-        <section className={styles.spendingByPartySection}>
-          <h2 id="spending-by-party">Contributions by party</h2>
-          {party_summary && (
-            <SpendingByParty
-              partySummary={party_summary}
-              labelId="spending-by-party"
-            />
-          )}
-        </section>
+        <div className={styles.spendingWrapper}>
+          <section
+            className={`${styles.spendingByPartySection} ${sharedStyles.constrainWidth}`}
+          >
+            <h2 id="spending-by-party">Contributions by party</h2>
+            {party_summary && (
+              <SpendingByParty
+                partySummary={party_summary}
+                labelId="spending-by-party"
+              />
+            )}
+          </section>
+        </div>
       </div>
     </>
   );

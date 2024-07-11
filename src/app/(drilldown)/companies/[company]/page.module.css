@@ -12,6 +12,7 @@
   align-items: center;
   justify-content: flex-start;
   gap: 1rem;
+  width: 100%;
 }
 
 .companyLogoWrapper {
@@ -23,6 +24,10 @@
   height: 10rem;
   border: 1px solid var(--main-text);
   background-color: var(--logo-background);
+}
+
+.companyText {
+  text-align: center;
 }
 
 .companyLogoSkeleton {
@@ -38,7 +43,7 @@
 
 .companyName {
   composes: titleH3 from "@/app/shared.module.css";
-  text-align: left;
+  text-align: center;
   margin: 0;
 }
 
@@ -54,6 +59,13 @@
   &:not(:last-child):after {
     content: ", ";
   }
+}
+
+.descriptionSkeleton {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .description {
@@ -86,6 +98,15 @@
   .companyLogoAndName {
     flex-direction: row;
     gap: 2rem;
+  }
+
+  .companyName,
+  .companyText {
+    text-align: left;
+  }
+
+  .descriptionSkeleton {
+    align-items: flex-start;
   }
 }
 

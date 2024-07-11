@@ -8,22 +8,14 @@ import styles from "./page.module.css";
 export default function LoadingPage() {
   return (
     <>
-      <section className="full-width">
-        <div className={styles.companyLogoAndName}>
-          <div className={styles.companyLogoSkeleton}>
+      <section className={styles.descriptionSkeleton}>
+        <div className={styles.imageAndNameSkeleton}>
+          <div className={styles.imageSkeleton}>
             <Skeleton width="10rem" height="10rem" />
           </div>
           <div className={`${styles.descriptionSkeleton} full-width`}>
-            <Skeleton width="70%" height="3rem" />
-            <div
-              className={`${styles.descriptionSkeleton} ${styles.description}`}
-            >
-              <Skeleton width="80%" />
-              <Skeleton width="80%" />
-            </div>
-            <div className={styles.descriptionSkeleton}>
-              <Skeleton width="100%" />
-            </div>
+            <Skeleton width="30rem" height="3rem" />
+            <Skeleton width="80%" />
           </div>
         </div>
       </section>

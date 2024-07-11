@@ -2,15 +2,14 @@ import { fetchConstant } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import sharedStyles from "@/app/shared.module.css";
 import { IndividualConstant } from "@/app/types/Individuals";
-import { ErrorType, isError } from "@/app/utils/errors";
 import Link from "next/link";
 
 export default async function IndividualsList() {
-  const data = await fetchConstant<
-    Record<string, IndividualConstant> | ErrorType
-  >("individuals");
+  const data = await fetchConstant<Record<string, IndividualConstant> | null>(
+    "individuals",
+  );
 
-  if (isError(data)) {
+  if (data === null) {
     return <ErrorText subject="the list of individuals" />;
   }
 

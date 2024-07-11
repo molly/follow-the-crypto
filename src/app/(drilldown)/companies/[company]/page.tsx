@@ -36,43 +36,41 @@ export default async function CompanyPage({
   const company = companyData as HydratedCompany;
   return (
     <>
-      <section>
-        <div className={styles.companyLogoAndName}>
-          <div className={styles.companyLogoWrapper}>
-            <img
-              src={`https://storage.googleapis.com/follow-the-crypto-misc-assets/${params.company}.webp`}
-              alt={`${company.name} logo`}
-              className={styles.companyLogoImage}
-            />
+      <section className={styles.companyLogoAndName}>
+        <div className={styles.companyLogoWrapper}>
+          <img
+            src={`https://storage.googleapis.com/follow-the-crypto-misc-assets/${params.company}.webp`}
+            alt={`${company.name} logo`}
+            className={styles.companyLogoImage}
+          />
+        </div>
+        <div className={styles.companyText}>
+          <h1 className={styles.companyName}>{company.name}</h1>
+          <div className="secondary">
+            {company.country && company.country}
+            {company.relatedIndividuals.length > 0 && (
+              <>
+                {company.country && <span> | </span>}
+                <span>Related people: </span>
+                <ul className={styles.plainList}>
+                  {company.relatedIndividuals.map((individual) => (
+                    <li key={individual.id} className={styles.plainListItem}>
+                      <Link href={`/individuals/${individual.id}`}>
+                        {individual.name}
+                      </Link>
+                      {individual.title && ` (${individual.title})`}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
           </div>
-          <div>
-            <h1 className={styles.companyName}>{company.name}</h1>
-            <div className="secondary">
-              {company.country && company.country}
-              {company.relatedIndividuals.length > 0 && (
-                <>
-                  {company.country && <span> | </span>}
-                  <span>Related people: </span>
-                  <ul className={styles.plainList}>
-                    {company.relatedIndividuals.map((individual) => (
-                      <li key={individual.id} className={styles.plainListItem}>
-                        <Link href={`/individuals/${individual.id}`}>
-                          {individual.name}
-                        </Link>
-                        {individual.title && ` (${individual.title})`}
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              )}
-            </div>
-            <div className={styles.description}>
-              <span
-                dangerouslySetInnerHTML={{
-                  __html: company.description || "",
-                }}
-              />
-            </div>
+          <div className={styles.description}>
+            <span
+              dangerouslySetInnerHTML={{
+                __html: company.description || "",
+              }}
+            />
           </div>
         </div>
       </section>
