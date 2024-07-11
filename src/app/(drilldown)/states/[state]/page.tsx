@@ -53,7 +53,7 @@ export default async function CommitteePage({
       <h1 className={sharedStyles.titleH2}>{titlecasedState}</h1>
       <div className={styles.moneyCardSection}>
         <MoneyCard
-          topText="Cryptocurrency companies and associated people have spent"
+          topText="Cryptocurrency-focused PACs have spent"
           amount={formatCurrency(expenditures.total, true)}
           bottomText={`to influence 2024 elections in ${titlecasedState}`}
         />

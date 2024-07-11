@@ -54,6 +54,7 @@
   --table-color: var(--color-slate-200);
   --table-highlight-color: var(--color-blue-100);
   --table-background-secondary: var(--color-slate-100);
+  --sidebar-border: var(--color-slate-400);
 
   --main-text: var(--color-slate-950);
   --text-stroke: var(--color-slate-950);

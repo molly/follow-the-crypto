@@ -16,7 +16,7 @@ export default async function TotalRaised({
       <div className={`${sharedStyles.smallCard} ${className}`}>
         <ErrorText
           subject="the total amount of money raised by
-        cryptocurrency companies and associated people"
+        cryptocurrency-focused political action committees"
         />
       </div>
     );
@@ -24,7 +24,7 @@ export default async function TotalRaised({
   const receipts = receiptsData as number;
   return (
     <MoneyCard
-      topText="Cryptocurrency companies and associated people have raised more than"
+      topText="Cryptocurrency-focused political action committees have raised more than"
       amount={humanizeRoundedCurrency(receipts)}
       bottomText="to influence 2024 elections."
       className={className}
