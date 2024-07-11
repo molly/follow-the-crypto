@@ -13,8 +13,12 @@ import { getRaceName } from "../utils/races";
 import styles from "./recentExpenditures.module.css";
 import Skeleton from "./skeletons/Skeleton";
 
-export function RecentExpendituresContentSkeleton() {
-  return range(20).map((i) => (
+export function RecentExpendituresContentSkeleton({
+  fullPage,
+}: {
+  fullPage?: boolean;
+}) {
+  return range(fullPage ? 20 : 5).map((i) => (
     <div
       className={styles.recentExpenditureRow}
       key={`recent-expenditures-skeleton-row-${i}`}
@@ -108,7 +112,7 @@ export default function RecentExpendituresContent({
               <span className="no-wrap">
                 (
                 <Link
-                  href={`/races/${getRaceId(expenditure, true)}`}
+                  href={`/elections/${getRaceId(expenditure, true)}`}
                 >{`${STATES_BY_ABBR[expenditure.candidate_office_state]} ${getRaceName(
                   getRaceId(expenditure),
                 )}`}</Link>

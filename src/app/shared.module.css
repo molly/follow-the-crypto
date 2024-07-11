@@ -1,6 +1,7 @@
 .mainLayout {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 1rem;
   padding: 0.5rem;
   max-width: var(--max-width);
@@ -44,6 +45,10 @@
   padding: 1rem;
 }
 
+.cardContent {
+  padding: 0 1rem;
+}
+
 .cardWithTable {
   composes: card;
   padding: 0;
@@ -51,6 +56,10 @@
 
 .smallCard {
   composes: card;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   text-align: center;
   min-width: 10rem;
   max-width: 25rem;

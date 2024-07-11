@@ -1,9 +1,11 @@
 import { fetchAllRecentExpenditures, fetchConstant } from "@/app/actions/fetch";
 import styles from "@/app/page.module.css";
+import sharedStyles from "@/app/shared.module.css";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { Expenditure } from "@/app/types/Expenditures";
 import { isError } from "@/app/utils/errors";
 import { Suspense } from "react";
+import ErrorText from "../ErrorText";
 import RecentExpenditures from "../RecentExpenditures";
 import RecentExpendituresContent, {
   RecentExpendituresContentSkeleton,
@@ -19,7 +21,11 @@ async function AllRecentExpendituresContent({
     fetchConstant("committees"),
   ]);
   if (isError(expendituresData)) {
-    return <div>Something went wrong when fetching recent expenditures.</div>;
+    return (
+      <div className={sharedStyles.cardContent}>
+        <ErrorText subject="recent expenditures" />
+      </div>
+    );
   }
 
   const allRecentExpenditures = expendituresData as Expenditure[];
@@ -44,7 +50,9 @@ export default async function AllRecentExpenditures({
       noHeader={fullPage}
       fullPage={fullPage}
     >
-      <Suspense fallback={<RecentExpendituresContentSkeleton />}>
+      <Suspense
+        fallback={<RecentExpendituresContentSkeleton fullPage={fullPage} />}
+      >
         <AllRecentExpendituresContent fullPage={fullPage} />
       </Suspense>
     </RecentExpenditures>

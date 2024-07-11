@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./sidebar.module.css";
 
 function LeftArrowIcon() {
@@ -31,6 +31,13 @@ function HamburgerIcon() {
 
 export default function Sidebar() {
   const [isCollapsed, setCollapsed] = useState(true);
+  const sidebarRef = useRef<HTMLAnchorElement>(null);
+
+  useEffect(() => {
+    if (!isCollapsed) {
+      sidebarRef.current?.focus();
+    }
+  }, [isCollapsed]);
 
   const sidebarVariants = {
     open: {
@@ -56,108 +63,124 @@ export default function Sidebar() {
         animate={isCollapsed ? "closed" : "open"}
         variants={sidebarVariants}
         initial="closed"
+        id="sidebar"
         className={styles.sidebarContainer}
       >
-        <nav className={styles.sidebarContent}>
-          <div className={styles.logoAndCollapse}>
-            <span className={styles.logo}>Follow the Crypto</span>
-            <button
-              className={styles.collapseButton}
-              title="Expand sidebar"
-              onClick={() => setCollapsed(true)}
-            >
-              <LeftArrowIcon />
-            </button>
-          </div>
-          <ul className={styles.sidebarList}>
-            <motion.li variants={itemVariants} className={styles.sidebarHeader}>
-              Spending
-            </motion.li>
-            <motion.li
-              variants={itemVariants}
-              className={styles.sidebarListItem}
-            >
-              <Link
-                className={styles.sidebarLink}
+        {!isCollapsed && (
+          <nav className={styles.sidebarContent}>
+            <div className={styles.logoAndCollapse}>
+              <span className={styles.logo}>Follow the Crypto</span>
+              <button
+                className={styles.onCardCollapseButton}
+                title="Collapse sidebar"
                 onClick={() => setCollapsed(true)}
-                href="/committees"
+                aria-expanded={!isCollapsed}
+                aria-controls="#sidebar"
               >
-                By cryptocurrency-focused committees
-              </Link>
-            </motion.li>
-            <motion.li
-              variants={itemVariants}
-              className={styles.sidebarListItem}
-            >
-              <Link
-                className={styles.sidebarLink}
-                onClick={() => setCollapsed(true)}
-                href="/companies"
+                <LeftArrowIcon />
+              </button>
+            </div>
+            <ul className={styles.sidebarList}>
+              <motion.li
+                variants={itemVariants}
+                className={styles.sidebarHeader}
               >
-                By companies
-              </Link>
-            </motion.li>
-            <motion.li
-              variants={itemVariants}
-              className={styles.sidebarListItem}
-            >
-              <Link
-                className={styles.sidebarLink}
-                onClick={() => setCollapsed(true)}
-                href="/individuals"
+                Spending
+              </motion.li>
+              <motion.li
+                variants={itemVariants}
+                className={styles.sidebarListItem}
               >
-                By individuals
-              </Link>
-            </motion.li>
-            <motion.li
-              variants={itemVariants}
-              className={styles.sidebarListItem}
-            >
-              <Link
-                className={styles.sidebarLink}
-                onClick={() => setCollapsed(true)}
-                href="/expenditures"
+                <Link
+                  className={styles.sidebarLink}
+                  onClick={() => setCollapsed(true)}
+                  href="/committees"
+                  ref={sidebarRef}
+                >
+                  By cryptocurrency-focused committees
+                </Link>
+              </motion.li>
+              <motion.li
+                variants={itemVariants}
+                className={styles.sidebarListItem}
               >
-                Most recent expenditures
-              </Link>
-            </motion.li>
-            <motion.li variants={itemVariants} className={styles.sidebarHeader}>
-              Elections
-            </motion.li>
-            <motion.li
-              variants={itemVariants}
-              className={styles.sidebarListItem}
-            >
-              <Link
-                className={styles.sidebarLink}
-                onClick={() => setCollapsed(true)}
-                href="/states"
+                <Link
+                  className={styles.sidebarLink}
+                  onClick={() => setCollapsed(true)}
+                  href="/companies"
+                >
+                  By companies
+                </Link>
+              </motion.li>
+              <motion.li
+                variants={itemVariants}
+                className={styles.sidebarListItem}
               >
-                By state
-              </Link>
-            </motion.li>
-            <motion.li
-              variants={itemVariants}
-              className={styles.sidebarListItem}
-            >
-              <Link
-                className={styles.sidebarLink}
-                onClick={() => setCollapsed(true)}
-                href="/races"
+                <Link
+                  className={styles.sidebarLink}
+                  onClick={() => setCollapsed(true)}
+                  href="/individuals"
+                >
+                  By individuals
+                </Link>
+              </motion.li>
+              <motion.li
+                variants={itemVariants}
+                className={styles.sidebarListItem}
               >
-                All races
-              </Link>
-            </motion.li>
-          </ul>
-        </nav>
+                <Link
+                  className={styles.sidebarLink}
+                  onClick={() => setCollapsed(true)}
+                  href="/expenditures"
+                >
+                  Most recent expenditures
+                </Link>
+              </motion.li>
+              <motion.li
+                variants={itemVariants}
+                className={styles.sidebarHeader}
+              >
+                Elections
+              </motion.li>
+              <motion.li
+                variants={itemVariants}
+                className={styles.sidebarListItem}
+              >
+                <Link
+                  className={styles.sidebarLink}
+                  onClick={() => setCollapsed(true)}
+                  href="/states"
+                >
+                  By state
+                </Link>
+              </motion.li>
+              <motion.li
+                variants={itemVariants}
+                className={styles.sidebarListItem}
+              >
+                <Link
+                  className={styles.sidebarLink}
+                  onClick={() => setCollapsed(true)}
+                  href="/elections"
+                >
+                  All elections
+                </Link>
+              </motion.li>
+            </ul>
+          </nav>
+        )}
       </motion.aside>
-      <button
-        className={styles.floatingCollapseButton}
-        title="Expand sidebar"
-        onClick={() => setCollapsed(false)}
-      >
-        <HamburgerIcon />
-      </button>
+      {isCollapsed && (
+        <button
+          className={styles.floatingCollapseButton}
+          title="Expand sidebar"
+          onClick={() => setCollapsed(false)}
+          aria-expanded={!isCollapsed}
+          aria-controls="#sidebar"
+        >
+          <HamburgerIcon />
+        </button>
+      )}
     </>
   );
 }

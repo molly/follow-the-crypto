@@ -25,14 +25,20 @@
   align-items: center;
 }
 
+.onCardCollapseButton {
+  composes: collapseButton;
+}
+
 .floatingCollapseButton {
   composes: collapseButton;
   position: fixed;
   top: 1rem;
   left: 1rem;
+  z-index: 100;
 }
 
 .collapseIcon {
+  fill: var(--main-text);
   width: 1rem;
   height: 1rem;
 }
@@ -95,5 +101,11 @@
 @media (min-width: 576px) {
   .sidebarContainer {
     width: 20rem;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .onCardCollapseButton {
+    border-color: var(--color-slate-500);
   }
 }

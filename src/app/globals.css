@@ -1,5 +1,6 @@
 :root {
   --max-width: 2000px;
+  --single-column-max-width: 1200px;
   --border-radius: 8px;
 
   --color-black: #000;
@@ -147,6 +148,13 @@ a {
 
 p {
   margin-top: 0;
+}
+
+.single-column-page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: var(--single-column-max-width);
 }
 
 table {

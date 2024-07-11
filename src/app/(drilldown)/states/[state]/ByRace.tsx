@@ -117,7 +117,7 @@ async function RaceCardContents({
 
         return (
           <div key={raceId} className={styles.cardSection}>
-            <Link href={`/races/${raceId}`}>
+            <Link href={`/elections/${raceId}`}>
               <h3>{getRaceName(raceId)}</h3>
             </Link>
             {influenced.map((candidate) => {

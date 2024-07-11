@@ -52,7 +52,7 @@ function CandidateRow({
   race: ElectionGroup;
   small?: boolean;
 }) {
-  const raceHref = `/races/${candidate.state}-${candidate.race}`;
+  const raceHref = `/elections/${candidate.state}-${candidate.race}`;
   const raceName = getRaceName(`${candidate.state}-${candidate.race}`);
   if (!small) {
     return (
@@ -139,18 +139,11 @@ export default function InfluencedRacesContents({
   }
 
   if (isError(expenditures) || isError(raceDetailsData)) {
-    if (!small) {
-      return (
-        <tr className={styles.influencedErrorRow}>
-          <td colSpan={6}>
-            <ErrorText
-              subject="the list of races influenced by
-        crypto industry money"
-            />
-          </td>
-        </tr>
-      );
-    }
+    return (
+      <div className={styles.influencedError}>
+        <ErrorText subject="the list of races" />
+      </div>
+    );
   }
 
   const { order, candidates } = expenditures as ExpendituresByCandidate;
