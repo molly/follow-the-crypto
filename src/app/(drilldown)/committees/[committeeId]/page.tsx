@@ -57,9 +57,9 @@ export default function CommitteePage({
           </Suspense>
         </section>
         <div className={styles.rightColumn}>
-          <div className={styles.constrainedWrapper}>
+          <div className={sharedStyles.constrainedWrapper}>
             <section
-              className={`${sharedStyles.card} ${styles.constrainWidth}`}
+              className={`${sharedStyles.card} ${sharedStyles.constrainWidth}`}
             >
               <h2 id="expenditures-label">Expenditures</h2>
               <Suspense fallback={<SpendingByPartySkeleton />}>

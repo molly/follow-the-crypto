@@ -49,21 +49,6 @@
   margin-top: 1rem;
 }
 
-.constrainedWrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: inherit;
-  width: 100%;
-}
-
-.constrainWidth {
-  max-width: 40rem;
-  width: 100%;
-  height: 100%;
-}
-
 .donorSection {
   composes: card from "@/app/shared.module.css";
   width: 66%;

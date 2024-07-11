@@ -74,3 +74,7 @@
   height: 100%;
   fill: var(--main-text);
 }
+
+.skeletonBar {
+  fill: var(--chart-skeleton);
+}

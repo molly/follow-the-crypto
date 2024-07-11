@@ -1,15 +1,17 @@
 .page {
   display: flex;
   align-items: flex-start;
+  flex-direction: column-reverse;
   gap: 1rem;
+  width: 100%;
 }
 
 .companyLogoAndName {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: 2rem;
+  gap: 1rem;
 }
 
 .companyLogoWrapper {
@@ -21,6 +23,10 @@
   height: 10rem;
   border: 1px solid var(--main-text);
   background-color: var(--logo-background);
+}
+
+.companyLogoSkeleton {
+  flex-shrink: 0;
 }
 
 .companyLogoImage {
@@ -56,8 +62,8 @@
 
 .contributionSection {
   composes: card from "@/app/shared.module.css";
-  width: 66%;
   padding: 1rem 0;
+  width: 100%;
 }
 
 .contributionSectionHeader {
@@ -65,8 +71,34 @@
   font-size: 1.5rem;
 }
 
+.spendingWrapper {
+  composes: constrainedWrapper from "@/app/shared.module.css";
+}
+
 .spendingByPartySection {
   composes: card from "@/app/shared.module.css";
-  width: 33%;
   padding: 1rem;
+  width: 100%;
+  max-width: 40rem;
+}
+
+@media (min-width: 576px) {
+  .companyLogoAndName {
+    flex-direction: row;
+    gap: 2rem;
+  }
+}
+
+@media (min-width: 1000px) {
+  .page {
+    flex-direction: row;
+  }
+
+  .contributionSection {
+    width: 66%;
+  }
+
+  .spendingWrapper {
+    width: 33%;
+  }
 }

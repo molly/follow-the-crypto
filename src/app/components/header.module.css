@@ -30,6 +30,7 @@
   &:not(:last-child):after {
     content: "›";
     padding: 0 0.5rem;
+    speak: never;
   }
 }
 

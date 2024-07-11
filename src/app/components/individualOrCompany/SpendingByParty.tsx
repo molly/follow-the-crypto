@@ -6,6 +6,10 @@ import * as d3 from "d3";
 import { useMemo } from "react";
 import styles from "./individualOrCompany.module.css";
 
+const MARGIN_BOTTOM = 20;
+const MARGIN_TOP = 15;
+const MARGIN_LEFT = 40;
+
 const PARTY_ORDER: Record<string, number> = {
   DEM: 0,
   REP: 1,
@@ -41,6 +45,91 @@ const sortParties = (partySummary: Record<string, number>): string[] => {
   });
 };
 
+export function SpendingByPartySkeleton() {
+  const DUMMY_DATA: Record<string, number> = {
+    DEM: 1000000,
+    REP: 2000000,
+    UNK: 10000000,
+  };
+
+  const maxExpenditure = 10000000;
+  const yDomain = [0, maxExpenditure + maxExpenditure * 0.05]; // Add a little breathing room to the chart
+  const x = d3.scaleBand().domain(["DEM", "REP", "UNK"]).range([0, 340]);
+  const y = d3.scaleLinear().domain(yDomain).range([260, 0]);
+  const xRange = x.range();
+  const yRange = y.range();
+
+  return (
+    <div className={styles.svgWrapper}>
+      <svg
+        viewBox={`0 0 400 300`}
+        preserveAspectRatio="none"
+        className={styles.svg}
+        role="group"
+      >
+        <g transform={`translate(0, ${MARGIN_TOP})`}>
+          {y.ticks(5).map((tick) => (
+            <g
+              key={`xTick-${tick}`}
+              transform={`translate(0,${y(tick)})`}
+              aria-hidden={true}
+              role="presentation"
+            >
+              <line
+                key={tick}
+                x1={MARGIN_LEFT - 5}
+                x2={MARGIN_LEFT}
+                stroke="currentColor"
+              />
+            </g>
+          ))}
+          <g
+            transform={`translate(${MARGIN_LEFT}, 0)`}
+            role="list"
+            aria-label="bar graph"
+          >
+            {["DEM", "REP", "UNK"].map((party) => {
+              const spending = DUMMY_DATA[party] || 0;
+              const height = y(0) - y(spending);
+              const xBandwidth = x.bandwidth();
+              return (
+                <rect
+                  key={`bar-${party}`}
+                  x={x(party)}
+                  y={y(spending)}
+                  width={xBandwidth}
+                  height={height}
+                  className={styles.skeletonBar}
+                />
+              );
+            })}
+            <g
+              transform="translate(0, 260)"
+              role="presentation"
+              aria-hidden={true}
+            >
+              <path
+                className={styles.axis}
+                d={["M", xRange[0], 0, "L", xRange[1], 0].join(" ")}
+                fill="none"
+                stroke="currentColor"
+              />
+            </g>
+            <path
+              className={styles.axis}
+              d={["M", 0, yRange[0], "L", 0, yRange[1]].join(" ")}
+              fill="none"
+              stroke="currentColor"
+              role="presentation"
+              aria-hidden={true}
+            />
+          </g>
+        </g>
+      </svg>
+    </div>
+  );
+}
+
 export default function SpendingByParty({
   partySummary,
   labelId,
@@ -50,9 +139,6 @@ export default function SpendingByParty({
 }) {
   const { ref, width, height } = useComponentSize({ width: 400, height: 300 });
 
-  const MARGIN_BOTTOM = 20;
-  const MARGIN_TOP = 15;
-  const MARGIN_LEFT = 40;
   const CHART_WIDTH = width;
   const CHART_HEIGHT = height;
   const BOUNDS_WIDTH = CHART_WIDTH - MARGIN_LEFT;
@@ -85,8 +171,8 @@ export default function SpendingByParty({
             <g
               key={`xTick-${tick}`}
               transform={`translate(0,${y(tick)})`}
-              role="presentation"
               aria-hidden={true}
+              role="presentation"
             >
               <line
                 key={tick}

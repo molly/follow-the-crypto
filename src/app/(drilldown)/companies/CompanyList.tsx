@@ -2,15 +2,14 @@ import { fetchConstant } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import sharedStyles from "@/app/shared.module.css";
 import { CompanyConstant } from "@/app/types/Companies";
-import { ErrorType, isError } from "@/app/utils/errors";
 import Link from "next/link";
 
 export default async function CompanyList() {
-  const data = await fetchConstant<Record<string, CompanyConstant> | ErrorType>(
+  const data = await fetchConstant<Record<string, CompanyConstant> | null>(
     "companies",
   );
 
-  if (isError(data)) {
+  if (data === null) {
     return <ErrorText subject="the list of companies" />;
   }
 

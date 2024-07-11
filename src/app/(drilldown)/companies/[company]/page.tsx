@@ -3,11 +3,26 @@ import { fetchCompany } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import ContributionsGroup from "@/app/components/individualOrCompany/ContributionsGroup";
 import SpendingByParty from "@/app/components/individualOrCompany/SpendingByParty";
-import { Company } from "@/app/types/Companies";
+import sharedStyles from "@/app/shared.module.css";
+import { HydratedCompany } from "@/app/types/Companies";
 import { HydratedIndividualOrCompanyContributionGroup } from "@/app/types/Contributions";
 import { isError } from "@/app/utils/errors";
+import { titlecase } from "@/app/utils/titlecase";
+import { Metadata } from "next";
 import Link from "next/link";
 import styles from "./page.module.css";
+
+export function generateMetadata({
+  params,
+}: {
+  params: { company: string };
+}): Metadata {
+  const companyName = titlecase(params.company.replaceAll("-", " "));
+  return {
+    title: `${companyName} | Follow the Crypto`,
+    description: `Election spending by ${companyName} and related individuals.`,
+  };
+}
 
 export default async function CompanyPage({
   params,
@@ -18,7 +33,7 @@ export default async function CompanyPage({
   if (isError(companyData)) {
     return <ErrorText subject="company data" />;
   }
-  const company = companyData as Company;
+  const company = companyData as HydratedCompany;
   return (
     <>
       <section>
@@ -64,7 +79,7 @@ export default async function CompanyPage({
       <div className={styles.page}>
         <section className={styles.contributionSection}>
           <h3 className={styles.contributionSectionHeader}>Contributions</h3>
-          {company.contributions.length ? (
+          {company.contributions ? (
             company.contributions.map(
               (
                 contributionGroup: HydratedIndividualOrCompanyContributionGroup,
@@ -82,15 +97,19 @@ export default async function CompanyPage({
             </div>
           )}
         </section>
-        <section className={styles.spendingByPartySection}>
-          <h2 id="spending-by-party">Contributions by party</h2>
-          {company.party_summary && (
-            <SpendingByParty
-              partySummary={company.party_summary}
-              labelId="spending-by-party"
-            />
-          )}
-        </section>
+        <div className={styles.spendingWrapper}>
+          <section
+            className={`${styles.spendingByPartySection} ${sharedStyles.constrainWidth}`}
+          >
+            <h2 id="spending-by-party">Contributions by party</h2>
+            {company.party_summary && (
+              <SpendingByParty
+                partySummary={company.party_summary}
+                labelId="spending-by-party"
+              />
+            )}
+          </section>
+        </div>
       </div>
     </>
   );

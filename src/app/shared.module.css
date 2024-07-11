@@ -78,6 +78,21 @@
   justify-content: center;
 }
 
+.constrainedWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: inherit;
+  width: 100%;
+}
+
+.constrainWidth {
+  max-width: 40rem;
+  width: 100%;
+  height: 100%;
+}
+
 .highlight {
   composes: accent-text;
   padding: 0.25rem 0 0.5rem 0;
