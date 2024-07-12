@@ -31,7 +31,10 @@ export default function RacePage({ params }: { params: { raceId: string } }) {
     <>
       <div className={styles.columns}>
         <div className={styles.headerWrapper}>
-          <h1 className="margin-0">{`${STATES_BY_ABBR[stateAbbr]} ${getRaceName(params.raceId)} election`}</h1>
+          <h1 className="no-margin">{`${STATES_BY_ABBR[stateAbbr]} ${getRaceName(params.raceId)} election`}</h1>
+          <Link href={`/state/${stateAbbr}`}>
+            &raquo; Other elections in {STATES_BY_ABBR[stateAbbr]}
+          </Link>
         </div>
         <div className={styles.electionsColumn}>
           <h2 className={styles.electionsColumnHeader}>Elections</h2>

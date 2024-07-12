@@ -138,6 +138,13 @@ export default function AboutPage() {
             </a>
             ”, Rick Claypool at <i>Public Citizen</i> (May 6, 2024)
           </li>
+          <li>
+            “
+            <a href="https://www.opensecrets.org/news/issues/crypto">
+              Cryptocurrency
+            </a>
+            ”, <i>OpenSecrets</i> (July 11, 2023)
+          </li>
         </ul>
         <div className={styles.footnotes}>
           1. As close to real-time as possible, that is. There are some delays
