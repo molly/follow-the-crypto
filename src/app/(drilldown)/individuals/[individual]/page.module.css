@@ -21,6 +21,16 @@
   justify-content: center;
 }
 
+.imageAndAttribution {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.attribution {
+  font-size: 0.7rem;
+}
+
 .descriptionSkeleton {
   width: 100%;
   display: flex;

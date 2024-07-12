@@ -83,11 +83,18 @@ export default async function IndividualPage({
   return (
     <>
       <section className={styles.imageAndName}>
-        <img
-          src={`https://storage.googleapis.com/follow-the-crypto-misc-assets/${params.individual}.webp`}
-          alt={`${individual.name} photo`}
-          className={styles.individualImage}
-        />
+        <div className={styles.imageAndAttribution}>
+          <img
+            src={`https://storage.googleapis.com/follow-the-crypto-misc-assets/${params.individual}.webp`}
+            alt={`${individual.name} photo`}
+            className={styles.individualImage}
+          />
+          {individual.photoCredit && (
+            <a href={individual.photoCredit} className={styles.attribution}>
+              (image attribution)
+            </a>
+          )}
+        </div>
         <div>
           <h1 className={styles.individualName}>{individual.name}</h1>
           <div className="secondary">

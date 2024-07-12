@@ -69,7 +69,13 @@ export default function Sidebar() {
         {!isCollapsed && (
           <nav className={styles.sidebarContent}>
             <div className={styles.logoAndCollapse}>
-              <span className={styles.logo}>Follow the Crypto</span>
+              <Link
+                href="/"
+                className={styles.logo}
+                onClick={() => setCollapsed(true)}
+              >
+                <span>Follow the Crypto</span>
+              </Link>
               <button
                 className={styles.onCardCollapseButton}
                 title="Collapse sidebar"

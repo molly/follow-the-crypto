@@ -53,6 +53,7 @@
   composes: accent-text from "@/app/shared.module.css";
   font-size: 1.5rem;
   font-weight: bold;
+  text-decoration: none;
 }
 
 .sidebarList {
