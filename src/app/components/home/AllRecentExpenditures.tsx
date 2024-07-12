@@ -22,7 +22,13 @@ async function AllRecentExpendituresContent({
   ]);
   if (isError(expendituresData)) {
     return (
-      <div className={sharedStyles.errorCardContent}>
+      <div
+        className={
+          fullPage
+            ? sharedStyles.errorCardContentStandalone
+            : sharedStyles.errorCardContent
+        }
+      >
         <ErrorText subject="recent expenditures" />
       </div>
     );

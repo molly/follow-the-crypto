@@ -2,6 +2,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  width: 100%;
   gap: 1rem;
 }
 
@@ -12,8 +13,12 @@
 }
 
 .statesTableCard {
-  composes: card from "@/app/shared.module.css";
+  composes: cardWithTable from "@/app/shared.module.css";
   min-width: 25rem;
+}
+
+.statesTableHeader {
+  padding: 1rem 1rem 0 1rem;
 }
 
 .statesTable {

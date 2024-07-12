@@ -157,7 +157,6 @@ p {
   flex-direction: column;
   width: 100%;
   max-width: var(--single-column-max-width);
-  padding: 0 1rem;
 }
 
 .full-width {
@@ -272,6 +271,12 @@ a.unstyled {
 
 .unk {
   fill: var(--color-slate-400);
+}
+
+@media (min-width: 1200px) {
+  .single-column-page {
+    padding: 0 1rem;
+  }
 }
 
 @media (prefers-color-scheme: dark) {

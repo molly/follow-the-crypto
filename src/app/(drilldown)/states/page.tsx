@@ -1,10 +1,17 @@
 import MapWrapper from "@/app/components/home/MapWrapper";
 import USMapSkeleton from "@/app/components/skeletons/USMapSkeleton";
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import StateExpenditures, {
   StateExpendituresSkeleton,
 } from "./StateExpenditures";
 import styles from "./page.module.css";
+
+export const metadata: Metadata = {
+  title: "Spending by State | Follow the Crypto",
+  description:
+    "States in which cryptocurrency-focused political action committees have been spending to influence 2024 elections.",
+};
 
 export default function Page() {
   return (
@@ -15,7 +22,9 @@ export default function Page() {
         </Suspense>
       </div>
       <section className={styles.statesTableCard}>
-        <h2>Crypto-related spending by state</h2>
+        <h2 className={styles.statesTableHeader}>
+          Cryptocurrency PAC spending by state
+        </h2>
         <table className={styles.statesTable}>
           <thead>
             <tr>
@@ -25,7 +34,6 @@ export default function Page() {
               <th className="number-cell">Expenditures</th>
             </tr>
           </thead>
-
           <Suspense fallback={<StateExpendituresSkeleton />}>
             <StateExpenditures />
           </Suspense>

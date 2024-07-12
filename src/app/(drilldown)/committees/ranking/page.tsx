@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "PAC rankings | Follow the Crypto",
+  title: "PAC Rankings | Follow the Crypto",
   description:
     "Rankings of the most highly funded political action committees.",
 };

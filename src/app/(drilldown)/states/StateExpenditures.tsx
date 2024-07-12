@@ -50,7 +50,9 @@ export default async function StateExpenditures() {
     return (
       <tbody>
         <tr>
-          <ErrorText subject="expenditures by state" />
+          <td colSpan={3}>
+            <ErrorText subject="expenditures by state" />
+          </td>
         </tr>
       </tbody>
     );

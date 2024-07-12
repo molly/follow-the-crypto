@@ -135,7 +135,7 @@
 
 .disbursementsCard {
   composes: card from "@/app/shared.module.css";
-  composes: constrainWidth;
+  composes: constrainWidth from "@/app/shared.module.css";
   align-self: flex-start;
 }
 

@@ -1,22 +1,43 @@
-import { fetchConstant } from "@/app/actions/fetch";
+import { fetchConstant, fetchStateExpenditures } from "@/app/actions/fetch";
+import ErrorText from "@/app/components/ErrorText";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { PopulatedStateExpenditures } from "@/app/types/Expenditures";
-import { isError } from "@/app/utils/errors";
+import { is4xx, isError } from "@/app/utils/errors";
 import { formatCurrency } from "@/app/utils/utils";
 import Link from "next/link";
-import { Suspense } from "react";
 import styles from "./page.module.css";
 
-async function CommitteeCardContents({
-  expenditures,
+export function CommitteeCardContentsSkeleton() {
+  return (
+    <div className={styles.cardSection}>
+      <Skeleton width="15rem" height="1.17em" onCard={true} />
+      <Skeleton width="5em" onCard={true} />
+    </div>
+  );
+}
+
+export default async function CommitteeCard({
+  stateAbbr,
 }: {
-  expenditures: PopulatedStateExpenditures;
+  stateAbbr: string;
 }) {
-  const data = await fetchConstant("committees");
-  const committees = isError(data)
-    ? null
-    : (data as Record<string, CommitteeConstant>);
+  const [expendituresData, committeeData] = await Promise.all([
+    fetchStateExpenditures(stateAbbr),
+    fetchConstant("committees"),
+  ]);
+  const committees = (committeeData || {}) as Record<string, CommitteeConstant>;
+  if (isError(expendituresData)) {
+    if (is4xx(expendituresData)) {
+      return (
+        <div className="secondary">
+          No spending has been recorded in this state.
+        </div>
+      );
+    }
+    return <ErrorText subject="state election information" />;
+  }
+  const expenditures = expendituresData as PopulatedStateExpenditures;
 
   const committeesSortedByExpenditures = Object.keys(
     expenditures.by_committee,
@@ -51,30 +72,6 @@ async function CommitteeCardContents({
           </div>
         );
       })}
-    </div>
-  );
-}
-
-function CommitteeCardContentsSkeleton() {
-  return (
-    <div className={styles.cardSection}>
-      <Skeleton randWidth={[5, 15]} height={"1.17em"} />
-      <Skeleton width={"5em"} />
-    </div>
-  );
-}
-
-export default async function ByCommittee({
-  expenditures,
-}: {
-  expenditures: PopulatedStateExpenditures;
-}) {
-  return (
-    <div className={styles.committeeCard}>
-      <h2>By group</h2>
-      <Suspense fallback={<CommitteeCardContentsSkeleton />}>
-        <CommitteeCardContents expenditures={expenditures} />
-      </Suspense>
     </div>
   );
 }

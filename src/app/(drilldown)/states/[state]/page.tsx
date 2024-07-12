@@ -1,28 +1,28 @@
-import { fetchStateExpenditures } from "@/app/actions/fetch";
-import MoneyCard from "@/app/components/MoneyCard";
+import { MoneyCardSkeleton } from "@/app/components/MoneyCard";
 import { STATES_BY_FULL } from "@/app/data/states";
 import sharedStyles from "@/app/shared.module.css";
-import { PopulatedStateExpenditures } from "@/app/types/Expenditures";
-import { is4xx, isError } from "@/app/utils/errors";
 import { titlecase } from "@/app/utils/titlecase";
-import { formatCurrency } from "@/app/utils/utils";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import ByCommittee from "./ByCommittee";
-import ByRace from "./ByRace";
+import { Suspense } from "react";
+import ByCommittee, { CommitteeCardContentsSkeleton } from "./ByCommittee";
+import ByRace, { RaceCardContentsSkeleton } from "./ByRace";
+import TotalSpending from "./TotalSpending";
 import styles from "./page.module.css";
 
-export async function generateMetadata({
+export function generateMetadata({
   params,
 }: {
   params: { state: string };
-}): Promise<Metadata> {
+}): Metadata {
+  const state = titlecase(params.state.split("-").join(" "));
   return {
-    title: `${titlecase(params.state.split("-").join(" "))} | Follow the Crypto`,
+    title: `${state} | Follow the Crypto`,
+    description: `Cryptocurrency-focused political action committee spending on 2024 elections in ${state}.`,
   };
 }
 
-export default async function CommitteePage({
+export default function CommitteePage({
   params,
 }: {
   params: { state: string };
@@ -33,35 +33,32 @@ export default async function CommitteePage({
   }
 
   const stateAbbr = STATES_BY_FULL[titlecasedState];
-  let data = await fetchStateExpenditures(stateAbbr);
-
-  if (isError(data)) {
-    if (is4xx(data)) {
-      return (
-        <div className={sharedStyles.smallCard}>
-          No spending has been recorded in this state.
-        </div>
-      );
-    }
-    return <div>Something went wrong when getting expenditure data.</div>;
-  }
-
-  const expenditures = data as PopulatedStateExpenditures;
 
   return (
-    <>
+    <div className={styles.page}>
       <h1 className={sharedStyles.titleH2}>{titlecasedState}</h1>
-      <div className={styles.moneyCardSection}>
-        <MoneyCard
-          topText="Cryptocurrency-focused PACs have spent"
-          amount={formatCurrency(expenditures.total, true)}
-          bottomText={`to influence 2024 elections in ${titlecasedState}`}
+      <Suspense
+        fallback={<MoneyCardSkeleton className={styles.totalSpendingCard} />}
+      >
+        <TotalSpending
+          stateAbbr={stateAbbr}
+          titlecasedState={titlecasedState}
         />
-      </div>
+      </Suspense>
       <div className={styles.raceAndCommitteeSection}>
-        <ByRace expenditures={expenditures} stateAbbr={stateAbbr} />
-        <ByCommittee expenditures={expenditures} />
+        <div className={styles.raceCard}>
+          <h2>By race</h2>
+          <Suspense fallback={<RaceCardContentsSkeleton />}>
+            <ByRace stateAbbr={stateAbbr} />
+          </Suspense>
+        </div>
+        <div className={styles.committeeCard}>
+          <h2>By group</h2>
+          <Suspense fallback={<CommitteeCardContentsSkeleton />}>
+            <ByCommittee stateAbbr={stateAbbr} />
+          </Suspense>
+        </div>
       </div>
-    </>
+    </div>
   );
 }

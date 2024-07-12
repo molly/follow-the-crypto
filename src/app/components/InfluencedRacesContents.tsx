@@ -64,7 +64,10 @@ function CandidateRow({
           </Link>
         </td>
         <td className="center-cell">
-          <Link className="unstyled" href={`/states/${candidate.state}`}>
+          <Link
+            className="unstyled"
+            href={`/states/${STATES_BY_ABBR[candidate.state].replaceAll(" ", "-").toLowerCase()}`}
+          >
             {candidate.state}
           </Link>
         </td>

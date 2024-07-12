@@ -64,11 +64,12 @@
 .smallCard {
   composes: card;
   display: flex;
+  flex: 0 0 auto;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  min-width: 10rem;
+  min-width: 15rem;
   max-width: 25rem;
 }
 

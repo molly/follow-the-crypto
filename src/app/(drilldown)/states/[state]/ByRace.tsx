@@ -1,25 +1,28 @@
-import { fetchConstant, fetchStateElections } from "@/app/actions/fetch";
+import {
+  fetchConstant,
+  fetchStateElections,
+  fetchStateExpenditures,
+} from "@/app/actions/fetch";
+import Candidate, { CandidateImage } from "@/app/components/Candidate";
 import { CommitteeLink } from "@/app/components/CommitteeLink";
+import ErrorText from "@/app/components/ErrorText";
+import Outcome from "@/app/components/Outcome";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import { CommitteeConstant } from "@/app/types/Committee";
-import { PopulatedStateExpenditures } from "@/app/types/Expenditures";
-import { isError } from "@/app/utils/errors";
-import { humanizeList } from "@/app/utils/humanize";
-import { getRaceName, getSubraceName, sortRaces } from "@/app/utils/races";
-import { getRandomInt, range } from "@/app/utils/range";
-import { formatCurrency } from "@/app/utils/utils";
-import Link from "next/link";
-import { Suspense } from "react";
-import styles from "./page.module.css";
-
-import Candidate from "@/app/components/Candidate";
-import Outcome from "@/app/components/Outcome";
 import {
   CandidateSummary,
   ElectionsByState,
   Race,
 } from "@/app/types/Elections";
+import { PopulatedStateExpenditures } from "@/app/types/Expenditures";
+import { is4xx, isError } from "@/app/utils/errors";
+import { humanizeList } from "@/app/utils/humanize";
 import { getFirstLastName } from "@/app/utils/names";
+import { getRaceName, getSubraceName, sortRaces } from "@/app/utils/races";
+import { range } from "@/app/utils/range";
+import { formatCurrency } from "@/app/utils/utils";
+import Link from "next/link";
+import styles from "./page.module.css";
 
 const renderAmount = (amount: number, supportOppose: string) => {
   if (amount > 0) {
@@ -43,6 +46,7 @@ function Influenced({
     renderAmount(candidate.support_total, "support"),
     renderAmount(candidate.oppose_total, "oppose"),
   ]);
+
   const involvedRaces = (candidate.expenditure_races as string[]).map(
     (raceType: string) => {
       const r = races.find((r) => r.type === raceType);
@@ -81,25 +85,43 @@ function Influenced({
   );
 }
 
-async function RaceCardContents({
-  expenditures,
-  stateAbbr,
-}: {
-  expenditures: PopulatedStateExpenditures;
-  stateAbbr: string;
-}) {
-  const [electionData, committeeData] = await Promise.all([
+export function RaceCardContentsSkeleton() {
+  return (
+    <div className={styles.skeletonContainer}>
+      {range(3).map((i) => (
+        <div key={`race-skeleton-${i}`} className={styles.cardSection}>
+          <Skeleton randWidth={[5, 15]} height="1.17em" onCard={true} />
+          <Skeleton randWidth={[10, 25]} onCard={true} />
+          <div className={styles.candidateResultWithImage}>
+            <CandidateImage />
+            <Skeleton randWidth={[10, 15]} onCard={true} />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export default async function RaceCard({ stateAbbr }: { stateAbbr: string }) {
+  const [expendituresData, electionData, committeeData] = await Promise.all([
+    fetchStateExpenditures(stateAbbr),
     fetchStateElections(stateAbbr),
     fetchConstant("committees"),
   ]);
 
-  if (isError(electionData)) {
-    return <div>Something went wrong when fetching election data.</div>;
+  if (isError(electionData) || isError(expendituresData)) {
+    if (is4xx(electionData) || is4xx(expendituresData)) {
+      return (
+        <span className="secondary">
+          No spending has been recorded in this state.
+        </span>
+      );
+    }
+    return <ErrorText subject="state election information" />;
   }
 
-  const COMMITTEES = isError(committeeData)
-    ? null
-    : (committeeData as Record<string, CommitteeConstant>);
+  const COMMITTEES = (committeeData || {}) as Record<string, CommitteeConstant>;
+  const expenditures = expendituresData as PopulatedStateExpenditures;
   const elections = electionData as ElectionsByState;
   const orderedRaces = Object.keys(expenditures.by_race).sort(sortRaces);
 
@@ -144,37 +166,5 @@ async function RaceCardContents({
         );
       })}
     </>
-  );
-}
-
-function RaceCardContentsSkeleton() {
-  return (
-    <>
-      {range(getRandomInt(2, 4)).map((i) => (
-        <div key={`race-skeleton-${i}`} className={styles.cardSection}>
-          <Skeleton randWidth={[5, 10]} height="1.17em" />
-          {range(getRandomInt(2, 6)).map((j) => (
-            <Skeleton key={`race-skeleton-${i}-${j}`} randWidth={[5, 8]} />
-          ))}
-        </div>
-      ))}
-    </>
-  );
-}
-
-export default async function ByRace({
-  expenditures,
-  stateAbbr,
-}: {
-  expenditures: PopulatedStateExpenditures;
-  stateAbbr: string;
-}) {
-  return (
-    <div className={styles.raceCard}>
-      <h2>By race</h2>
-      <Suspense fallback={<RaceCardContentsSkeleton />}>
-        <RaceCardContents expenditures={expenditures} stateAbbr={stateAbbr} />
-      </Suspense>
-    </div>
   );
 }

@@ -170,7 +170,7 @@ export default function Sidebar() {
                 variants={itemVariants}
                 className={styles.sidebarHeader}
               >
-                Money raised compared to other committees
+                Fundraising compared to other committees
               </motion.li>
               <motion.li
                 variants={itemVariants}
