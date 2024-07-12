@@ -9,6 +9,7 @@ import {
   titlecaseIndividualName,
 } from "@/app/utils/titlecase";
 import { formatCurrency, formatDateFromString } from "@/app/utils/utils";
+import Claimed from "./Claimed";
 import CommitteeDetails from "./CommitteeDetails";
 import styles from "./individualOrCompany.module.css";
 
@@ -84,7 +85,8 @@ export default function Contribution({
       <div className={styles.contributionSubRow}>
         <div>
           <Contributor contribution={contribution} />
-          <ContributionDate contribution={contribution} />
+          <ContributionDate contribution={contribution} />{" "}
+          {"claimed" in contribution && contribution.claimed && <Claimed />}
         </div>
         <ContributionAmount contribution={contribution} isSubRow={true} />
       </div>
@@ -98,6 +100,7 @@ export default function Contribution({
             <MaybeLink href={contributionsGroup.link}>
               {formattedName}
             </MaybeLink>
+            {"claimed" in contribution && contribution.claimed && <Claimed />}
           </span>
           <ContributionAmount contribution={contribution} />
         </div>

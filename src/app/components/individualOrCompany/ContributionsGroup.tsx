@@ -2,6 +2,7 @@ import MaybeLink from "@/app/components/MaybeLink";
 import { HydratedIndividualOrCompanyContributionGroup } from "@/app/types/Contributions";
 import { titlecaseCommittee } from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
+import Claimed from "./Claimed";
 import CommitteeDetails from "./CommitteeDetails";
 import Contribution from "./Contribution";
 import styles from "./individualOrCompany.module.css";
@@ -20,6 +21,11 @@ export default function ContributionsGroup({
       />
     );
   }
+
+  const isClaimed = contributionsGroup.contributions.every(
+    (c) => "claimed" in c && c.claimed,
+  );
+
   return (
     <div className={styles.contributionRow}>
       <div className={styles.contributionSummary}>
@@ -29,6 +35,12 @@ export default function ContributionsGroup({
               ? titlecaseCommittee(contributionsGroup.committee_name, false)
               : contributionsGroup.committee_id}
           </MaybeLink>
+          {isClaimed && (
+            <>
+              {" "}
+              <Claimed />
+            </>
+          )}
         </span>
         <span>{formatCurrency(contributionsGroup.total)}</span>
       </div>
