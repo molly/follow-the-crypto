@@ -1,14 +1,15 @@
 import Skeleton from "@/app/components/skeletons/Skeleton";
+import { customMetadata } from "@/app/utils/metadata";
 import { range } from "@/app/utils/range";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import CompanyList from "./CompanyList";
 
-export const metadata: Metadata = {
-  title: "Companies | Follow the Crypto",
+export const metadata: Metadata = customMetadata({
+  title: "Companies",
   description:
     "List of cryptocurrency-related companies active in election spending.",
-};
+});
 
 function CompanyListSkeleton() {
   return range(10).map((x) => (

@@ -4,6 +4,7 @@ import { MoneyCardSkeleton } from "@/app/components/MoneyCard";
 import { SpendingByPartySkeleton } from "@/app/components/SpendingByParty";
 import COMMITTEES from "@/app/data/committees";
 import sharedStyles from "@/app/shared.module.css";
+import { customMetadata } from "@/app/utils/metadata";
 import { Suspense } from "react";
 import CommitteeDetailsSection, {
   CommitteeDetailsSkeleton,
@@ -25,10 +26,10 @@ export function generateMetadata({
     params.committeeId in COMMITTEES
       ? COMMITTEES[params.committeeId]
       : params.committeeId;
-  return {
-    title: `${committeeName} | Follow the Crypto`,
+  return customMetadata({
+    title: committeeName,
     description: `Election activity by the ${committeeName} PAC`,
-  };
+  });
 }
 
 export default function CommitteePage({

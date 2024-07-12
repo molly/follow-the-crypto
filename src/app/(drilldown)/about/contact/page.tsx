@@ -1,10 +1,11 @@
+import { customMetadata } from "@/app/utils/metadata";
 import { Metadata } from "next";
 import styles from "../page.module.css";
 
-export const metadata: Metadata = {
-  title: "Contact | Follow the Crypto",
+export const metadata: Metadata = customMetadata({
+  title: "Contact",
   description: "Frequently asked questions about Follow the Crypto.",
-};
+});
 
 export default function FAQPage() {
   return (

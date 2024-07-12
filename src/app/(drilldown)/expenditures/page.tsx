@@ -1,11 +1,12 @@
 import AllRecentExpenditures from "@/app/components/home/AllRecentExpenditures";
+import { customMetadata } from "@/app/utils/metadata";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Recent Expenditures | Follow the Crypto",
+export const metadata: Metadata = customMetadata({
+  title: "Recent Expenditures",
   description:
     "Recent expenditures in the 2024 election cycle by cryptocurrency-focused political action committees.",
-};
+});
 
 export default function ExpendituresList() {
   return (

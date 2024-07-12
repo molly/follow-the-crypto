@@ -2,15 +2,12 @@ import type { Metadata } from "next";
 import { Source_Sans_3 } from "next/font/google";
 import Sidebar from "./components/Sidebar";
 import "./globals.css";
+import { BASE_METADATA } from "./utils/metadata";
 
 export const revalidate = 3600;
 const sourceSans = Source_Sans_3({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-  title: "Follow the Crypto",
-  description:
-    "Follow the cryptocurrency industry&rsquo;s influence on 2024 elections in the United States.",
-};
+export const metadata: Metadata = BASE_METADATA;
 
 export default function RootLayout({
   children,

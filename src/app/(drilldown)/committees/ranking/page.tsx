@@ -1,12 +1,13 @@
 import sharedStyles from "@/app/shared.module.css";
+import { customMetadata } from "@/app/utils/metadata";
 import { Metadata } from "next";
 import Link from "next/link";
 
-export const metadata: Metadata = {
-  title: "PAC Rankings | Follow the Crypto",
+export const metadata: Metadata = customMetadata({
+  title: "PAC Rankings",
   description:
     "Rankings of the most highly funded political action committees.",
-};
+});
 
 export default async function RankingListPage() {
   return (

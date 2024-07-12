@@ -1,5 +1,6 @@
 import MapWrapper from "@/app/components/home/MapWrapper";
 import USMapSkeleton from "@/app/components/skeletons/USMapSkeleton";
+import { customMetadata } from "@/app/utils/metadata";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import StateExpenditures, {
@@ -7,11 +8,11 @@ import StateExpenditures, {
 } from "./StateExpenditures";
 import styles from "./page.module.css";
 
-export const metadata: Metadata = {
-  title: "Spending by State | Follow the Crypto",
+export const metadata: Metadata = customMetadata({
+  title: "Spending by State",
   description:
     "States in which cryptocurrency-focused political action committees have been spending to influence 2024 elections.",
-};
+});
 
 export default function Page() {
   return (

@@ -1,14 +1,15 @@
 import Skeleton from "@/app/components/skeletons/Skeleton";
+import { customMetadata } from "@/app/utils/metadata";
 import { range } from "@/app/utils/range";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import IndividualsList from "./IndividualsList";
 
-export const metadata: Metadata = {
-  title: "Individuals | Follow the Crypto",
+export const metadata: Metadata = customMetadata({
+  title: "Individuals",
   description:
     "List of cryptocurrency-related individuals active in election spending.",
-};
+});
 
 function IndividualsListSkeleton() {
   return range(20).map((x) => (

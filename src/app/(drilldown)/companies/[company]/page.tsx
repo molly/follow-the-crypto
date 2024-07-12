@@ -7,6 +7,7 @@ import sharedStyles from "@/app/shared.module.css";
 import { HydratedCompany } from "@/app/types/Companies";
 import { HydratedIndividualOrCompanyContributionGroup } from "@/app/types/Contributions";
 import { isError } from "@/app/utils/errors";
+import { customMetadata } from "@/app/utils/metadata";
 import { titlecase } from "@/app/utils/titlecase";
 import { Metadata } from "next";
 import Link from "next/link";
@@ -18,10 +19,10 @@ export function generateMetadata({
   params: { company: string };
 }): Metadata {
   const companyName = titlecase(params.company.replaceAll("-", " "));
-  return {
-    title: `${companyName} | Follow the Crypto`,
+  return customMetadata({
+    title: companyName,
     description: `Election spending by ${companyName} and related individuals.`,
-  };
+  });
 }
 
 export default async function CompanyPage({

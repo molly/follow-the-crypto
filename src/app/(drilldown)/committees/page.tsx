@@ -1,14 +1,15 @@
 import Skeleton from "@/app/components/skeletons/Skeleton";
+import { customMetadata } from "@/app/utils/metadata";
 import { range } from "@/app/utils/range";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import CommitteeList from "./CommitteeList";
 
-export const metadata: Metadata = {
-  title: "Cryptocurrency-focused PACs | Follow the Crypto",
+export const metadata: Metadata = customMetadata({
+  title: "Cryptocurrency-focused PACs",
   description:
     "Political action committees that focus on cryptocurrency and blockchain advocacy.",
-};
+});
 
 function CommitteeListSkeleton() {
   return range(10).map((x) => (

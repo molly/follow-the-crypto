@@ -1,6 +1,7 @@
 import { MoneyCardSkeleton } from "@/app/components/MoneyCard";
 import { STATES_BY_FULL } from "@/app/data/states";
 import sharedStyles from "@/app/shared.module.css";
+import { customMetadata } from "@/app/utils/metadata";
 import { titlecase } from "@/app/utils/titlecase";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -16,10 +17,10 @@ export function generateMetadata({
   params: { state: string };
 }): Metadata {
   const state = titlecase(params.state.split("-").join(" "));
-  return {
-    title: `${state} | Follow the Crypto`,
+  return customMetadata({
+    title: state,
     description: `Cryptocurrency-focused political action committee spending on 2024 elections in ${state}.`,
-  };
+  });
 }
 
 export default function CommitteePage({

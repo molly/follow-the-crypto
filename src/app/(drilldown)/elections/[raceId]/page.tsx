@@ -1,4 +1,5 @@
 import { STATES_BY_ABBR } from "@/app/data/states";
+import { customMetadata } from "@/app/utils/metadata";
 import { getRaceName } from "@/app/utils/races";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -16,10 +17,10 @@ export function generateMetadata({
 }): Metadata {
   const state = params.raceId.split("-")[0];
   const raceName = `${STATES_BY_ABBR[state]} ${getRaceName(params.raceId)}`;
-  return {
-    title: `${raceName} election | Follow the Crypto`,
+  return customMetadata({
+    title: `${raceName} election`,
     description: `Cryptocurrency industry spending to influence the ${raceName} election.`,
-  };
+  });
 }
 
 export default function RacePage({ params }: { params: { raceId: string } }) {

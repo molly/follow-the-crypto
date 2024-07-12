@@ -13,6 +13,7 @@ import {
   IndividualConstant,
 } from "@/app/types/Individuals";
 import { isError } from "@/app/utils/errors";
+import { customMetadata } from "@/app/utils/metadata";
 import { titlecase, titlecaseCompany } from "@/app/utils/titlecase";
 import { Metadata } from "next";
 import Link from "next/link";
@@ -24,10 +25,10 @@ export function generateMetadata({
   params: { individual: string };
 }): Metadata {
   const individualName = titlecase(params.individual.replaceAll("-", " "));
-  return {
-    title: `${individualName} | Follow the Crypto`,
+  return customMetadata({
+    title: individualName,
     description: `Election spending by ${individualName}.`,
-  };
+  });
 }
 
 function Subhead({
