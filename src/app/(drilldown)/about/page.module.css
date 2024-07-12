@@ -1,11 +1,12 @@
 .title {
-  composes: title from "@/app/shared.module.css";
+  composes: accent-text from "@/app/shared.module.css";
   font-size: 3rem;
   text-align: left;
+  margin: 1rem 0;
 }
 
 .subhead {
-  composes: title from "@/app/shared.module.css";
+  composes: accent-text from "@/app/shared.module.css";
   font-size: 2rem;
   line-height: 2rem;
   margin-top: 2rem;

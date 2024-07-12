@@ -12,6 +12,10 @@ export const metadata: Metadata = customMetadata({
 export default function AboutPage() {
   return (
     <div className="single-column-page">
+      <div>
+        <Link href="/about/faq">FAQ</Link> |{" "}
+        <Link href="/about/contact">Contact</Link>
+      </div>
       <h2 className={styles.title}>About</h2>
       <div className={styles.mainText}>
         <p>
@@ -23,10 +27,10 @@ export default function AboutPage() {
           States.
         </p>
         <p>
-          Crypto companies have raised hundreds of millions of dollars to put
-          towards buying crypto-friendly politicians and ousting those who have
-          spoken up for stricter regulations to protect consumers in an industry
-          that is{" "}
+          Cryptocurrency companies have raised hundreds of millions of dollars
+          to put towards buying crypto-friendly politicians and ousting those
+          who have spoken up for stricter regulations to protect consumers in an
+          industry that is{" "}
           <a href="https://web3isgoinggreat.com/">
             fraught with hacks, scams, and fraud
           </a>
@@ -78,8 +82,8 @@ export default function AboutPage() {
             Web3 is Going Just Great
           </a>
           , where she documents only some of the many disasters in the
-          cryptocurrency and web3 industries. She also writes about crypto and
-          about technology much more broadly in the{" "}
+          cryptocurrency and web3 industries. She writes about crypto and about
+          technology much more broadly in the{" "}
           <i>
             <a href="https://citationneeded.news/">Citation Needed</a>
           </i>{" "}
