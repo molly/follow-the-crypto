@@ -1,0 +1,49 @@
+.title {
+  composes: titleH2 from "@/app/shared.module.css";
+  text-align: left;
+}
+
+.subhead {
+  composes: title from "@/app/shared.module.css";
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 3rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.mainText {
+  font-size: 1.2rem;
+  line-height: 2rem;
+  margin-bottom: 10rem;
+}
+
+.quoteCard {
+  composes: card from "@/app/shared.module.css";
+  margin: 2rem auto;
+  width: 60%;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 2rem;
+}
+
+.quote {
+  font-size: 2rem;
+  line-height: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.quoteAttribution {
+  color: var(--secondary-text);
+  font-size: 1.5rem;
+  text-align: right;
+}
+
+.quoteCardImage {
+  max-width: 15rem;
+}
+
+.footnotes {
+  font-size: 0.9rem;
+}

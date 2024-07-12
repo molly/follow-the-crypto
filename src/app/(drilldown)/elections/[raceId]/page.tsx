@@ -52,7 +52,7 @@ export default function RacePage({ params }: { params: { raceId: string } }) {
               These are mostly tracked by hand, and so some advertisements may
               be missing. Have you seen a cryptocurrency PAC-funded
               advertisement pertaining to this election?{" "}
-              <Link href="/contribute/ad">Send it in!</Link>
+              <Link href="/about/contact">Send it in!</Link>
             </div>
           </div>
         </div>

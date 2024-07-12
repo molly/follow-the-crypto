@@ -196,6 +196,48 @@ export default function Sidebar() {
                   All committees
                 </Link>
               </motion.li>
+              <motion.li
+                variants={itemVariants}
+                className={styles.sidebarHeader}
+              >
+                About this site
+              </motion.li>
+              <motion.li
+                variants={itemVariants}
+                className={styles.sidebarListItem}
+              >
+                <Link
+                  className={styles.sidebarLink}
+                  onClick={() => setCollapsed(true)}
+                  href="/about"
+                >
+                  About
+                </Link>
+              </motion.li>
+              <motion.li
+                variants={itemVariants}
+                className={styles.sidebarListItem}
+              >
+                <Link
+                  className={styles.sidebarLink}
+                  onClick={() => setCollapsed(true)}
+                  href="/about/faq"
+                >
+                  FAQ
+                </Link>
+              </motion.li>
+              <motion.li
+                variants={itemVariants}
+                className={styles.sidebarListItem}
+              >
+                <Link
+                  className={styles.sidebarLink}
+                  onClick={() => setCollapsed(true)}
+                  href="/about/contact"
+                >
+                  Contact
+                </Link>
+              </motion.li>
             </ul>
           </nav>
         )}

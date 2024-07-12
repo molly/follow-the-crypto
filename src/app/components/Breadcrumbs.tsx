@@ -40,19 +40,26 @@ export default function Breadcrumbs() {
     index: number,
     segments: string[],
   ): string => {
-    if (segments[0] === "committees" && index === 1 && segment !== "ranking") {
-      if (!committees || !(segment in committees)) {
+    if (
+      segments[0].toLowerCase() === "committees" &&
+      index === 1 &&
+      segment.toLowerCase() !== "ranking"
+    ) {
+      if (!committees || !(segment.toUpperCase() in committees)) {
         return segment;
       }
-      return committees[segment].name;
-    } else if (segments[0] === "elections" && index === 1) {
-      const state = segment.split("-")[0];
-      return `${STATES_BY_ABBR[state]} ${getRaceName(segment)} election`;
+      return committees[segment.toUpperCase()].name;
+    } else if (segments[0].toLowerCase() === "elections" && index === 1) {
+      const state = segment.split("-")[0].toLowerCase();
+      return `${STATES_BY_ABBR[state]} ${getRaceName(segment.toUpperCase())} election`;
     } else if (
-      (segments[0] === "individuals" || segments[0] === "companies") &&
+      (segments[0].toLowerCase() === "individuals" ||
+        segments[0].toLowerCase() === "companies") &&
       index === 1
     ) {
-      return titlecase(segment.replaceAll("-", " "));
+      return titlecase(segment.toLowerCase().replaceAll("-", " "));
+    } else if (index === 1 && segment.toLowerCase() === "faq") {
+      return "FAQ";
     }
     return titlecase(segment);
   };
