@@ -18,7 +18,7 @@ export default function FAQPage() {
           contributes to political candidates or campaigns, the goal of this
           project is not to draw attention to the many everyday people who
           choose to make small contributions to support their favored causes or
-          candidates. For those who don't appear to be executives or
+          candidates. For those who don&rsquo;t appear to be executives or
           senior-level employees at these companies, I have redacted identifying
           information.
         </p>
@@ -27,12 +27,13 @@ export default function FAQPage() {
           Although the FEC tracks ad spending, they do not maintain a database
           of the advertisements themselves. I am doing my best to gather this
           information as I am able, but databases with this information are
-          either limited or prohibitively expensive. If you're aware of an
-          advertisement that's missing, please{" "}
+          either limited or prohibitively expensive. If you&rsquo;re aware of an
+          advertisement that&rsquo;s missing, please{" "}
           <Link href="/about/contact">send it in</Link> so I can add it!
         </p>
         <h3>
-          Why does it look like there hasn't been much recent spending activity?
+          Why does it look like there hasn&rsquo;t been much recent spending
+          activity?
         </h3>
         <p>
           There are delays between when expenditures are made and when they are
@@ -43,7 +44,7 @@ export default function FAQPage() {
           </a>
           , but some data{" "}
           <a href="https://www.fec.gov/help-candidates-and-committees/dates-and-deadlines/">
-            just isn't filed that frequently
+            just isn&rsquo;t filed that frequently
           </a>
           .
         </p>
@@ -51,7 +52,9 @@ export default function FAQPage() {
           Are these people and companies donating cryptocurrency or regular
           dollars?
         </h3>
-        <p>It's a mix, but anecdotally it appears to be mostly dollars.</p>
+        <p>
+          It&rsquo;s a mix, but anecdotally it appears to be mostly dollars.
+        </p>
         <h3>
           Who cares what the cryptocurrency industry is doing when
           [oil|pharma|banking|some other industry] also spends millions on

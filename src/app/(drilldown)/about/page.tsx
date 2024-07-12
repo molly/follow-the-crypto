@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { Metadata } from "next";
 import Link from "next/link";
 import styles from "./page.module.css";
@@ -14,10 +15,11 @@ export default function AboutPage() {
       <div className={styles.mainText}>
         <p>
           The cryptocurrency industry has been throwing money into politics
-          unlike ever before, and that’s even <em>after</em> political donations
-          from the industry skyrocketed in the 2022 election cycle. Despite the
-          relatively small size of the industry, it has become one of the
-          biggest spenders in the upcoming elections in the United States.
+          unlike ever before, and that&rsquo;s even <em>after</em> political
+          donations from the industry skyrocketed in the 2022 election cycle.
+          Despite the relatively small size of the industry, it has become one
+          of the biggest spenders in the upcoming elections in the United
+          States.
         </p>
         <p>
           Crypto companies have raised hundreds of millions of dollars to put
@@ -44,12 +46,13 @@ export default function AboutPage() {
           />
           <div>
             <div className={styles.quote}>
-              “Money moves the needle. For better or worse, that's how our
+              “Money moves the needle. For better or worse, that&rsquo;s how our
               system works.”
             </div>
             <div className={styles.quoteAttribution}>
-              – <Link href="/individuals/brian-armstrong">Brian Armstrong</Link>
-              , <Link href="/companies/coinbase">Coinbase</Link> CEO
+              &ndash;{" "}
+              <Link href="/individuals/brian-armstrong">Brian Armstrong</Link>,{" "}
+              <Link href="/companies/coinbase">Coinbase</Link> CEO
             </div>
           </div>
         </div>
@@ -61,8 +64,8 @@ export default function AboutPage() {
         <p>
           Most of the money in the war chests amassed by cryptocurrency-focused
           PACs has yet to be deployed, and this project will give you a
-          real-time<sup>1</sup> view into where it's being spent, by whom, and
-          for whom. Join me in <b>following the crypto</b>.
+          real-time<sup>1</sup> view into where it&rsquo;s being spent, by whom,
+          and for whom. Join me in <b>following the crypto</b>.
         </p>
         <h3 className={styles.subhead}>Who I am</h3>
         <p>
@@ -92,14 +95,14 @@ export default function AboutPage() {
           <a href="https://fec.gov/">Federal Election Commission</a>. Some data
           about political advertisements comes from{" "}
           <a href="https://adstransparency.google.com/">
-            Google’s Ad Transparency Center
+            Google&rsquo;s Ad Transparency Center
           </a>
           . Some additional information, such as news coverage and some other
           political ads, is gathered manually.
         </p>
         <p>
           Election data is messy, and despite best efforts to clean up the data,
-          there <i>may be errors</i>. If you think something’s missing or
+          there <i>may be errors</i>. If you think something&rsquo;s missing or
           erroneous, please <Link href="/about/contact">get in touch</Link>!
         </p>
         <h3 className={styles.subhead}>Code</h3>
@@ -117,7 +120,7 @@ export default function AboutPage() {
             “
             <a href="https://www.citationneeded.news/2024-cryptocurrency-election-spending/">
               Cryptocurrency companies have raised over $135 million to
-              influence US elections this cycle, and they’re just getting
+              influence US elections this cycle, and they&rsquo;re just getting
               started
             </a>
             ”, Molly White at <i>Citation Needed</i> (May 30, 2024)
