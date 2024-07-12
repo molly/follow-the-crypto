@@ -130,17 +130,6 @@ export function SpendingByPartySkeleton() {
   );
 }
 
-function PartyLabel({ party, width }: { party: string; width: number }) {
-  console.log(width);
-  if (width > 100) {
-    return party == "U"
-      ? "Unknown / Non-partisan"
-      : getFullPartyName(party, false);
-  } else {
-    return party == "U" ? "Unknown" : getFullPartyName(party, false);
-  }
-}
-
 export default function SpendingByParty({
   partySummary,
   labelId,

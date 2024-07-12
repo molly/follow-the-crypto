@@ -37,7 +37,11 @@ export async function CommitteeRecentExpendituresContent({
   const committeeExpenditures = expendituresData as Expenditure[];
   const committee = committeeData as CommitteeDetails;
   if (!committeeExpenditures.length) {
-    return <div>No recent expenditures found for this committee.</div>;
+    return (
+      <div className={sharedStyles.errorCardContent}>
+        No recent expenditures found for this committee.
+      </div>
+    );
   }
   return <RecentExpendituresContent expenditures={committeeExpenditures} />;
 }

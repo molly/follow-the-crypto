@@ -10,17 +10,16 @@ export default async function CommitteeExpendituresTotal({
 }: {
   committeeId: string;
 }) {
-  const totalData = await fetchCommitteeTotalExpenditures(committeeId);
-  if (isError(totalData)) {
+  let totalData = await fetchCommitteeTotalExpenditures(committeeId);
+  if (isError(totalData) && !is4xx(totalData)) {
     return (
       <div className={sharedStyles.smallCard}>
-        {is4xx(totalData) ? (
-          <span className="secondary">Committee not found.</span>
-        ) : (
-          <ErrorText subject="the total expenditures by this committee" />
-        )}
+        <ErrorText subject="the total expenditures by this committee" />
       </div>
     );
+  }
+  if (isError(totalData)) {
+    totalData = 0;
   }
 
   return (
