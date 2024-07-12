@@ -42,7 +42,7 @@ export default function Sidebar() {
   const sidebarVariants = {
     open: {
       x: 0,
-      transition: { duration: 0.2, ease: "easeInOut", staggerChildren: 0.05 },
+      transition: { duration: 0.2, ease: "easeInOut", staggerChildren: 0.025 },
     },
     closed: { x: "-100%", transition: { duration: 0.2, ease: "easeInOut" } },
   };

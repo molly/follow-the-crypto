@@ -78,3 +78,9 @@
 .skeletonBar {
   fill: var(--chart-skeleton);
 }
+
+.partyLabel {
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-align: center;
+}

@@ -6,7 +6,7 @@ import * as d3 from "d3";
 import { useMemo } from "react";
 import styles from "./individualOrCompany.module.css";
 
-const MARGIN_BOTTOM = 20;
+const MARGIN_BOTTOM = 40;
 const MARGIN_TOP = 15;
 const MARGIN_LEFT = 40;
 
@@ -130,6 +130,17 @@ export function SpendingByPartySkeleton() {
   );
 }
 
+function PartyLabel({ party, width }: { party: string; width: number }) {
+  console.log(width);
+  if (width > 100) {
+    return party == "U"
+      ? "Unknown / Non-partisan"
+      : getFullPartyName(party, false);
+  } else {
+    return party == "U" ? "Unknown" : getFullPartyName(party, false);
+  }
+}
+
 export default function SpendingByParty({
   partySummary,
   labelId,
@@ -218,21 +229,20 @@ export default function SpendingByParty({
                   >
                     {gridLabelFormatter(spending)}
                   </text>
-                  <text
-                    x={(x(party) || 0) + xBandwidth / 2}
+                  <foreignObject
+                    x={x(party) || 0}
                     width={xBandwidth}
-                    height={10}
-                    y={BOUNDS_HEIGHT + 15}
+                    height={40}
+                    y={BOUNDS_HEIGHT}
                     role="presentation"
                     aria-hidden={true}
-                    fontSize={14}
-                    fontWeight="bold"
-                    textAnchor="middle"
                   >
-                    {party == "UNK"
-                      ? "Unknown / Non-partisan"
-                      : getFullPartyName(party[0], false)}
-                  </text>
+                    <div className={styles.partyLabel}>
+                      {party == "UNK"
+                        ? "Non-partisan / unknown"
+                        : getFullPartyName(party[0], false)}
+                    </div>
+                  </foreignObject>
                 </g>
               );
             })}
