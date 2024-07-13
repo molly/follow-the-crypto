@@ -32,7 +32,9 @@ export default function RacePage({ params }: { params: { raceId: string } }) {
       <div className={styles.columns}>
         <div className={styles.headerWrapper}>
           <h1 className="no-margin">{`${STATES_BY_ABBR[stateAbbr]} ${getRaceName(params.raceId)} election`}</h1>
-          <Link href={`/state/${stateAbbr}`}>
+          <Link
+            href={`/states/${STATES_BY_ABBR[stateAbbr].replaceAll(" ", "-").toLowerCase()}`}
+          >
             &raquo; Other elections in {STATES_BY_ABBR[stateAbbr]}
           </Link>
         </div>

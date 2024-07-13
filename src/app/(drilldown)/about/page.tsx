@@ -106,6 +106,12 @@ export default function AboutPage() {
           political ads, is gathered manually.
         </p>
         <p>
+          Despite the name, none of this data is coming from a blockchain. Most
+          election spending by the cryptocurrency industry is in dollars, and
+          both crypto- and dollar-denominated election spending are included in
+          FEC reporting.
+        </p>
+        <p>
           Election data is messy, and despite best efforts to clean up the data,
           there <i>may be errors</i>. If you think something&rsquo;s missing or
           erroneous, please <Link href="/about/contact">get in touch</Link>!

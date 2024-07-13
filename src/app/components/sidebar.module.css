@@ -8,6 +8,7 @@
   padding: 1rem;
   box-shadow: var(--shadow-md);
   z-index: 10;
+  overflow-y: auto;
 }
 
 .collapseButton {

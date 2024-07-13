@@ -49,11 +49,18 @@ function Influenced({
 
   const involvedRaces = (candidate.expenditure_races as string[]).map(
     (raceType: string) => {
-      const r = races.find((r) => r.type === raceType);
+      const r = races.filter((r) => r.type === raceType);
       if (!r) {
         return raceType;
+      } else if (r.length > 1) {
+        const rParty = r.filter((r) => r.party === candidate.party);
+        if (rParty.length === 1) {
+          return getSubraceName(rParty[0] as Race);
+        } else {
+          return raceType;
+        }
       }
-      return getSubraceName(r as Race);
+      return getSubraceName(r[0] as Race);
     },
   );
   const raceStr = humanizeList(involvedRaces);
