@@ -13,7 +13,9 @@ export default function FAQPage() {
     <div className="single-column-page">
       <h2 className={styles.title}>FAQ</h2>
       <div className={styles.mainText}>
-        <h3>Why are some contributions attributed only to “Individual”?</h3>
+        <h3 id="individual">
+          Why are some contributions attributed only to “Individual”?
+        </h3>
         <p>
           Although the FEC publishes detailed information about anyone who
           contributes to political candidates or campaigns, the goal of this
@@ -23,7 +25,7 @@ export default function FAQPage() {
           senior-level employees at these companies, I have redacted identifying
           information.
         </p>
-        <h3>Why are some political advertisements missing?</h3>
+        <h3 id="missing-ads">Why are some political advertisements missing?</h3>
         <p>
           Although the FEC tracks ad spending, they do not maintain a database
           of the advertisements themselves. I am doing my best to gather this
@@ -32,7 +34,7 @@ export default function FAQPage() {
           advertisement that&rsquo;s missing, please{" "}
           <Link href="/about/contact">send it in</Link> so I can add it!
         </p>
-        <h3>
+        <h3 id="recent">
           Why does it look like there hasn&rsquo;t been much recent spending
           activity?
         </h3>
@@ -49,14 +51,21 @@ export default function FAQPage() {
           </a>
           .
         </p>
-        <h3>
+        <h3 id="crypto-or-dollars">
           Are these people and companies donating cryptocurrency or regular
           dollars?
         </h3>
         <p>
           It&rsquo;s a mix, but anecdotally it appears to be mostly dollars.
         </p>
-        <h3>
+        <h3 id="blockchain">Does this project use blockchain data?</h3>
+        <p>
+          No, the monetary data for this project comes from reports to the FEC
+          (which includes donations made both in dollars and in cryptocurrency).
+          This project does not aim to track dark money political spending that
+          is not reported to the FEC.
+        </p>
+        <h3 id="what-about">
           Who cares what the cryptocurrency industry is doing when
           [oil|pharma|banking|some other industry] also spends millions on
           lobbying and politics?
@@ -67,10 +76,16 @@ export default function FAQPage() {
           warrants scrutiny from a much broader audience.
         </p>
         <p>
-          I agree that corporate influence on politics is a much broader issue
-          than just in the cryptocurrency industry. If you would like to see a
-          project like this to track spending from another industry, please make
-          it happen! As always, my{" "}
+          I <i>firmly</i> agree that corporate influence on politics is a much
+          broader issue than just in the cryptocurrency industry. The broader
+          problem is
+          <a href="https://en.wikipedia.org/wiki/Citizens_United_v._FEC">
+            <i>Citizens United</i>
+          </a>{" "}
+          and the ability for corporations and the super wealthy to pour this
+          much money into politics. If you would like to see a project like this
+          to track spending from another industry, please make it happen! As
+          always, my{" "}
           <a href="https://github.com/molly/follow-the-crypto">
             code is all open source
           </a>

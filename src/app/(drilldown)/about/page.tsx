@@ -72,7 +72,9 @@ export default function AboutPage() {
           real-time<sup>1</sup> view into where it&rsquo;s being spent, by whom,
           and for whom. Join me in <b>following the crypto</b>.
         </p>
-        <h3 className={styles.subhead}>Who I am</h3>
+        <h3 className={styles.subhead} id="who">
+          Who I am
+        </h3>
         <p>
           Follow the Crypto is a project by{" "}
           <a href="https://www.mollywhite.net">Molly White</a>, an independent
@@ -94,7 +96,16 @@ export default function AboutPage() {
           <a href="https://www.mollywhite.net/support/">supporting her</a> so
           she can continue to do this kind of independent research and writing.
         </p>
-        <h3 className={styles.subhead}>Data</h3>
+        <p>
+          She has{" "}
+          <a href="https://www.mollywhite.net/crypto-disclosures">
+            disclosures
+          </a>{" "}
+          for her crypto-related work.
+        </p>
+        <h3 className={styles.subhead} id="data">
+          Data
+        </h3>
         <p>
           Most of the data shown on this website comes directly from the{" "}
           <a href="https://fec.gov/">Federal Election Commission</a>. Some data
@@ -116,7 +127,9 @@ export default function AboutPage() {
           there <i>may be errors</i>. If you think something&rsquo;s missing or
           erroneous, please <Link href="/about/contact">get in touch</Link>!
         </p>
-        <h3 className={styles.subhead}>Code</h3>
+        <h3 className={styles.subhead} id="code">
+          Code
+        </h3>
         <p>
           The code for this website is all open source and available on Github:{" "}
           <a href="https://github.com/molly/follow-the-crypto">frontend</a>,{" "}
@@ -125,7 +138,9 @@ export default function AboutPage() {
           </a>
           .
         </p>
-        <h3 className={styles.subhead}>Further reading</h3>
+        <h3 className={styles.subhead} id="further-reading">
+          Further reading
+        </h3>
         <ul>
           <li>
             “
