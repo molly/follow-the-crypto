@@ -121,15 +121,19 @@
 
 .goalAccomplished,
 .checkmark {
-  color: green;
+  fill: green;
+  max-width: 1rem;
 }
 
 .goalFailed,
 .xMark {
-  color: red;
+  fill: red;
+  max-width: 1rem;
 }
 
 .goalMixed {
+  fill: var(--main-text);
+  max-width: 1rem;
   font-weight: bold;
 }
 
