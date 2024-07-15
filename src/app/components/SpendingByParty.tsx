@@ -3,6 +3,7 @@
 import * as d3 from "d3";
 import { useComponentSize } from "../hooks/useComponentSize";
 import { ExpendituresByParty } from "../types/Expenditures";
+import InformationalTooltip from "./InformationalTooltip";
 import styles from "./expenditures.module.css";
 
 type Party = "rep" | "dem";
@@ -10,7 +11,7 @@ type SupportOppose = "support" | "oppose";
 
 type ExpendituresByPartyKey = `${Party}_${SupportOppose}`;
 
-const MARGIN_BOTTOM = 20;
+const MARGIN_BOTTOM = 25;
 const MARGIN_TOP = 15;
 const MARGIN_LEFT = 40;
 
@@ -252,19 +253,19 @@ export default function SpendingByParty({
                     </g>
                   );
                 })}
-                <g
-                  transform={`translate(${fx.bandwidth() / 2},${BOUNDS_HEIGHT})`}
-                  role="presentation"
-                  aria-hidden={true}
-                >
-                  <text
-                    fontSize={14}
-                    fontWeight="bold"
-                    textAnchor="middle"
-                    y={MARGIN_BOTTOM - 5}
+                <g role="presentation" aria-hidden={true}>
+                  <foreignObject
+                    y={BOUNDS_HEIGHT + 2}
+                    height={MARGIN_BOTTOM}
+                    width={fx.bandwidth()}
                   >
-                    {supportOppose === "support" ? "Support" : "Oppose"}
-                  </text>
+                    <div className={styles.supportOpposeLabel}>
+                      {supportOppose === "support" ? "Support" : "Oppose"}
+                      <InformationalTooltip>
+                        <span>{`Spending by cryptocurrency PACs to ${supportOppose} candidates in this party.`}</span>
+                      </InformationalTooltip>
+                    </div>
+                  </foreignObject>
                 </g>
               </g>
             ))}

@@ -29,6 +29,12 @@
   color: var(--color-slate-200);
 }
 
+.supportOpposeLabel {
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-align: center;
+}
+
 .skeletonBar {
   fill: var(--chart-skeleton);
 }
