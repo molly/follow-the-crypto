@@ -203,6 +203,10 @@ table.lined {
   text-align: right;
 }
 
+.small-cell {
+  max-width: 6rem;
+}
+
 .no-wrap {
   white-space: nowrap;
 }

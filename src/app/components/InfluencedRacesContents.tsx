@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import { STATES_BY_ABBR } from "../data/states";
 import Candidate, { CandidateSkeleton } from "./Candidate";
 import ErrorText from "./ErrorText";
+import InformationalTooltip from "./InformationalTooltip";
 import Outcome from "./Outcome";
 import Skeleton from "./skeletons/Skeleton";
 
@@ -42,6 +43,43 @@ function InfluencedRacesContentsSkeleton({ fullPage }: { fullPage: boolean }) {
       />
     </div>
   ));
+}
+
+function GoalOutcome({
+  candidate,
+}: {
+  candidate: ExpenditureCandidateSummary;
+}) {
+  const wasOpposed = candidate.oppose_total > 0;
+  const wasSupported = candidate.support_total > 0;
+  let goalMark = null;
+  if (candidate.defeated || candidate.withdrew) {
+    if (wasOpposed) {
+      if (wasSupported) {
+        return (
+          <span
+            className={sharedStyles.goalMixed}
+            title="Mixed results (this candidate received both support and opposition from crypto PACs)"
+          >
+            &ndash;
+          </span>
+        );
+      } else {
+        return (
+          <span className={sharedStyles.goalAccomplished} title="Goal achieved">
+            ✔
+          </span>
+        );
+      }
+    } else {
+      return (
+        <span className={sharedStyles.goalFailed} title="Goal failed">
+          ✘
+        </span>
+      );
+    }
+  }
+  return null;
 }
 
 function CandidateRow({
@@ -85,6 +123,9 @@ function CandidateRow({
           {candidate.oppose_total
             ? formatCurrency(candidate.oppose_total, true)
             : ""}
+        </td>
+        <td className="small-cell center-cell">
+          <GoalOutcome candidate={candidate} />
         </td>
         <td className="text-cell">
           <Outcome candidate={candidate} races={race.races} withIcon={true} />
@@ -176,16 +217,25 @@ export default function InfluencedRacesContents({
     <table className={styles.influencedTable}>
       <thead className={styles.inheritBorderRadius}>
         <tr className={styles.influencedTableHeader}>
-          <th className={`${styles.inheritBorderRadius} text-cell`}>
-            Candidate
-          </th>
+          <th className="text-cell">Candidate</th>
           <th className="center-cell">State</th>
           <th className="center-cell">Office</th>
           <th className="number-cell">Support</th>
           <th className="number-cell">Oppose</th>
-          <th className={`${styles.inheritBorderRadius} long-text-cell`}>
-            Outcome
+          <th className="small-cell center-cell">
+            Goal{" "}
+            <span className="no-wrap">
+              achieved?
+              <InformationalTooltip>
+                <span>
+                  The PACs&rsquo; goal is considered to have been achieved if a
+                  candidate they supported won their election, or if a candidate
+                  they opposed lost.
+                </span>
+              </InformationalTooltip>
+            </span>
           </th>
+          <th className="long-text-cell">Outcome</th>
         </tr>
       </thead>
       <tbody className={styles.inheritBorderRadius}>{contents}</tbody>

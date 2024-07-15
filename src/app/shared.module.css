@@ -129,6 +129,10 @@
   color: red;
 }
 
+.goalMixed {
+  font-weight: bold;
+}
+
 @media (min-width: 500px) {
   .highlight {
     font-size: clamp(2rem, 5vw, 3rem);

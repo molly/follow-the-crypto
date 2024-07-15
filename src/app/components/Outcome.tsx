@@ -1,4 +1,3 @@
-import sharedStyles from "@/app/shared.module.css";
 import { CandidateSummary, Race } from "@/app/types/Elections";
 import { ExpenditureCandidateSummary } from "@/app/types/Expenditures";
 import { getSubraceName, getUpcomingRaceForCandidate } from "@/app/utils/races";
@@ -21,32 +20,22 @@ export default function Outcome({
         r.type === candidate.defeated_race &&
         r.candidates.some((c) => c.name === candidate.common_name),
     );
-    const goalAccomplished = candidate.oppose_total > 0;
-    let goalMark = null;
-    if (withIcon) {
-      if (goalAccomplished) {
-        goalMark = <span className={sharedStyles.goalAccomplished}>✔</span>;
-      } else {
-        goalMark = <span className={sharedStyles.goalFailed}>✘</span>;
-      }
-    }
     return (
       <>
-        {goalMark}
-        {` ${inSentence ? "was d" : "D"}efeated in the `}
+        {`${inSentence ? " was d" : "D"}efeated in the `}
         {getSubraceName(defeatedRace)}
       </>
     );
   } else if (candidate.withdrew) {
-    return ` ${inSentence ? "w" : "W"}ithdrew from the election`;
+    return `${inSentence ? " w" : "W"}ithdrew from the election`;
   } else {
     const nextRace = getUpcomingRaceForCandidate(races, candidate);
     if (nextRace) {
       if (isUpcomingDate(nextRace.date, { inclusive: true })) {
-        return ` ${inSentence ? "has an u" : "U"}pcoming ${getSubraceName(nextRace)} on ${formatDateFromString(nextRace.date)}`;
+        return `${inSentence ? " has an u" : "U"}pcoming ${getSubraceName(nextRace)} on ${formatDateFromString(nextRace.date)}`;
       } else {
         // Edge case where election date may have passed, but results have not yet become available.
-        return ` ${inSentence ? "is a" : "A"}waiting results from ${getSubraceName(nextRace)} on ${formatDateFromString(nextRace.date)}`;
+        return `${inSentence ? " is a" : "A"}waiting results from ${getSubraceName(nextRace)} on ${formatDateFromString(nextRace.date)}`;
       }
     }
   }
