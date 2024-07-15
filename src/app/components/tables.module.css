@@ -96,6 +96,13 @@
   margin-top: 0.5rem;
 }
 
+.goalIconWrapper {
+  display: inline-flex;
+  width: 0.9em;
+  height: 0.7rem;
+  align-items: center;
+}
+
 @media (max-width: 1000px) {
   .tableCellCollapse1 {
     display: none;

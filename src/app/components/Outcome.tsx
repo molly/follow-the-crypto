@@ -7,12 +7,10 @@ export default function Outcome({
   candidate,
   races,
   inSentence = false,
-  withIcon = false,
 }: {
   candidate: ExpenditureCandidateSummary | CandidateSummary;
   races: Race[];
   inSentence?: boolean;
-  withIcon?: boolean;
 }) {
   if (candidate.defeated) {
     const defeatedRace = races.find(

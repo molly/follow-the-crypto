@@ -137,6 +137,10 @@
   font-weight: bold;
 }
 
+.goalInline {
+  max-height: 100%;
+}
+
 @media (min-width: 500px) {
   .highlight {
     font-size: clamp(2rem, 5vw, 3rem);

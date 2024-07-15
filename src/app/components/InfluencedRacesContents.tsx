@@ -47,18 +47,22 @@ function InfluencedRacesContentsSkeleton({ fullPage }: { fullPage: boolean }) {
 
 function GoalOutcome({
   candidate,
+  explanatoryText = false,
 }: {
   candidate: ExpenditureCandidateSummary;
+  explanatoryText?: boolean;
 }) {
   const wasOpposed = candidate.oppose_total > 0;
   const wasSupported = candidate.support_total > 0;
-  let goalMark = null;
+  let icon = null;
+  let text = null;
+
   if (candidate.defeated || candidate.withdrew) {
     if (wasOpposed) {
       if (wasSupported) {
-        return (
+        icon = (
           <svg
-            className={sharedStyles.goalMixed}
+            className={`${sharedStyles.goalMixed} ${explanatoryText ? sharedStyles.goalInline : ""}`}
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 448 512"
           >
@@ -69,23 +73,26 @@ function GoalOutcome({
             <path d="M32 288c-17.7 0-32 14.3-32 32s14.3 32 32 32l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L32" />
           </svg>
         );
+        text =
+          "Candidate both supported and opposed by crypto PACs lost their race";
       } else {
-        return (
+        icon = (
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 448 512"
-            className={sharedStyles.goalAccomplished}
+            className={`${sharedStyles.goalAccomplished} ${explanatoryText ? sharedStyles.goalInline : ""}`}
             role="image"
           >
             <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
             <title>Goal achieved</title>
           </svg>
         );
+        text = "Candidate opposed by crypto PACs lost their race";
       }
     } else {
-      return (
+      icon = (
         <svg
-          className={sharedStyles.goalFailed}
+          className={`${sharedStyles.goalFailed} ${explanatoryText ? sharedStyles.goalInline : ""}`}
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 384 512"
         >
@@ -93,9 +100,24 @@ function GoalOutcome({
           <title>Goal failed</title>
         </svg>
       );
+      text = "Candidate supported by crypto PACs lost their race";
     }
   }
-  return null;
+
+  if (!icon) {
+    return null;
+  }
+
+  if (explanatoryText) {
+    return (
+      <>
+        <div className={styles.goalIconWrapper}>{icon}</div>
+        {text}
+      </>
+    );
+  } else {
+    return icon;
+  }
 }
 
 function CandidateRow({
@@ -144,11 +166,14 @@ function CandidateRow({
           <GoalOutcome candidate={candidate} />
         </td>
         <td className="text-cell">
-          <Outcome candidate={candidate} races={race.races} withIcon={true} />
+          <Outcome candidate={candidate} races={race.races} />
         </td>
       </tr>
     );
   } else {
+    const goalOutcome = (
+      <GoalOutcome candidate={candidate} explanatoryText={true} />
+    );
     return (
       <div key={candidate.common_name} className={styles.influencedRow}>
         <Candidate candidateSummary={candidate} imageOnly={true} />
@@ -159,7 +184,10 @@ function CandidateRow({
           >{`${STATES_BY_ABBR[candidate.state]} ${raceName}`}</Link>
           .
           <div className={styles.influencedRowOutcome}>
-            <Outcome candidate={candidate} races={race.races} withIcon={true} />
+            <Outcome candidate={candidate} races={race.races} />
+            {goalOutcome && (
+              <div className={styles.goalOutcomeRow}>{goalOutcome}</div>
+            )}
           </div>
         </div>
       </div>

@@ -80,13 +80,7 @@ function Influenced({
           imageOnly={true}
         />
         {candidate.common_name}
-        <Outcome
-          candidate={candidate}
-          races={races}
-          inSentence={true}
-          withIcon={false}
-        />
-        .
+        <Outcome candidate={candidate} races={races} inSentence={true} />.
       </div>
     </>
   );
