@@ -9,11 +9,19 @@ import SpendingByPartyWithOpposition, {
 import sharedStyles from "@/app/shared.module.css";
 import { ExpendituresByParty } from "@/app/types/Expenditures";
 import { isError } from "@/app/utils/errors";
+import { customMetadata } from "@/app/utils/metadata";
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import OppositionSpending, {
   OppositionSpendingSkeleton,
 } from "./OppositionSpending";
 import styles from "./page.module.css";
+
+export const metadata: Metadata = customMetadata({
+  title: "PAC spending by party",
+  description:
+    "Cryptocurrency-focused spending in the 2024 election cycle, broken down by political party.",
+});
 
 async function SpendingByPartyWithOppositionChart() {
   const data = await fetchAllExpenditureTotalsByParty();

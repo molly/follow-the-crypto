@@ -13,7 +13,7 @@ export default async function RankingListPage() {
   return (
     <section className="single-column-page">
       <h1 className="no-margin">
-        Where cryptocurrency-focused PACs fall among all PACs
+        Where cryptocurrency-focused PACs fall among most-funded PACs
       </h1>
       <ul className={sharedStyles.plainList}>
         <li className={sharedStyles.plainListItem}>
