@@ -33,7 +33,7 @@ export function PartySupportSkeleton() {
 
   const maxExpenditure = 2000000;
   const yDomain = [0, maxExpenditure + maxExpenditure * 0.05]; // Add a little breathing room to the chart
-  const x = d3.scaleBand().domain(["DEM", "REP"]).range([0, 340]);
+  const x = d3.scaleBand().domain(["DEM", "REP"]).range([0, 340]).padding(0.1);
   const y = d3.scaleLinear().domain(yDomain).range([260, 0]);
   const xRange = x.range();
   const yRange = y.range();
@@ -139,7 +139,11 @@ export default function PartySupport({
 
   const maxExpenditure = d3.max(Object.values(support)) || 0;
   const yDomain = [0, maxExpenditure + maxExpenditure * 0.05]; // Add a little breathing room to the chart
-  const x = d3.scaleBand().domain(keys).range([0, BOUNDS_WIDTH]);
+  const x = d3
+    .scaleBand()
+    .domain(keys)
+    .range([0, BOUNDS_WIDTH])
+    .paddingInner(0.1);
   const y = d3.scaleLinear().domain(yDomain).range([BOUNDS_HEIGHT, 0]);
   const xRange = x.range();
   const yRange = y.range();
