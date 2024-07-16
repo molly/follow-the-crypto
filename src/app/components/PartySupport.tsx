@@ -144,6 +144,7 @@ export default function PartySupport({
   const xRange = x.range();
   const yRange = y.range();
   const gridLabelFormatter = (d: number) => d3.format("$.2s")(Math.abs(d));
+  const barLabelFormatter = (d: number) => d3.format("$.3s")(Math.abs(d));
 
   return (
     <div className={`${styles.svgWrapper} ${styles.growWrapper}`}>
@@ -196,7 +197,7 @@ export default function PartySupport({
                     width={xBandwidth}
                     height={height}
                     className={party.toLowerCase()}
-                    aria-label={`~${gridLabelFormatter(spending)} in support of ${PARTIES[party]} candidates.`}
+                    aria-label={`~${barLabelFormatter(spending)} in support of ${PARTIES[party]} candidates.`}
                   />
                   <text
                     x={(x(party) || 0) + xBandwidth / 2}
@@ -205,7 +206,7 @@ export default function PartySupport({
                     textAnchor="middle"
                     aria-hidden={true}
                   >
-                    {gridLabelFormatter(spending)}
+                    {barLabelFormatter(spending)}
                   </text>
                   <foreignObject
                     x={x(party) || 0}

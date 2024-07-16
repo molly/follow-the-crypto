@@ -154,7 +154,7 @@ export default function SpendingByParty({
   const y = d3.scaleLinear().domain(yDomain).range([BOUNDS_HEIGHT, 0]);
   const xRange = x.range();
   const yRange = y.range();
-  const gridLabelFormatter = (d: number) => d3.format("$.2s")(Math.abs(d));
+  const gridLabelFormatter = (d: number) => d3.format("$.3s")(Math.abs(d));
 
   return (
     <div className={styles.svgWrapper}>

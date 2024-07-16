@@ -3,7 +3,6 @@
 import * as d3 from "d3";
 import { useComponentSize } from "../hooks/useComponentSize";
 import { ExpendituresByParty } from "../types/Expenditures";
-import InformationalTooltip from "./InformationalTooltip";
 import styles from "./expenditures.module.css";
 
 type Party = "rep" | "dem";
@@ -155,6 +154,7 @@ export default function SpendingByPartyWithOpposition({
   const xRange = fx.range();
   const yRange = y.range();
   const gridLabelFormatter = (d: number) => d3.format("$.2s")(Math.abs(d));
+  const barLabelFormatter = (d: number) => d3.format("$.3s")(Math.abs(d));
 
   const renderLabel = (label: string, width: number) => {
     return (
@@ -222,7 +222,7 @@ export default function SpendingByPartyWithOpposition({
                         width={xBandwidth}
                         height={height}
                         className={party}
-                        aria-label={`~${gridLabelFormatter(spending)} spent to ${supportOppose} ${party === "rep" ? "Republican" : "Democratic"} candidates`}
+                        aria-label={`~${barLabelFormatter(spending)} spent to ${supportOppose} ${party === "rep" ? "Republican" : "Democratic"} candidates`}
                       />
                       <text
                         x={(x(party) || 0) + xBandwidth / 2}
@@ -231,7 +231,7 @@ export default function SpendingByPartyWithOpposition({
                         textAnchor="middle"
                         aria-hidden={true}
                       >
-                        {gridLabelFormatter(spending)}
+                        {barLabelFormatter(spending)}
                       </text>
                       {height > 20 && (
                         <foreignObject
@@ -261,9 +261,6 @@ export default function SpendingByPartyWithOpposition({
                   >
                     <div className={styles.supportOpposeLabel}>
                       {supportOppose === "support" ? "Support" : "Oppose"}
-                      <InformationalTooltip>
-                        <span>{`Spending by cryptocurrency PACs to ${supportOppose} candidates in this party.`}</span>
-                      </InformationalTooltip>
                     </div>
                   </foreignObject>
                 </g>

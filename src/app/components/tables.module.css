@@ -40,7 +40,8 @@
 }
 
 .superPacRow,
-.influencedTableRow {
+.influencedTableRow,
+.oppositionSpendingRow {
   &:nth-child(odd) {
     background: var(--table-background-secondary);
   }

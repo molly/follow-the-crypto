@@ -49,6 +49,7 @@ export default function SpendingByCommittee({
   const yRange = y.range();
   const color = d3.scaleOrdinal(committees, SCALE_BLUES);
   const gridLabelFormatter = (d: number) => d3.format("$.2s")(Math.abs(d));
+  const barLabelFormatter = (d: number) => d3.format("$.3s")(Math.abs(d));
 
   return (
     <div className={styles.svgWrapper}>
@@ -101,7 +102,7 @@ export default function SpendingByCommittee({
                   key={committee}
                   style={{ cursor: "pointer" }}
                   role="link"
-                  aria-label={`~${gridLabelFormatter(spending)} spent by ${committeeName}`}
+                  aria-label={`~${barLabelFormatter(spending)} spent by ${committeeName}`}
                 >
                   <a href={`/committees/${committee}`}>
                     <rect
@@ -119,7 +120,7 @@ export default function SpendingByCommittee({
                       textAnchor="middle"
                       aria-hidden={true}
                     >
-                      {gridLabelFormatter(spending)}
+                      {barLabelFormatter(spending)}
                     </text>
                     {height > 20 && (
                       <foreignObject
