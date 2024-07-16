@@ -1,8 +1,8 @@
-import SpendingByParty from "@/app/components/SpendingByParty";
 import { CommitteeDetails } from "@/app/types/Committee";
 
 import { fetchCommitteeDetails } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
+import SpendingByPartyWithOpposition from "@/app/components/SpendingByPartyWithOpposition";
 import { is4xx, isError } from "@/app/utils/errors";
 
 export default async function CommitteeExpendituresByParty({
@@ -25,7 +25,10 @@ export default async function CommitteeExpendituresByParty({
   const expenditures = committee.by_party;
 
   return expenditures ? (
-    <SpendingByParty expenditures={expenditures} labelId="expenditures-label" />
+    <SpendingByPartyWithOpposition
+      expenditures={expenditures}
+      labelId="expenditures-label"
+    />
   ) : (
     <p>No expenditures found.</p>
   );

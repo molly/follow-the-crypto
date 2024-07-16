@@ -17,9 +17,11 @@ import {
 import { cache } from "react";
 import { Ad, AdGroup } from "../types/Ads";
 import { Company, HydratedCompany } from "../types/Companies";
-import { ElectionsByState } from "../types/Elections";
+import { ElectionsByState, OppositionConstant } from "../types/Elections";
 import {
+  CommitteeTotalExpenditures,
   Expenditure,
+  ExpenditureCandidateSummary,
   ExpenditureId,
   ExpendituresByCandidate,
   ExpendituresByParty,
@@ -90,7 +92,7 @@ export const fetchCommitteeTotalReceipts = cache(
     if (isError(snapshot)) {
       return snapshot as ErrorType;
     } else {
-      return snapshot.receipts;
+      return snapshot.net_receipts;
     }
   },
 );
@@ -118,17 +120,32 @@ export const fetchAllCommitteeExpenditures = cache(
 );
 
 export const fetchCommitteeTotalExpenditures = cache(
-  async (committeeId: string): Promise<number | ErrorType> => {
-    const snapshot = await fetchSnapshot("expenditures", "total");
-    if (isError(snapshot)) {
-      return snapshot as ErrorType;
-    } else {
-      if (committeeId in snapshot.by_committee) {
-        return snapshot.by_committee[committeeId];
-      } else {
-        return { error: true, statusCode: 404 };
-      }
+  async (
+    committeeId: string,
+  ): Promise<CommitteeTotalExpenditures | ErrorType> => {
+    const [expendituresSnapshot, committeeSnapshot] = await Promise.all([
+      fetchSnapshot("expenditures", "total"),
+      fetchSnapshot("committees", committeeId),
+    ]);
+    if (isError(expendituresSnapshot)) {
+      return expendituresSnapshot as ErrorType;
+    } else if (isError(committeeSnapshot)) {
+      return committeeSnapshot as ErrorType;
     }
+    const committee = committeeSnapshot as CommitteeDetails;
+    const result: CommitteeTotalExpenditures = {
+      expenditures: null,
+      disbursements: null,
+    };
+    if (committeeId in expendituresSnapshot.by_committee) {
+      result.expenditures = expendituresSnapshot.by_committee[committeeId];
+    }
+    if ("disbursements_by_committee" in committeeSnapshot) {
+      result.disbursements = Object.values(
+        committee.disbursements_by_committee,
+      ).reduce((acc, disbursementGroup) => acc + disbursementGroup.total, 0);
+    }
+    return result;
   },
 );
 
@@ -332,6 +349,36 @@ export const fetchStateElections = cache(
 export const fetchCandidateExpenditures = cache(
   async (): Promise<ExpendituresByCandidate | ErrorType> =>
     fetchSnapshot("candidates", "bySpending"),
+);
+
+export const fetchCandidatesWithOpposeSpending = cache(
+  async (): Promise<ExpenditureCandidateSummary[] | ErrorType> => {
+    const [data, oppositionData] = await Promise.all([
+      fetchSnapshot("candidates", "bySpending"),
+      fetchConstant("oppositionSpending"),
+    ]);
+    if (isError(data)) {
+      return data as ErrorType;
+    }
+    const candidates = data as ExpendituresByCandidate;
+    const oppositionConstant = (oppositionData || {}) as Record<
+      string,
+      OppositionConstant
+    >;
+    return Object.values(candidates.candidates)
+      .filter((candidate) => candidate.oppose_total > 0)
+      .sort((a, b) => b.oppose_total - a.oppose_total)
+      .map((candidate) => {
+        if (
+          candidate.candidate_id &&
+          candidate.candidate_id in oppositionConstant
+        ) {
+          candidate.opposition_details =
+            oppositionConstant[candidate.candidate_id];
+        }
+        return candidate;
+      });
+  },
 );
 
 // ADS ------------------------------------------------------------------

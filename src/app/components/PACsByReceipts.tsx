@@ -84,29 +84,34 @@ export default function PACsByReceipts({
           <Suspense fallback={<TableContentsSkeleton />}>{children}</Suspense>
         </tbody>
       </table>
-      {!fullPage && (
-        <div className={styles.tableCardContent}>
-          {type === "super" && (
-            <p className="secondary smaller">
+      <div className={styles.tableCardContent}>
+        <div className="secondary smaller">
+          Note that some of the values in this table differ from the rest of the
+          data used elsewhere on this site; see the{" "}
+          <Link href="/about/faq#pacs-data">FAQ</Link>.
+        </div>
+        {!fullPage && type === "super" && (
+          <>
+            <div className="secondary smaller">
               This list includes only PACs that are designated with the FEC as
               independent expenditure only political committees (super PACs),
               and does not include hybrid PACs. To view all political action and
               party committees, including hybrid PACs, see the{" "}
               <Link href="/committees/ranking/all">list of all PACs</Link>.
-            </p>
-          )}
-          <div className={styles.viewMoreLinks}>
-            <div className={styles.viewMoreLink}>
-              <Link href="/committees/ranking/super">
-                &raquo; All super PACs
-              </Link>
             </div>
-            <div className={styles.viewMoreLink}>
-              <Link href="/committees/ranking/all">&raquo; All PACs</Link>
+            <div className={styles.viewMoreLinks}>
+              <div className={styles.viewMoreLink}>
+                <Link href="/committees/ranking/super">
+                  &raquo; All super PACs
+                </Link>
+              </div>
+              <div className={styles.viewMoreLink}>
+                <Link href="/committees/ranking/all">&raquo; All PACs</Link>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          </>
+        )}
+      </div>
     </div>
   );
 }

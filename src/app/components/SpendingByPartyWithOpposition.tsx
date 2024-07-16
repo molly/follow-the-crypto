@@ -129,7 +129,7 @@ export function SpendingByPartySkeleton() {
   );
 }
 
-export default function SpendingByParty({
+export default function SpendingByPartyWithOpposition({
   expenditures,
   labelId,
 }: {

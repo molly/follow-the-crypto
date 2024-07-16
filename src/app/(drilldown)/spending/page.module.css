@@ -1,0 +1,12 @@
+.column {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 800px;
+}
+
+.chartWrapper {
+  max-width: 30rem;
+  width: 100%;
+  margin: 0 auto;
+}

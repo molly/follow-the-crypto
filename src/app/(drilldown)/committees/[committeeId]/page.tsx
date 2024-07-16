@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 import { MoneyCardSkeleton } from "@/app/components/MoneyCard";
-import { SpendingByPartySkeleton } from "@/app/components/SpendingByParty";
+import { SpendingByPartySkeleton } from "@/app/components/SpendingByPartyWithOpposition";
 import COMMITTEES from "@/app/data/committees";
 import sharedStyles from "@/app/shared.module.css";
 import { customMetadata } from "@/app/utils/metadata";

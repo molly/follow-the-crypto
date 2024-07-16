@@ -38,6 +38,11 @@ export type Expenditure = {
 
 export type ExpenditureId = string;
 
+export type CommitteeTotalExpenditures = {
+  expenditures: number | null;
+  disbursements: number | null;
+};
+
 interface ExpenditureGroup {
   expenditures: ExpenditureId[];
   total: number;
@@ -84,6 +89,10 @@ export interface ExpendituresByParty {
   dem_support: number;
   rep_oppose: number;
   rep_support: number;
+  oppose_benefit_dem: number;
+  oppose_benefit_rep: number;
+  oppose_benefit_mix: number;
+  oppose_benefit_unk: number;
 }
 
 export interface ExpenditureTotals {

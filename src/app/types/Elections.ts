@@ -55,6 +55,7 @@ export type CandidateSummary = {
   spent_total?: number;
 
   outside_spending?: OutsideSpending;
+  opposition_details?: OppositionConstant;
 } & Pick<Candidate, "candidate_id" | "incumbent_challenge" | "party">;
 
 export interface Race {
@@ -72,4 +73,9 @@ export interface ElectionGroup {
 
 export interface ElectionsByState {
   [raceId: string]: ElectionGroup;
+}
+
+export interface OppositionConstant {
+  benefitsCandidate?: string;
+  benefitsParty?: string;
 }

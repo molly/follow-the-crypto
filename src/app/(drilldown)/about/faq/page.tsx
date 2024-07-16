@@ -34,6 +34,30 @@ export default function FAQPage() {
           advertisement that&rsquo;s missing, please{" "}
           <Link href="/about/contact">send it in</Link> so I can add it!
         </p>
+        <h3 id="pacs-data">
+          Why do some amounts in the lists of PACs differ from the amounts shown
+          on committee pages?
+        </h3>
+        <p>
+          There are some errors in the FEC data, generally where contributions
+          have been double-reported. Because I am only calculating committee
+          contributions for the cryptocurrency-related PACs, I am showing the
+          original FEC data table here, as I am not reasonably able to correct
+          for these errors across all PACs unrelated to the project.
+        </p>
+        <h3 id="discrepancies">Why do some numbers not seem to add up?</h3>
+        <p>
+          You might notice that there are some discrepancies between numbers —
+          for example, committees that appear to have spent more than
+          they&rsquo;ve raised, or cash on hand that doesn&rsquo;t equal
+          receipts - disbursements. This is largely due to the fact that
+          different data is subject to different reporting requirements and
+          timeframes. For example, the FEC requires that committees report
+          independent expenditures within 24 or 48 hours of the expenditure, but
+          receipts are reported monthly or quarterly. This site aims to show the
+          most up-to-date data as possible, at the expense of occasionally
+          unusual numbers.
+        </p>
         <h3 id="recent">
           Why does it look like there hasn&rsquo;t been much recent spending
           activity?

@@ -21,17 +21,22 @@ export default function MoneyCard({
   amount,
   topText,
   bottomText,
+  tooltip,
   className,
 }: {
   amount: string | JSX.Element;
   topText: string | JSX.Element;
   bottomText?: string | JSX.Element;
+  tooltip?: JSX.Element;
   className?: string;
 }) {
   return (
     <div className={`${sharedStyles.smallCard} ${className || ""}`}>
       {topText} <div className={sharedStyles.highlight}>{amount}</div>{" "}
-      {bottomText}
+      <div>
+        {bottomText}
+        {tooltip}
+      </div>
     </div>
   );
 }
