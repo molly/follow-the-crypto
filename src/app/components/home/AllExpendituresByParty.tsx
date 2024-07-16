@@ -5,8 +5,8 @@ import { isError } from "@/app/utils/errors";
 import Link from "next/link";
 import { Suspense } from "react";
 import ErrorText from "../ErrorText";
-import PartySupport from "../PartySupport";
 import ExpendituresSkeleton from "../skeletons/ExpendituresSkeleton";
+import SpendingByPartyWithOpposition from "../SpendingByPartyWithOpposition";
 
 async function AllExpendituresByPartyContent({ labelId }: { labelId: string }) {
   const data = await fetchAllExpenditureTotalsByParty();
@@ -14,7 +14,7 @@ async function AllExpendituresByPartyContent({ labelId }: { labelId: string }) {
     return <ErrorText subject="expenditures by party" />;
   }
   return (
-    <PartySupport
+    <SpendingByPartyWithOpposition
       expenditures={data as ExpendituresByParty}
       labelId={labelId}
     />
@@ -30,7 +30,7 @@ export default function AllExpendituresByParty() {
       <Suspense fallback={<ExpendituresSkeleton />}>
         <AllExpendituresByPartyContent labelId="expenditures-by-party-label" />
       </Suspense>
-      <Link href="/spending">&raquo; More detailed spending by party</Link>
+      <Link href="/spending">&raquo; More details</Link>
     </section>
   );
 }

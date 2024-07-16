@@ -61,6 +61,7 @@
   --main-text: var(--color-slate-950);
   --text-stroke: var(--color-slate-950);
   --secondary-text: var(--color-slate-500);
+  --tertiary-text: var(--color-slate-400);
   --link-text: var(--accent);
   --link-text-hover: #0a338a;
   --on-dark-text: var(--color-slate-200);

@@ -11,6 +11,7 @@ import { ExpendituresByParty } from "@/app/types/Expenditures";
 import { isError } from "@/app/utils/errors";
 import { customMetadata } from "@/app/utils/metadata";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Suspense } from "react";
 import OppositionSpending, {
   OppositionSpendingSkeleton,
@@ -72,6 +73,19 @@ export default function SpendingPage() {
           may be supporting a different candidate from the same party — or they
           may intend to support a candidate from the opposing party in a later
           election.
+        </p>
+        <p>
+          In some races where PACs have spent heavily to oppose candidates but
+          have not supported any candidates, such as in{" "}
+          <Link href="/elections/CA-S">California&rsquo;s Senate primary</Link>{" "}
+          and in{" "}
+          <Link href="/elections/NY-H-16">
+            New York&rsquo;s District 16 Democratic primary
+          </Link>
+          , these PACs seem more focused on ousting candidates they view as
+          anti-crypto, rather than supporting any specific candidate. The
+          incidental beneficiaries in these cases are marked in lighter italic
+          text in the table below.
         </p>
         <p>
           Based on committee support spending, individual contributions to other

@@ -14,3 +14,8 @@
 .oppositionSpendingTable {
   margin-top: 2rem;
 }
+
+.incidental {
+  color: var(--tertiary-text);
+  font-style: italic;
+}

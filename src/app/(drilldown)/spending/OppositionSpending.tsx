@@ -3,6 +3,7 @@ import ErrorText from "@/app/components/ErrorText";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import tableStyles from "@/app/components/tables.module.css";
 import { STATES_BY_ABBR } from "@/app/data/states";
+import { OppositionConstant } from "@/app/types/Elections";
 import { ExpenditureCandidateSummary } from "@/app/types/Expenditures";
 import { isError } from "@/app/utils/errors";
 import { getFullPartyName } from "@/app/utils/party";
@@ -12,13 +13,40 @@ import { formatCurrency } from "@/app/utils/utils";
 import Link from "next/link";
 import styles from "./page.module.css";
 
-function Party({ party }: { party?: string }) {
-  if (!party) {
+function Beneficiary({
+  opposition_details,
+}: {
+  opposition_details?: OppositionConstant;
+}) {
+  const isIncidental =
+    opposition_details && opposition_details.supportedBeneficiary === false;
+  if (opposition_details && opposition_details.benefitsCandidate) {
+    return (
+      <span className={isIncidental ? styles.incidental : undefined}>
+        {opposition_details.benefitsCandidate}
+      </span>
+    );
+  }
+  return <span className="secondary">Pending</span>;
+}
+
+function Party({
+  opposition_details,
+}: {
+  opposition_details?: OppositionConstant;
+}) {
+  const isIncidental =
+    opposition_details && opposition_details.supportedBeneficiary === false;
+  if (!opposition_details || !opposition_details.benefitsParty) {
     return <span className="secondary">Pending</span>;
-  } else if (party === "MIX") {
+  } else if (opposition_details.benefitsParty === "MIX") {
     return "Multiple parties";
   }
-  return getFullPartyName(party[0], false);
+  return (
+    <span className={isIncidental ? styles.incidental : undefined}>
+      {getFullPartyName(opposition_details.benefitsParty[0], false)}
+    </span>
+  );
 }
 
 function Table({ children }: { children: React.ReactNode }) {
@@ -94,14 +122,10 @@ export default async function OppositionSpending() {
               </Link>
             </td>
             <td className="text-cell">
-              {candidate.opposition_details ? (
-                candidate.opposition_details.benefitsCandidate
-              ) : (
-                <span className="secondary">Pending</span>
-              )}
+              <Beneficiary opposition_details={candidate.opposition_details} />
             </td>
             <td className="text-cell">
-              <Party party={candidate.opposition_details?.benefitsParty} />
+              <Party opposition_details={candidate.opposition_details} />
             </td>
           </tr>
         );
