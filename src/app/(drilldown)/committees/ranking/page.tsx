@@ -12,7 +12,9 @@ export const metadata: Metadata = customMetadata({
 export default async function RankingListPage() {
   return (
     <section className="single-column-page">
-      <h1 className="no-margin">Most highly funded PACs</h1>
+      <h1 className="no-margin">
+        Where cryptocurrency-focused PACs fall among all PACs
+      </h1>
       <ul className={sharedStyles.plainList}>
         <li className={sharedStyles.plainListItem}>
           <Link href="/committees/ranking/super">Super PACs</Link>

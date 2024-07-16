@@ -47,7 +47,7 @@ export default function PACsByReceipts({
           election cycle.
         </p>
         <h2 className={styles.superPacHeader}>
-          {`Most highly funded ${type === "super" ? "super " : ""}PACs`}
+          {`Where crypto-focused PACs fall among the most highly funded ${type === "super" ? "super " : ""}PACs`}
         </h2>
         {fullPage && type === "super" && (
           <p className="secondary smaller">
