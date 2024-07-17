@@ -78,5 +78,5 @@ export interface ElectionsByState {
 export interface OppositionConstant {
   benefitsCandidate?: string;
   benefitsParty?: string;
-  supportedBeneficiar?: boolean;
+  supportedBeneficiary?: boolean;
 }
