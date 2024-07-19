@@ -27,6 +27,7 @@ export default function CandidateResult({
   } else if (!isRaceUpcoming) {
     candidateNameClassName = styles.wonCandidateName;
   }
+  console.log(supportTotal, opposeTotal);
   return (
     <tr className={rowClass}>
       <td className={styles.candidateCell}>

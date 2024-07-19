@@ -93,10 +93,13 @@ export default function SpendingByCommittee({
             {committees.map((committee) => {
               const spending = expenditures[committee];
               const height = y(0) - y(spending);
-              const committeeName =
+              let committeeName =
                 committee in committeeConstants
                   ? committeeConstants[committee].name
                   : committee;
+              if (committeeName === "Commonwealth Unity Fund") {
+                committeeName = "Common&shy;wealth Unity Fund";
+              }
               return (
                 <g
                   key={committee}
@@ -122,22 +125,32 @@ export default function SpendingByCommittee({
                     >
                       {barLabelFormatter(spending)}
                     </text>
-                    {height > 20 && (
-                      <foreignObject
-                        x={x(committee) || 0}
-                        width={x.bandwidth()}
-                        height={height - 5}
-                        y={y(spending) + 5}
-                        aria-hidden={true}
+                    <foreignObject
+                      x={x(committee) || 0}
+                      width={x.bandwidth()}
+                      height={height > 20 ? height - 5 : 70}
+                      y={height > 20 ? y(spending) + 5 : y(spending) - 90}
+                      aria-hidden={true}
+                    >
+                      <div
+                        className={
+                          height > 20
+                            ? styles.expendituresBarLabel
+                            : styles.expendituresBarLabelOffBar
+                        }
+                        style={{
+                          color:
+                            height > 20
+                              ? getLabelColor(color(committee))
+                              : undefined,
+                        }}
                       >
-                        <div
-                          className={styles.expendituresBarLabel}
-                          style={{ color: getLabelColor(color(committee)) }}
-                        >
-                          {committeeName}
-                        </div>
-                      </foreignObject>
-                    )}
+                        <span
+                          className={styles.expendituresBarLabelSpan}
+                          dangerouslySetInnerHTML={{ __html: committeeName }}
+                        />
+                      </div>
+                    </foreignObject>
                   </a>
                 </g>
               );
