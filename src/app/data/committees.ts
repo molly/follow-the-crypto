@@ -13,6 +13,7 @@ const COMMITTEES: Record<string, string> = {
   C00879452: "Galaxy Digital PAC",
   C00880518: "Bitcoin Voter PAC",
   C00881250: "Make Bitcoin Great Again",
+  C00875856: "Commonwealth Unity Fund",
 };
 
 export default COMMITTEES;
