@@ -113,30 +113,6 @@ export default function Sidebar() {
                 <Link
                   className={styles.sidebarLink}
                   onClick={() => setCollapsed(true)}
-                  href="/companies"
-                >
-                  By companies
-                </Link>
-              </motion.li>
-              <motion.li
-                variants={itemVariants}
-                className={styles.sidebarListItem}
-              >
-                <Link
-                  className={styles.sidebarLink}
-                  onClick={() => setCollapsed(true)}
-                  href="/individuals"
-                >
-                  By individuals
-                </Link>
-              </motion.li>
-              <motion.li
-                variants={itemVariants}
-                className={styles.sidebarListItem}
-              >
-                <Link
-                  className={styles.sidebarLink}
-                  onClick={() => setCollapsed(true)}
                   href="/expenditures"
                 >
                   Most recent expenditures
