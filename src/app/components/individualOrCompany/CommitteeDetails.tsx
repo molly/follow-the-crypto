@@ -1,20 +1,18 @@
 import MaybeLink from "@/app/components/MaybeLink";
 import { STATES_BY_ABBR } from "@/app/data/states";
-import { HydratedIndividualOrCompanyContributionGroup } from "@/app/types/Contributions";
+import { RecipientDetails } from "@/app/types/Contributions";
 import { getFullPartyName } from "@/app/utils/party";
 import { getRaceName } from "@/app/utils/races";
 import { titlecaseLastFirst } from "@/app/utils/titlecase";
 import styles from "./individualOrCompany.module.css";
 
-function isSingleCandidateCommittee(
-  contributionsGroup: HydratedIndividualOrCompanyContributionGroup,
-) {
-  if (contributionsGroup.candidate_ids) {
-    if (contributionsGroup.candidate_ids.length === 1) {
+function isSingleCandidateCommittee(recipient: RecipientDetails) {
+  if (recipient?.candidate_ids) {
+    if (recipient.candidate_ids.length === 1) {
       return true;
     }
-    const candidates = contributionsGroup.candidate_ids.map(
-      (id) => contributionsGroup.candidate_details[id],
+    const candidates = recipient.candidate_ids.map(
+      (id) => recipient.candidate_details[id],
     );
     if (new Set(candidates.map((c) => c.name.split(", ")[0])).size === 1) {
       return true;
@@ -23,15 +21,13 @@ function isSingleCandidateCommittee(
   return false;
 }
 
-function isSingleSponsorCandidateCommittee(
-  contributionsGroup: HydratedIndividualOrCompanyContributionGroup,
-) {
-  if (contributionsGroup.sponsor_candidate_ids) {
-    if (contributionsGroup.sponsor_candidate_ids.length === 1) {
+function isSingleSponsorCandidateCommittee(recipient: RecipientDetails) {
+  if (recipient?.sponsor_candidate_ids) {
+    if (recipient.sponsor_candidate_ids.length === 1) {
       return true;
     }
-    const candidates = contributionsGroup.sponsor_candidate_ids.map(
-      (id) => contributionsGroup.candidate_details[id],
+    const candidates = recipient.sponsor_candidate_ids.map(
+      (id) => recipient.candidate_details[id],
     );
     if (new Set(candidates.map((c) => c.name.split(", ")[0])).size === 1) {
       return true;
@@ -51,24 +47,21 @@ function getDesignation(designation_full: string | undefined) {
 }
 
 function CandidateCommitteeDetails({
-  contributionsGroup,
+  recipient,
   details,
 }: {
-  contributionsGroup: HydratedIndividualOrCompanyContributionGroup;
+  recipient: RecipientDetails;
   details: any;
 }) {
   return (
     <div className={styles.committeeDetails}>
       <span className={styles.committeeDetail}>
-        {titlecaseLastFirst(details.name)}
-        {getDesignation(contributionsGroup.designation_full)}
+        {details.name ? titlecaseLastFirst(details.name) : null}
+        {getDesignation(recipient.designation_full)}
       </span>
-      {(contributionsGroup.party || details.party) && (
+      {(recipient.party || details.party) && (
         <span className={styles.committeeDetail}>
-          {getFullPartyName(
-            (contributionsGroup.party || details.party)[0],
-            false,
-          )}
+          {getFullPartyName((recipient.party || details.party)[0], false)}
         </span>
       )}
       {details.state && details.state in STATES_BY_ABBR && (
@@ -90,55 +83,42 @@ function CandidateCommitteeDetails({
 }
 
 export default function CommitteeDetails({
-  contributionsGroup,
+  recipient,
 }: {
-  contributionsGroup: HydratedIndividualOrCompanyContributionGroup;
+  recipient?: RecipientDetails;
 }) {
-  if (
-    contributionsGroup.committee_type_full &&
-    !contributionsGroup.committee_type_full.startsWith("Party")
-  ) {
-    if (isSingleCandidateCommittee(contributionsGroup)) {
-      const candidateId = (contributionsGroup.candidate_ids as string[])[0];
-      const details = contributionsGroup.candidate_details[candidateId];
-      return (
-        <CandidateCommitteeDetails
-          contributionsGroup={contributionsGroup}
-          details={details}
-        />
-      );
-    } else if (isSingleSponsorCandidateCommittee(contributionsGroup)) {
-      const candidateId = (
-        contributionsGroup.sponsor_candidate_ids as string[]
-      )[0];
-      const details = contributionsGroup.candidate_details[candidateId];
-      return (
-        <CandidateCommitteeDetails
-          contributionsGroup={contributionsGroup}
-          details={details}
-        />
-      );
-    }
+  if (!recipient) {
+    return null;
   }
-  if (contributionsGroup.description) {
+  if (isSingleCandidateCommittee(recipient)) {
+    const candidateId = (recipient.candidate_ids as string[])[0];
+    const details = recipient.candidate_details?.[candidateId];
+    return (
+      <CandidateCommitteeDetails recipient={recipient} details={details} />
+    );
+  } else if (isSingleSponsorCandidateCommittee(recipient)) {
+    const candidateId = (recipient.sponsor_candidate_ids as string[])[0];
+    const details = recipient.candidate_details?.[candidateId];
+    return (
+      <CandidateCommitteeDetails recipient={recipient} details={details} />
+    );
+  } else if (recipient.description) {
     return (
       <div className={styles.committeeDetails}>
-        <span className={styles.committeeDetail}>
-          {contributionsGroup.description}
-        </span>
-        {contributionsGroup.party && (
+        <span className={styles.committeeDetail}>{recipient.description}</span>
+        {recipient.party && (
           <span className={styles.committeeDetail}>
-            {getFullPartyName(contributionsGroup.party[0], false)}
+            {getFullPartyName(recipient.party[0], false)}
           </span>
         )}
-        {contributionsGroup.designation_full &&
-          contributionsGroup.designation_full !== "Unauthorized" && (
+        {recipient.designation_full &&
+          recipient.designation_full !== "Unauthorized" && (
             <span className={styles.committeeDetail}>
-              {contributionsGroup.designation_full}
+              {recipient.designation_full}
             </span>
           )}
       </div>
     );
   }
-  return null;
+  return <div style={{ color: "red" }}>{recipient.committee_id}</div>;
 }
