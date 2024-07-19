@@ -63,12 +63,14 @@ function Influenced({
       return getSubraceName(r[0] as Race);
     },
   );
-  const raceStr = humanizeList(involvedRaces);
+  const raceList = humanizeList(involvedRaces);
   return (
     <>
       <div>
         {committees}
-        {` spent ${amounts} ${candidate.common_name} in the ${raceStr}.`}
+        {` spent ${amounts} ${candidate.common_name} in the `}
+        {raceList}
+        {"."}
       </div>
       {candidate.withdrew && (
         <div>{`${lastName} later withdrew from the race.`}</div>
@@ -129,11 +131,7 @@ export default async function RaceCard({ stateAbbr }: { stateAbbr: string }) {
   return (
     <>
       {orderedRaces.map(async (raceId) => {
-        const race = expenditures.by_race[raceId];
         const shortId = raceId.split("-").slice(1).join("-");
-        const involvedCommittees = new Set(
-          race.expenditures.map((exp) => exp.committee_id),
-        );
         const influenced = Object.values(elections[shortId].candidates).filter(
           (c: CandidateSummary) => c.support_total > 0 || c.oppose_total > 0,
         );

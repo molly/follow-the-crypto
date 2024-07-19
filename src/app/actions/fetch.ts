@@ -17,7 +17,11 @@ import {
 import { cache } from "react";
 import { Ad, AdGroup } from "../types/Ads";
 import { Company } from "../types/Companies";
-import { ElectionsByState, OppositionConstant } from "../types/Elections";
+import {
+  ElectionGroup,
+  ElectionsByState,
+  OppositionConstant,
+} from "../types/Elections";
 import {
   CommitteeTotalExpenditures,
   Expenditure,
@@ -337,6 +341,23 @@ export const fetchAllStateElections = cache(
 export const fetchStateElections = cache(
   async (stateAbbr: string): Promise<ElectionsByState | ErrorType> =>
     fetchSnapshot("raceDetails", stateAbbr),
+);
+
+export const fetchElection = cache(
+  async (raceId: string): Promise<ElectionGroup | ErrorType> => {
+    const [state, ...raceParts] = raceId.split("-");
+    const shortRaceId = raceParts.join("-");
+    const stateElectionsData = await fetchStateElections(state);
+    if (isError(stateElectionsData)) {
+      return stateElectionsData as ErrorType;
+    }
+    const stateElections = stateElectionsData as ElectionsByState;
+    if (!(shortRaceId in stateElections)) {
+      return { error: true, statusCode: 404 };
+    } else {
+      return stateElections[shortRaceId];
+    }
+  },
 );
 
 // CANDIDATES -----------------------------------------------------------

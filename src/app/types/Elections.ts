@@ -66,21 +66,35 @@ export interface Race {
   canceled?: boolean;
 }
 
-export interface RaceSpending {
-  [committeeId: string]: {
-    [raceId: string]: {
-      [candidateId: string]: {
-        support: number;
-        oppose: number;
-      };
+type SubraceSpending = {
+  candidates: {
+    [candidate: string]: {
+      support: number;
+      oppose: number;
     };
   };
-}
+  total: number;
+};
+
+export type RaceSpending = {
+  subraces: {
+    [subrace: string]: {
+      candidates: {
+        [candidate: string]: {
+          support: number;
+          oppose: number;
+        };
+      };
+      total: number;
+    };
+  };
+  total: number;
+};
 
 export interface ElectionGroup {
   races: Race[];
   candidates: Record<string, CandidateSummary>;
-  spending: RaceSpending;
+  spending: Record<string, RaceSpending>;
 }
 
 export interface ElectionsByState {

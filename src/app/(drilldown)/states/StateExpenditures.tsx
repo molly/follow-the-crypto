@@ -8,14 +8,15 @@ import { getRaceName } from "@/app/utils/races";
 import { range } from "@/app/utils/range";
 import { formatCurrency } from "@/app/utils/utils";
 import Link from "next/link";
+import { Fragment } from "react";
 import styles from "./page.module.css";
 
 export function StateExpendituresSkeleton() {
   return (
     <tbody>
       {range(5).map((i) => (
-        <>
-          <tr key={`state-skeleton-${i}`}>
+        <Fragment key={`state-skeleton-${i}`}>
+          <tr>
             <td colSpan={2}>
               <Skeleton width="8rem" onCard={true} />
             </td>
@@ -38,7 +39,7 @@ export function StateExpendituresSkeleton() {
               </td>
             </tr>
           ))}
-        </>
+        </Fragment>
       ))}
     </tbody>
   );

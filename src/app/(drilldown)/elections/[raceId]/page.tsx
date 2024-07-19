@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import Ads from "./Ads";
+import CommitteeSpending from "./CommitteeSpending";
 import Elections, { ElectionsSkeleton } from "./Elections";
 import { SpendingSkeleton } from "./Spending";
 import SpendingCard from "./SpendingCard";
@@ -53,6 +54,9 @@ export default function RacePage({ params }: { params: { raceId: string } }) {
           </div>
           <div className={styles.committeeCard}>
             <h2>Committees</h2>
+            <Suspense fallback={<div>Loading...</div>}>
+              <CommitteeSpending raceId={params.raceId} />
+            </Suspense>
           </div>
           <div className={styles.adsCard}>
             <h2 className="no-margin">Ads</h2>

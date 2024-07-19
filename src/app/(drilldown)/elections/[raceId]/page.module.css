@@ -196,6 +196,20 @@
   color: var(--main-text);
 }
 
+/* Committees */
+.committeeCard {
+  composes: card from "@/app/shared.module.css";
+}
+
+.committeeSpendingList {
+  margin: 0.5rem 0 0 0;
+  padding: 0 0 0 2rem;
+}
+
+.committeeSpendingListItem {
+  padding: 0.25rem 0;
+}
+
 /* Ads */
 .adsCard {
   composes: card from "@/app/shared.module.css";
