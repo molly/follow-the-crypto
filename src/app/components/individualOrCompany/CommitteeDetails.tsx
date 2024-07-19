@@ -90,25 +90,19 @@ export default function CommitteeDetails({
   if (!recipient) {
     return null;
   }
-  if (
-    recipient?.committee_type_full &&
-    recipient.committee_type_full.startsWith("Party")
-  ) {
-    if (isSingleCandidateCommittee(recipient)) {
-      const candidateId = (recipient.candidate_ids as string[])[0];
-      const details = recipient.candidate_details?.[candidateId];
-      return (
-        <CandidateCommitteeDetails recipient={recipient} details={details} />
-      );
-    } else if (isSingleSponsorCandidateCommittee(recipient)) {
-      const candidateId = (recipient.sponsor_candidate_ids as string[])[0];
-      const details = recipient.candidate_details?.[candidateId];
-      return (
-        <CandidateCommitteeDetails recipient={recipient} details={details} />
-      );
-    }
-  }
-  if (recipient.description) {
+  if (isSingleCandidateCommittee(recipient)) {
+    const candidateId = (recipient.candidate_ids as string[])[0];
+    const details = recipient.candidate_details?.[candidateId];
+    return (
+      <CandidateCommitteeDetails recipient={recipient} details={details} />
+    );
+  } else if (isSingleSponsorCandidateCommittee(recipient)) {
+    const candidateId = (recipient.sponsor_candidate_ids as string[])[0];
+    const details = recipient.candidate_details?.[candidateId];
+    return (
+      <CandidateCommitteeDetails recipient={recipient} details={details} />
+    );
+  } else if (recipient.description) {
     return (
       <div className={styles.committeeDetails}>
         <span className={styles.committeeDetail}>{recipient.description}</span>
@@ -126,7 +120,5 @@ export default function CommitteeDetails({
       </div>
     );
   }
-  return (
-    <div className={styles.committeeDetails}>{recipient.committee_id}</div>
-  );
+  return <div style={{ color: "red" }}>{recipient.committee_id}</div>;
 }

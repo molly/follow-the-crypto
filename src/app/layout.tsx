@@ -4,7 +4,7 @@ import Sidebar from "./components/Sidebar";
 import "./globals.css";
 import { BASE_METADATA } from "./utils/metadata";
 
-export const revalidate = 3600;
+export const revalidate = 0;
 const sourceSans = Source_Sans_3({ subsets: ["latin"] });
 
 export const metadata: Metadata = BASE_METADATA;
