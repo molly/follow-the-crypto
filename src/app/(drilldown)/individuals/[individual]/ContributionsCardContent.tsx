@@ -18,11 +18,18 @@ function ByDate({
   individual: IndividualContributions;
   recipients: Record<string, RecipientDetails>;
 }) {
+  if (!individual.contributions_by_date) {
+    return null;
+  }
   return individual.contributions_by_date.map((contribution, ind: number) => (
     <Contribution
       contribution={contribution}
       key={`contribution-${ind}`}
-      recipient={recipients[contribution.committee_id]}
+      recipient={
+        contribution.committee_id && contribution.committee_id in recipients
+          ? recipients[contribution.committee_id]
+          : undefined
+      }
     />
   ));
 }

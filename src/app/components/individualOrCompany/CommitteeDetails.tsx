@@ -120,5 +120,4 @@ export default function CommitteeDetails({
       </div>
     );
   }
-  return <div style={{ color: "red" }}>{recipient.committee_id}</div>;
 }
