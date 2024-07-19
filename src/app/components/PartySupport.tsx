@@ -133,7 +133,7 @@ export default function PartySupport({
     keys.push("mix");
   }
   if (expenditures.oppose_benefit_unk) {
-    support.unk = expenditures.oppose_benefit_mix;
+    support.unk = expenditures.oppose_benefit_unk;
     keys.push("unk");
   }
 
