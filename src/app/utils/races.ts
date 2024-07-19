@@ -1,4 +1,4 @@
-import { CandidateSummary, Race } from "@/app/types/Elections";
+import { CandidateSummary, Race, RaceType } from "@/app/types/Elections";
 import { getFullPartyName } from "@/app/utils/party";
 import { SINGLE_MEMBER_STATES } from "../data/states";
 import { ExpenditureCandidateSummary } from "../types/Expenditures";
@@ -43,8 +43,14 @@ export const getRaceName = (raceId: string) => {
   return "";
 };
 
-export const getSubraceName = (race?: Race) => {
-  if (!race) {
+type SubraceArg = {
+  type?: RaceType;
+  party?: string | null;
+  [key: string]: any;
+};
+
+export const getSubraceName = (race?: SubraceArg) => {
+  if (!race || !race.type) {
     return "";
   }
   if (race.type === "general") {

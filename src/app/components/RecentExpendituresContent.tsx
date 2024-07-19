@@ -3,13 +3,15 @@ import { Expenditure } from "@/app/types/Expenditures";
 import { getCategory } from "@/app/utils/expenditures";
 import { range } from "@/app/utils/range";
 import {
+  sentenceCase,
   titlecaseIndividualName,
   titlecaseSuffix,
 } from "@/app/utils/titlecase";
 import { formatCurrency, formatDateFromString } from "@/app/utils/utils";
 import Link from "next/link";
 import { STATES_BY_ABBR } from "../data/states";
-import { getRaceName } from "../utils/races";
+import { RaceType } from "../types/Elections";
+import { getRaceName, getSubraceName } from "../utils/races";
 import styles from "./recentExpenditures.module.css";
 import Skeleton from "./skeletons/Skeleton";
 
@@ -76,6 +78,15 @@ export default function RecentExpendituresContent({
       ];
     }
     name = name.filter(Boolean).map(titlecaseIndividualName).join(" ");
+    let subraceName = getSubraceName({
+      type: expenditure.subrace as RaceType,
+      party: expenditure.candidate_party
+        ? expenditure.candidate_party[0]
+        : null,
+    });
+    if (subraceName) {
+      subraceName = sentenceCase(subraceName);
+    }
 
     return (
       <div
@@ -94,35 +105,41 @@ export default function RecentExpendituresContent({
             </span>
           )}
         </div>
-        <div className={styles.expenditureNameAndAmount}>
-          <span className={styles.expenditureTarget}>
-            <span className="bold">
-              {`${
-                expenditure.support_oppose_indicator === "S"
-                  ? "Support "
-                  : "Oppose "
-              } ${name}
+        <div className={styles.topGroup}>
+          <div className={styles.expenditureNameAndAmount}>
+            <div className={styles.expenditureTarget}>
+              <span className="bold">
+                {`${
+                  expenditure.support_oppose_indicator === "S"
+                    ? "Support "
+                    : "Oppose "
+                } ${name}
                 ${
                   expenditure.candidate_suffix
                     ? ` ${titlecaseSuffix(expenditure.candidate_suffix)}`
                     : ""
                 }`}
+              </span>
+              {expenditure.candidate_party && (
+                <span>{` (${expenditure.candidate_party[0]})`}</span>
+              )}
+            </div>
+            <span className="bold">
+              {formatCurrency(expenditure.expenditure_amount)}
             </span>
+          </div>
+          <div>
+            {subraceName && `${subraceName}, `}
             {expenditure.candidate_office_state && (
               <span className="no-wrap">
-                (
                 <Link
                   href={`/elections/${getRaceId(expenditure, true)}`}
                 >{`${STATES_BY_ABBR[expenditure.candidate_office_state]} ${getRaceName(
                   getRaceId(expenditure),
                 )}`}</Link>
-                )
               </span>
             )}
-          </span>
-          <span className="bold">
-            {formatCurrency(expenditure.expenditure_amount)}
-          </span>
+          </div>
         </div>
         {committees && expenditure.committee_id && (
           <Link href={`/committees/${expenditure.committee_id}`}>

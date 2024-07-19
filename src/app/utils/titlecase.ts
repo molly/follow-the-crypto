@@ -8,6 +8,11 @@ export function titlecase(str: string): string {
   return cased.charAt(0).toUpperCase() + cased.substring(1);
 }
 
+export function sentenceCase(str: string): string {
+  // Titlecase just the first letter of the first word
+  return str.charAt(0).toUpperCase() + str.substring(1).toLowerCase();
+}
+
 export function titlecaseCompany(str: string): string {
   let titlecased = titlecase(str);
   titlecased = titlecased.replace(
