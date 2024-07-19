@@ -19,7 +19,7 @@ type Support = {
 type PartyKey = "dem" | "rep" | "mix" | "unk";
 
 const PARTIES = {
-  dem: "Democrat",
+  dem: "Democratic",
   rep: "Republican",
   mix: "Mix",
   unk: "Unknown",

@@ -44,7 +44,7 @@ function Party({
   }
   return (
     <span className={isIncidental ? styles.incidental : undefined}>
-      {getFullPartyName(opposition_details.benefitsParty[0], false)}
+      {getFullPartyName(opposition_details.benefitsParty[0])}
     </span>
   );
 }

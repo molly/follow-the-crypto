@@ -144,8 +144,8 @@ export default async function RaceCard({ stateAbbr }: { stateAbbr: string }) {
               <h3>{getRaceName(raceId)}</h3>
             </Link>
             {influenced.map((candidate) => {
-              const committeeNames = (
-                candidate.expenditure_committees as string[]
+              const committeeNames = Object.keys(
+                elections[shortId].spending,
               ).map((cid) => (
                 <CommitteeLink
                   key={cid}
@@ -153,7 +153,6 @@ export default async function RaceCard({ stateAbbr }: { stateAbbr: string }) {
                   committeeName={COMMITTEES ? COMMITTEES[cid].name : cid}
                 />
               ));
-
               return (
                 <Influenced
                   key={candidate.candidate_id}

@@ -51,6 +51,9 @@ export default function RacePage({ params }: { params: { raceId: string } }) {
               <SpendingCard raceId={params.raceId} />
             </Suspense>
           </div>
+          <div className={styles.committeeCard}>
+            <h2>Committees</h2>
+          </div>
           <div className={styles.adsCard}>
             <h2 className="no-margin">Ads</h2>
             <Ads raceId={params.raceId} />
