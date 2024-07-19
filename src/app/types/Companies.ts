@@ -1,7 +1,4 @@
-import {
-  HydratedIndividualOrCompanyContributionGroup,
-  IndividualOrCompanyContribution,
-} from "./Contributions";
+import { IndividualOrCompanyContributionGroup } from "./Contributions";
 import { IndividualConstant } from "./Individuals";
 
 export interface CompanyConstant {
@@ -37,10 +34,6 @@ export interface CompanyOpenSecrets {
 export type Company = CompanyConstant & {
   openSecrets: CompanyOpenSecrets;
   relatedIndividuals: IndividualConstant[];
-  contributions: Record<string, IndividualOrCompanyContribution[]>;
+  contributions: IndividualOrCompanyContributionGroup[];
   party_summary: Record<string, number>;
-};
-
-export type HydratedCompany = Company & {
-  contributions: HydratedIndividualOrCompanyContributionGroup[];
 };

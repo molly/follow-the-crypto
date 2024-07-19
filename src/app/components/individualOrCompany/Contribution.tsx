@@ -1,8 +1,8 @@
 import MaybeLink from "@/app/components/MaybeLink";
 import {
   Contribution as ContributionType,
-  HydratedIndividualOrCompanyContributionGroup,
   IndividualOrCompanyContribution,
+  RecipientDetails,
 } from "@/app/types/Contributions";
 import {
   titlecaseCommittee,
@@ -70,16 +70,16 @@ function ContributionAmount({
 
 export default function Contribution({
   contribution,
-  contributionsGroup,
+  recipient,
   isSubRow,
 }: {
   contribution: IndividualOrCompanyContribution;
-  contributionsGroup: HydratedIndividualOrCompanyContributionGroup;
+  recipient?: RecipientDetails;
   isSubRow?: boolean;
 }) {
-  const formattedName = contributionsGroup.committee_name
-    ? titlecaseCommittee(contributionsGroup.committee_name, false)
-    : contributionsGroup.committee_id;
+  const formattedName = recipient?.committee_name
+    ? titlecaseCommittee(recipient.committee_name, false)
+    : contribution.committee_id;
   if (isSubRow) {
     return (
       <div className={styles.contributionSubRow}>
@@ -97,14 +97,12 @@ export default function Contribution({
       <div className={styles.contributionRow}>
         <div className={styles.contributionSummary}>
           <span className={styles.contributionCommittee}>
-            <MaybeLink href={contributionsGroup.link}>
-              {formattedName}
-            </MaybeLink>
+            <MaybeLink href={recipient?.link}>{formattedName}</MaybeLink>
             {"claimed" in contribution && contribution.claimed && <Claimed />}
           </span>
           <ContributionAmount contribution={contribution} />
         </div>
-        <CommitteeDetails contributionsGroup={contributionsGroup} />
+        <CommitteeDetails recipient={recipient} />
         <div>
           <Contributor contribution={contribution} />
           <ContributionDate contribution={contribution} />

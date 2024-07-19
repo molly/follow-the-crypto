@@ -71,6 +71,18 @@
   margin-top: 1rem;
 }
 
+.contributionCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.contributionCardSwitcher {
+  font-size: 0.8rem;
+  padding: 0.5rem 1rem;
+}
+
 .contributionSection {
   composes: card from "@/app/shared.module.css";
   width: 100%;
@@ -80,6 +92,7 @@
 .contributionSectionHeader {
   padding: 0 1rem;
   font-size: 1.5rem;
+  margin-bottom: 0;
 }
 
 .spendingWrapper {

@@ -90,6 +90,7 @@ export type IndividualOrCompanyContribution = {
 
 export type IndividualOrCompanyContributionGroup = {
   contributions: IndividualOrCompanyContribution[];
+  committee_id: string;
   total: number;
 };
 
@@ -115,6 +116,3 @@ export type RecipientDetails = {
   link?: string;
   description?: string;
 };
-
-export type HydratedIndividualOrCompanyContributionGroup =
-  IndividualOrCompanyContributionGroup & RecipientDetails;

@@ -1,5 +1,8 @@
 import MaybeLink from "@/app/components/MaybeLink";
-import { HydratedIndividualOrCompanyContributionGroup } from "@/app/types/Contributions";
+import {
+  IndividualOrCompanyContributionGroup,
+  RecipientDetails,
+} from "@/app/types/Contributions";
 import { titlecaseCommittee } from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
 import Claimed from "./Claimed";
@@ -9,17 +12,14 @@ import styles from "./individualOrCompany.module.css";
 
 export default function ContributionsGroup({
   contributionsGroup,
+  recipient,
 }: {
-  contributionsGroup: HydratedIndividualOrCompanyContributionGroup;
+  contributionsGroup: IndividualOrCompanyContributionGroup;
+  recipient?: RecipientDetails;
 }) {
   if (contributionsGroup.contributions.length === 1) {
     const donor = contributionsGroup.contributions[0];
-    return (
-      <Contribution
-        contribution={donor}
-        contributionsGroup={contributionsGroup}
-      />
-    );
+    return <Contribution contribution={donor} recipient={recipient} />;
   }
 
   const isClaimed = contributionsGroup.contributions.every(
@@ -30,9 +30,9 @@ export default function ContributionsGroup({
     <div className={styles.contributionRow}>
       <div className={styles.contributionSummary}>
         <span className={styles.contributionCommittee}>
-          <MaybeLink href={contributionsGroup.link}>
-            {contributionsGroup.committee_name
-              ? titlecaseCommittee(contributionsGroup.committee_name, false)
+          <MaybeLink href={recipient?.link}>
+            {recipient?.committee_name
+              ? titlecaseCommittee(recipient.committee_name, false)
               : contributionsGroup.committee_id}
           </MaybeLink>
           {isClaimed && (
@@ -44,13 +44,13 @@ export default function ContributionsGroup({
         </span>
         <span>{formatCurrency(contributionsGroup.total)}</span>
       </div>
-      <CommitteeDetails contributionsGroup={contributionsGroup} />
+      <CommitteeDetails recipient={recipient} />
       <div className={styles.contributionsContainer}>
         {contributionsGroup.contributions.map((contribution, ind) => (
           <Contribution
             isSubRow={true}
             contribution={contribution}
-            contributionsGroup={contributionsGroup}
+            recipient={recipient}
             key={`contribution-${ind}`}
           />
         ))}

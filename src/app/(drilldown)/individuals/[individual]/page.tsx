@@ -1,22 +1,18 @@
 /* eslint-disable @next/next/no-img-element */
-import {
-  fetchConstant,
-  fetchIndividualContributions,
-} from "@/app/actions/fetch";
+import { fetchConstant, fetchIndividual } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
-import ContributionsGroup from "@/app/components/individualOrCompany/ContributionsGroup";
 import SpendingByParty from "@/app/components/individualOrCompany/SpendingByParty";
 import sharedStyles from "@/app/shared.module.css";
-import { HydratedIndividualOrCompanyContributionGroup } from "@/app/types/Contributions";
 import {
-  HydratedIndividualContributions,
   IndividualConstant,
+  IndividualContributions,
 } from "@/app/types/Individuals";
 import { isError } from "@/app/utils/errors";
 import { customMetadata } from "@/app/utils/metadata";
 import { titlecase, titlecaseCompany } from "@/app/utils/titlecase";
 import { Metadata } from "next";
 import Link from "next/link";
+import Contributions from "./Contributions";
 import styles from "./page.module.css";
 
 export function generateMetadata({
@@ -67,7 +63,7 @@ export default async function IndividualPage({
 }) {
   const [individualData, contributionsData] = await Promise.all([
     fetchConstant("individuals"),
-    fetchIndividualContributions(params.individual),
+    fetchIndividual(params.individual),
   ]);
   if (isError(individualData)) {
     return <ErrorText subject="individual data" />;
@@ -78,8 +74,8 @@ export default async function IndividualPage({
   const individual = (individualData as Record<string, IndividualConstant>)[
     params.individual
   ];
-  const { associatedCompany, contributions, party_summary } =
-    contributionsData as HydratedIndividualContributions;
+  const { associatedCompany, party_summary } =
+    contributionsData as IndividualContributions;
 
   return (
     <>
@@ -107,26 +103,7 @@ export default async function IndividualPage({
         </div>
       </section>
       <div className={styles.page}>
-        <section className={styles.contributionSection}>
-          <h3 className={styles.contributionSectionHeader}>Contributions</h3>
-          {contributions.length ? (
-            contributions.map(
-              (
-                contributionGroup: HydratedIndividualOrCompanyContributionGroup,
-                ind: number,
-              ) => (
-                <ContributionsGroup
-                  key={`contrib-group-${ind}`}
-                  contributionsGroup={contributionGroup}
-                />
-              ),
-            )
-          ) : (
-            <div className={`secondary ${styles.contributionRow}`}>
-              No contributions yet.
-            </div>
-          )}
-        </section>
+        <Contributions individualId={params.individual} />
         <div className={styles.spendingWrapper}>
           <section
             className={`${styles.spendingByPartySection} ${sharedStyles.constrainWidth}`}

@@ -16,7 +16,7 @@ import {
 } from "firebase/firestore";
 import { cache } from "react";
 import { Ad, AdGroup } from "../types/Ads";
-import { Company, HydratedCompany } from "../types/Companies";
+import { Company } from "../types/Companies";
 import { ElectionsByState, OppositionConstant } from "../types/Elections";
 import {
   CommitteeTotalExpenditures,
@@ -29,15 +29,9 @@ import {
   RecentExpenditures,
   StateExpenditures,
 } from "../types/Expenditures";
-import {
-  HydratedIndividualContributions,
-  IndividualContributions,
-} from "../types/Individuals";
+import { IndividualContributions } from "../types/Individuals";
 import { MapData } from "../types/MapData";
-import {
-  hydrateIndividualContributions,
-  hydrateStateExpenditures,
-} from "./hydrate";
+import { hydrateStateExpenditures } from "./hydrate";
 
 const fetchSnapshot = async (
   path: string,
@@ -408,54 +402,17 @@ export const fetchAdsByRace = cache(
 
 // COMPANIES ------------------------------------------------------------
 export const fetchCompany = cache(
-  async (company: string): Promise<HydratedCompany | ErrorType> => {
-    const [companyData, recipientsData] = await Promise.all([
-      fetchSnapshot("companies", company),
-      fetchSnapshot("allRecipients", "recipients"),
-    ]);
-    if (isError(companyData)) {
-      return companyData as ErrorType;
-    }
-    if (isError(companyData)) {
-      return recipientsData as ErrorType;
-    }
-
-    const companyDataObj = companyData as Company;
-    const recipientsDataObj = recipientsData as Record<
-      string,
-      RecipientDetails
-    >;
-
-    const hydrated = hydrateIndividualContributions(
-      companyDataObj,
-      recipientsDataObj,
-    ) as HydratedCompany;
-    return hydrated;
-  },
+  async (company: string): Promise<Company | ErrorType> =>
+    fetchSnapshot("companies", company),
 );
 
 // INDIVIDUALS ------------------------------------------------------------
-export const fetchIndividualContributions = cache(
-  async (
-    individual: string,
-  ): Promise<HydratedIndividualContributions | ErrorType> => {
-    const [individualData, recipientsData] = await Promise.all([
-      fetchSnapshot("individuals", individual),
-      fetchSnapshot("allRecipients", "recipients"),
-    ]);
-    if (isError(individualData)) {
-      return individualData as ErrorType;
-    }
-    if (isError(recipientsData)) {
-      return recipientsData as ErrorType;
-    }
+export const fetchIndividual = cache(
+  async (individual: string): Promise<IndividualContributions | ErrorType> =>
+    fetchSnapshot("individuals", individual),
+);
 
-    const individualDataObj = individualData as IndividualContributions;
-    const recipientsDataObj = recipientsData as Record<
-      string,
-      RecipientDetails
-    >;
-
-    return hydrateIndividualContributions(individualDataObj, recipientsDataObj);
-  },
+export const fetchAllRecipients = cache(
+  async (): Promise<Record<string, RecipientDetails> | ErrorType> =>
+    fetchSnapshot("allRecipients", "recipients"),
 );

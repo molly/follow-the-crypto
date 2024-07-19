@@ -1,11 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
-import { fetchCompany } from "@/app/actions/fetch";
+import { fetchAllRecipients, fetchCompany } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import ContributionsGroup from "@/app/components/individualOrCompany/ContributionsGroup";
 import SpendingByParty from "@/app/components/individualOrCompany/SpendingByParty";
 import sharedStyles from "@/app/shared.module.css";
-import { HydratedCompany } from "@/app/types/Companies";
-import { HydratedIndividualOrCompanyContributionGroup } from "@/app/types/Contributions";
+import { Company } from "@/app/types/Companies";
+import {
+  IndividualOrCompanyContributionGroup,
+  RecipientDetails,
+} from "@/app/types/Contributions";
 import { isError } from "@/app/utils/errors";
 import { customMetadata } from "@/app/utils/metadata";
 import { titlecase } from "@/app/utils/titlecase";
@@ -30,11 +33,17 @@ export default async function CompanyPage({
 }: {
   params: { company: string };
 }) {
-  const companyData = await fetchCompany(params.company);
+  const [companyData, recipientData] = await Promise.all([
+    fetchCompany(params.company),
+    fetchAllRecipients(),
+  ]);
   if (isError(companyData)) {
     return <ErrorText subject="company data" />;
   }
-  const company = companyData as HydratedCompany;
+  const company = companyData as Company;
+  const recipients = isError(recipientData)
+    ? {}
+    : (recipientData as Record<string, RecipientDetails>);
   return (
     <>
       <section className={styles.companyLogoAndName}>
@@ -81,14 +90,17 @@ export default async function CompanyPage({
           {company.contributions ? (
             company.contributions.map(
               (
-                contributionGroup: HydratedIndividualOrCompanyContributionGroup,
+                contributionGroup: IndividualOrCompanyContributionGroup,
                 ind: number,
-              ) => (
-                <ContributionsGroup
-                  key={`contrib-group-${ind}`}
-                  contributionsGroup={contributionGroup}
-                />
-              ),
+              ) => {
+                return (
+                  <ContributionsGroup
+                    key={`contrib-group-${ind}`}
+                    contributionsGroup={contributionGroup}
+                    recipient={recipients[contributionGroup.committee_id]}
+                  />
+                );
+              },
             )
           ) : (
             <div className={`secondary ${styles.contributionRow}`}>
