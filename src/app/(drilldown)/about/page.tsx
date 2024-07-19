@@ -55,7 +55,9 @@ export default function AboutPage() {
               system works.”
             </div>
             <div className={styles.quoteAttribution}>
-              &ndash; Brian Armstrong, Coinbase CEO
+              &ndash;{" "}
+              <Link href="/individuals/brian-armstrong">Brian Armstrong</Link>,{" "}
+              <Link href="/companies/coinbase">Coinbase</Link> CEO
             </div>
           </div>
         </div>

@@ -1,0 +1,125 @@
+.page {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column-reverse;
+  gap: 1rem;
+  width: 100%;
+}
+
+.companyLogoAndName {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+  width: 100%;
+}
+
+.companyLogoWrapper {
+  display: flex;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+  width: 10rem;
+  height: 10rem;
+  border: 1px solid var(--main-text);
+  background-color: var(--logo-background);
+}
+
+.companyText {
+  text-align: center;
+}
+
+.companyLogoSkeleton {
+  flex-shrink: 0;
+}
+
+.companyLogoImage {
+  max-width: 100%;
+  max-height: 100%;
+  padding: 1rem;
+  object-fit: contain;
+}
+
+.companyName {
+  composes: titleH3 from "@/app/shared.module.css";
+  text-align: center;
+  margin: 0;
+}
+
+.plainList {
+  composes: plainList from "@/app/shared.module.css";
+  display: inline;
+  margin: 0;
+}
+
+.plainListItem {
+  composes: plainListItem from "@/app/shared.module.css";
+  display: inline;
+  &:not(:last-child):after {
+    content: ", ";
+  }
+}
+
+.descriptionSkeleton {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.description {
+  margin-top: 1rem;
+}
+
+.contributionSection {
+  composes: card from "@/app/shared.module.css";
+  padding: 1rem 0;
+  width: 100%;
+}
+
+.contributionSectionHeader {
+  padding: 0 1rem;
+  font-size: 1.5rem;
+}
+
+.spendingWrapper {
+  composes: constrainedWrapper from "@/app/shared.module.css";
+}
+
+.spendingByPartySection {
+  composes: card from "@/app/shared.module.css";
+  padding: 1rem;
+  width: 100%;
+  max-width: 40rem;
+}
+
+@media (min-width: 576px) {
+  .companyLogoAndName {
+    flex-direction: row;
+    gap: 2rem;
+  }
+
+  .companyName,
+  .companyText {
+    text-align: left;
+  }
+
+  .descriptionSkeleton {
+    align-items: flex-start;
+  }
+}
+
+@media (min-width: 1000px) {
+  .page {
+    flex-direction: row;
+  }
+
+  .contributionSection {
+    width: 66%;
+  }
+
+  .spendingWrapper {
+    width: 33%;
+  }
+}
