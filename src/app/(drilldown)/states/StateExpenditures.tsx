@@ -74,7 +74,7 @@ export default async function StateExpenditures() {
           <>
             <tr key={state} className={styles.headerRow}>
               <td colSpan={2} className="text-cell">
-                <Link href={`/states/${stateName.toLocaleLowerCase()}`}>
+                <Link href={`/states/${stateName.toLowerCase().replace(" ", "-")}`}>
                   {stateName}
                 </Link>
               </td>

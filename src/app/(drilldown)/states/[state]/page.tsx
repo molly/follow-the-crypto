@@ -11,12 +11,17 @@ import ByRace, { RaceCardContentsSkeleton } from "./ByRace";
 import TotalSpending from "./TotalSpending";
 import styles from "./page.module.css";
 
+function stateNameFromUrl(urlName: string) {
+  const stateName = decodeURIComponent(urlName).split("-").join(" ");
+  return titlecase(stateName);
+}
+
 export function generateMetadata({
   params,
 }: {
   params: { state: string };
 }): Metadata {
-  const state = titlecase(params.state.split("-").join(" "));
+  const state = stateNameFromUrl(params.state);
   return customMetadata({
     title: state,
     description: `Cryptocurrency-focused political action committee spending on 2024 elections in ${state}.`,
@@ -28,7 +33,7 @@ export default function CommitteePage({
 }: {
   params: { state: string };
 }) {
-  const titlecasedState = titlecase(params.state.split("-").join(" "));
+  const titlecasedState = stateNameFromUrl(params.state);
   if (!(titlecasedState in STATES_BY_FULL)) {
     notFound();
   }
