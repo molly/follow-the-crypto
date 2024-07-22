@@ -45,7 +45,7 @@ export default async function PACsByReceiptsTableContents({
     // Don't show a bunch of extra rows if they're all unrelated PACs
     let limit = Math.ceil(lastCryptoIndex / 10) * 10;
     if (!fullPage) {
-      limit = Math.ceil(firstCryptoIndex / 10) * 10;
+      limit = Math.ceil(Math.max(firstCryptoIndex / 10, 1)) * 10;
     }
     PACsToShow = PACs.slice(0, limit);
   }
