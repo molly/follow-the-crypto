@@ -12,7 +12,7 @@ export interface IndividualConstant {
 }
 
 export type IndividualContributions = {
-  associatedCompany?: string;
+  associatedCompany: string[];
   party_summary: Record<string, number>;
   contributions: IndividualOrCompanyContributionGroup[];
   contributions_by_date?: IndividualOrCompanyContribution[];

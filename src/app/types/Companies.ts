@@ -1,6 +1,12 @@
 import { IndividualOrCompanyContributionGroup } from "./Contributions";
 import { IndividualConstant } from "./Individuals";
 
+export enum CompanyCategory {
+  advocacy = "advocacy",
+  capital = "capital",
+  crypto = "crypto",
+}
+
 export interface CompanyConstant {
   name: string;
   os_id: string;
@@ -8,6 +14,7 @@ export interface CompanyConstant {
   description: TrustedHTML;
   country?: string;
   aliases?: string[];
+  category: CompanyCategory[];
 }
 
 export interface CompanyOpenSecrets {

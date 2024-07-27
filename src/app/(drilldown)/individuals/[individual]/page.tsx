@@ -8,6 +8,7 @@ import {
   IndividualContributions,
 } from "@/app/types/Individuals";
 import { isError } from "@/app/utils/errors";
+import { humanizeList } from "@/app/utils/humanize";
 import { customMetadata } from "@/app/utils/metadata";
 import { titlecase, titlecaseCompany } from "@/app/utils/titlecase";
 import { Metadata } from "next";
@@ -32,7 +33,7 @@ function Subhead({
   associatedCompany,
 }: {
   individual: IndividualConstant;
-  associatedCompany?: string;
+  associatedCompany?: string[];
 }) {
   let subhead = [];
   if (individual.title) {
@@ -41,15 +42,16 @@ function Subhead({
     }
     subhead.push(<span>{`${individual.title} at `}</span>);
   }
-  if (associatedCompany) {
+  if (associatedCompany && associatedCompany.length) {
     if (!individual.title) {
       subhead.push(<span>Associated with </span>);
     }
-    subhead.push(
-      <Link href={`/companies/${associatedCompany}`}>
-        {titlecaseCompany(associatedCompany.replaceAll("-", " "))}
-      </Link>,
-    );
+    const companyLinks = associatedCompany.map((company) => (
+      <Link href={`/companies/${company}`} key={company}>
+        {titlecaseCompany(company.replaceAll("-", " "))}
+      </Link>
+    ));
+    subhead.push(humanizeList(companyLinks));
   } else if (individual.company) {
     subhead.push(<span>{individual.company}</span>);
   }
