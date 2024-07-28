@@ -2,6 +2,7 @@ import { fetchConstant } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import sharedStyles from "@/app/shared.module.css";
 import { IndividualConstant } from "@/app/types/Individuals";
+import { humanizeList } from "@/app/utils/humanize";
 import Link from "next/link";
 
 export default async function IndividualsList() {
@@ -28,7 +29,7 @@ export default async function IndividualsList() {
       {individuals.map((individual) => (
         <li key={individual.id} className={sharedStyles.plainListItem}>
           <Link href={`/individuals/${individual.id}`}>{individual.name}</Link>
-          {individual.company && ` (${individual.company})`}
+          {individual.company && ` (${humanizeList(individual.company)})`}
         </li>
       ))}
     </ul>

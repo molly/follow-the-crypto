@@ -53,7 +53,7 @@ function Subhead({
     ));
     subhead.push(humanizeList(companyLinks));
   } else if (individual.company) {
-    subhead.push(<span>{individual.company}</span>);
+    subhead.push(<span>{humanizeList(individual.company)}</span>);
   }
   return subhead;
 }

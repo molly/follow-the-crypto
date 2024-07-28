@@ -6,7 +6,7 @@ import {
 export interface IndividualConstant {
   name: string;
   id: string;
-  company?: string;
+  company?: string[];
   title?: string;
   photoCredit?: string;
 }

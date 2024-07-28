@@ -58,7 +58,8 @@ export const pluralize = (
   return value === 1 ? singular : plural;
 };
 
-export function humanizeList<T>(values: T[]): T | JSX.Element | null {
+export function humanizeList<T>(values: T[]): T | JSX.Element | string | null {
+  const isString = values.every((value) => typeof value === "string");
   const filtered = values.filter((value) => !!value);
   if (filtered.length === 0) {
     return null;
@@ -66,6 +67,9 @@ export function humanizeList<T>(values: T[]): T | JSX.Element | null {
   if (filtered.length === 1) {
     return filtered[0];
   } else if (filtered.length === 2) {
+    if (isString) {
+      return `${filtered[0]} and ${filtered[1]}`;
+    }
     return (
       <>
         {filtered[0]} and {filtered[1]}
@@ -80,5 +84,8 @@ export function humanizeList<T>(values: T[]): T | JSX.Element | null {
   }
   elements.push("and ");
   elements.push(last);
+  if (isString) {
+    return elements.join("");
+  }
   return <>{elements}</>;
 }
