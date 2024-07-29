@@ -46,6 +46,11 @@ export default function PACsByReceipts({
           cryptocurrency-focused PACs are among the most well-funded this
           election cycle.
         </p>
+        <p className="secondary smaller">
+          Note that some of the values in this table differ from the rest of the
+          data used elsewhere on this site due to errors in FEC reporting; see
+          the <Link href="/about/faq#pacs-data">FAQ</Link>.
+        </p>
         <h2 className={styles.superPacHeader}>
           {`Where crypto-focused PACs fall among the most highly funded ${type === "super" ? "super " : ""}PACs`}
         </h2>
@@ -85,11 +90,6 @@ export default function PACsByReceipts({
         </tbody>
       </table>
       <div className={styles.tableCardContent}>
-        <div className="secondary smaller">
-          Note that some of the values in this table differ from the rest of the
-          data used elsewhere on this site; see the{" "}
-          <Link href="/about/faq#pacs-data">FAQ</Link>.
-        </div>
         {!fullPage && type === "super" && (
           <>
             <div className="secondary smaller">
