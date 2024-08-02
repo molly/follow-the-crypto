@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import Skeleton from "./skeletons/Skeleton";
 
-function TableContentsSkeleton() {
+function TableContentsSkeleton({ type }: { type: string }) {
   return range(10).map((i) => {
     return (
       <tr className={styles.superPacRow} key={`superPac-skeleton-row-${i}`}>
@@ -15,15 +15,11 @@ function TableContentsSkeleton() {
         <td>
           <Skeleton randWidth={[6, 18]} onCard={true} />
         </td>
-        <td>
-          <Skeleton width="6rem" onCard={true} style={{ float: "right" }} />
-        </td>
-        <td>
-          <Skeleton width="6rem" onCard={true} style={{ float: "right" }} />
-        </td>
-        <td>
-          <Skeleton width="6rem" onCard={true} style={{ float: "right" }} />
-        </td>
+        {type === "all" && (
+          <td>
+            <Skeleton width="6rem" onCard={true} style={{ float: "right" }} />
+          </td>
+        )}
       </tr>
     );
   });
@@ -47,9 +43,8 @@ export default function PACsByReceipts({
           election cycle.
         </p>
         <p className="secondary smaller">
-          Note that some of the values in this table differ from the rest of the
-          data used elsewhere on this site due to errors in FEC reporting; see
-          the <Link href="/about/faq#pacs-data">FAQ</Link>.
+          Issues in FEC reporting may affect this list; see the{" "}
+          <Link href="/about/faq#pacs-data">FAQ</Link>.
         </p>
         <h2 className={styles.superPacHeader}>
           {`Where crypto-focused PACs fall among the most highly funded ${type === "super" ? "super " : ""}PACs`}
@@ -75,18 +70,12 @@ export default function PACsByReceipts({
             {type === "all" && (
               <th className={`text-cell ${styles.tableCellCollapse1}`}>Type</th>
             )}
-            <th className={`number-cell ${styles.superPacTableCellMinWidth}`}>
-              Receipts
-            </th>
-            <th
-              className={`number-cell ${styles.superPacTableCellMinWidth} ${styles.tableCellCollapse2}`}
-            >
-              Cash on hand
-            </th>
           </tr>
         </thead>
         <tbody>
-          <Suspense fallback={<TableContentsSkeleton />}>{children}</Suspense>
+          <Suspense fallback={<TableContentsSkeleton type={type} />}>
+            {children}
+          </Suspense>
         </tbody>
       </table>
       <div className={styles.tableCardContent}>

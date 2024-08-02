@@ -35,15 +35,20 @@ export default function FAQPage() {
           <Link href="/about/contact">send it in</Link> so I can add it!
         </p>
         <h3 id="pacs-data">
-          Why do some amounts in the lists of PACs differ from the amounts shown
-          on committee pages?
+          What&rsquo;s going on with the list of PACs? Why aren&rsquo;t the
+          amounts belonging to each PAC displayed?
         </h3>
         <p>
-          There are some errors in the FEC data, generally where contributions
-          have been double-reported. Because I am only calculating committee
-          contributions for the cryptocurrency-related PACs, I am showing the
-          original FEC data table here, as I am not reasonably able to correct
-          for these errors across all PACs unrelated to the project.
+          There are some errors in FEC data, generally where in-kind
+          cryptocurrency contributions have been double-reported or even
+          triple-reported. Because I am only calculating committee contributions
+          (accounting for duplicates) for the cryptocurrency-related PACs, and
+          it is not feasible for me to do this type of data analysis across all
+          political committees, I am showing the order of PACs as reflected by
+          the FEC, while acknowledging that PACs with cryptocurrency-denominated
+          contributions may appear slightly too highly. To avoid propogating
+          numbers that I know are inaccurate, I no longer show the PAC receipts
+          in the lists of PACs.
         </p>
         <h3 id="discrepancies">Why do some numbers not seem to add up?</h3>
         <p>

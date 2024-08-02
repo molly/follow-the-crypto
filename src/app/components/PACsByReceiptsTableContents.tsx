@@ -2,7 +2,6 @@ import styles from "@/app/components/tables.module.css";
 import { AllCommitteesSummary } from "@/app/types/Committee";
 import { ErrorType, isError } from "@/app/utils/errors";
 import { titlecaseCommittee } from "@/app/utils/titlecase";
-import { formatCurrency } from "@/app/utils/utils";
 import Link from "next/link";
 import ErrorText from "./ErrorText";
 
@@ -85,12 +84,6 @@ export default async function PACsByReceiptsTableContents({
                 </span>
               </td>
             )}
-            <td className="number-cell">
-              {formatCurrency(committee.receipts, true)}
-            </td>
-            <td className={`number-cell ${styles.tableCellCollapse2}`}>
-              {formatCurrency(committee.last_cash_on_hand_end_period, true)}
-            </td>
           </tr>
         );
       })}
