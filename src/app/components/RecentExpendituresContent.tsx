@@ -64,8 +64,11 @@ export default function RecentExpendituresContent({
   return expenditures.map((expenditure) => {
     let name;
     if ("candidate_last_name" in expenditure) {
+      const first_name = expenditure.candidate_first_name
+        ? expenditure.candidate_first_name.split(" ")[0]
+        : "";
       name = [
-        expenditure.candidate_first_name,
+        first_name,
         expenditure.candidate_middle_name,
         expenditure.candidate_last_name,
       ];
