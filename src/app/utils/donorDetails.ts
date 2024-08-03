@@ -2,6 +2,7 @@ import { Contribution } from "../types/Contributions";
 import {
   titlecase,
   titlecaseCompany,
+  titlecaseLastFirst,
   titlecaseOccupation,
   titlecaseSuffix,
 } from "./titlecase";
@@ -21,6 +22,18 @@ type CompanyDonorType = {
   companyAlias?: string;
   isIndividual: false;
 };
+
+function getClaimedDonorName(donor: Contribution): IndividualDonorType {
+  return {
+    name: donor.contributor_name
+      ? titlecaseLastFirst(donor.contributor_name)
+      : "",
+    occupation: donor.contributor_occupation
+      ? titlecaseOccupation(donor.contributor_occupation)
+      : undefined,
+    isIndividual: true,
+  };
+}
 
 function getIndividualDonorName(donor: Contribution): IndividualDonorType {
   let occupation;
@@ -71,6 +84,12 @@ export function getDonorDetails(
   if (donor.contributor_first_name || donor.contributor_last_name) {
     return {
       ...getIndividualDonorName(donor),
+      ...getDonorCompanyDetails(donor, COMPANY_ALIASES, INDIVIDUAL_EMPLOYERS),
+      isIndividual: true,
+    };
+  } else if (donor.claimed) {
+    return {
+      ...getClaimedDonorName(donor),
       ...getDonorCompanyDetails(donor, COMPANY_ALIASES, INDIVIDUAL_EMPLOYERS),
       isIndividual: true,
     };

@@ -1,3 +1,4 @@
+import Claimed from "@/app/components/individualOrCompany/Claimed";
 import MaybeLink from "@/app/components/MaybeLink";
 import { ContributionsGroup as ContributionsGroupType } from "@/app/types/Contributions";
 import { IndividualDonorType, getDonorDetails } from "@/app/utils/donorDetails";
@@ -21,6 +22,10 @@ export default function ContributionsGroup({
       ),
     [donorGroup.contributions, donorGroup.company],
   );
+  const isClaimed = useMemo(
+    () => donorGroup.contributions.every((c) => c.claimed),
+    [donorGroup.contributions],
+  );
 
   if (donorGroup.contributions.length === 1) {
     const donor = donorGroup.contributions[0];
@@ -43,6 +48,7 @@ export default function ContributionsGroup({
       <div className={styles.donorSummary}>
         <span className={styles.donorCompany}>
           <MaybeLink href={donorGroup.link}>{name}</MaybeLink>
+          {isClaimed && <Claimed />}
         </span>
         <span>{formatCurrency(donorGroup.total)}</span>
       </div>

@@ -1,6 +1,10 @@
 import { Committee, ScheduleA } from "./FECTypes";
 
-export type SingleContribution = { redacted?: boolean; link?: string } & Pick<
+export type SingleContribution = {
+  redacted?: boolean;
+  link?: string;
+  claimed?: boolean;
+} & Pick<
   ScheduleA,
   | "contributor_aggregate_ytd"
   | "contributor_first_name"
@@ -22,6 +26,7 @@ export type SingleContribution = { redacted?: boolean; link?: string } & Pick<
 export type RollupContribution = {
   redacted?: boolean;
   link?: string;
+  claimed?: boolean;
   oldest: string;
   newest: string;
   total: number;

@@ -1,4 +1,5 @@
 import { fetchConstant } from "@/app/actions/fetch";
+import Claimed from "@/app/components/individualOrCompany/Claimed";
 import MaybeLink from "@/app/components/MaybeLink";
 import { Contribution as ContributionType } from "@/app/types/Contributions";
 import { titlecaseCompany } from "@/app/utils/titlecase";
@@ -168,15 +169,19 @@ export default async function Contribution({
               {donorDetails.occupation}
             </span>
           )}
+          {contribution.claimed && <Claimed />}
         </>
       );
     } else {
       donorIdentifier = (
-        <CompanyName
-          donorDetails={donorDetails}
-          link={contribution.link}
-          inline
-        />
+        <>
+          <CompanyName
+            donorDetails={donorDetails}
+            link={contribution.link}
+            inline
+          />
+          {contribution.claimed && <Claimed />}
+        </>
       );
     }
 
@@ -205,7 +210,10 @@ export default async function Contribution({
               </span>
             )}
             {!donorDetails.company && (
-              <ContributionDate contribution={contribution} />
+              <>
+                <ContributionDate contribution={contribution} />
+                {contribution.claimed && <Claimed />}
+              </>
             )}
           </div>
           {donorDetails.company && (
@@ -215,6 +223,7 @@ export default async function Contribution({
                 link={contribution.link}
               />
               <ContributionDate contribution={contribution} />
+              {contribution.claimed && <Claimed />}
             </div>
           )}
         </div>
@@ -227,6 +236,7 @@ export default async function Contribution({
             link={contribution.link}
             contributionDate={<ContributionDate contribution={contribution} />}
           />
+          {contribution.claimed && <Claimed />}
         </div>
       );
     }
