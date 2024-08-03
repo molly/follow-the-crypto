@@ -2,7 +2,7 @@
 
 import { fetchConstant, fetchGoogleAds } from "@/app/actions/fetch";
 import { db } from "@/app/lib/db";
-import { Ad, AdGroup, GoogleAdConstant } from "@/app/types/Ads";
+import { Ad, AdConstants, AdGroup, GoogleAdConstant } from "@/app/types/Ads";
 import { isError } from "@/app/utils/errors";
 import { doc, setDoc } from "firebase/firestore";
 import { Fragment, useEffect, useState } from "react";
@@ -10,7 +10,7 @@ import styles from "../../admin.module.css";
 
 async function saveAdConstants(adsConstants: Record<string, GoogleAdConstant>) {
   const docRef = doc(db, "constants", "ads");
-  await setDoc(docRef, adsConstants, { merge: true });
+  await setDoc(docRef, { google: adsConstants }, { merge: true });
 }
 
 export default function AdsEditor() {
@@ -24,13 +24,14 @@ export default function AdsEditor() {
     (async () => {
       const [adsData, adsConstantData] = await Promise.all([
         fetchGoogleAds(),
-        fetchConstant<Record<string, GoogleAdConstant>>("ads"),
+        fetchConstant<Record<string, AdConstants>>("ads"),
       ]);
       if (isError(adsData)) {
         setLoadingState("error");
       } else {
         setAds(adsData as Record<string, AdGroup>);
-        setAdConstants(adsConstantData || {});
+        const ads = adsConstantData ? adsConstantData.google : {};
+        setAdConstants(ads);
         setLoadingState("loaded");
       }
     })();

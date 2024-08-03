@@ -41,14 +41,17 @@ export default function FAQPage() {
         <p>
           There are some errors in FEC data, generally where in-kind
           cryptocurrency contributions have been double-reported or even
-          triple-reported. Because I am only calculating committee contributions
-          (accounting for duplicates) for the cryptocurrency-related PACs, and
-          it is not feasible for me to do this type of data analysis across all
-          political committees, I am showing the order of PACs as reflected by
-          the FEC, while acknowledging that PACs with cryptocurrency-denominated
+          triple-reported. While the FEC accounts for this by recording a
+          disbursement for each duplicate contribution, it causes the receipts
+          data to appear artificially high. Because I am only calculating
+          committee receipts (accounting for duplicates) for the
+          cryptocurrency-related PACs, and it is not feasible for me to do this
+          type of labor-intensive data correction across all political
+          committees, I am showing the order of PACs as reflected by the FEC,
+          while acknowledging that PACs with cryptocurrency-denominated
           contributions may appear slightly too highly. To avoid propogating
-          numbers that I know are inaccurate, I no longer show the PAC receipts
-          in the lists of PACs.
+          numbers that I know are inaccurate, I no longer show the FEC-reported
+          PAC receipts in the lists of PACs.
         </p>
         <h3 id="discrepancies">Why do some numbers not seem to add up?</h3>
         <p>

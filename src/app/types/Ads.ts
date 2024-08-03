@@ -3,6 +3,11 @@ export type Source = {
   publisher: string;
 };
 
+export type AdConstants = {
+  google: Record<string, GoogleAdConstant>;
+  images: ImageAd[];
+};
+
 export type GoogleAdConstant = {
   race: string;
   videoUrl?: string;
