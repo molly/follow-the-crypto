@@ -244,6 +244,51 @@ export default function Sidebar() {
                   Contact
                 </Link>
               </motion.li>
+              <motion.li
+                variants={itemVariants}
+                className={styles.sidebarHeader}
+              >
+                Follow
+              </motion.li>
+              <motion.li
+                variants={itemVariants}
+                className={styles.sidebarListItem}
+              >
+                <a
+                  className={styles.sidebarLink}
+                  onClick={() => setCollapsed(true)}
+                  href="https://twitter.com/follow__crypto"
+                  rel="me"
+                >
+                  Twitter
+                </a>
+              </motion.li>
+              <motion.li
+                variants={itemVariants}
+                className={styles.sidebarListItem}
+              >
+                <a
+                  className={styles.sidebarLink}
+                  onClick={() => setCollapsed(true)}
+                  href="https://hachyderm.io/@followthecrypto"
+                  rel="me"
+                >
+                  Mastodon
+                </a>
+              </motion.li>
+              <motion.li
+                variants={itemVariants}
+                className={styles.sidebarListItem}
+              >
+                <a
+                  className={styles.sidebarLink}
+                  onClick={() => setCollapsed(true)}
+                  href="https://bsky.app/profile/followthecrypto.org"
+                  rel="me"
+                >
+                  Bluesky
+                </a>
+              </motion.li>
             </ul>
           </nav>
         )}

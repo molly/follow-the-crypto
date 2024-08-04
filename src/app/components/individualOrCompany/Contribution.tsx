@@ -15,8 +15,10 @@ import styles from "./individualOrCompany.module.css";
 
 function Contributor({
   contribution,
+  company,
 }: {
   contribution: IndividualOrCompanyContribution;
+  company?: string;
 }) {
   if (contribution.isIndividual && contribution.individual) {
     return (
@@ -26,6 +28,8 @@ function Contributor({
         )} – `}
       </span>
     );
+  } else if (company) {
+    return <span className={styles.contributionSource}>{`${company} – `}</span>;
   }
   return null;
 }
@@ -71,10 +75,12 @@ function ContributionAmount({
 export default function Contribution({
   contribution,
   recipient,
+  company,
   isSubRow,
 }: {
   contribution: IndividualOrCompanyContribution;
   recipient?: RecipientDetails;
+  company?: string;
   isSubRow?: boolean;
 }) {
   const formattedName = recipient?.committee_name
@@ -84,7 +90,7 @@ export default function Contribution({
     return (
       <div className={styles.contributionSubRow}>
         <div>
-          <Contributor contribution={contribution} />
+          <Contributor contribution={contribution} company={company} />
           <ContributionDate contribution={contribution} />{" "}
           {"claimed" in contribution && contribution.claimed && <Claimed />}
         </div>
@@ -104,7 +110,7 @@ export default function Contribution({
         </div>
         <CommitteeDetails recipient={recipient} />
         <div>
-          <Contributor contribution={contribution} />
+          <Contributor contribution={contribution} company={company} />
           <ContributionDate contribution={contribution} />
         </div>
       </div>

@@ -98,6 +98,7 @@ export default async function CompanyPage({
                     key={`contrib-group-${ind}`}
                     contributionsGroup={contributionGroup}
                     recipient={recipients[contributionGroup.committee_id]}
+                    company={company.name}
                   />
                 );
               },

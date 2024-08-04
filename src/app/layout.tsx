@@ -16,6 +16,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="me" href="https://hachyderm.io/@followthecrypto" />
+      </head>
       <body className={sourceSans.className}>
         <Sidebar />
         {children}

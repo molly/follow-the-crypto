@@ -13,13 +13,21 @@ import styles from "./individualOrCompany.module.css";
 export default function ContributionsGroup({
   contributionsGroup,
   recipient,
+  company,
 }: {
   contributionsGroup: IndividualOrCompanyContributionGroup;
   recipient?: RecipientDetails;
+  company?: string;
 }) {
   if (contributionsGroup.contributions.length === 1) {
     const donor = contributionsGroup.contributions[0];
-    return <Contribution contribution={donor} recipient={recipient} />;
+    return (
+      <Contribution
+        contribution={donor}
+        recipient={recipient}
+        company={company}
+      />
+    );
   }
 
   const isClaimed = contributionsGroup.contributions.every(
@@ -51,6 +59,7 @@ export default function ContributionsGroup({
             isSubRow={true}
             contribution={contribution}
             recipient={recipient}
+            company={company}
             key={`contribution-${ind}`}
           />
         ))}

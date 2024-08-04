@@ -169,19 +169,15 @@ export default async function Contribution({
               {donorDetails.occupation}
             </span>
           )}
-          {contribution.claimed && <Claimed />}
         </>
       );
     } else {
       donorIdentifier = (
-        <>
-          <CompanyName
-            donorDetails={donorDetails}
-            link={contribution.link}
-            inline
-          />
-          {contribution.claimed && <Claimed />}
-        </>
+        <CompanyName
+          donorDetails={donorDetails}
+          link={contribution.link}
+          inline
+        />
       );
     }
 
@@ -190,6 +186,7 @@ export default async function Contribution({
         <div>
           {donorIdentifier}
           <ContributionDate contribution={contribution} />
+          {contribution.claimed && <Claimed />}
         </div>
         <ContributionAmount contribution={contribution} isSubRow={true} />
       </div>
