@@ -87,7 +87,7 @@ export default async function StateExpenditures() {
                 <tr key={raceKey}>
                   <td></td>
                   <td className="text-cell">
-                    <Link href={`/race/${raceKey}`}>
+                    <Link href={`/elections/${raceKey}`}>
                       {getRaceName(raceKey)}
                     </Link>
                   </td>
