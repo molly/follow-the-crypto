@@ -16,8 +16,7 @@ export default function FAQPage() {
           Spot an error? Found an advertisement by a cryptocurrency-focused PAC
           that isn&rsquo;t on the site yet? Spotted a PAC that appears to be
           crypto-affiliated? Have a question I haven&rsquo;t answered in the{" "}
-          <a href="http://localhost:3000/about/faq">FAQ</a>? Have a suggestion?
-          Just want to say hi?
+          <a href="/about/faq">FAQ</a>? Have a suggestion? Just want to say hi?
         </p>
         <p>
           Missing data, errors, or feature suggestions are best submitted{" "}
