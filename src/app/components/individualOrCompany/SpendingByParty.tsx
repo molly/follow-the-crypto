@@ -8,7 +8,7 @@ import styles from "./individualOrCompany.module.css";
 
 const MARGIN_BOTTOM = 40;
 const MARGIN_TOP = 15;
-const MARGIN_LEFT = 40;
+const MARGIN_LEFT = 45;
 
 const PARTY_ORDER: Record<string, number> = {
   DEM: 0,

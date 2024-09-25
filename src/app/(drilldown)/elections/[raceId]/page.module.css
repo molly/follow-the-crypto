@@ -196,18 +196,25 @@
   color: var(--main-text);
 }
 
-/* Committees */
-.committeeCard {
+/* Committees, other support */
+.committeeCard,
+.otherSupportCard {
   composes: card from "@/app/shared.module.css";
 }
 
-.committeeSpendingList {
+.committeeSpendingList,
+.otherSupportContributions {
   margin: 0.5rem 0 0 0;
   padding: 0 0 0 2rem;
 }
 
-.committeeSpendingListItem {
+.committeeSpendingListItem,
+.otherSupportContribution {
   padding: 0.25rem 0;
+}
+
+.otherSupportSection {
+  margin: 1rem 0;
 }
 
 /* Ads */
@@ -259,6 +266,10 @@
 
 .adImage {
   max-width: 100%;
+}
+
+.adsEmpty {
+  margin: 1rem 0;
 }
 
 @media (max-width: 1000px) {

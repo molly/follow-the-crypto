@@ -36,6 +36,14 @@ export default async function CommitteeSpending({
   const sortedCommitteeIds = Object.keys(spending).sort((a, b) => {
     return spending[b].total - spending[a].total;
   });
+  if (sortedCommitteeIds.length === 0) {
+    return (
+      <span className="secondary">
+        No cryptocurrency-focused committees have made expenditures involving
+        this election.
+      </span>
+    );
+  }
   return (
     <div>
       {sortedCommitteeIds.map((committeeId) => {
@@ -90,5 +98,4 @@ export default async function CommitteeSpending({
       })}
     </div>
   );
-  return null;
 }

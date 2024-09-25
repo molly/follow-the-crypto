@@ -16,6 +16,7 @@ import {
 } from "firebase/firestore";
 import { cache } from "react";
 import { Ad, AdGroup } from "../types/Ads";
+import { Beneficiary } from "../types/Beneficiaries";
 import { Company } from "../types/Companies";
 import {
   ElectionGroup,
@@ -436,4 +437,36 @@ export const fetchIndividual = cache(
 export const fetchAllRecipients = cache(
   async (): Promise<Record<string, RecipientDetails> | ErrorType> =>
     fetchSnapshot("allRecipients", "recipients"),
+);
+
+// BENEFICIARIIES ------------------------------------------------------------
+export const fetchBeneficiaries = cache(
+  async (): Promise<Record<string, Beneficiary> | ErrorType> =>
+    fetchSnapshot("allRecipients", "recipientsWithContribs"),
+);
+
+export const fetchBeneficiariesOrder = cache(
+  async (): Promise<string[] | ErrorType> => {
+    const beneficiariesOrderData = await fetchSnapshot(
+      "allRecipients",
+      "recipientsOrder",
+    );
+    if (isError(beneficiariesOrderData)) {
+      return beneficiariesOrderData as ErrorType;
+    }
+    return beneficiariesOrderData.order;
+  },
+);
+
+export const fetchBeneficiariesWithoutExpendituresOrder = cache(
+  async (): Promise<string[] | ErrorType> => {
+    const beneficiariesOrderData = await fetchSnapshot(
+      "allRecipients",
+      "recipientsOrder",
+    );
+    if (isError(beneficiariesOrderData)) {
+      return beneficiariesOrderData as ErrorType;
+    }
+    return beneficiariesOrderData.candidatesWithoutExpendituresOrder;
+  },
 );

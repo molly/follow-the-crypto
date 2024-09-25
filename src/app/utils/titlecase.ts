@@ -56,6 +56,7 @@ export function titlecaseCommittee(
   titlecased = titlecased.replace(/(.*?) for Us/, function (_, name) {
     return `${titlecaseIndividualName(name)} for US`;
   });
+  titlecased = titlecased.replace(" U.s. ", " U.S. ");
   titlecased = titlecased.replace(
     /((?:^|\W)\w{2}) Senate/,
     function (_, state) {
@@ -99,7 +100,7 @@ export function titlecaseOccupation(str: string): string {
 }
 
 export function titlecaseLastFirst(str: string): string {
-  const parts = str.split(", ");
+  const parts = str.split(", ").map((x) => x.trim());
   const firstname = parts[1].split(" ")[0];
   return titlecaseIndividualName(`${firstname} ${parts[0]}`);
 }
