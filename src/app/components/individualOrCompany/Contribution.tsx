@@ -64,11 +64,8 @@ function ContributionAmount({
     contribution.contribution_receipt_amount
   ) {
     return (
-      <span>
-        <span className={isSubRow ? styles.subRowCurrency : ""}>
-          {formatCurrency(contribution.contribution_receipt_amount)}
-        </span>{" "}
-        <span>{contribution.transaction_id}</span>
+      <span className={isSubRow ? styles.subRowCurrency : ""}>
+        {formatCurrency(contribution.contribution_receipt_amount)}
       </span>
     );
   }
