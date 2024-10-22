@@ -1,6 +1,8 @@
 import InfluencedRaces from "@/app/components/InfluencedRaces";
 import { customMetadata } from "@/app/utils/metadata";
 import type { Metadata } from "next";
+import OtherSupportedRaces from "./OtherSupportedRaces";
+import styles from "./page.module.css";
 
 export const metadata: Metadata = customMetadata({
   title: "Influenced Elections",
@@ -10,13 +12,10 @@ export const metadata: Metadata = customMetadata({
 
 export default function RacesList() {
   return (
-    <div className="single-column-page">
-      <h1>Elections</h1>
-      <p>
-        Cryptocurrency-focused PACs have already spent heavily to influence the
-        outcome of multiple Congressional races.
-      </p>
+    <div className={styles.page}>
+      <h1 className="no-margin">Elections</h1>
       <InfluencedRaces fullPage={true} />
+      <OtherSupportedRaces />
     </div>
   );
 }

@@ -66,12 +66,12 @@ export default async function Elections({ raceId }: { raceId: string }) {
     fetchStateElections(stateAbbr),
   ]);
 
-  if (isError(expendituresData) || isError(electionsData)) {
+  if (isError(electionsData)) {
     let errorText;
-    if (is4xx(expendituresData) && is4xx(electionsData)) {
+    if (is4xx(electionsData)) {
       errorText = (
         <span className="secondary">
-          No cryptocurrency PAC spending has been recorded in this state.
+          No cryptocurrency PAC spending has been recorded for this election.
         </span>
       );
     } else {
@@ -79,18 +79,12 @@ export default async function Elections({ raceId }: { raceId: string }) {
     }
     return <div className={sharedStyles.errorCardContent}>{errorText}</div>;
   }
-  const expenditures = expendituresData as PopulatedStateExpenditures;
-  const elections = electionsData as ElectionsByState;
 
-  if (!(shortRaceId in elections) || !(raceId in expenditures.by_race)) {
-    return (
-      <div className={sharedStyles.errorCardContent}>
-        <span className="secondary">
-          No cryptocurrency PAC spending has been recorded for this election.
-        </span>
-      </div>
-    );
-  }
+  const expenditures =
+    isError(expendituresData) && is4xx(expendituresData)
+      ? null
+      : (expendituresData as PopulatedStateExpenditures);
+  const elections = electionsData as ElectionsByState;
 
   const upcomingRaces = elections[shortRaceId].races.filter((r) =>
     isUpcomingRace(r),
@@ -101,7 +95,7 @@ export default async function Elections({ raceId }: { raceId: string }) {
       key={`${shortRaceId}-${race.type}`}
       race={race}
       electionData={elections[shortRaceId]}
-      expenditures={expenditures.by_race[raceId]}
+      expenditures={expenditures ? expenditures.by_race[raceId] : null}
       upcomingRaces={upcomingRaces}
     />
   ));

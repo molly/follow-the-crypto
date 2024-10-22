@@ -18,7 +18,12 @@ export const sortRaces = (a: string, b: string) => {
 };
 
 export const getRaceName = (raceId: string) => {
-  const raceParts = raceId.split("-");
+  const raceIdCaps = raceId.toUpperCase();
+  if (raceIdCaps === "PRESIDENT") {
+    return "Presidential";
+  }
+
+  const raceParts = raceIdCaps.split("-");
   let state, office, district;
   if (raceParts[0].length == 1) {
     // ShortID

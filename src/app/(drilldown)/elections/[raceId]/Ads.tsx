@@ -5,6 +5,7 @@ import { CommitteeConstant } from "@/app/types/Committee";
 import { isError } from "@/app/utils/errors";
 import GoogleAd from "./GoogleAd";
 import ImageAd from "./ImageAd";
+import styles from "./page.module.css";
 
 export default async function Ads({ raceId }: { raceId: string }) {
   const [adsData, committeeConstantData] = await Promise.all([
@@ -24,7 +25,9 @@ export default async function Ads({ raceId }: { raceId: string }) {
 
   if (ads.length === 0) {
     return (
-      <div className="secondary">No known ads related to this election.</div>
+      <div className={styles.adsEmpty}>
+        No known ads related to this election.
+      </div>
     );
   }
   return ads.map((ad) => {

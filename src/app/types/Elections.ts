@@ -56,6 +56,7 @@ export type CandidateSummary = {
 
   outside_spending?: OutsideSpending;
   opposition_details?: OppositionConstant;
+  has_non_pac_support?: boolean;
 } & Pick<Candidate, "candidate_id" | "incumbent_challenge" | "party">;
 
 export interface Race {

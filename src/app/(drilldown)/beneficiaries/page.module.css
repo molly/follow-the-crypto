@@ -1,0 +1,3 @@
+.card {
+  composes: cardWithTable from "@/app/shared.module.css";
+}

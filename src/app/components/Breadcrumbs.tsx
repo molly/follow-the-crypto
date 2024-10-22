@@ -50,6 +50,9 @@ export default function Breadcrumbs() {
       }
       return committees[segment.toUpperCase()].name;
     } else if (segments[0].toLowerCase() === "elections" && index === 1) {
+      if (segment.toUpperCase() === "PRESIDENT") {
+        return "President";
+      }
       const state = segment.split("-")[0].toUpperCase();
       return `${STATES_BY_ABBR[state]} ${getRaceName(segment.toUpperCase())} election`;
     } else if (

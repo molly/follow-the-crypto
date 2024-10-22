@@ -91,6 +91,7 @@ export type IndividualOrCompanyContribution = {
     | "contributor_aggregate_ytd"
     | "memo_text"
     | "receipt_type"
+    | "contributor_name"
   >;
 
 export type IndividualOrCompanyContributionGroup = {

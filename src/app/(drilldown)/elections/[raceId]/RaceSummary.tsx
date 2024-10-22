@@ -25,13 +25,13 @@ export default function RaceSummary({
 }: {
   race: Race;
   electionData: ElectionGroup;
-  expenditures: PopulatedRaceExpenditureGroup;
+  expenditures: PopulatedRaceExpenditureGroup | null;
   upcomingRaces: Race[];
 }) {
   const raceType = race.type;
-  const relatedExpenditures = expenditures.expenditures.filter(
-    (e) => e.subrace === raceType,
-  );
+  const relatedExpenditures = expenditures
+    ? expenditures.expenditures.filter((e) => e.subrace === raceType)
+    : [];
   const candidates = race.candidates;
   const candidateSummaries = race.candidates.map(
     (c) => electionData.candidates[c.name] || {},

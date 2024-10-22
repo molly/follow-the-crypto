@@ -1,5 +1,6 @@
 import {
   fetchAllStateElections,
+  fetchBeneficiaries,
   fetchCandidateExpenditures,
 } from "@/app/actions/fetch";
 import styles from "@/app/components/tables.module.css";
@@ -16,6 +17,7 @@ import { formatCurrency } from "@/app/utils/utils";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { STATES_BY_ABBR } from "../data/states";
+import { Beneficiary } from "../types/Beneficiaries";
 import Candidate, { CandidateSkeleton } from "./Candidate";
 import ErrorText from "./ErrorText";
 import InformationalTooltip from "./InformationalTooltip";
@@ -123,10 +125,12 @@ function GoalOutcome({
 function CandidateRow({
   candidate,
   race,
+  beneficiary,
   small,
 }: {
   candidate: ExpenditureCandidateSummary;
   race: ElectionGroup;
+  beneficiary?: Beneficiary;
   small?: boolean;
 }) {
   const raceHref = `/elections/${candidate.state}-${candidate.race}`;
@@ -161,6 +165,9 @@ function CandidateRow({
           {candidate.oppose_total
             ? formatCurrency(candidate.oppose_total, true)
             : ""}
+        </td>
+        <td className="small-cell number-cell">
+          {beneficiary ? formatCurrency(beneficiary.total, true) : ""}
         </td>
         <td className="small-cell center-cell">
           <GoalOutcome candidate={candidate} />
@@ -211,17 +218,27 @@ export default function InfluencedRacesContents({
   const [raceDetailsData, setRaceDetails] = useState<
     Record<string, ElectionsByState> | ErrorType | null
   >();
+  const [beneficiaries, setBeneficiaries] = useState<Record<
+    string,
+    Beneficiary
+  > | null>();
 
   useEffect(() => {
     (async function () {
-      const [expenditureData, raceData] = await Promise.all([
-        fetchCandidateExpenditures(),
+      const [expenditureData, raceData, beneficiariesData] = await Promise.all([
+        fetchCandidateExpenditures(fullPage ? undefined : 5),
         fetchAllStateElections(),
+        fetchBeneficiaries(),
       ]);
       setExpenditures(expenditureData);
       setRaceDetails(raceData);
+      setBeneficiaries(
+        isError(beneficiariesData)
+          ? {}
+          : (beneficiariesData as Record<string, Beneficiary>),
+      );
     })();
-  }, []);
+  }, [fullPage]);
 
   if (!expenditures || !raceDetailsData) {
     return <InfluencedRacesContentsSkeleton fullPage={fullPage} />;
@@ -238,17 +255,19 @@ export default function InfluencedRacesContents({
   const { order, candidates } = expenditures as ExpendituresByCandidate;
   const raceDetails = raceDetailsData as Record<string, ElectionsByState>;
   let rows = order;
-  if (!fullPage) {
-    rows = order.slice(0, 5);
-  }
 
   const contents = rows.map((candidateName) => {
     const candidate = candidates[candidateName];
+    const beneficiary =
+      beneficiaries && candidate.candidate_id
+        ? beneficiaries[candidate.candidate_id]
+        : undefined;
     return (
       <CandidateRow
         key={candidateName}
         candidate={candidate}
         race={raceDetails[candidate.state][candidate.race]}
+        beneficiary={beneficiary}
         small={small}
       />
     );
@@ -266,6 +285,16 @@ export default function InfluencedRacesContents({
           <th className="center-cell">Office</th>
           <th className="number-cell">Support</th>
           <th className="number-cell">Oppose</th>
+          <th className="small-cell center-cell">
+            Other support
+            <InformationalTooltip>
+              <span>
+                Contributions from cryptocurrency industry companies or
+                associated individuals to this candidate or aligned committees,
+                which have not gone through the crypto-focused super PACs
+              </span>
+            </InformationalTooltip>
+          </th>
           <th className="small-cell center-cell">
             Goal{" "}
             <span className="no-wrap">

@@ -13,9 +13,12 @@ import {
   doc,
   getDoc,
   getDocs,
+  query,
+  where,
 } from "firebase/firestore";
 import { cache } from "react";
 import { Ad, AdGroup } from "../types/Ads";
+import { Beneficiary } from "../types/Beneficiaries";
 import { Company } from "../types/Companies";
 import {
   ElectionGroup,
@@ -345,7 +348,13 @@ export const fetchStateElections = cache(
 
 export const fetchElection = cache(
   async (raceId: string): Promise<ElectionGroup | ErrorType> => {
-    const [state, ...raceParts] = raceId.split("-");
+    let state, raceParts;
+    if (raceId.toUpperCase() === "PRESIDENT") {
+      state = "US";
+      raceParts = ["P"];
+    } else {
+      [state, ...raceParts] = raceId.split("-");
+    }
     const shortRaceId = raceParts.join("-");
     const stateElectionsData = await fetchStateElections(state);
     if (isError(stateElectionsData)) {
@@ -362,20 +371,70 @@ export const fetchElection = cache(
 
 // CANDIDATES -----------------------------------------------------------
 export const fetchCandidateExpenditures = cache(
-  async (): Promise<ExpendituresByCandidate | ErrorType> =>
-    fetchSnapshot("candidates", "bySpending"),
+  async (
+    limit: number | undefined,
+  ): Promise<ExpendituresByCandidate | ErrorType> => {
+    const order = await fetchSnapshot("candidatesOrder", "order");
+    if (isError(order)) {
+      return order as ErrorType;
+    }
+    const candidateOrder = order.order as string[];
+    if (limit) {
+      const limitedCandidates = candidateOrder.slice(0, limit);
+      try {
+        const q = query(
+          collection(db, "candidates"),
+          where("common_name", "in", limitedCandidates),
+        );
+        const snapshot = await getDocs(q);
+        const results = {
+          candidates: {},
+          order: limitedCandidates,
+        } as ExpendituresByCandidate;
+        snapshot.forEach((doc) => {
+          const candidateData = doc.data() as ExpenditureCandidateSummary;
+          results.candidates[candidateData.common_name] = candidateData;
+        });
+        return results;
+      } catch (e) {
+        return { error: true };
+      }
+    } else {
+      const results = await fetchCollection("candidates");
+      if (isError(results)) {
+        return results as ErrorType;
+      }
+      const resultsData = results as DocumentData[];
+      return resultsData.reduce(
+        (acc, result) => {
+          const candidateData = result.data();
+          acc.candidates[candidateData.common_name] = candidateData;
+          return acc;
+        },
+        { candidates: {}, order: candidateOrder } as ExpendituresByCandidate,
+      ) as ExpendituresByCandidate;
+    }
+  },
 );
 
 export const fetchCandidatesWithOpposeSpending = cache(
   async (): Promise<ExpenditureCandidateSummary[] | ErrorType> => {
     const [data, oppositionData] = await Promise.all([
-      fetchSnapshot("candidates", "bySpending"),
+      fetchCollection("candidates"),
       fetchConstant("oppositionSpending"),
     ]);
     if (isError(data)) {
       return data as ErrorType;
     }
-    const candidates = data as ExpendituresByCandidate;
+    const candidates = (data as DocumentData[]).reduce(
+      (acc, result) => {
+        const candidateData = result.data();
+        acc.candidates[candidateData.common_name] = candidateData;
+        return acc;
+      },
+      { candidates: {} } as ExpendituresByCandidate,
+    ) as ExpendituresByCandidate;
+
     const oppositionConstant = (oppositionData || {}) as Record<
       string,
       OppositionConstant
@@ -436,4 +495,36 @@ export const fetchIndividual = cache(
 export const fetchAllRecipients = cache(
   async (): Promise<Record<string, RecipientDetails> | ErrorType> =>
     fetchSnapshot("allRecipients", "recipients"),
+);
+
+// BENEFICIARIIES ------------------------------------------------------------
+export const fetchBeneficiaries = cache(
+  async (): Promise<Record<string, Beneficiary> | ErrorType> =>
+    fetchSnapshot("allRecipients", "recipientsWithContribs"),
+);
+
+export const fetchBeneficiariesOrder = cache(
+  async (): Promise<string[] | ErrorType> => {
+    const beneficiariesOrderData = await fetchSnapshot(
+      "allRecipients",
+      "recipientsOrder",
+    );
+    if (isError(beneficiariesOrderData)) {
+      return beneficiariesOrderData as ErrorType;
+    }
+    return beneficiariesOrderData.order;
+  },
+);
+
+export const fetchBeneficiariesWithoutExpendituresOrder = cache(
+  async (): Promise<string[] | ErrorType> => {
+    const beneficiariesOrderData = await fetchSnapshot(
+      "allRecipients",
+      "recipientsOrder",
+    );
+    if (isError(beneficiariesOrderData)) {
+      return beneficiariesOrderData as ErrorType;
+    }
+    return beneficiariesOrderData.candidatesWithoutExpendituresOrder;
+  },
 );

@@ -256,26 +256,32 @@ a.unstyled {
 
 .rep {
   fill: var(--party-republican);
+  color: var(--party-republican);
 }
 
 .dem {
   fill: var(--party-democrat);
+  color: var(--party-democrat);
 }
 
 .lib {
   fill: var(--party-libertarian);
+  color: var(--party-libertarian);
 }
 
 .gre {
   fill: var(--party-green);
+  color: var(--party-green);
 }
 
 .ind {
   fill: var(--party-independent);
+  color: var(--party-independent);
 }
 
 .unk {
   fill: var(--color-slate-400);
+  color: var(--color-slate_400);
 }
 
 @media (min-width: 1200px) {

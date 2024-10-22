@@ -14,15 +14,13 @@ export default function InfluencedRaces({
 
   return (
     <div className={styles.influencedCard}>
-      {!fullPage && (
-        <div className={styles.tableCardContent}>
-          <p>
-            These PACs have already spent heavily to influence the outcome of
-            multiple Congressional races.
-          </p>
-          <h2>{`${fullPage ? "R" : "Top r"}aces influenced by crypto industry money`}</h2>
-        </div>
-      )}
+      <div className={styles.tableCardContent}>
+        <p>
+          These PACs have already spent heavily to influence the outcome of
+          multiple Congressional races.
+        </p>
+        <h2>{`${fullPage ? "R" : "Top r"}aces influenced by crypto industry money`}</h2>
+      </div>
       <InfluencedRacesContents small={useCompact} fullPage={fullPage} />
       {!fullPage && (
         <div className={styles.tableCardContent}>
