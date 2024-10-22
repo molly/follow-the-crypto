@@ -64,9 +64,15 @@ export default async function OtherSupport({ raceId }: { raceId: string }) {
   }
   const election = electionData as ElectionGroup;
   const beneficiaries = beneficiaryData as Record<string, Beneficiary>;
-  const supportedCandidates = Object.values(election.candidates).filter(
-    (c) => c.has_non_pac_support,
-  );
+
+  const supportedCandidates = Object.values(election.candidates)
+    .filter((c) => c.has_non_pac_support)
+    .sort((a, b) => {
+      const aTotal = a.candidate_id ? beneficiaries[a.candidate_id].total : 0;
+      const bTotal = b.candidate_id ? beneficiaries[b.candidate_id].total : 0;
+      return bTotal - aTotal;
+    });
+
   return (
     <div>
       {supportedCandidates.map((c) => {

@@ -226,7 +226,7 @@ export default function InfluencedRacesContents({
   useEffect(() => {
     (async function () {
       const [expenditureData, raceData, beneficiariesData] = await Promise.all([
-        fetchCandidateExpenditures(),
+        fetchCandidateExpenditures(fullPage ? undefined : 5),
         fetchAllStateElections(),
         fetchBeneficiaries(),
       ]);
@@ -238,7 +238,7 @@ export default function InfluencedRacesContents({
           : (beneficiariesData as Record<string, Beneficiary>),
       );
     })();
-  }, []);
+  }, [fullPage]);
 
   if (!expenditures || !raceDetailsData) {
     return <InfluencedRacesContentsSkeleton fullPage={fullPage} />;
@@ -255,9 +255,6 @@ export default function InfluencedRacesContents({
   const { order, candidates } = expenditures as ExpendituresByCandidate;
   const raceDetails = raceDetailsData as Record<string, ElectionsByState>;
   let rows = order;
-  if (!fullPage) {
-    rows = order.slice(0, 5);
-  }
 
   const contents = rows.map((candidateName) => {
     const candidate = candidates[candidateName];

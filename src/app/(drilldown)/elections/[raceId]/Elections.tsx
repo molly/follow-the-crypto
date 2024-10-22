@@ -71,7 +71,7 @@ export default async function Elections({ raceId }: { raceId: string }) {
     if (is4xx(electionsData)) {
       errorText = (
         <span className="secondary">
-          No cryptocurrency PAC spending has been recorded in this state.
+          No cryptocurrency PAC spending has been recorded for this election.
         </span>
       );
     } else {
