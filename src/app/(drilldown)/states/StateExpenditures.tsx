@@ -71,10 +71,12 @@ export default async function StateExpenditures() {
           (a, b) => data[state].by_race[b] - data[state].by_race[a],
         );
         return (
-          <>
-            <tr key={state} className={styles.headerRow}>
+          <Fragment key={state}>
+            <tr className={styles.headerRow}>
               <td colSpan={2} className="text-cell">
-                <Link href={`/states/${stateName.toLowerCase().replace(" ", "-")}`}>
+                <Link
+                  href={`/states/${stateName.toLowerCase().replace(" ", "-")}`}
+                >
                   {stateName}
                 </Link>
               </td>
@@ -97,7 +99,7 @@ export default async function StateExpenditures() {
                 </tr>
               );
             })}
-          </>
+          </Fragment>
         );
       })}
     </tbody>

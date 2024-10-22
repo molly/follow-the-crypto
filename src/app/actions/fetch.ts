@@ -222,6 +222,9 @@ export const fetchMapData = cache(async (): Promise<MapData | ErrorType> => {
     const stateData = data as Record<string, StateExpenditures>;
     const mapData: MapData = {};
     for (const state of Object.keys(stateData)) {
+      if (state == "US") {
+        continue;
+      }
       mapData[state] = {
         total: stateData[state].total,
         by_race: {},
