@@ -14,7 +14,10 @@ function isSingleCandidateCommittee(recipient: RecipientDetails) {
     const candidates = recipient.candidate_ids.map(
       (id) => recipient.candidate_details[id],
     );
-    if (new Set(candidates.map((c) => c.name.split(", ")[0])).size === 1) {
+    if (
+      new Set(candidates.map((c) => !c.name || c.name.split(", ")[0])).size ===
+      1
+    ) {
       return true;
     }
   }
