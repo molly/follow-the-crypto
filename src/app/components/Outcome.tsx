@@ -35,6 +35,8 @@ export default function Outcome({
         // Edge case where election date may have passed, but results have not yet become available.
         return `${inSentence ? " is a" : "A"}waiting results from the ${getSubraceName(nextRace)} on ${formatDateFromString(nextRace.date)}`;
       }
+    } else {
+      return `${inSentence ? " w" : "W"}on the general election`;
     }
   }
   return null;

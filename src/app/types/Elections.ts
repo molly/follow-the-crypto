@@ -39,6 +39,7 @@ export type CandidateSummary = {
   support_total: number;
   races: RaceType[];
   defeated?: boolean;
+  won: boolean;
   defeated_race?: RaceType;
   withdrew?: boolean;
   withdrew_race?: RaceType;
