@@ -5,13 +5,13 @@ import {
 } from "@/app/actions/fetch";
 import styles from "@/app/components/tables.module.css";
 import sharedStyles from "@/app/shared.module.css";
-import { ElectionGroup, ElectionsByState } from "@/app/types/Elections";
+import { ElectionGroup, ElectionsByState, Race } from "@/app/types/Elections";
 import {
   ExpenditureCandidateSummary,
   ExpendituresByCandidate,
 } from "@/app/types/Expenditures";
 import { ErrorType, isError } from "@/app/utils/errors";
-import { getRaceName } from "@/app/utils/races";
+import { getRaceName, getUpcomingRaceForCandidate } from "@/app/utils/races";
 import { range } from "@/app/utils/range";
 import { formatCurrency } from "@/app/utils/utils";
 import Link from "next/link";
@@ -49,9 +49,11 @@ function InfluencedRacesContentsSkeleton({ fullPage }: { fullPage: boolean }) {
 
 function GoalOutcome({
   candidate,
+  races,
   explanatoryText = false,
 }: {
   candidate: ExpenditureCandidateSummary;
+  races: Race[];
   explanatoryText?: boolean;
 }) {
   const wasOpposed = candidate.oppose_total > 0;
@@ -117,6 +119,51 @@ function GoalOutcome({
       </svg>
     );
     text = `Candidate supported by crypto PACs won their race`;
+  } else {
+    const nextRace = getUpcomingRaceForCandidate(races, candidate);
+    if (!nextRace) {
+      if (wasSupported && wasOpposed) {
+        icon = (
+          <svg
+            className={`${sharedStyles.goalMixed} ${explanatoryText ? sharedStyles.goalInline : ""}`}
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 448 512"
+          >
+            <title>
+              Mixed results (this candidate received both support and opposition
+              from crypto PACs)
+            </title>
+            <path d="M32 288c-17.7 0-32 14.3-32 32s14.3 32 32 32l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L32" />
+          </svg>
+        );
+        text = `Candidate both supported and opposed by crypto PACs won their race`;
+      } else if (wasSupported) {
+        icon = (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 448 512"
+            className={`${sharedStyles.goalAccomplished} ${explanatoryText ? sharedStyles.goalInline : ""}`}
+            role="image"
+          >
+            <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
+            <title>Goal achieved</title>
+          </svg>
+        );
+        text = `Candidate supported by crypto PACs won their race`;
+      } else if (wasOpposed) {
+        icon = (
+          <svg
+            className={`${sharedStyles.goalFailed} ${explanatoryText ? sharedStyles.goalInline : ""}`}
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 384 512"
+          >
+            <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+            <title>Goal failed</title>
+          </svg>
+        );
+        text = `Candidate supported by crypto PACs lost their race`;
+      }
+    }
   }
 
   if (!icon) {
@@ -183,7 +230,7 @@ function CandidateRow({
           {beneficiary ? formatCurrency(beneficiary.total, true) : ""}
         </td>
         <td className="small-cell center-cell">
-          <GoalOutcome candidate={candidate} />
+          <GoalOutcome candidate={candidate} races={race.races} />
         </td>
         <td className="text-cell">
           <Outcome candidate={candidate} races={race.races} />
@@ -192,7 +239,11 @@ function CandidateRow({
     );
   } else {
     const goalOutcome = (
-      <GoalOutcome candidate={candidate} explanatoryText={true} />
+      <GoalOutcome
+        candidate={candidate}
+        races={race.races}
+        explanatoryText={true}
+      />
     );
     return (
       <div key={candidate.common_name} className={styles.influencedRow}>
