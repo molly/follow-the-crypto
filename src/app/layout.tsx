@@ -20,6 +20,12 @@ export default function RootLayout({
         <link rel="me" href="https://hachyderm.io/@followthecrypto" />
       </head>
       <body className={sourceSans.className}>
+        <div className="banner">
+          This website is being updated to track ongoing Congressional activity
+          and the 2026 midterm election cycles. Current data on the site
+          reflects the 2024 election cycle and may be outdated; it will be
+          updated soon.
+        </div>
         <Sidebar />
         {children}
       </body>
