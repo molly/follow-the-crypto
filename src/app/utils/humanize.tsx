@@ -35,12 +35,17 @@ export const humanizeRoundedCurrency = (
   value: number,
   round = false,
 ): string => {
-  if (value > 1000000) {
-    const rounded = Math.floor(value / 1000000);
-    return `$${rounded} million`;
-  } else if (value > 1000) {
-    const rounded = Math.floor(value / 1000);
-    return `$${rounded} thousand`;
+  if (value >= 1000000) {
+    let amount;
+    if (round) {
+      amount = Math.floor(value / 1000000);
+    } else {
+      amount = value / 1000000;
+    }
+    return `$${amount} million`;
+  } else if (value < 10000) {
+    let amount = round ? Math.floor(value / 1000) : value / 1000;
+    return `${amount} thousand`;
   }
   return formatCurrency(value, true);
 };

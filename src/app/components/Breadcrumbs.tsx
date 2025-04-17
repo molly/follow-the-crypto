@@ -63,6 +63,8 @@ export default function Breadcrumbs() {
       return titlecase(segment.toLowerCase().replaceAll("-", " "));
     } else if (index === 1 && segment.toLowerCase() === "faq") {
       return "FAQ";
+    } else if (index === 0 && segment.toLowerCase() === "quidproquo") {
+      return "Quid pro quo";
     }
     return titlecase(segment);
   };
