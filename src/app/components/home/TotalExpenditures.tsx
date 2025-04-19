@@ -25,7 +25,7 @@ export default async function TotalDisbursements({
       topText={
         <div className={styles.spentTopSection}>They have spent more than</div>
       }
-      amount={humanizeRoundedCurrency(expenditures)}
+      amount={humanizeRoundedCurrency(expenditures, true)}
       bottomText="of it so far."
       className={className}
     />

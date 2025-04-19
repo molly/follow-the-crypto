@@ -5,6 +5,7 @@ export const qpqData = {
     benefits: [
       "SEC enforcement case dismissed with prejudice",
       "Relaunched bitcoin borrowing program previously shut down after SEC warnings",
+      "Invitation to White House crypto summit",
     ],
     contributions: [
       { amount: 75000000, recipient: "crypto-focused super PACs" },
@@ -43,7 +44,8 @@ export const qpqData = {
     link: "/companies/gemini",
     benefits: [
       "SEC enforcement case stayed pending resolution",
-      "SEC investigation ended",
+      "SEC investigation ended with no action",
+      "Invitation to White House crypto summit",
     ],
     contributions: [
       { amount: 4900000, recipient: "crypto-focused super PACs" },
@@ -57,7 +59,7 @@ export const qpqData = {
   },
   cryptocom: {
     name: "Crypto.com",
-    benefits: ["SEC enforcement case dismissed with prejudice"],
+    benefits: ["SEC investigation ended with no action"],
     contributions: [
       {
         benefit:
@@ -67,7 +69,10 @@ export const qpqData = {
   },
   robinhood: {
     name: "Robinhood",
-    benefits: ["SEC investigation ended"],
+    benefits: [
+      "SEC investigation ended with no action",
+      "Invitation to White House crypto summit",
+    ],
     contributions: [{ amount: 2000000, recipient: "Trump inauguration fund" }],
   },
   kraken: {
@@ -76,6 +81,7 @@ export const qpqData = {
     benefits: [
       "SEC enforcement case to be dismissed with prejudice",
       "Relaunched staking services which were shut down as part of a February 2023 SEC settlement",
+      "Invitation to White House crypto summit",
     ],
     contributions: [
       { amount: 1000000, recipient: "Trump super PACs" },
@@ -101,6 +107,7 @@ export const qpqData = {
     benefits: [
       "SEC enforcement case stayed pending resolution",
       "$75 million of previous SEC fine returned to Ripple",
+      "Invitation to White House crypto summit",
     ],
     contributions: [
       { amount: 73000000, recipient: "crypto-focused super PACs" },
@@ -112,6 +119,7 @@ export const qpqData = {
     link: "/companies/andreessen-horowitz",
     benefits: [
       "Four Andreessen Horowitz employees installed in formal or informal positions of influence at the White House",
+      "Invitation to White House crypto summit",
     ],
     contributions: [
       { amount: 70000000, recipient: "crypto-focused super PACs" },
