@@ -126,4 +126,32 @@ export const qpqData = {
       { amount: 5350000, recipient: "Trump super PACs" },
     ],
   },
+  yuga: {
+    name: "Yuga Labs",
+    benefits: ["SEC investigation ended with no action"],
+  },
+  opensea: {
+    name: "OpenSea",
+    benefits: ["SEC investigation ended with no action"],
+  },
+  uniswap: {
+    name: "Uniswap",
+    benefits: ["SEC investigation ended with no action"],
+  },
+  unicoin: {
+    name: "Unicoin",
+    benefits: [
+      "SEC offered negotiated settlement to end ongoing investigation (refused by Unicoin)",
+    ],
+  },
+  nova: {
+    name: "Nova Labs",
+    benefits: [
+      "SEC case settled for $200,000 fine, claims dropped that Helium and related tokens are securities",
+    ],
+  },
+  hex: {
+    name: "Hex",
+    benefits: ["SEC enforcement case dropped"],
+  },
 };

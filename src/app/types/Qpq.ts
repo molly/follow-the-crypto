@@ -8,5 +8,5 @@ export type QPQ = {
   name: string;
   link?: string;
   benefits: string[];
-  contributions: QPQContribution[];
+  contributions?: QPQContribution[];
 };

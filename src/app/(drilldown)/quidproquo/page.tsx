@@ -15,18 +15,23 @@ export const metadata: Metadata = customMetadata({
 
 export default async function QuidProQuoPage() {
   const sortedQpq = Object.values(qpqData).sort((a, b) => {
-    const aAmount = a.contributions
-      ? a.contributions.reduce(
-          (acc, curr) => acc + ("amount" in curr ? curr.amount || 0 : 0),
-          0,
-        )
-      : 0;
-    const bAmount = b.contributions
-      ? b.contributions.reduce(
-          (acc, curr) => acc + ("amount" in curr ? curr.amount || 0 : 0),
-          0,
-        )
-      : 0;
+    const aAmount =
+      "contributions" in a && a.contributions
+        ? a.contributions.reduce(
+            (acc, curr) => acc + ("amount" in curr ? curr.amount || 0 : 0),
+            0,
+          )
+        : 0;
+    const bAmount =
+      "contributions" in b && b.contributions
+        ? b.contributions.reduce(
+            (acc, curr) => acc + ("amount" in curr ? curr.amount || 0 : 0),
+            0,
+          )
+        : 0;
+    if (aAmount === bAmount) {
+      return a.name.localeCompare(b.name);
+    }
     return bAmount - aAmount;
   });
 
@@ -42,9 +47,10 @@ export default async function QuidProQuoPage() {
   };
 
   const renderContribution = (entry: QPQ) => {
-    const sortedContributions = entry.contributions.sort(
-      (a, b) => (b.amount || 0) - (a.amount || 0),
-    );
+    const sortedContributions =
+      "contributions" in entry && entry.contributions
+        ? entry.contributions.sort((a, b) => (b.amount || 0) - (a.amount || 0))
+        : [];
     return sortedContributions.map((contribution) => {
       if (contribution.amount) {
         return (
@@ -81,7 +87,9 @@ export default async function QuidProQuoPage() {
                   <ul>{renderBenefit(entry)}</ul>
                 </td>
                 <td>
-                  {entry.contributions && <ul>{renderContribution(entry)}</ul>}
+                  {"contributions" in entry && entry.contributions && (
+                    <ul>{renderContribution(entry)}</ul>
+                  )}
                 </td>
               </tr>
             ))}
