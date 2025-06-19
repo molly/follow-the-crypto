@@ -56,7 +56,7 @@ export default async function QuidProQuoPage() {
         return (
           <li
             key={contribution.recipient}
-          >{`${humanizeRoundedCurrency(contribution.amount)} to ${contribution.recipient}`}</li>
+          >{`${humanizeRoundedCurrency(contribution.amount)} ${contribution.recipient}`}</li>
         );
       }
       return <li key={contribution.benefit}>{contribution.benefit}</li>;
