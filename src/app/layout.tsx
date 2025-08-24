@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Source_Sans_3 } from "next/font/google";
+import Link from "next/link";
 import Sidebar from "./components/Sidebar";
 import "./globals.css";
 import { BASE_METADATA } from "./utils/metadata";
@@ -21,10 +22,8 @@ export default function RootLayout({
       </head>
       <body className={sourceSans.className}>
         <div className="banner">
-          This website is being updated to track ongoing Congressional activity
-          and the 2026 midterm election cycles. Current data on the site
-          reflects the 2024 election cycle and may be outdated; it will be
-          updated soon.
+          You are viewing data from the 2024 election cycle. Visit{" "}
+          <Link href="/">Follow the Crypto</Link> for the latest data.
         </div>
         <Sidebar />
         {children}

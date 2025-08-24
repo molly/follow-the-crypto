@@ -1,9 +1,11 @@
 import { Metadata } from "next";
 
+import { fetchAllCommittees } from "@/app/actions/fetch";
 import { MoneyCardSkeleton } from "@/app/components/MoneyCard";
 import { SpendingByPartySkeleton } from "@/app/components/SpendingByPartyWithOpposition";
 import COMMITTEES from "@/app/data/committees";
 import sharedStyles from "@/app/shared.module.css";
+import { CommitteeDetails } from "@/app/types/Committee";
 import { customMetadata } from "@/app/utils/metadata";
 import { Suspense } from "react";
 import CommitteeDetailsSection, {
@@ -30,6 +32,16 @@ export function generateMetadata({
     title: committeeName,
     description: `Election activity by the ${committeeName} PAC`,
   });
+}
+
+export async function generateStaticParams() {
+  const data = await fetchAllCommittees();
+  const committees = (data as CommitteeDetails[]).filter(
+    (c) => c.contributions && c.contributions > 0,
+  );
+  return committees.map((committee) => ({
+    committeeId: committee.id,
+  }));
 }
 
 export default function CommitteePage({

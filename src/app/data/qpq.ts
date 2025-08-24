@@ -26,6 +26,7 @@ export const qpqData = {
           "to purchase WLFI tokens from Trump-owned World Liberty Financial",
       },
       { amount: 37700000, recipient: "to purchase $TRUMP memecoins (via HTX)" },
+      { amount: 100000000, recipient: "to purchase $TRUMP memecoins" },
       { benefit: "Listed USD1 for trading on HTX" },
     ],
   },
@@ -67,6 +68,7 @@ export const qpqData = {
     name: "Crypto.com",
     benefits: ["SEC investigation ended with no action"],
     contributions: [
+      { amount: 10000000, recipient: "to Trump PACs" },
       {
         benefit:
           "Business partnership with Trump-owned Trump Media & Technology Group",

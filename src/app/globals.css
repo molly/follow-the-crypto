@@ -291,6 +291,11 @@ a.unstyled {
   text-align: center;
 }
 
+.banner a {
+  color: var(--color-white);
+  text-decoration: underline;
+}
+
 @media (min-width: 1200px) {
   .single-column-page {
     padding: 0 1rem;

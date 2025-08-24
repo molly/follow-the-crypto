@@ -15,6 +15,10 @@ export function generateMetadata({
   });
 }
 
+export function generateStaticParams() {
+  return ["super", "all"].map((type) => ({ type }));
+}
+
 export default async function PACRankingPage({
   params,
 }: {

@@ -1,6 +1,8 @@
+import { fetchMapData } from "@/app/actions/fetch";
 import { MoneyCardSkeleton } from "@/app/components/MoneyCard";
-import { STATES_BY_FULL } from "@/app/data/states";
+import { STATES_BY_ABBR, STATES_BY_FULL } from "@/app/data/states";
 import sharedStyles from "@/app/shared.module.css";
+import { MapData } from "@/app/types/MapData";
 import { customMetadata } from "@/app/utils/metadata";
 import { titlecase } from "@/app/utils/titlecase";
 import type { Metadata } from "next";
@@ -25,6 +27,19 @@ export function generateMetadata({
   return customMetadata({
     title: state,
     description: `Cryptocurrency-focused political action committee spending on 2024 elections in ${state}.`,
+  });
+}
+
+export async function generateStaticParams() {
+  const mapData = await fetchMapData();
+  const data = mapData as MapData;
+  const states = Object.keys(data).map((state) => {
+    const stateName = STATES_BY_ABBR[state];
+    return `/states/${stateName.toLowerCase().replace(" ", "-")}`;
+  });
+  return Object.keys(data).map((state) => {
+    const stateName = STATES_BY_ABBR[state];
+    return { state: stateName.toLowerCase().replace(" ", "-") };
   });
 }
 

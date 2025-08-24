@@ -7,8 +7,7 @@ import {
   RecipientDetails,
 } from "@/app/types/Contributions";
 import { IndividualContributions } from "@/app/types/Individuals";
-import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import styles from "./page.module.css";
 
 function ByDate({
@@ -61,27 +60,14 @@ export default function ContributionsCardContent({
   individual: IndividualContributions;
   recipients: Record<string, RecipientDetails>;
 }) {
-  const searchParams = useSearchParams();
   const pathname = usePathname();
-  const sort = searchParams.get("sort") || "recipient";
 
   return (
     <>
       <div className={styles.contributionCardHeader}>
         <h3 className={styles.contributionSectionHeader}>Contributions</h3>
-        <Link
-          href={`${pathname}/${sort === "recipient" ? "?sort=date" : ""}`}
-          className={styles.contributionCardSwitcher}
-        >
-          {`Sort by ${sort === "date" ? "recipient" : "date"}`}
-        </Link>
       </div>
-      {sort === "recipient" && (
-        <ByRecipient individual={individual} recipients={recipients} />
-      )}
-      {sort === "date" && (
-        <ByDate individual={individual} recipients={recipients} />
-      )}
+      <ByRecipient individual={individual} recipients={recipients} />
     </>
   );
 }

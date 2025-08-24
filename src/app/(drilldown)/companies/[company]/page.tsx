@@ -1,10 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
-import { fetchAllRecipients, fetchCompany } from "@/app/actions/fetch";
+import {
+  fetchAllRecipients,
+  fetchCompany,
+  fetchConstant,
+} from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import ContributionsGroup from "@/app/components/individualOrCompany/ContributionsGroup";
 import SpendingByParty from "@/app/components/individualOrCompany/SpendingByParty";
 import sharedStyles from "@/app/shared.module.css";
-import { Company } from "@/app/types/Companies";
+import { Company, CompanyConstant } from "@/app/types/Companies";
 import {
   IndividualOrCompanyContributionGroup,
   RecipientDetails,
@@ -26,6 +30,20 @@ export function generateMetadata({
     title: companyName,
     description: `Election spending by ${companyName} and related individuals.`,
   });
+}
+
+export async function generateStaticParams() {
+  const data = await fetchConstant<Record<string, CompanyConstant> | null>(
+    "companies",
+  );
+
+  return Object.keys(data as Record<string, CompanyConstant>).map(
+    (companyId) => {
+      return {
+        company: companyId,
+      };
+    },
+  );
 }
 
 export default async function CompanyPage({

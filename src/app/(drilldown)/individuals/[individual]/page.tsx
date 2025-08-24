@@ -28,6 +28,24 @@ export function generateMetadata({
   });
 }
 
+export async function generateStaticParams() {
+  const data = await fetchConstant<Record<string, IndividualConstant> | null>(
+    "individuals",
+  );
+  const individuals = Object.values(
+    data as Record<string, IndividualConstant>,
+  ).sort((a, b) =>
+    a.id
+      .split("-")
+      .slice(1)
+      .join("-")
+      .localeCompare(b.id.split("-").slice(1).join("-")),
+  );
+  return individuals.map((individual) => ({
+    individual: individual.id,
+  }));
+}
+
 function Subhead({
   individual,
   associatedCompany,
