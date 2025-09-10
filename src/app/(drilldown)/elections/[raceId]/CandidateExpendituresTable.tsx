@@ -40,6 +40,9 @@ export default function CandidateExpendituresTable({
   relatedExpenditures: Expenditure[];
   isRaceUpcoming: boolean;
 }) {
+  const trimmedCandidates = candidates.filter(
+    (c) => c.name in electionData.candidates,
+  );
   return (
     <table className={styles.candidateExpendituresTable}>
       <thead>
@@ -51,7 +54,7 @@ export default function CandidateExpendituresTable({
         </tr>
       </thead>
       <tbody>
-        {candidates.map((candidate, ind) => {
+        {trimmedCandidates.map((candidate, ind) => {
           const candidateSummary = electionData.candidates[candidate.name];
           const { supportTotal, opposeTotal } = getCandidateSupportOppose(
             electionData.candidates[candidate.name],
