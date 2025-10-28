@@ -11,6 +11,7 @@ export const qpqData = {
       { amount: 1000000, recipient: "to Senate super PACs" },
       { amount: 1000000, recipient: "to Trump inauguration fund" },
       { benefit: "Sponsored Trump birthday military parade" },
+      { benefit: "Contributed to fund Trump's $300 million ballroom project'" },
     ],
   },
   tron: {
@@ -34,7 +35,7 @@ export const qpqData = {
     benefits: [
       "SEC enforcement case dismissed with prejudice",
       "Reported talks with US Treasury Department to remove compliance monitor",
-      "Former Binance CEO Changpeng Zhao seeking pardon",
+      "Former Binance CEO Changpeng Zhao pardoned",
     ],
     contributions: [
       {
@@ -54,6 +55,7 @@ export const qpqData = {
     contributions: [
       { amount: 4900000, recipient: "to crypto-focused super PACs" },
       { amount: 2600000, recipient: "to Trump super PACs" },
+      { benefit: "Contributed to fund Trump's $300 million ballroom project'" },
     ],
   },
   consensys: {
@@ -112,6 +114,7 @@ export const qpqData = {
     contributions: [
       { amount: 73000000, recipient: "to crypto-focused super PACs" },
       { amount: 5000000, recipient: "to Trump inauguration fund" },
+      { benefit: "Contributed to fund Trump's $300 million ballroom project'" },
     ],
   },
   andreessen: {
