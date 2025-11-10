@@ -15,8 +15,8 @@ function isSingleCandidateCommittee(recipient: RecipientDetails) {
       (id) => recipient.candidate_details[id],
     );
     if (
-      new Set(candidates.map((c) => !c.name || c.name.split(", ")[0])).size ===
-      1
+      new Set(candidates.map((c) => !c || !c.name || c.name.split(", ")[0]))
+        .size === 1
     ) {
       return true;
     }

@@ -40,16 +40,18 @@ export default async function CompanyList() {
     data as Record<string, CompanyConstant>,
   ).reduce<Record<string, string[]>>(
     (acc, { category, id }) => {
-      if (category.includes("capital" as CompanyCategory)) {
-        if (category.includes("crypto" as CompanyCategory)) {
-          acc["crypto-capital"].push(id);
-        } else {
-          acc["capital"].push(id);
+      if (category) {
+        if (category.includes("capital" as CompanyCategory)) {
+          if (category.includes("crypto" as CompanyCategory)) {
+            acc["crypto-capital"].push(id);
+          } else {
+            acc["capital"].push(id);
+          }
+        } else if (category.includes("advocacy" as CompanyCategory)) {
+          acc["advocacy"].push(id);
+        } else if (category.includes("crypto" as CompanyCategory)) {
+          acc["crypto"].push(id);
         }
-      } else if (category.includes("advocacy" as CompanyCategory)) {
-        acc["advocacy"].push(id);
-      } else if (category.includes("crypto" as CompanyCategory)) {
-        acc["crypto"].push(id);
       }
       return acc;
     },
