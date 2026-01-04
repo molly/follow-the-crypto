@@ -49,6 +49,7 @@ export default function ContributionsGroup({
               <Claimed />
             </>
           )}
+          {` ${contributionsGroup.committee_id}`}
         </span>
         <span>{formatCurrency(contributionsGroup.total)}</span>
       </div>
