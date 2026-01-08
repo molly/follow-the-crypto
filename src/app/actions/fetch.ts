@@ -329,6 +329,7 @@ export const fetchAllExpenditureTotalsByParty = cache(
 );
 
 // ELECTIONS -------------------------------------------------------------
+// Note: Python backend merges races and manualRaces into races field
 export const fetchAllStateElections = cache(
   async (): Promise<Record<string, ElectionsByState> | ErrorType> => {
     const data = await fetchCollection("raceDetails");

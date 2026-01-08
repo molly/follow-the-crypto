@@ -94,7 +94,12 @@ export type RaceSpending = {
 };
 
 export interface ElectionGroup {
-  races: Race[];
+  races: Race[]; // Final reviewed/merged races
+  manualRaces?: Race[]; // Races added via admin UI
+  scrapedRaces?: Race[]; // Races from Python scraper
+  lastReviewed?: number; // Timestamp when races were last reviewed
+  manualRacesUpdated?: number; // Timestamp when manualRaces were last updated
+  scrapedRacesUpdated?: number; // Timestamp when scrapedRaces were last updated
   candidates: Record<string, CandidateSummary>;
   spending: Record<string, RaceSpending>;
 }
