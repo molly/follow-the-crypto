@@ -12,36 +12,42 @@ import styles from "./page.module.css";
 import { SpendingSkeleton } from "./Spending";
 import SpendingCard from "./SpendingCard";
 
-export function generateMetadata({
+export async function generateMetadata({
   params,
 }: {
   params: { raceId: string };
-}): Metadata {
-  if (params.raceId.toUpperCase() === "PRESIDENT") {
+}): Promise<Metadata> {
+  const { raceId } = await params;
+  if (raceId.toUpperCase() === "PRESIDENT") {
     return customMetadata({
       title: "Presidential election",
       description:
         "Cryptocurrency industry spending to influence the United States Presidential election.",
     });
   }
-  const state = params.raceId.split("-")[0];
-  const raceName = `${STATES_BY_ABBR[state]} ${getRaceName(params.raceId)}`;
+  const state = raceId.split("-")[0];
+  const raceName = `${STATES_BY_ABBR[state]} ${getRaceName(raceId)}`;
   return customMetadata({
     title: `${raceName} election`,
     description: `Cryptocurrency industry spending to influence the ${raceName} election.`,
   });
 }
 
-export default function RacePage({ params }: { params: { raceId: string } }) {
-  const raceIdSplit = params.raceId.split("-");
+export default async function RacePage({
+  params,
+}: {
+  params: { raceId: string };
+}) {
+  const { raceId } = await params;
+  const raceIdSplit = raceId.split("-");
   const stateAbbr = raceIdSplit[0];
-  const isPres = params.raceId.toUpperCase() === "PRESIDENT";
+  const isPres = raceId.toUpperCase() === "PRESIDENT";
 
   return (
     <>
       <div className={styles.columns}>
         <div className={styles.headerWrapper}>
-          <h1 className="no-margin">{`${isPres ? "" : `${STATES_BY_ABBR[stateAbbr]} `}${getRaceName(params.raceId)} election`}</h1>
+          <h1 className="no-margin">{`${isPres ? "" : `${STATES_BY_ABBR[stateAbbr]} `}${getRaceName(raceId)} election`}</h1>
           {!isPres && (
             <Link
               href={`/states/${STATES_BY_ABBR[stateAbbr].replaceAll(" ", "-").toLowerCase()}`}
@@ -53,20 +59,20 @@ export default function RacePage({ params }: { params: { raceId: string } }) {
         <div className={styles.electionsColumn}>
           <h2 className={styles.electionsColumnHeader}>Elections</h2>
           <Suspense fallback={<ElectionsSkeleton />}>
-            <Elections raceId={params.raceId} />
+            <Elections raceId={raceId} />
           </Suspense>
         </div>
         <div className={styles.rightColumn}>
           <div className={styles.spendingCard}>
             <h2 id="spending-label">Money involved in this election</h2>
             <Suspense fallback={<SpendingSkeleton />}>
-              <SpendingCard raceId={params.raceId} />
+              <SpendingCard raceId={raceId} />
             </Suspense>
           </div>
           <div className={styles.committeeCard}>
             <h2>Spending by cryptocurrency-focused committees</h2>
             <Suspense fallback={<div>Loading...</div>}>
-              <CommitteeSpending raceId={params.raceId} />
+              <CommitteeSpending raceId={raceId} />
             </Suspense>
           </div>
           <div className={styles.otherSupportCard}>
@@ -77,12 +83,12 @@ export default function RacePage({ params }: { params: { raceId: string } }) {
             </p>
             <h2>Other spending from the industry</h2>
             <Suspense fallback={<div>Loading...</div>}>
-              <OtherSupport raceId={params.raceId} />
+              <OtherSupport raceId={raceId} />
             </Suspense>
           </div>
           <div className={styles.adsCard}>
             <h2 className="no-margin">Ads</h2>
-            <Ads raceId={params.raceId} />
+            <Ads raceId={raceId} />
             <div className="secondary small">
               These are mostly tracked by hand, and so some advertisements may
               be missing. Have you seen a cryptocurrency PAC-funded

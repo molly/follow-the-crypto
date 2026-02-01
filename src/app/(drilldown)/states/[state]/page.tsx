@@ -16,24 +16,26 @@ function stateNameFromUrl(urlName: string) {
   return titlecase(stateName);
 }
 
-export function generateMetadata({
+export async function generateMetadata({
   params,
 }: {
-  params: { state: string };
-}): Metadata {
-  const state = stateNameFromUrl(params.state);
+  params: Promise<{ state: string }>;
+}): Promise<Metadata> {
+  const { state: stateParam } = await params;
+  const state = stateNameFromUrl(stateParam);
   return customMetadata({
     title: state,
     description: `Cryptocurrency-focused political action committee spending on 2024 elections in ${state}.`,
   });
 }
 
-export default function CommitteePage({
+export default async function CommitteePage({
   params,
 }: {
-  params: { state: string };
+  params: Promise<{ state: string }>;
 }) {
-  const titlecasedState = stateNameFromUrl(params.state);
+  const { state: stateParam } = await params;
+  const titlecasedState = stateNameFromUrl(stateParam);
   if (!(titlecasedState in STATES_BY_FULL)) {
     notFound();
   }

@@ -16,12 +16,13 @@ import { Metadata } from "next";
 import Link from "next/link";
 import styles from "./page.module.css";
 
-export function generateMetadata({
+export async function generateMetadata({
   params,
 }: {
   params: { company: string };
-}): Metadata {
-  const companyName = titlecase(params.company.replaceAll("-", " "));
+}): Promise<Metadata> {
+  const { company } = await params;
+  const companyName = titlecase(company.replaceAll("-", " "));
   return customMetadata({
     title: companyName,
     description: `Election spending by ${companyName} and related individuals.`,
@@ -33,8 +34,9 @@ export default async function CompanyPage({
 }: {
   params: { company: string };
 }) {
+  const { company: companyParam } = await params;
   const [companyData, recipientData] = await Promise.all([
-    fetchCompany(params.company),
+    fetchCompany(companyParam),
     fetchAllRecipients(),
   ]);
   if (isError(companyData)) {
@@ -49,7 +51,7 @@ export default async function CompanyPage({
       <section className={styles.companyLogoAndName}>
         <div className={styles.companyLogoWrapper}>
           <img
-            src={`https://storage.googleapis.com/follow-the-crypto-misc-assets/${params.company}.webp`}
+            src={`https://storage.googleapis.com/follow-the-crypto-misc-assets/${companyParam}.webp`}
             alt={`${company.name} logo`}
             className={styles.companyLogoImage}
           />
@@ -91,7 +93,7 @@ export default async function CompanyPage({
             company.contributions.map(
               (
                 contributionGroup: IndividualOrCompanyContributionGroup,
-                ind: number,
+                ind: number
               ) => {
                 return (
                   <ContributionsGroup
@@ -101,7 +103,7 @@ export default async function CompanyPage({
                     company={company.name}
                   />
                 );
-              },
+              }
             )
           ) : (
             <div className={`secondary ${styles.contributionRow}`}>

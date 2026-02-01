@@ -18,6 +18,9 @@ export const sortRaces = (a: string, b: string) => {
 };
 
 export const getRaceName = (raceId: string) => {
+  if (!raceId) {
+    return "";
+  }
   const raceIdCaps = raceId.toUpperCase();
   if (raceIdCaps === "PRESIDENT") {
     return "Presidential";

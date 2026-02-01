@@ -17,44 +17,44 @@ import CommitteeRecentExpenditures from "./CommitteeRecentExpenditures";
 import TopDonors, { TopDonorsSkeleton } from "./TopDonors";
 import styles from "./page.module.css";
 
-export function generateMetadata({
+export async function generateMetadata({
   params,
 }: {
   params: { committeeId: string };
-}): Metadata {
+}): Promise<Metadata> {
+  const { committeeId } = await params;
   let committeeName =
-    params.committeeId in COMMITTEES
-      ? COMMITTEES[params.committeeId]
-      : params.committeeId;
+    committeeId in COMMITTEES ? COMMITTEES[committeeId] : committeeId;
   return customMetadata({
     title: committeeName,
     description: `Election activity by the ${committeeName} PAC`,
   });
 }
 
-export default function CommitteePage({
+export default async function CommitteePage({
   params,
 }: {
   params: { committeeId: string };
 }) {
+  const { committeeId } = await params;
   return (
     <div className={styles.page}>
       <Suspense fallback={<CommitteeDetailsSkeleton />}>
-        <CommitteeDetailsSection committeeId={params.committeeId} />
+        <CommitteeDetailsSection committeeId={committeeId} />
       </Suspense>
       <section className={styles.moneyCardRow}>
         <Suspense fallback={<MoneyCardSkeleton />}>
-          <CommitteeRaised committeeId={params.committeeId} />
+          <CommitteeRaised committeeId={committeeId} />
         </Suspense>
         <Suspense fallback={<MoneyCardSkeleton />}>
-          <CommitteeExpendituresTotal committeeId={params.committeeId} />
+          <CommitteeExpendituresTotal committeeId={committeeId} />
         </Suspense>
       </section>
       <div className={styles.committeeWrapper}>
         <section className={styles.donorSection}>
           <h3 className={styles.donorSectionHeader}>Top donors</h3>
           <Suspense fallback={<TopDonorsSkeleton />}>
-            <TopDonors committeeId={params.committeeId} />
+            <TopDonors committeeId={committeeId} />
           </Suspense>
         </section>
         <div className={styles.rightColumn}>
@@ -64,16 +64,14 @@ export default function CommitteePage({
             >
               <h2 id="expenditures-label">Expenditures</h2>
               <Suspense fallback={<SpendingByPartySkeleton />}>
-                <CommitteeExpendituresByParty
-                  committeeId={params.committeeId}
-                />
+                <CommitteeExpendituresByParty committeeId={committeeId} />
               </Suspense>
             </section>
             <Suspense fallback={null}>
-              <CommitteeDisbursements committeeId={params.committeeId} />
+              <CommitteeDisbursements committeeId={committeeId} />
             </Suspense>
           </div>
-          <CommitteeRecentExpenditures committeeId={params.committeeId} />
+          <CommitteeRecentExpenditures committeeId={committeeId} />
         </div>
       </div>
     </div>
