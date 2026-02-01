@@ -5,6 +5,7 @@ import { SpendingByPartySkeleton } from "@/app/components/SpendingByPartyWithOpp
 import COMMITTEES from "@/app/data/committees";
 import sharedStyles from "@/app/shared.module.css";
 import { customMetadata } from "@/app/utils/metadata";
+import Link from "next/link";
 import { Suspense } from "react";
 import CommitteeDetailsSection, {
   CommitteeDetailsSkeleton,
@@ -33,10 +34,14 @@ export async function generateMetadata({
 
 export default async function CommitteePage({
   params,
+  searchParams,
 }: {
-  params: { committeeId: string };
+  params: Promise<{ committeeId: string }>;
+  searchParams: Promise<{ sort?: string }>;
 }) {
   const { committeeId } = await params;
+  const { sort } = await searchParams;
+
   return (
     <div className={styles.page}>
       <Suspense fallback={<CommitteeDetailsSkeleton />}>
@@ -52,9 +57,17 @@ export default async function CommitteePage({
       </section>
       <div className={styles.committeeWrapper}>
         <section className={styles.donorSection}>
-          <h3 className={styles.donorSectionHeader}>Top donors</h3>
+          <div className={styles.donorSectionHeaderGroup}>
+            <h3 className={styles.donorSectionHeader}>Top donors</h3>
+            <div className={styles.donorSortLink}>
+              Sort by:{" "}
+              <Link href={`?sort=${sort === "date" ? "donor" : "date"}`}>
+                {sort === "date" ? "Donor" : "Date"}
+              </Link>
+            </div>
+          </div>
           <Suspense fallback={<TopDonorsSkeleton />}>
-            <TopDonors committeeId={committeeId} />
+            <TopDonors committeeId={committeeId} sort={sort} />
           </Suspense>
         </section>
         <div className={styles.rightColumn}>

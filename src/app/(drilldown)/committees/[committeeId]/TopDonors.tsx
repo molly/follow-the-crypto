@@ -8,6 +8,7 @@ import {
 } from "@/app/types/Contributions";
 import { is4xx, isError } from "@/app/utils/errors";
 import { range } from "@/app/utils/range";
+import Contribution from "./Contribution";
 import ContributionsGroup from "./ContributionsGroup";
 import styles from "./page.module.css";
 
@@ -33,10 +34,35 @@ export function TopDonorsSkeleton() {
   ));
 }
 
+function ByDonor({ donors }: { donors: Contributions }) {
+  if (donors.groups.length) {
+    return donors.groups.map(
+      (donorGroup: ContributionsGroupType, ind: number) => (
+        <ContributionsGroup key={`donor-${ind}`} donorGroup={donorGroup} />
+      ),
+    );
+  }
+  return <div className={`secondary ${styles.donorRow}`}>No donors found.</div>;
+}
+
+function ByDate({ donors }: { donors: Contributions }) {
+  if (donors.by_date.length) {
+    return donors.by_date.map((contribution) => (
+      <Contribution
+        key={contribution.transaction_id}
+        contribution={contribution}
+      />
+    ));
+  }
+  return <div className={`secondary ${styles.donorRow}`}>No donors found.</div>;
+}
+
 export default async function TopDonors({
   committeeId,
+  sort,
 }: {
   committeeId: string;
+  sort?: string;
 }) {
   const donorData = await fetchCommitteeDonors(committeeId);
 
@@ -57,12 +83,8 @@ export default async function TopDonors({
   }
 
   const donors = donorData as Contributions;
-
-  return donors.groups.length ? (
-    donors.groups.map((donorGroup: ContributionsGroupType, ind: number) => (
-      <ContributionsGroup key={`donor-${ind}`} donorGroup={donorGroup} />
-    ))
-  ) : (
-    <div className={`secondary ${styles.donorRow}`}>No donors found.</div>
-  );
+  if (sort === "date") {
+    return <ByDate donors={donors} />;
+  }
+  return <ByDonor donors={donors} />;
 }

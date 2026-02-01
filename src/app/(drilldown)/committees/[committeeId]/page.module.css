@@ -55,9 +55,21 @@
   padding: 1rem 0;
 }
 
+.donorSectionHeaderGroup {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
 .donorSectionHeader {
   padding: 0 1rem;
+  margin: 0;
   font-size: 1.5rem;
+}
+
+.donorSortLink {
+  padding: 0 1rem;
 }
 
 .donorRow {

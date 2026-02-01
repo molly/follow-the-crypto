@@ -55,6 +55,7 @@ export interface ContributionsGroup {
 
 export interface Contributions {
   contributions_count: number;
+  by_date: SingleContribution[];
   groups: ContributionsGroup[];
   total_contributed: number;
   total_transferred: number;
