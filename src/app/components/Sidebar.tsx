@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import styles from "./sidebar.module.css";
@@ -39,23 +39,33 @@ export default function Sidebar() {
     }
   }, [isCollapsed]);
 
-  const sidebarVariants = {
+  const sidebarVariants: Variants = {
     open: {
       x: 0,
-      transition: { duration: 0.2, ease: "easeInOut", staggerChildren: 0.025 },
+      transition: {
+        duration: 0.2,
+        ease: [0.4, 0.0, 0.2, 1],
+        staggerChildren: 0.025,
+      },
     },
-    closed: { x: "-100%", transition: { duration: 0.2, ease: "easeInOut" } },
+    closed: {
+      x: "-100%",
+      transition: { duration: 0.2, ease: [0.4, 0.0, 0.2, 1] },
+    },
   };
 
-  const itemVariants = {
-    open: { opacity: 1 },
+  const itemVariants: Variants = {
+    open: {
+      opacity: 1,
+      transition: { duration: 0.2, ease: [0.4, 0.0, 0.2, 1] }
+    },
     closed: { opacity: 0 },
   };
 
-  const buttonVariants = {
-    open: { left: "unset", right: "1rem" },
-    closed: { left: "1rem", right: "unset" },
-  };
+  // const buttonVariants = {
+  //   open: { left: "unset", right: "1rem" },
+  //   closed: { left: "1rem", right: "unset" },
+  // };
 
   return (
     <>
@@ -66,8 +76,7 @@ export default function Sidebar() {
         id="sidebar"
         className={styles.sidebarContainer}
       >
-        {!isCollapsed && (
-          <nav className={styles.sidebarContent}>
+        <nav className={styles.sidebarContent}>
             <div className={styles.logoAndCollapse}>
               <Link
                 href="/"
@@ -290,8 +299,7 @@ export default function Sidebar() {
                 </a>
               </motion.li>
             </ul>
-          </nav>
-        )}
+        </nav>
       </motion.aside>
       {isCollapsed && (
         <button

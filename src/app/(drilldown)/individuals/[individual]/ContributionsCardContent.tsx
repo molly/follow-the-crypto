@@ -65,7 +65,6 @@ export default function ContributionsCardContent({
   const pathname = usePathname();
   const sort = searchParams.get("sort") || "recipient";
 
-  console.log(recipients);
   return (
     <>
       <div className={styles.contributionCardHeader}>

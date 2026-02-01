@@ -90,7 +90,6 @@ export const fetchConstant = cache(
 export const fetchCommitteeTotalReceipts = cache(
   async (): Promise<number | ErrorType> => {
     const snapshot = await fetchSnapshot("totals", "committees");
-    console.log(snapshot);
     if (isError(snapshot)) {
       return snapshot as ErrorType;
     } else {
