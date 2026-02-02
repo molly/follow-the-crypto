@@ -62,7 +62,6 @@ export default async function CommitteeDetailsSection({
           ></div>
         )}
       </section>
-      <section className={styles.moneyCardRow}></section>
     </>
   );
 }

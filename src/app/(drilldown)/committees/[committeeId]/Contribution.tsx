@@ -37,22 +37,29 @@ function CompanyName({
   link,
   inline = false,
   contributionDate = null,
+  groupName,
 }: {
   donorDetails: DonorType;
   link?: string;
   inline?: boolean;
   contributionDate?: React.ReactElement | null;
+  groupName?: string;
 }) {
-  const companyName =
+  let companyName =
     (donorDetails.companyAlias &&
       titlecaseCompany(donorDetails.companyAlias)) ||
     donorDetails.company;
 
-  const alias =
+  let alias =
     donorDetails.companyAlias &&
     donorDetails.companyAlias !== donorDetails.company?.toUpperCase()
       ? donorDetails.company
       : "";
+
+  if (alias && groupName && companyName === groupName) {
+    companyName = alias;
+    alias = "";
+  }
 
   let entityType = null;
   if (!donorDetails.isIndividual && donorDetails.entityType) {
@@ -152,9 +159,11 @@ function ContributionAmount({
 export default async function Contribution({
   contribution,
   isSubRow,
+  groupName,
 }: {
   contribution: ContributionType;
   isSubRow?: boolean;
+  groupName?: string;
 }) {
   let [COMPANY_ALIASES, INDIVIDUAL_EMPLOYERS] = await Promise.all([
     fetchConstant<Record<string, string>>("companyAliases") || {},
@@ -189,6 +198,7 @@ export default async function Contribution({
         <CompanyName
           donorDetails={donorDetails}
           link={contribution.link}
+          groupName={groupName}
           inline
         />
       );
@@ -198,9 +208,9 @@ export default async function Contribution({
       <div className={styles.donorSubRow}>
         <div className={styles.donorSubRowPrimary}>
           <div>
-            {/* TODO: Remove */}
-            {contribution.manualReview?.status === "verified" && <span>✓</span>}
-            {donorIdentifier}
+            {donorDetails.company === groupName ? null : (
+              <span className={styles.donorName}>{donorIdentifier}</span>
+            )}
             <ContributionDate contribution={contribution} />
             {contribution.claimed && <Claimed />}
           </div>

@@ -4,7 +4,7 @@ import { ContributionsGroup as ContributionsGroupType } from "@/app/types/Contri
 import { IndividualDonorType, getDonorDetails } from "@/app/utils/donorDetails";
 import { titlecaseCompany } from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
-import { ReactNode, useMemo } from "react";
+import { useMemo } from "react";
 import Contribution from "./Contribution";
 import styles from "./page.module.css";
 
@@ -27,12 +27,7 @@ export default function ContributionsGroup({
     [donorGroup.contributions],
   );
 
-  if (donorGroup.contributions.length === 1) {
-    const donor = donorGroup.contributions[0];
-    return <Contribution contribution={donor} />;
-  }
-
-  let name: ReactNode = titlecaseCompany(donorGroup.company || "");
+  let name: string = titlecaseCompany(donorGroup.company || "");
   if (isIndividual) {
     const donorDetails: IndividualDonorType = getDonorDetails(
       donorGroup.contributions[0],
@@ -41,6 +36,11 @@ export default function ContributionsGroup({
     if (donorDetails.name) {
       name = donorDetails.name;
     }
+  }
+
+  if (donorGroup.contributions.length === 1) {
+    const donor = donorGroup.contributions[0];
+    return <Contribution contribution={donor} groupName={name} />;
   }
 
   return (
@@ -57,6 +57,7 @@ export default function ContributionsGroup({
           <Contribution
             isSubRow={true}
             contribution={donor}
+            groupName={name}
             key={`donor-${ind}`}
           />
         ))}

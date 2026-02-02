@@ -28,6 +28,14 @@
   margin: 0 auto;
 }
 
+.moneyCardDetails {
+  margin-top: 1rem;
+}
+
+.justifyTop {
+  align-items: flex-start;
+}
+
 .rightColumn {
   display: flex;
   flex-direction: column;
@@ -43,10 +51,6 @@
   composes: accent-text from "@/app/shared.module.css";
   font-size: 3rem;
   margin-bottom: 0;
-}
-
-.raisedDetails {
-  margin-top: 1rem;
 }
 
 .donorSection {
@@ -203,7 +207,7 @@
     }
   }
 
-  .donorDate {
+  .donorDate:not(:first-child) {
     &:before {
       content: " – ";
       font-style: normal;

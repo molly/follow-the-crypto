@@ -63,7 +63,9 @@ export const pluralize = (
   return value === 1 ? singular : plural;
 };
 
-export function humanizeList<T>(values: T[]): T | JSX.Element | string | null {
+export function humanizeList<T>(
+  values: T[],
+): T | React.ReactElement | string | null {
   const isString = values.every((value) => typeof value === "string");
   const filtered = values.filter((value) => !!value);
   if (filtered.length === 0) {

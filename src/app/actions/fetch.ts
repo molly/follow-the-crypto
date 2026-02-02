@@ -176,18 +176,38 @@ export const fetchSuperPACsByReceipts = cache(
 // COMMITTEES -----------------------------------------------------------
 
 // Fetch all committees and sort them by total receipts
-export const fetchAllCommittees = cache(
-  async (): Promise<CommitteeDetails[] | ErrorType> => {
-    const data = await fetchCollection("committees");
-    if (isError(data)) {
-      return data as ErrorType;
+export const fetchCommitteesWithContributions = cache(
+  async (): Promise<
+    (CommitteeConstant[] & { total: number }[]) | ErrorType
+  > => {
+    const [contributionsData, committeeConstants] = await Promise.all([
+      fetchCollection("contributions"),
+      fetchConstant<Record<string, CommitteeConstant>>("committees"),
+    ]);
+    if (isError(contributionsData)) {
+      return contributionsData as ErrorType;
+    } else if (!committeeConstants) {
+      return {
+        error: true,
+        message: "Committee constants not found",
+      } as ErrorType;
     } else {
-      const committeesData = data as DocumentData[];
-      const committees = committeesData.map((doc) =>
-        doc.data(),
-      ) as CommitteeDetails[];
-      committees.sort((a, b) => (b.receipts || 0) - (a.receipts || 0));
-      return committees;
+      const contributions = contributionsData as DocumentData[];
+      const committees = contributions.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      })) as (Contributions & { id: string })[];
+
+      const committeesWithTotals = committees
+        .map((committee) => ({
+          ...committeeConstants[committee.id],
+          total:
+            (committee.total_contributed || 0) +
+            (committee.total_transferred || 0),
+        }))
+        .filter((committee) => committee.total > 0);
+      committeesWithTotals.sort((a, b) => b.total - a.total);
+      return committeesWithTotals;
     }
   },
 );

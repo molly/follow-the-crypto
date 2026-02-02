@@ -10,6 +10,7 @@ import { Contributions } from "@/app/types/Contributions";
 import { CommitteeTotalExpenditures } from "@/app/types/Expenditures";
 import { is4xx, isError } from "@/app/utils/errors";
 import { formatCurrency } from "@/app/utils/utils";
+import styles from "./page.module.css";
 
 export default async function CommitteeExpendituresTotal({
   committeeId,
@@ -58,6 +59,7 @@ export default async function CommitteeExpendituresTotal({
       topText="They have spent"
       bottomText={bottomText}
       tooltip={tooltip}
+      className={styles.justifyTop}
     />
   );
 }

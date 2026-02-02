@@ -35,24 +35,41 @@ export default async function CommitteeRaised({
   const committee = committeeData as CommitteeDetails;
   const donors = donorData as Contributions;
 
-  const total = donors.total_contributed + donors.total_transferred;
+  const total =
+    donors.total_contributed +
+    donors.total_transferred +
+    (committee.last_cash_on_hand_end_period || 0);
 
   return (
     <MoneyCard
       amount={formatCurrency(total || 0, true)}
-      topText={<span>{`${committee.name} has raised`}</span>}
+      topText={<span>{`${committee.name} has`}</span>}
       bottomText={
-        donors.total_transferred > 0 ? (
-          <div className={styles.raisedDetails}>
-            <div>
-              {`${formatCurrency(donors.total_contributed, true)} came from direct contributions.`}
+        <div>
+          in total funds.
+          {donors.total_transferred > 0 ||
+          (committee.last_cash_on_hand_end_period &&
+            committee.last_cash_on_hand_end_period > 0) ? (
+            <div className={styles.moneyCardDetails}>
+              <div>
+                {`${formatCurrency(donors.total_contributed, true)} came from direct contributions.`}
+              </div>
+              {donors.total_transferred > 0 && (
+                <div>
+                  {`${formatCurrency(donors.total_transferred, true)} was transferred from other committees.`}
+                </div>
+              )}
+              {committee.last_cash_on_hand_end_period &&
+                committee.last_cash_on_hand_end_period > 0 && (
+                  <div>
+                    {`${formatCurrency(committee.last_cash_on_hand_end_period, true)} was cash on hand.`}
+                  </div>
+                )}
             </div>
-            <div>
-              {`${formatCurrency(donors.total_transferred, true)} was transferred from other committees.`}
-            </div>
-          </div>
-        ) : undefined
+          ) : undefined}
+        </div>
       }
+      className={styles.justifyTop}
     />
   );
 }
