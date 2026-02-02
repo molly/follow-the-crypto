@@ -35,8 +35,13 @@ export function TopDonorsSkeleton() {
 }
 
 function ByDonor({ donors }: { donors: Contributions }) {
-  if (donors.groups.length) {
-    return donors.groups.map(
+  // Filter out OMITTED group (contains minimal data for omitted contributions)
+  const visibleGroups = donors.groups.filter(
+    (group) => group.company !== "OMITTED"
+  );
+
+  if (visibleGroups.length) {
+    return visibleGroups.map(
       (donorGroup: ContributionsGroupType, ind: number) => (
         <ContributionsGroup key={`donor-${ind}`} donorGroup={donorGroup} />
       ),
@@ -46,8 +51,13 @@ function ByDonor({ donors }: { donors: Contributions }) {
 }
 
 function ByDate({ donors }: { donors: Contributions }) {
-  if (donors.by_date.length) {
-    return donors.by_date.map((contribution) => (
+  // Filter out contributions marked as omit
+  const visibleContributions = donors.by_date.filter(
+    (contribution) => contribution.manualReview?.status !== "omit"
+  );
+
+  if (visibleContributions.length) {
+    return visibleContributions.map((contribution) => (
       <Contribution
         key={contribution.transaction_id}
         contribution={contribution}

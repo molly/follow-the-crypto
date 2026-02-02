@@ -20,6 +20,7 @@ export type IndividualDonorType = {
 type CompanyDonorType = {
   company?: string;
   companyAlias?: string;
+  entityType?: string | undefined;
   isIndividual: false;
 };
 
@@ -61,12 +62,23 @@ function getDonorCompanyDetails(
 ): {
   company: string | undefined;
   companyAlias: string | undefined;
+  entityType: string | undefined;
 } {
   let result: {
     company: string | undefined;
     companyAlias: string | undefined;
-  } = { company: undefined, companyAlias: undefined };
-  const company = donor.contributor_employer || donor.contributor_name;
+    entityType: string | undefined;
+  } = {
+    company: undefined,
+    companyAlias: undefined,
+    entityType: donor.entity_type || undefined,
+  };
+  let company;
+  if (donor.contributor_employer && donor.contributor_employer !== "N/A") {
+    company = donor.contributor_employer;
+  } else {
+    company = donor.contributor_name;
+  }
   if (company && !INDIVIDUAL_EMPLOYERS.includes(company)) {
     result.company = titlecaseCompany(company);
     if (company in COMPANY_ALIASES) {
@@ -81,6 +93,16 @@ export function getDonorDetails(
   COMPANY_ALIASES: Record<string, string> = {},
   INDIVIDUAL_EMPLOYERS: string[] = [],
 ): IndividualDonorType | CompanyDonorType {
+  if (
+    new Set(["COM", "PAC", "ORG"]).has(donor.entity_type || "") &&
+    donor.contributor_last_name &&
+    donor.contributor_last_name in COMPANY_ALIASES
+  ) {
+    return {
+      ...getDonorCompanyDetails(donor, COMPANY_ALIASES, INDIVIDUAL_EMPLOYERS),
+      isIndividual: false,
+    };
+  }
   if (donor.contributor_first_name || donor.contributor_last_name) {
     return {
       ...getIndividualDonorName(donor),

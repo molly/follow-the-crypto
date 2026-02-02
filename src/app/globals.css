@@ -245,6 +245,10 @@ iframe {
   font-size: 0.9rem;
 }
 
+.italic {
+  font-style: italic;
+}
+
 a.unstyled {
   color: inherit;
   text-decoration: none;

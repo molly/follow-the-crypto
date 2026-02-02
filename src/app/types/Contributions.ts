@@ -1,9 +1,17 @@
 import { Committee, ScheduleA } from "./FECTypes";
 
+export interface ManualReview {
+  reviewed: boolean;
+  status: "verified" | "omit";
+  reviewed_at: string;
+}
+
 export type SingleContribution = {
   redacted?: boolean;
   link?: string;
   claimed?: boolean;
+  description?: string;
+  manualReview?: ManualReview;
 } & Pick<
   ScheduleA,
   | "contributor_aggregate_ytd"
@@ -27,6 +35,8 @@ export type RollupContribution = {
   redacted?: boolean;
   link?: string;
   claimed?: boolean;
+  description?: string;
+  manualReview?: ManualReview;
   oldest: string;
   newest: string;
   total: number;

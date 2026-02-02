@@ -106,16 +106,20 @@
 }
 
 .donorSubRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   margin-left: 1rem;
   padding: 0.5rem 0;
   font-size: 1rem;
 }
 
+.donorSubRowPrimary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .subRowCurrency {
   color: var(--secondary-text);
+  justify-content: end;
 }
 
 .donorOccupation {
@@ -129,6 +133,13 @@
 
 .aliasAndDate {
   align-items: center;
+}
+
+.contributionDescription {
+  color: var(--secondary-text);
+  font-size: 0.9rem;
+  font-style: italic;
+  margin-left: 1.5rem;
 }
 
 .donorDate {
