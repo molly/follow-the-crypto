@@ -208,9 +208,9 @@ export default async function Contribution({
       <div className={styles.donorSubRow}>
         <div className={styles.donorSubRowPrimary}>
           <div>
-            {donorDetails.company === groupName ? null : (
-              <span className={styles.donorName}>{donorIdentifier}</span>
-            )}
+            {!donorDetails.isIndividual && donorDetails.company === groupName
+              ? null
+              : donorIdentifier}
             <ContributionDate contribution={contribution} />
             {contribution.claimed && <Claimed />}
           </div>

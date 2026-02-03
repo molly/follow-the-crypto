@@ -93,7 +93,7 @@ export const fetchCommitteeTotalReceipts = cache(
     if (isError(snapshot)) {
       return snapshot as ErrorType;
     } else {
-      return snapshot.net_receipts;
+      return snapshot.net_receipts + snapshot.cash_on_hand;
     }
   },
 );

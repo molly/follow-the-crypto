@@ -118,6 +118,7 @@ export type RecipientCandidateDetails = {
   party: string;
   state: string;
   race_link?: string;
+  election_years?: number[];
 };
 
 export type RecipientDetails = {

@@ -43,13 +43,13 @@ export default function ContributionsGroup({
               ? titlecaseCommittee(recipient.committee_name, false)
               : contributionsGroup.committee_id}
           </MaybeLink>
+          {` ${recipient?.committee_id}`}
           {isClaimed && (
             <>
               {" "}
               <Claimed />
             </>
           )}
-          {` ${contributionsGroup.committee_id}`}
         </span>
         <span>{formatCurrency(contributionsGroup.total)}</span>
       </div>

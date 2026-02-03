@@ -39,13 +39,13 @@ function Subhead({
   let subhead = [];
   if (individual.title) {
     if (!associatedCompany && !individual.company) {
-      return <span>{individual.title}</span>;
+      return <span key="title">{individual.title}</span>;
     }
-    subhead.push(<span>{`${individual.title} at `}</span>);
+    subhead.push(<span key="title">{`${individual.title} at `}</span>);
   }
   if (associatedCompany && associatedCompany.length) {
     if (!individual.title) {
-      subhead.push(<span>Associated with </span>);
+      subhead.push(<span key="association">Associated with </span>);
     }
     const companyLinks = associatedCompany.map((company) => (
       <Link href={`/companies/${company}`} key={company}>
@@ -54,7 +54,7 @@ function Subhead({
     ));
     subhead.push(humanizeList(companyLinks));
   } else if (individual.company) {
-    subhead.push(<span>{humanizeList(individual.company)}</span>);
+    subhead.push(<span key="company">{humanizeList(individual.company)}</span>);
   }
   return subhead;
 }

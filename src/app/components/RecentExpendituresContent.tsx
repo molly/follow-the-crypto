@@ -39,6 +39,7 @@ export function RecentExpendituresContentSkeleton({
 }
 
 function getRaceId(expenditure: Expenditure, withState = false) {
+  console.log(expenditure);
   let raceId = "";
   if (withState) {
     raceId = `${expenditure.candidate_office_state}-${expenditure.candidate_office}`;
@@ -50,6 +51,9 @@ function getRaceId(expenditure: Expenditure, withState = false) {
     expenditure.candidate_office_district !== "00"
   ) {
     raceId += `-${expenditure.candidate_office_district}`;
+  }
+  if (expenditure.subrace === "special") {
+    raceId += "-special";
   }
   return raceId;
 }

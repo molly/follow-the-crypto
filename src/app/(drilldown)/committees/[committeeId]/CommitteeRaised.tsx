@@ -69,7 +69,6 @@ export default async function CommitteeRaised({
           ) : undefined}
         </div>
       }
-      className={styles.justifyTop}
     />
   );
 }

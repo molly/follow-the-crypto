@@ -17,7 +17,7 @@ export const sortRaces = (a: string, b: string) => {
   }
 };
 
-export const getRaceName = (raceId: string) => {
+export const getRaceName = (raceId: string, year: string = "") => {
   if (!raceId) {
     return "";
   }
@@ -28,6 +28,8 @@ export const getRaceName = (raceId: string) => {
 
   const raceParts = raceIdCaps.split("-");
   let state, office, district;
+  let raceName = "";
+
   if (raceParts[0].length == 1) {
     // ShortID
     office = raceParts[0];
@@ -41,14 +43,18 @@ export const getRaceName = (raceId: string) => {
   if (office === "P") {
     return "President";
   } else if (office === "S") {
-    return "Senate";
+    raceName = "Senate";
   } else if (office === "H") {
     if (!district || (state && SINGLE_MEMBER_STATES.includes(state))) {
-      return "House";
+      raceName = "House";
+    } else {
+      raceName = `House District ${parseInt(district, 10)}`;
     }
-    return `House District ${parseInt(district, 10)}`;
   }
-  return "";
+  if (raceParts[raceParts.length - 1] === "SPECIAL") {
+    raceName += ` (${year} special election)`;
+  }
+  return raceName;
 };
 
 type SubraceArg = {

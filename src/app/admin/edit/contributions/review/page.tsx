@@ -12,7 +12,7 @@ import {
   SingleContribution,
 } from "@/app/types/Contributions";
 import { isError } from "@/app/utils/errors";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, updateDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import styles from "../../../admin.module.css";
 
@@ -102,15 +102,51 @@ export default function ContributionReviewPage() {
     null
   );
   const [editDescription, setEditDescription] = useState("");
+  const [reviewCounts, setReviewCounts] = useState<
+    Record<string, { total: number; unreviewed: number }>
+  >({});
+  const [bulkSaveState, setBulkSaveState] = useState<
+    "idle" | "pending" | "success" | "error"
+  >("idle");
 
-  // Load committees on mount
+  // Count unreviewed contributions for a committee's data
+  function countUnreviewed(data: Contributions): {
+    total: number;
+    unreviewed: number;
+  } {
+    let total = 0;
+    let unreviewed = 0;
+    for (const group of data.groups) {
+      for (const c of group.contributions) {
+        total++;
+        if (!c.manualReview) unreviewed++;
+      }
+    }
+    return { total, unreviewed };
+  }
+
+  // Load committees and review counts on mount
   useEffect(() => {
     (async () => {
       const data = await uncachedFetchCommittees();
       if (isError(data)) {
         console.error("Error loading committees");
-      } else {
-        setCommittees(data as Record<string, CommitteeConstant>);
+        return;
+      }
+      setCommittees(data as Record<string, CommitteeConstant>);
+
+      // Fetch all contributions to compute per-committee review counts
+      try {
+        const snapshot = await getDocs(collection(db, "contributions"));
+        const counts: Record<string, { total: number; unreviewed: number }> =
+          {};
+        snapshot.forEach((doc) => {
+          const contribs = doc.data() as Contributions;
+          counts[doc.id] = countUnreviewed(contribs);
+        });
+        setReviewCounts(counts);
+      } catch (error) {
+        console.error("Error loading review counts:", error);
       }
     })();
   }, []);
@@ -191,6 +227,19 @@ export default function ContributionReviewPage() {
 
       // Update local state
       setContributions(updatedContributions);
+      // Update review counts if this was previously unreviewed
+      if (!contribution.manualReview && selectedCommitteeId) {
+        setReviewCounts((prev) => ({
+          ...prev,
+          [selectedCommitteeId]: {
+            total: prev[selectedCommitteeId]?.total || 0,
+            unreviewed: Math.max(
+              0,
+              (prev[selectedCommitteeId]?.unreviewed || 0) - 1
+            ),
+          },
+        }));
+      }
       setSaveStates({ ...saveStates, [contributionId]: "success" });
       setEditingContribution(null);
       setEditDescription("");
@@ -215,6 +264,59 @@ export default function ContributionReviewPage() {
           return updated;
         });
       }, 3000);
+    }
+  };
+
+  const markAllAsVerified = async () => {
+    if (!selectedCommitteeId || !contributions) return;
+    if (
+      !window.confirm(
+        "Mark all unreviewed contributions for this committee as verified?"
+      )
+    )
+      return;
+
+    setBulkSaveState("pending");
+
+    const manualReview: ManualReview = {
+      reviewed: true,
+      status: "verified",
+      reviewed_at: new Date().toISOString(),
+    };
+
+    try {
+      const updatedContributions = { ...contributions };
+
+      updatedContributions.by_date = updatedContributions.by_date.map((c) =>
+        c.manualReview ? c : { ...c, manualReview }
+      );
+
+      updatedContributions.groups = updatedContributions.groups.map(
+        (group) => ({
+          ...group,
+          contributions: group.contributions.map((c) =>
+            c.manualReview ? c : { ...c, manualReview }
+          ),
+        })
+      );
+
+      const docRef = doc(db, "contributions", selectedCommitteeId);
+      await updateDoc(docRef, updatedContributions);
+
+      setContributions(updatedContributions);
+      setReviewCounts((prev) => ({
+        ...prev,
+        [selectedCommitteeId]: {
+          total: prev[selectedCommitteeId]?.total || 0,
+          unreviewed: 0,
+        },
+      }));
+      setBulkSaveState("success");
+      setTimeout(() => setBulkSaveState("idle"), 2000);
+    } catch (error) {
+      console.error("Error marking all as verified:", error);
+      setBulkSaveState("error");
+      setTimeout(() => setBulkSaveState("idle"), 3000);
     }
   };
 
@@ -550,9 +652,14 @@ export default function ContributionReviewPage() {
     return <div className={styles.container}>Loading committees...</div>;
   }
 
-  const committeeKeys = Object.keys(committees).sort((a, b) =>
-    committees[a].name.localeCompare(committees[b].name)
-  );
+  // Sort: committees with unreviewed contributions first, then alphabetical
+  const committeeKeys = Object.keys(committees).sort((a, b) => {
+    const aUnreviewed = reviewCounts[a]?.unreviewed || 0;
+    const bUnreviewed = reviewCounts[b]?.unreviewed || 0;
+    if (aUnreviewed > 0 && bUnreviewed === 0) return -1;
+    if (aUnreviewed === 0 && bUnreviewed > 0) return 1;
+    return committees[a].name.localeCompare(committees[b].name);
+  });
 
   return (
     <div className={styles.container}>
@@ -566,20 +673,63 @@ export default function ContributionReviewPage() {
           onChange={(e) => setSelectedCommitteeId(e.target.value)}
         >
           <option value="">Select a committee</option>
-          {committeeKeys.map((key) => (
-            <option key={key} value={key}>
-              {committees[key].name}
-            </option>
-          ))}
+          {committeeKeys.map((key) => {
+            const counts = reviewCounts[key];
+            const unreviewed = counts?.unreviewed || 0;
+            return (
+              <option key={key} value={key}>
+                {unreviewed > 0
+                  ? `* ${committees[key].name} (${unreviewed} unreviewed)`
+                  : committees[key].name}
+              </option>
+            );
+          })}
         </select>
 
         {loadingState === "loading" && <p>Loading contributions...</p>}
         {loadingState === "error" && <p>Error loading contributions.</p>}
         {loadingState === "loaded" && contributions && (
           <div style={{ marginTop: "20px" }}>
-            <p style={{ marginBottom: "15px", color: "#666" }}>
-              Total contributions: {getFlattenedContributions().length}
-            </p>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "15px",
+                marginBottom: "15px",
+              }}
+            >
+              <p style={{ color: "#666", margin: 0 }}>
+                Total contributions: {getFlattenedContributions().length}
+              </p>
+              {getFlattenedContributions().some((c) => !c.manualReview) && (
+                <button
+                  onClick={markAllAsVerified}
+                  disabled={bulkSaveState === "pending"}
+                  style={{
+                    padding: "6px 14px",
+                    fontSize: "0.85em",
+                    backgroundColor:
+                      bulkSaveState === "success" ? "#28a745" : "#17a2b8",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "3px",
+                    cursor:
+                      bulkSaveState === "pending" ? "not-allowed" : "pointer",
+                  }}
+                >
+                  {bulkSaveState === "pending"
+                    ? "Saving..."
+                    : bulkSaveState === "success"
+                      ? "All verified!"
+                      : "Mark all as verified"}
+                </button>
+              )}
+              {bulkSaveState === "error" && (
+                <span style={{ color: "#dc3545", fontSize: "0.85em" }}>
+                  Error saving — please try again
+                </span>
+              )}
+            </div>
             <div>
               {getFlattenedContributions().map((contribution) =>
                 renderContributionRow(contribution)
