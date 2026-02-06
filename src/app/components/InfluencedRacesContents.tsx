@@ -193,11 +193,11 @@ function CandidateRow({
   beneficiary?: Beneficiary;
   small?: boolean;
 }) {
-  console.log(candidate, race);
   const raceHref = `/elections/${candidate.state}-${candidate.race}`;
   const raceName = getRaceName(
     `${candidate.state}-${candidate.race}`,
     race.year,
+    true,
   );
   if (!small) {
     return (

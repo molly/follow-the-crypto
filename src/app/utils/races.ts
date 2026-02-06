@@ -17,7 +17,11 @@ export const sortRaces = (a: string, b: string) => {
   }
 };
 
-export const getRaceName = (raceId: string, year: string = "") => {
+export const getRaceName = (
+  raceId: string,
+  year: string = "",
+  parens: boolean = false,
+) => {
   if (!raceId) {
     return "";
   }
@@ -52,7 +56,11 @@ export const getRaceName = (raceId: string, year: string = "") => {
     }
   }
   if (raceParts[raceParts.length - 1] === "SPECIAL") {
-    raceName += ` (${year} special election)`;
+    if (parens) {
+      raceName += ` (${year ? `${year} ` : ""}special election)`;
+    } else {
+      raceName += ` ${year ? `${year} ` : ""}special`;
+    }
   }
   return raceName;
 };

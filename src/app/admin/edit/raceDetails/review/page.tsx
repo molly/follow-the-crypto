@@ -1,10 +1,10 @@
 "use client";
 
-import { db } from "@/app/lib/db";
-import { Party, Race, RaceType, ElectionsByState } from "@/app/types/Elections";
 import { STATES_BY_ABBR } from "@/app/data/states";
-import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
-import React, { useState, useEffect } from "react";
+import { db } from "@/app/lib/db";
+import { ElectionsByState, Race } from "@/app/types/Elections";
+import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
+import { useEffect, useState } from "react";
 import styles from "../../../admin.module.css";
 
 interface RaceConflict {
@@ -22,18 +22,22 @@ interface ConflictGroup {
 
 export default function RaceReviewPage() {
   const [conflicts, setConflicts] = useState<RaceConflict[]>([]);
-  const [selectedConflict, setSelectedConflict] = useState<RaceConflict | null>(null);
+  const [selectedConflict, setSelectedConflict] = useState<RaceConflict | null>(
+    null,
+  );
   const [loading, setLoading] = useState(true);
-  const [saveState, setSaveState] = useState<"idle" | "pending" | "success" | "error">("idle");
+  const [saveState, setSaveState] = useState<
+    "idle" | "pending" | "success" | "error"
+  >("idle");
 
   useEffect(() => {
     loadConflicts();
   }, []);
 
   const generateRaceKey = (race: Race): string => {
-    const raceType = race.type || '';
-    const party = race.party || 'none';
-    const date = race.date || '';
+    const raceType = race.type || "";
+    const party = race.party || "none";
+    const date = race.date || "";
     return `${raceType}-${party}-${date}`;
   };
 
@@ -58,8 +62,10 @@ export default function RaceReviewPage() {
           const scrapedRacesUpdated = raceGroup.scrapedRacesUpdated || 0;
 
           // Check if there are new changes since last review
-          const hasUnreviewedManual = manualRaces.length > 0 && manualRacesUpdated > lastReviewed;
-          const hasUnreviewedScraped = scrapedRaces.length > 0 && scrapedRacesUpdated > lastReviewed;
+          const hasUnreviewedManual =
+            manualRaces.length > 0 && manualRacesUpdated > lastReviewed;
+          const hasUnreviewedScraped =
+            scrapedRaces.length > 0 && scrapedRacesUpdated > lastReviewed;
 
           if (hasUnreviewedManual || hasUnreviewedScraped) {
             foundConflicts.push({
@@ -83,7 +89,7 @@ export default function RaceReviewPage() {
 
   const applyMerge = async (
     conflict: RaceConflict,
-    action: "use_manual" | "use_scraped" | "use_both" | "keep_current"
+    action: "use_manual" | "use_scraped" | "use_both" | "keep_current",
   ) => {
     setSaveState("pending");
     try {
@@ -99,10 +105,10 @@ export default function RaceReviewPage() {
         case "use_both":
           // Combine both, removing duplicates based on race key
           const raceMap = new Map<string, Race>();
-          conflict.manualRaces.forEach(race => {
+          conflict.scrapedRaces.forEach((race) => {
             raceMap.set(generateRaceKey(race), race);
           });
-          conflict.scrapedRaces.forEach(race => {
+          conflict.manualRaces.forEach((race) => {
             raceMap.set(generateRaceKey(race), race);
           });
           newRaces = Array.from(raceMap.values());
@@ -142,7 +148,8 @@ export default function RaceReviewPage() {
     const name = candidate.name;
     const party = candidate.party ? ` (${candidate.party})` : "";
     const incumbent = candidate.incumbent ? " [Incumbent]" : "";
-    const won = candidate.won === true ? " ✓ Won" : candidate.won === false ? " ✗" : "";
+    const won =
+      candidate.won === true ? " ✓ Won" : candidate.won === false ? " ✗" : "";
     return `${name}${party}${incumbent}${won}`;
   };
 
@@ -160,23 +167,39 @@ export default function RaceReviewPage() {
     const manualKeys = new Set(conflict.manualRaces.map(generateRaceKey));
     const scrapedKeys = new Set(conflict.scrapedRaces.map(generateRaceKey));
     const bothKeys = new Set(
-      [...conflict.manualRaces, ...conflict.scrapedRaces].map(generateRaceKey)
+      [...conflict.manualRaces, ...conflict.scrapedRaces].map(generateRaceKey),
     );
 
     return (
       <div className={styles.container}>
         <div style={{ marginBottom: "20px" }}>
-          <button onClick={() => setSelectedConflict(null)}>← Back to List</button>
+          <button onClick={() => setSelectedConflict(null)}>
+            ← Back to List
+          </button>
           <h1>
             {STATES_BY_ABBR[conflict.state]} - {conflict.raceId}
           </h1>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: "20px",
+          }}
+        >
           {/* Manual Races Column */}
-          <div style={{ border: "1px solid #ccc", padding: "15px", borderRadius: "5px" }}>
+          <div
+            style={{
+              border: "1px solid #ccc",
+              padding: "15px",
+              borderRadius: "5px",
+            }}
+          >
             <h2>Manual Races ({conflict.manualRaces.length})</h2>
-            <p style={{ fontSize: "0.9em", color: "#666" }}>From admin entry UI</p>
+            <p style={{ fontSize: "0.9em", color: "#666" }}>
+              From admin entry UI
+            </p>
             {conflict.manualRaces.length === 0 ? (
               <p>No manual races</p>
             ) : (
@@ -194,7 +217,9 @@ export default function RaceReviewPage() {
                 >
                   <strong>{formatRace(race)}</strong>
                   {scrapedKeys.has(generateRaceKey(race)) && (
-                    <span style={{ marginLeft: "10px", color: "#856404" }}>⚠ Conflict</span>
+                    <span style={{ marginLeft: "10px", color: "#856404" }}>
+                      ⚠ Conflict
+                    </span>
                   )}
                   <ul style={{ marginTop: "5px", marginBottom: "0" }}>
                     {race.candidates.map((candidate, cidx) => (
@@ -218,9 +243,17 @@ export default function RaceReviewPage() {
           </div>
 
           {/* Scraped Races Column */}
-          <div style={{ border: "1px solid #ccc", padding: "15px", borderRadius: "5px" }}>
+          <div
+            style={{
+              border: "1px solid #ccc",
+              padding: "15px",
+              borderRadius: "5px",
+            }}
+          >
             <h2>Scraped Races ({conflict.scrapedRaces.length})</h2>
-            <p style={{ fontSize: "0.9em", color: "#666" }}>From Python scraper</p>
+            <p style={{ fontSize: "0.9em", color: "#666" }}>
+              From Python scraper
+            </p>
             {conflict.scrapedRaces.length === 0 ? (
               <p>No scraped races</p>
             ) : (
@@ -238,10 +271,14 @@ export default function RaceReviewPage() {
                 >
                   <strong>{formatRace(race)}</strong>
                   {manualKeys.has(generateRaceKey(race)) && (
-                    <span style={{ marginLeft: "10px", color: "#856404" }}>⚠ Conflict</span>
+                    <span style={{ marginLeft: "10px", color: "#856404" }}>
+                      ⚠ Conflict
+                    </span>
                   )}
                   {!manualKeys.has(generateRaceKey(race)) && (
-                    <span style={{ marginLeft: "10px", color: "#155724" }}>✓ New</span>
+                    <span style={{ marginLeft: "10px", color: "#155724" }}>
+                      ✓ New
+                    </span>
                   )}
                   <ul style={{ marginTop: "5px", marginBottom: "0" }}>
                     {race.candidates.map((candidate, cidx) => (
@@ -266,7 +303,14 @@ export default function RaceReviewPage() {
         </div>
 
         {/* Action Buttons */}
-        <div style={{ marginTop: "20px", display: "flex", gap: "10px", justifyContent: "center" }}>
+        <div
+          style={{
+            marginTop: "20px",
+            display: "flex",
+            gap: "10px",
+            justifyContent: "center",
+          }}
+        >
           <button
             onClick={() => applyMerge(conflict, "use_both")}
             disabled={saveState === "pending"}
@@ -312,10 +356,12 @@ export default function RaceReviewPage() {
       ) : (
         <>
           <p style={{ marginBottom: "20px", color: "#666" }}>
-            Found {conflicts.length} race{conflicts.length !== 1 ? "s" : ""} with differences to
-            review
+            Found {conflicts.length} race{conflicts.length !== 1 ? "s" : ""}{" "}
+            with differences to review
           </p>
-          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+          >
             {conflicts.map((conflict, idx) => (
               <div
                 key={idx}
@@ -332,9 +378,12 @@ export default function RaceReviewPage() {
                   {STATES_BY_ABBR[conflict.state]} - {conflict.raceId}
                 </h3>
                 <p style={{ margin: "0", fontSize: "0.9em", color: "#666" }}>
-                  Manual: {conflict.manualRaces.length} race{conflict.manualRaces.length !== 1 ? "s" : ""} |
-                  Scraped: {conflict.scrapedRaces.length} race{conflict.scrapedRaces.length !== 1 ? "s" : ""} |
-                  Current: {conflict.currentRaces.length} race{conflict.currentRaces.length !== 1 ? "s" : ""}
+                  Manual: {conflict.manualRaces.length} race
+                  {conflict.manualRaces.length !== 1 ? "s" : ""} | Scraped:{" "}
+                  {conflict.scrapedRaces.length} race
+                  {conflict.scrapedRaces.length !== 1 ? "s" : ""} | Current:{" "}
+                  {conflict.currentRaces.length} race
+                  {conflict.currentRaces.length !== 1 ? "s" : ""}
                 </p>
               </div>
             ))}

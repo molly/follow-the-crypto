@@ -43,6 +43,8 @@ export type CandidateSummary = {
   defeated_race?: RaceType;
   withdrew?: boolean;
   withdrew_race?: RaceType;
+  declined?: boolean;
+  declinedReason?: string;
 
   FEC_name: string;
   candidate_id?: string;
@@ -102,6 +104,7 @@ export interface ElectionGroup {
   scrapedRacesUpdated?: number; // Timestamp when scrapedRaces were last updated
   candidates: Record<string, CandidateSummary>;
   spending: Record<string, RaceSpending>;
+  year: string;
 }
 
 export interface ElectionsByState {

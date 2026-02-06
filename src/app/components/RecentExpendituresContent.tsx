@@ -39,7 +39,6 @@ export function RecentExpendituresContentSkeleton({
 }
 
 function getRaceId(expenditure: Expenditure, withState = false) {
-  console.log(expenditure);
   let raceId = "";
   if (withState) {
     raceId = `${expenditure.candidate_office_state}-${expenditure.candidate_office}`;

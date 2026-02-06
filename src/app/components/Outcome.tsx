@@ -12,6 +12,9 @@ export default function Outcome({
   races: Race[];
   inSentence?: boolean;
 }) {
+  if (candidate.declined) {
+    return `${inSentence ? " d" : "D"}eclined to run${candidate.declinedReason ? ` (${candidate.declinedReason})` : ""}`;
+  }
   if (candidate.defeated) {
     const defeatedRace = races.find(
       (r) =>
