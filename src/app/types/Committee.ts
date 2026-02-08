@@ -7,6 +7,13 @@ export type CommitteeConstant = {
   description?: TrustedHTML;
 };
 
+export type CommitteeConstantWithContributions = CommitteeConstant & {
+  total_contributed: number;
+  total_transferred: number;
+  last_cash_on_hand_end_period: number;
+  total: number;
+};
+
 export type CommitteeDisbursement = Pick<
   ScheduleB,
   "disbursement_amount" | "disbursement_date" | "pdf_url" | "recipient_name"

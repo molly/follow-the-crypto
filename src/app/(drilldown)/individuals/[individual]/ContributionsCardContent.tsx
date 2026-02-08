@@ -14,9 +14,11 @@ import styles from "./page.module.css";
 function ByDate({
   individual,
   recipients,
+  nonCandidateCommittees,
 }: {
   individual: IndividualContributions;
   recipients: Record<string, RecipientDetails>;
+  nonCandidateCommittees: Set<string>;
 }) {
   if (!individual.contributions_by_date) {
     return null;
@@ -30,6 +32,7 @@ function ByDate({
           ? recipients[contribution.committee_id]
           : undefined
       }
+      nonCandidateCommittees={nonCandidateCommittees}
     />
   ));
 }
@@ -37,9 +40,11 @@ function ByDate({
 function ByRecipient({
   individual,
   recipients,
+  nonCandidateCommittees,
 }: {
   individual: IndividualContributions;
   recipients: Record<string, RecipientDetails>;
+  nonCandidateCommittees: Set<string>;
 }) {
   return individual.contributions.map(
     (contributionsGroup: IndividualOrCompanyContributionGroup, ind: number) => {
@@ -48,6 +53,7 @@ function ByRecipient({
           key={`contrib-group-${ind}`}
           contributionsGroup={contributionsGroup}
           recipient={recipients[contributionsGroup.committee_id]}
+          nonCandidateCommittees={nonCandidateCommittees}
         />
       );
     },
@@ -57,10 +63,13 @@ function ByRecipient({
 export default function ContributionsCardContent({
   individual,
   recipients,
+  nonCandidateCommittees: nonCandidateCommitteesArray = [],
 }: {
   individual: IndividualContributions;
   recipients: Record<string, RecipientDetails>;
+  nonCandidateCommittees?: string[];
 }) {
+  const nonCandidateCommittees = new Set(nonCandidateCommitteesArray);
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const sort = searchParams.get("sort") || "recipient";
@@ -77,10 +86,10 @@ export default function ContributionsCardContent({
         </Link>
       </div>
       {sort === "recipient" && (
-        <ByRecipient individual={individual} recipients={recipients} />
+        <ByRecipient individual={individual} recipients={recipients} nonCandidateCommittees={nonCandidateCommittees} />
       )}
       {sort === "date" && (
-        <ByDate individual={individual} recipients={recipients} />
+        <ByDate individual={individual} recipients={recipients} nonCandidateCommittees={nonCandidateCommittees} />
       )}
     </>
   );

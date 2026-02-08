@@ -46,6 +46,7 @@ export default async function PACsByReceiptsTableContents({
     if (!fullPage) {
       limit = Math.ceil(Math.max(firstCryptoIndex / 10, 1)) * 10;
     }
+    limit = Math.max(limit, 20);
     PACsToShow = PACs.slice(0, limit);
   }
 

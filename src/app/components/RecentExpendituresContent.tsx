@@ -51,7 +51,10 @@ function getRaceId(expenditure: Expenditure, withState = false) {
   ) {
     raceId += `-${expenditure.candidate_office_district}`;
   }
-  if (expenditure.subrace === "special") {
+  if (
+    expenditure.subrace === "special" ||
+    (expenditure.election_type && expenditure.election_type[0] == "S")
+  ) {
     raceId += "-special";
   }
   return raceId;

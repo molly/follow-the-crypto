@@ -8,9 +8,6 @@ import { titlecaseLastFirst } from "@/app/utils/titlecase";
 import { ReactElement } from "react";
 import styles from "./individualOrCompany.module.css";
 
-// Edge case for NRSC and a few others
-const NON_CANDIDATE_COMMITTEES = new Set(["C00027466", "C00187450"]);
-
 function getUniqueCandidateIds(recipient: RecipientDetails) {
   // If a candidate has run for multiple offices, sometimes they end up duplicated in candidate_ids
   // There is an edge case here where two different candidates could have the same last name AND
@@ -42,8 +39,11 @@ function getUniqueCandidateIds(recipient: RecipientDetails) {
   return Array.from(lastNameMap.values());
 }
 
-function isSingleCandidateCommittee(recipient: RecipientDetails) {
-  if (NON_CANDIDATE_COMMITTEES.has(recipient.committee_id)) {
+function isSingleCandidateCommittee(
+  recipient: RecipientDetails,
+  nonCandidateCommittees: Set<string>,
+) {
+  if (nonCandidateCommittees.has(recipient.committee_id)) {
     return false;
   }
   if (recipient?.candidate_ids) {
@@ -58,8 +58,11 @@ function isSingleCandidateCommittee(recipient: RecipientDetails) {
   return false;
 }
 
-function isMultiCandidateCommittee(recipient: RecipientDetails) {
-  if (NON_CANDIDATE_COMMITTEES.has(recipient.committee_id)) {
+function isMultiCandidateCommittee(
+  recipient: RecipientDetails,
+  nonCandidateCommittees: Set<string>,
+) {
+  if (nonCandidateCommittees.has(recipient.committee_id)) {
     return false;
   }
   if (recipient?.candidate_ids && recipient.candidate_ids.length > 1) {
@@ -187,19 +190,21 @@ function MultiCandidateCommitteeDetails({
 
 export default function CommitteeDetails({
   recipient,
+  nonCandidateCommittees = new Set(),
 }: {
   recipient?: RecipientDetails;
+  nonCandidateCommittees?: Set<string>;
 }) {
   if (!recipient) {
     return null;
   }
-  if (isSingleCandidateCommittee(recipient)) {
+  if (isSingleCandidateCommittee(recipient, nonCandidateCommittees)) {
     const candidateId = (recipient.candidate_ids as string[])[0];
     const details = recipient.candidate_details?.[candidateId];
     return (
       <CandidateCommitteeDetails recipient={recipient} details={details} />
     );
-  } else if (isMultiCandidateCommittee(recipient)) {
+  } else if (isMultiCandidateCommittee(recipient, nonCandidateCommittees)) {
     return <MultiCandidateCommitteeDetails recipient={recipient} />;
   } else if (isSingleSponsorCandidateCommittee(recipient)) {
     const candidateId = (recipient.sponsor_candidate_ids as string[])[0];

@@ -47,6 +47,21 @@ function getShortRaceId(candidateDetails: RecipientCandidateDetails): string {
   return "";
 }
 
+function getElectionCandidate(
+  shortRaceId: string,
+  candidateId: string,
+  stateElections?: ElectionsByState,
+) {
+  let electionCandidate;
+  const election = stateElections?.[shortRaceId];
+  if (election) {
+    electionCandidate = Object.values(election.candidates).find(
+      (c) => c.candidate_id === candidateId,
+    );
+  }
+  return electionCandidate;
+}
+
 function CandidateRow({
   beneficiary,
   stateElections,
@@ -57,19 +72,20 @@ function CandidateRow({
   id: string;
 }) {
   const candidateDetails = beneficiary.candidate_details;
-  const raceId = getRaceId(candidateDetails);
+  let raceId = getRaceId(candidateDetails);
+  let shortRaceId = getShortRaceId(candidateDetails);
+  let electionCandidate = getElectionCandidate(shortRaceId, id, stateElections);
+
+  // Try special election if candidate not found in regular election
+  if (!electionCandidate) {
+    raceId = `${raceId}-special`;
+    shortRaceId = `${shortRaceId}-special`;
+    electionCandidate = getElectionCandidate(shortRaceId, id, stateElections);
+  }
+
   const raceHref = `/elections/${raceId === "P" ? "president" : raceId}`;
   const raceName = getRaceName(raceId);
-  let election;
-  let electionCandidate;
-  if (raceId !== "presidential") {
-    election = stateElections?.[getShortRaceId(candidateDetails)];
-    if (election) {
-      electionCandidate = Object.values(election.candidates).find(
-        (c) => c.candidate_id === id,
-      );
-    }
-  }
+  const election = stateElections?.[shortRaceId];
 
   return (
     <tr className={styles.influencedTableRow} key={id}>

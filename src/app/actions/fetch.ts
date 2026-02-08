@@ -2,6 +2,7 @@ import { db } from "@/app/lib/db";
 import {
   AllCommitteesSummary,
   CommitteeConstant,
+  CommitteeConstantWithContributions,
   CommitteeDetails,
 } from "@/app/types/Committee";
 import { Contributions, RecipientDetails } from "@/app/types/Contributions";
@@ -177,15 +178,17 @@ export const fetchSuperPACsByReceipts = cache(
 
 // Fetch all committees and sort them by total receipts
 export const fetchCommitteesWithContributions = cache(
-  async (): Promise<
-    (CommitteeConstant[] & { total: number }[]) | ErrorType
-  > => {
-    const [contributionsData, committeeConstants] = await Promise.all([
-      fetchCollection("contributions"),
-      fetchConstant<Record<string, CommitteeConstant>>("committees"),
-    ]);
+  async (): Promise<CommitteeConstantWithContributions[] | ErrorType> => {
+    const [contributionsData, committeesData, committeeConstants] =
+      await Promise.all([
+        fetchCollection("contributions"),
+        fetchCollection("committees"),
+        fetchConstant<Record<string, CommitteeConstant>>("committees"),
+      ]);
     if (isError(contributionsData)) {
       return contributionsData as ErrorType;
+    } else if (isError(committeesData)) {
+      return committeesData as ErrorType;
     } else if (!committeeConstants) {
       return {
         error: true,
@@ -193,17 +196,27 @@ export const fetchCommitteesWithContributions = cache(
       } as ErrorType;
     } else {
       const contributions = contributionsData as DocumentData[];
-      const committees = contributions.map((doc) => ({
+      const committeesDocData = committeesData as DocumentData[];
+      const committees: Record<string, CommitteeDetails> = {};
+      committeesDocData.forEach((doc) => {
+        committees[doc.id] = doc.data() as CommitteeDetails;
+      });
+      const contributionsCommittees = contributions.map((doc) => ({
         ...doc.data(),
         id: doc.id,
       })) as (Contributions & { id: string })[];
 
-      const committeesWithTotals = committees
+      const committeesWithTotals = contributionsCommittees
         .map((committee) => ({
           ...committeeConstants[committee.id],
+          total_contributed: committee.total_contributed || 0,
+          total_transferred: committee.total_transferred || 0,
+          last_cash_on_hand_end_period:
+            committees[committee.id]?.last_cash_on_hand_end_period || 0,
           total:
             (committee.total_contributed || 0) +
-            (committee.total_transferred || 0),
+            (committee.total_transferred || 0) +
+            (committees[committee.id]?.last_cash_on_hand_end_period || 0),
         }))
         .filter((committee) => committee.total > 0);
       committeesWithTotals.sort((a, b) => b.total - a.total);
@@ -227,6 +240,19 @@ export const fetchCommitteeDonors = cache(
 export const uncachedFetchCommittees = async (): Promise<
   Record<string, CommitteeConstant> | ErrorType
 > => fetchSnapshot("constants", "committees");
+
+export const fetchNonCandidateCommittees = cache(
+  async (): Promise<Set<string>> => {
+    const data = await fetchConstant<Record<string, string[]>>(
+      "nonCandidateCommittees",
+    );
+    if (data && "ids" in data) {
+      const nonCandidateCommittees = new Set(data.ids);
+      return nonCandidateCommittees;
+    }
+    return new Set();
+  },
+);
 
 // EXPENDITURES ----------------------------------------------------------
 export const fetchAllExpenditures = cache(

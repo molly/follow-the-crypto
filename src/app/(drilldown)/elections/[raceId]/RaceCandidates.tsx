@@ -78,7 +78,8 @@ export default function RaceCandidates({
           const summary = electionData.candidates[candidate.name];
           const defeated =
             ("won" in candidate && candidate.won === false) ||
-            ("withdrew" in candidate && candidate.withdrew);
+            ("withdrew" in candidate && candidate.withdrew) ||
+            ("declined" in candidate && candidate.declined);
           let candidateNameClassName;
           if (defeated) {
             candidateNameClassName = styles.defeatedCandidateName;

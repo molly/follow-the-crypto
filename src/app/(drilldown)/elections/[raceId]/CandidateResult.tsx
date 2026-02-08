@@ -21,7 +21,8 @@ export default function CandidateResult({
   let candidateNameClassName;
   if (
     ("won" in candidate && candidate.won === false) ||
-    ("withdrew" in candidate && candidate.withdrew)
+    ("withdrew" in candidate && candidate.withdrew) ||
+    ("declined" in candidate && candidate.declined)
   ) {
     candidateNameClassName = styles.defeatedCandidateName;
   } else if (!isRaceUpcoming) {
@@ -45,7 +46,13 @@ export default function CandidateResult({
       <td className="number-cell">
         {opposeTotal > 0 && formatCurrency(opposeTotal, true)}
       </td>
-      <td className="secondary">{candidate.withdrew && `Withdrew`}</td>
+      <td className="secondary">
+        {candidate.declined
+          ? "Declined to run"
+          : candidate.withdrew
+            ? `Withdrew`
+            : ""}
+      </td>
     </tr>
   );
 }

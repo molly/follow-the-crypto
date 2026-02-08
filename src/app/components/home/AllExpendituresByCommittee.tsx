@@ -20,7 +20,7 @@ async function AllExpendituresByCommitteeContent({
     fetchConstant<Record<string, CommitteeConstant>>("committees"),
   ]);
   if (isError(expendituresData)) {
-    return <ErrorText subject="expenditures by party" />;
+    return <ErrorText subject="expenditures by committee" />;
   }
   const committeeConstants = committeeConstantData || {};
   return (
@@ -35,7 +35,7 @@ async function AllExpendituresByCommitteeContent({
 export default function AllExpendituresByCommittee() {
   return (
     <section className={styles.expendituresByCommitteeCard}>
-      <h2 id="expenditures-by-committee-label">Expenditures by committee</h2>
+      <h2 id="expenditures-by-committee-label">PAC expenditures</h2>
       <Suspense fallback={<ExpendituresSkeleton />}>
         <AllExpendituresByCommitteeContent labelId="expenditures-by-committee-label" />
       </Suspense>

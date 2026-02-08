@@ -15,6 +15,7 @@ export interface RaceCandidate {
   percentage?: number;
   won?: boolean;
   withdrew?: boolean;
+  declined?: boolean;
   writeIn?: boolean;
 }
 

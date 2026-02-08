@@ -77,11 +77,13 @@ export default function Contribution({
   recipient,
   company,
   isSubRow,
+  nonCandidateCommittees,
 }: {
   contribution: IndividualOrCompanyContribution;
   recipient?: RecipientDetails;
   company?: string;
   isSubRow?: boolean;
+  nonCandidateCommittees?: Set<string>;
 }) {
   const formattedName = recipient?.committee_name
     ? titlecaseCommittee(recipient.committee_name, false)
@@ -109,7 +111,7 @@ export default function Contribution({
           </span>
           <ContributionAmount contribution={contribution} />
         </div>
-        <CommitteeDetails recipient={recipient} />
+        <CommitteeDetails recipient={recipient} nonCandidateCommittees={nonCandidateCommittees} />
         <div>
           <Contributor contribution={contribution} company={company} />
           <ContributionDate contribution={contribution} />
