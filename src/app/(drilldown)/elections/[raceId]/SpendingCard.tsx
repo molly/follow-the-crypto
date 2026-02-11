@@ -16,7 +16,6 @@ export default async function SpendingCard({ raceId }: { raceId: string }) {
     fetchStateElections(stateAbbr),
     fetchBeneficiariesForRace(raceId),
   ]);
-  console.log(electionsData, beneficiariesData);
   if (
     isError(electionsData) ||
     !(shortRaceId in (electionsData as ElectionsByState))
