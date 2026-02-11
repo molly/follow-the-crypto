@@ -25,7 +25,7 @@ export default function AllExpendituresByParty() {
   return (
     <section className={styles.card}>
       <h2 id="expenditures-by-party-label">
-        All cryptocurrency PAC expenditures by party
+        All crypto PAC expenditures by party
       </h2>
       <Suspense fallback={<ExpendituresSkeleton />}>
         <AllExpendituresByPartyContent labelId="expenditures-by-party-label" />

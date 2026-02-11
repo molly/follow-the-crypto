@@ -3,6 +3,7 @@ import InfluencedRaces from "./components/InfluencedRaces";
 import { MoneyCardSkeleton } from "./components/MoneyCard";
 import SuperPACsByReceipts from "./components/PACsByReceipts";
 import SuperPACsByReceiptsTableContents from "./components/SuperPACsByReceiptsTableContents";
+import AllCashByCommittee from "./components/home/AllCashByCommittee";
 import AllExpendituresByCommittee from "./components/home/AllExpendituresByCommittee";
 import AllExpendituresByParty from "./components/home/AllExpendituresByParty";
 import AllRecentExpenditures from "./components/home/AllRecentExpenditures";
@@ -38,8 +39,9 @@ export default function Home() {
         </Suspense>
       </div>
       <div className={styles.mainCards}>
-        <AllExpendituresByParty />
+        <AllCashByCommittee />
         <AllExpendituresByCommittee />
+        <AllExpendituresByParty />
         <InfluencedRaces />
         <SuperPACsByReceipts type="super">
           <SuperPACsByReceiptsTableContents />

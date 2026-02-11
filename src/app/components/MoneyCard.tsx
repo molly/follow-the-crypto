@@ -24,10 +24,10 @@ export default function MoneyCard({
   tooltip,
   className,
 }: {
-  amount: string | JSX.Element;
-  topText: string | JSX.Element;
-  bottomText?: string | JSX.Element;
-  tooltip?: JSX.Element;
+  amount: string | React.ReactElement;
+  topText: string | React.ReactElement;
+  bottomText?: string | React.ReactElement;
+  tooltip?: React.ReactElement;
   className?: string;
 }) {
   return (

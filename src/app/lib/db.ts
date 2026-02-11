@@ -12,5 +12,5 @@ const firebaseConfig = {
 };
 
 export const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
+export const db = getFirestore(app, "follow-the-crypto-2026");
 export const auth = getAuth(app);

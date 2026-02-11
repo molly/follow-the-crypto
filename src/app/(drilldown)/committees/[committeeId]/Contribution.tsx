@@ -4,6 +4,7 @@ import MaybeLink from "@/app/components/MaybeLink";
 import { Contribution as ContributionType } from "@/app/types/Contributions";
 import { titlecaseCompany } from "@/app/utils/titlecase";
 import { formatCurrency, formatDateFromString } from "@/app/utils/utils";
+import React from "react";
 import {
   DonorType,
   IndividualDonorType,
@@ -36,22 +37,38 @@ function CompanyName({
   link,
   inline = false,
   contributionDate = null,
+  groupName,
 }: {
   donorDetails: DonorType;
   link?: string;
   inline?: boolean;
-  contributionDate?: JSX.Element | null;
+  contributionDate?: React.ReactElement | null;
+  groupName?: string;
 }) {
-  const companyName =
+  let companyName =
     (donorDetails.companyAlias &&
       titlecaseCompany(donorDetails.companyAlias)) ||
     donorDetails.company;
 
-  const alias =
+  let alias =
     donorDetails.companyAlias &&
     donorDetails.companyAlias !== donorDetails.company?.toUpperCase()
       ? donorDetails.company
       : "";
+
+  if (alias && groupName && companyName === groupName) {
+    companyName = alias;
+    alias = "";
+  }
+
+  let entityType = null;
+  if (!donorDetails.isIndividual && donorDetails.entityType) {
+    if (donorDetails.entityType === "COM") {
+      entityType = "Committee";
+    } else if (donorDetails.entityType === "PAC") {
+      entityType = "PAC";
+    }
+  }
 
   if (inline) {
     return (
@@ -74,6 +91,9 @@ function CompanyName({
         </div>
       )}
       {!alias && contributionDate}
+      {entityType && (
+        <div className="secondary smaller italic">{`(${entityType})`}</div>
+      )}
     </div>
   );
 }
@@ -139,9 +159,11 @@ function ContributionAmount({
 export default async function Contribution({
   contribution,
   isSubRow,
+  groupName,
 }: {
   contribution: ContributionType;
   isSubRow?: boolean;
+  groupName?: string;
 }) {
   let [COMPANY_ALIASES, INDIVIDUAL_EMPLOYERS] = await Promise.all([
     fetchConstant<Record<string, string>>("companyAliases") || {},
@@ -176,6 +198,7 @@ export default async function Contribution({
         <CompanyName
           donorDetails={donorDetails}
           link={contribution.link}
+          groupName={groupName}
           inline
         />
       );
@@ -183,12 +206,21 @@ export default async function Contribution({
 
     return (
       <div className={styles.donorSubRow}>
-        <div>
-          {donorIdentifier}
-          <ContributionDate contribution={contribution} />
-          {contribution.claimed && <Claimed />}
+        <div className={styles.donorSubRowPrimary}>
+          <div>
+            {!donorDetails.isIndividual && donorDetails.company === groupName
+              ? null
+              : donorIdentifier}
+            <ContributionDate contribution={contribution} />
+            {contribution.claimed && <Claimed />}
+          </div>
+          <ContributionAmount contribution={contribution} isSubRow={true} />
         </div>
-        <ContributionAmount contribution={contribution} isSubRow={true} />
+        {contribution.description && (
+          <div className={styles.contributionDescription}>
+            {contribution.description}
+          </div>
+        )}
       </div>
     );
   } else {
@@ -244,6 +276,11 @@ export default async function Contribution({
           {donorIdentifier}
           <ContributionAmount contribution={contribution} />
         </div>
+        {contribution.description && (
+          <div className={styles.contributionDescription}>
+            {contribution.description}
+          </div>
+        )}
       </div>
     );
   }

@@ -16,7 +16,7 @@ export function sentenceCase(str: string): string {
 export function titlecaseCompany(str: string): string {
   let titlecased = titlecase(str);
   titlecased = titlecased.replace(
-    /\b([A-Z]|AH|TJ|GP|SV|LLC|DRW|DBA|CMT|RRE|USA|HBAR)\b/gi,
+    /\b([A-Z]|AH|TJ|GP|SV|LLC|DRW|DBA|CMT|RRE|USA|HBAR|BTC|CFG|PAC)\b/gi,
     function (txt) {
       return txt.toUpperCase();
     },
@@ -41,11 +41,14 @@ export function titlecaseCommittee(
     return "WinRed";
   }
   if (removeDba && str.includes(" DBA ")) {
-    str = str.split(" DBA ")[1];
+    const splitStr = str.split(" DBA ");
+    if (splitStr.length === 2) {
+      str = splitStr[1];
+    }
   }
   let titlecased = titlecase(str);
   titlecased = titlecased.replace(
-    /\b(SMP|LCV|AF(C|P)|UDP|PAC|RSLC|NEA|I{1,3}|DNC|D(C|S)CC|NR(S|C)C|FF|HMP|SFA|SEIU|COPE|AB|ACLU|BA|NY22|DBA|CHC|JD|GSD|JFC|NC|CA|GLCF|SAG|RJC)\b/gi,
+    /\b(SMP|LCV|AF(C|P)|UDP|PAC|RSLC|NEA|I{1,3}|DNC|D(C|S)CC|NR(S|C)C|FF|HMP|SFA|SEIU|COPE|AB|ACLU|BA|NY22|DBA|CHC|JD|GSD|JFC|NC|CA|GLCF|SAG|RJC|MA[HG]A|PA|CFG|SLF|CVA|DGA|RA?GA|EDF)\b/gi,
     function (txt) {
       return txt.toUpperCase();
     },
@@ -91,7 +94,7 @@ export function titlecaseOccupation(str: string): string {
   return titlecase(str)
     .split(" ")
     .map((x) => {
-      if (x.match(/^[^A-Z]*([VG]P|C[A-Z]{2}|US|SRE)[^A-Z]*$/i)) {
+      if (x.match(/^[^A-Z]*([VG]P|C[A-Z]{2}|US|SRE|HR|MD)[^A-Z]*$/i)) {
         return x.toUpperCase();
       }
       return x;

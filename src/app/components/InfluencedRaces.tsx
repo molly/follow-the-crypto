@@ -19,7 +19,7 @@ export default function InfluencedRaces({
           These PACs have already spent heavily to influence the outcome of
           multiple Congressional races.
         </p>
-        <h2>{`${fullPage ? "R" : "Top r"}aces influenced by crypto industry money`}</h2>
+        <h2>{`${fullPage ? "R" : "Top r"}aces influenced by crypto industry super PAC money`}</h2>
       </div>
       <InfluencedRacesContents small={useCompact} fullPage={fullPage} />
       {!fullPage && (

@@ -2,6 +2,7 @@ import { db } from "@/app/lib/db";
 import {
   AllCommitteesSummary,
   CommitteeConstant,
+  CommitteeConstantWithContributions,
   CommitteeDetails,
 } from "@/app/types/Committee";
 import { Contributions, RecipientDetails } from "@/app/types/Contributions";
@@ -93,7 +94,7 @@ export const fetchCommitteeTotalReceipts = cache(
     if (isError(snapshot)) {
       return snapshot as ErrorType;
     } else {
-      return snapshot.net_receipts;
+      return snapshot.net_receipts + snapshot.cash_on_hand;
     }
   },
 );
@@ -176,18 +177,50 @@ export const fetchSuperPACsByReceipts = cache(
 // COMMITTEES -----------------------------------------------------------
 
 // Fetch all committees and sort them by total receipts
-export const fetchAllCommittees = cache(
-  async (): Promise<CommitteeDetails[] | ErrorType> => {
-    const data = await fetchCollection("committees");
-    if (isError(data)) {
-      return data as ErrorType;
+export const fetchCommitteesWithContributions = cache(
+  async (): Promise<CommitteeConstantWithContributions[] | ErrorType> => {
+    const [contributionsData, committeesData, committeeConstants] =
+      await Promise.all([
+        fetchCollection("contributions"),
+        fetchCollection("committees"),
+        fetchConstant<Record<string, CommitteeConstant>>("committees"),
+      ]);
+    if (isError(contributionsData)) {
+      return contributionsData as ErrorType;
+    } else if (isError(committeesData)) {
+      return committeesData as ErrorType;
+    } else if (!committeeConstants) {
+      return {
+        error: true,
+        message: "Committee constants not found",
+      } as ErrorType;
     } else {
-      const committeesData = data as DocumentData[];
-      const committees = committeesData.map((doc) =>
-        doc.data(),
-      ) as CommitteeDetails[];
-      committees.sort((a, b) => (b.receipts || 0) - (a.receipts || 0));
-      return committees;
+      const contributions = contributionsData as DocumentData[];
+      const committeesDocData = committeesData as DocumentData[];
+      const committees: Record<string, CommitteeDetails> = {};
+      committeesDocData.forEach((doc) => {
+        committees[doc.id] = doc.data() as CommitteeDetails;
+      });
+      const contributionsCommittees = contributions.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      })) as (Contributions & { id: string })[];
+
+      const committeesWithTotals = contributionsCommittees
+        .map((committee) => ({
+          ...committeeConstants[committee.id],
+          total_contributed: committee.total_contributed || 0,
+          total_transferred: committee.total_transferred || 0,
+          last_cash_on_hand_end_period:
+            committees[committee.id]?.last_cash_on_hand_end_period || 0,
+          total:
+            (committee.total_contributed || 0) +
+            (committee.total_transferred || 0) +
+            (committees[committee.id]?.last_cash_on_hand_end_period || 0),
+        }))
+        .filter((committee) => committee.total > 0);
+      committeesWithTotals.sort((a, b) => b.total - a.total);
+      return committeesWithTotals;
     }
   },
 );
@@ -208,10 +241,54 @@ export const uncachedFetchCommittees = async (): Promise<
   Record<string, CommitteeConstant> | ErrorType
 > => fetchSnapshot("constants", "committees");
 
+export const fetchNonCandidateCommittees = cache(
+  async (): Promise<Set<string>> => {
+    const data = await fetchConstant<Record<string, string[]>>(
+      "nonCandidateCommittees",
+    );
+    if (data && "ids" in data) {
+      const nonCandidateCommittees = new Set(data.ids);
+      return nonCandidateCommittees;
+    }
+    return new Set();
+  },
+);
+
 // EXPENDITURES ----------------------------------------------------------
 export const fetchAllExpenditures = cache(
   async (): Promise<Record<ExpenditureId, Expenditure> | ErrorType> =>
     fetchSnapshot("expenditures", "all"),
+);
+
+export const fetchAllRaceIds = cache(
+  async (): Promise<Record<string, string[]> | ErrorType> => {
+    const data = await fetchCollection("raceDetails");
+    if (isError(data)) {
+      return data as ErrorType;
+    } else {
+      const electionsData = data as DocumentData[];
+      const raceIds: Record<string, string[]> = {};
+      electionsData.forEach((doc) => {
+        const electionsByState = doc.data() as ElectionsByState;
+        if (!(doc.id in raceIds)) {
+          raceIds[doc.id] = [];
+        }
+        for (const raceId of Object.keys(electionsByState)) {
+          raceIds[doc.id].push(raceId);
+        }
+        raceIds[doc.id].sort((a, b) => {
+          const senateRacePattern = /^S(-special)?$/;
+          const aIsSenate = senateRacePattern.test(a);
+          const bIsSenate = senateRacePattern.test(b);
+
+          if (aIsSenate && !bIsSenate) return -1;
+          if (!aIsSenate && bIsSenate) return 1;
+          return a.localeCompare(b);
+        });
+      });
+      return raceIds;
+    }
+  },
 );
 
 export const fetchMapData = cache(async (): Promise<MapData | ErrorType> => {
@@ -328,6 +405,7 @@ export const fetchAllExpenditureTotalsByParty = cache(
 );
 
 // ELECTIONS -------------------------------------------------------------
+// Note: Python backend merges races and manualRaces into races field
 export const fetchAllStateElections = cache(
   async (): Promise<Record<string, ElectionsByState> | ErrorType> => {
     const data = await fetchCollection("raceDetails");
@@ -529,5 +607,34 @@ export const fetchBeneficiariesWithoutExpendituresOrder = cache(
       return beneficiariesOrderData as ErrorType;
     }
     return beneficiariesOrderData.candidatesWithoutExpendituresOrder;
+  },
+);
+
+export const fetchBeneficiariesForRace = cache(
+  async (raceId: string): Promise<Record<string, Beneficiary> | ErrorType> => {
+    const [beneficiariesData, raceData] = await Promise.all([
+      fetchBeneficiaries(),
+      fetchElection(raceId),
+    ]);
+    if (isError(beneficiariesData)) {
+      return beneficiariesData as ErrorType;
+    } else if (isError(raceData)) {
+      return raceData as ErrorType;
+    } else {
+      const beneficiaries = beneficiariesData as Record<string, Beneficiary>;
+      const election = raceData as ElectionGroup;
+      const candidatesInRace = Object.values(election.candidates).map(
+        (candidate) => candidate.candidate_id,
+      );
+      return candidatesInRace.reduce(
+        (acc, candidateId) => {
+          if (candidateId && candidateId in beneficiaries) {
+            acc[candidateId] = beneficiaries[candidateId];
+          }
+          return acc;
+        },
+        {} as Record<string, Beneficiary>,
+      );
+    }
   },
 );

@@ -39,8 +39,9 @@
   grid-template-columns: minmax(20rem, 1fr);
   grid-template-rows: repeat(2, 20rem) repeat(3, auto);
   grid-template-areas:
-    "byParty"
+    "allCash"
     "byCommittee"
+    "byParty"
     "influencedCard"
     "superPacCard"
     "expenditures";
@@ -51,6 +52,11 @@
   align-items: center;
   justify-content: center;
   height: 2.4rem;
+}
+
+.allCashCard {
+  composes: card from "@/app/components/expenditures.module.css";
+  grid-area: allCash;
 }
 
 .expendituresByCommitteeCard {
@@ -86,7 +92,7 @@
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: 20rem repeat(3, auto);
     grid-template-areas:
-      "byParty byCommittee"
+      "allCash byCommittee byParty"
       "influencedCard influencedCard"
       "superPacCard superPacCard"
       "expenditures expenditures";
@@ -98,8 +104,9 @@
     grid-template-columns: 2fr 1fr;
     grid-template-rows: 20rem 20rem auto;
     grid-template-areas:
-      "influencedCard byParty"
+      "influencedCard allCash"
       "influencedCard byCommittee"
+      "superPacCard byParty"
       "superPacCard expenditures";
   }
 }

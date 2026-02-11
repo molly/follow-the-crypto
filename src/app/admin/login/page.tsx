@@ -3,11 +3,12 @@
 import { useAuth } from "@/app/admin/AuthProvider";
 import sharedStyles from "@/app/shared.module.css";
 import { redirect } from "next/navigation";
-import { useFormState, useFormStatus } from "react-dom";
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 
 export default function Login() {
   const { authenticate, user } = useAuth();
-  const [errorMessage, dispatch] = useFormState(authenticate, undefined);
+  const [errorMessage, dispatch] = useActionState(authenticate, undefined);
 
   if (user) {
     redirect("/admin");

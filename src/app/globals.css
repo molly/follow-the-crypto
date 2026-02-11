@@ -245,6 +245,10 @@ iframe {
   font-size: 0.9rem;
 }
 
+.italic {
+  font-style: italic;
+}
+
 a.unstyled {
   color: inherit;
   text-decoration: none;
@@ -289,6 +293,11 @@ a.unstyled {
   color: var(--color-white);
   padding: 0.5rem 0.5rem 0.5rem 60px;
   text-align: center;
+}
+
+.banner a {
+  color: var(--color-white);
+  font-weight: bold;
 }
 
 @media (min-width: 1200px) {

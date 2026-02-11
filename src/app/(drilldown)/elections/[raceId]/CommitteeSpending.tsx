@@ -2,7 +2,7 @@ import { fetchConstant, fetchElection } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { ElectionGroup, RaceType } from "@/app/types/Elections";
-import { isError } from "@/app/utils/errors";
+import { is4xx, isError } from "@/app/utils/errors";
 import { getSubraceName } from "@/app/utils/races";
 import { formatCurrency } from "@/app/utils/utils";
 import Link from "next/link";
@@ -26,6 +26,13 @@ export default async function CommitteeSpending({
     fetchConstant("committees"),
   ]);
   if (isError(election)) {
+    if (is4xx(election)) {
+      return (
+        <span className="secondary">
+          No cryptocurrency PACs have made expenditures involving this election.
+        </span>
+      );
+    }
     return <ErrorText subject="election spending data" />;
   }
   const spending = (election as ElectionGroup).spending;

@@ -6,6 +6,7 @@ import { Suspense } from "react";
 import StateExpenditures, {
   StateExpendituresSkeleton,
 } from "./StateExpenditures";
+import StateNonPacExpenditures from "./StateNonPacExpenditures";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = customMetadata({
@@ -37,6 +38,24 @@ export default function Page() {
           </thead>
           <Suspense fallback={<StateExpendituresSkeleton />}>
             <StateExpenditures />
+          </Suspense>
+        </table>
+      </section>
+      <section className={styles.statesTableCard}>
+        <h2 className={styles.statesTableHeader}>
+          Elections with spending by cryptocurrency industry-associated
+          companies or individuals
+        </h2>
+        <table className={styles.statesTable}>
+          <thead>
+            <tr>
+              <th className="text-cell" colSpan={2}>
+                State
+              </th>
+            </tr>
+          </thead>
+          <Suspense fallback={<StateExpendituresSkeleton />}>
+            <StateNonPacExpenditures />
           </Suspense>
         </table>
       </section>

@@ -19,6 +19,16 @@
   align-self: flex-start;
 }
 
+.constantsTable {
+  border-collapse: collapse;
+}
+
+.constantsTable td,
+.constantsTable th {
+  padding: 0.75rem 0.5rem;
+  border-bottom: 1px solid #ddd;
+}
+
 .adGrid {
   display: grid;
   grid-template-columns: [ad] 1fr [region] 1fr;

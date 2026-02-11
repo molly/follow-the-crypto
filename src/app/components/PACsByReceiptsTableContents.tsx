@@ -46,6 +46,7 @@ export default async function PACsByReceiptsTableContents({
     if (!fullPage) {
       limit = Math.ceil(Math.max(firstCryptoIndex / 10, 1)) * 10;
     }
+    limit = Math.max(limit, 20);
     PACsToShow = PACs.slice(0, limit);
   }
 
@@ -55,7 +56,7 @@ export default async function PACsByReceiptsTableContents({
         const committeeName = committee.committee_name
           ? titlecaseCommittee(committee.committee_name)
           : "";
-        let committeeIdentifier: string | JSX.Element = committeeName;
+        let committeeIdentifier: string | React.ReactElement = committeeName;
         if (committee.is_crypto) {
           committeeIdentifier = (
             <Link href={`/committees/${committee.committee_id}`}>

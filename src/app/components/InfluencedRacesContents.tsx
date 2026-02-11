@@ -194,7 +194,11 @@ function CandidateRow({
   small?: boolean;
 }) {
   const raceHref = `/elections/${candidate.state}-${candidate.race}`;
-  const raceName = getRaceName(`${candidate.state}-${candidate.race}`);
+  const raceName = getRaceName(
+    `${candidate.state}-${candidate.race}`,
+    race.year,
+    true,
+  );
   if (!small) {
     return (
       <tr className={styles.influencedTableRow} key={candidate.common_name}>

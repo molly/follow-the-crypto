@@ -24,7 +24,7 @@ export default async function TotalRaised({
   const receipts = receiptsData as number;
   return (
     <MoneyCard
-      topText="Cryptocurrency-focused political action committees have raised more than"
+      topText="Cryptocurrency-focused political action committees have more than"
       amount={humanizeRoundedCurrency(receipts, true)}
       bottomText="to influence 2024 elections."
       className={className}

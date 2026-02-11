@@ -1,4 +1,4 @@
-import { fetchAllRecipients, fetchIndividual } from "@/app/actions/fetch";
+import { fetchAllRecipients, fetchIndividual, fetchNonCandidateCommittees } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import individualStyles from "@/app/components/individualOrCompany/individualOrCompany.module.css";
 import { RecipientDetails } from "@/app/types/Contributions";
@@ -12,9 +12,10 @@ export default async function Contributions({
 }: {
   individualId: string;
 }) {
-  const [individualData, recipientsData] = await Promise.all([
+  const [individualData, recipientsData, nonCandidateCommittees] = await Promise.all([
     fetchIndividual(individualId),
     fetchAllRecipients(),
+    fetchNonCandidateCommittees(),
   ]);
   if (isError(individualData) && !is4xx(individualData)) {
     return (
@@ -41,6 +42,7 @@ export default async function Contributions({
       <ContributionsCardContent
         individual={individual}
         recipients={recipients}
+        nonCandidateCommittees={Array.from(nonCandidateCommittees)}
       />
     </section>
   );

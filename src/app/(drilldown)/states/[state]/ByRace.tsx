@@ -37,7 +37,7 @@ function Influenced({
   races,
 }: {
   candidate: CandidateSummary;
-  committeeNames: JSX.Element[];
+  committeeNames: React.ReactElement[];
   races: Race[];
 }) {
   const [_, lastName] = getFirstLastName(candidate.common_name);

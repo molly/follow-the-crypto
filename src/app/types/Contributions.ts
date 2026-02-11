@@ -1,9 +1,17 @@
 import { Committee, ScheduleA } from "./FECTypes";
 
+export interface ManualReview {
+  reviewed: boolean;
+  status: "verified" | "omit";
+  reviewed_at: string;
+}
+
 export type SingleContribution = {
   redacted?: boolean;
   link?: string;
   claimed?: boolean;
+  description?: string;
+  manualReview?: ManualReview;
 } & Pick<
   ScheduleA,
   | "contributor_aggregate_ytd"
@@ -27,6 +35,8 @@ export type RollupContribution = {
   redacted?: boolean;
   link?: string;
   claimed?: boolean;
+  description?: string;
+  manualReview?: ManualReview;
   oldest: string;
   newest: string;
   total: number;
@@ -55,6 +65,7 @@ export interface ContributionsGroup {
 
 export interface Contributions {
   contributions_count: number;
+  by_date: SingleContribution[];
   groups: ContributionsGroup[];
   total_contributed: number;
   total_transferred: number;
@@ -107,6 +118,7 @@ export type RecipientCandidateDetails = {
   party: string;
   state: string;
   race_link?: string;
+  election_years?: number[];
 };
 
 export type RecipientDetails = {

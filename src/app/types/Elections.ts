@@ -15,6 +15,7 @@ export interface RaceCandidate {
   percentage?: number;
   won?: boolean;
   withdrew?: boolean;
+  declined?: boolean;
   writeIn?: boolean;
 }
 
@@ -43,6 +44,8 @@ export type CandidateSummary = {
   defeated_race?: RaceType;
   withdrew?: boolean;
   withdrew_race?: RaceType;
+  declined?: boolean;
+  declinedReason?: string;
 
   FEC_name: string;
   candidate_id?: string;
@@ -94,9 +97,15 @@ export type RaceSpending = {
 };
 
 export interface ElectionGroup {
-  races: Race[];
+  races: Race[]; // Final reviewed/merged races
+  manualRaces?: Race[]; // Races added via admin UI
+  scrapedRaces?: Race[]; // Races from Python scraper
+  lastReviewed?: number; // Timestamp when races were last reviewed
+  manualRacesUpdated?: number; // Timestamp when manualRaces were last updated
+  scrapedRacesUpdated?: number; // Timestamp when scrapedRaces were last updated
   candidates: Record<string, CandidateSummary>;
   spending: Record<string, RaceSpending>;
+  year: string;
 }
 
 export interface ElectionsByState {

@@ -16,12 +16,13 @@ import Link from "next/link";
 import Contributions from "./Contributions";
 import styles from "./page.module.css";
 
-export function generateMetadata({
+export async function generateMetadata({
   params,
 }: {
-  params: { individual: string };
-}): Metadata {
-  const individualName = titlecase(params.individual.replaceAll("-", " "));
+  params: Promise<{ individual: string }>;
+}): Promise<Metadata> {
+  const { individual } = await params;
+  const individualName = titlecase(individual.replaceAll("-", " "));
   return customMetadata({
     title: individualName,
     description: `Election spending by ${individualName}.`,
@@ -38,13 +39,13 @@ function Subhead({
   let subhead = [];
   if (individual.title) {
     if (!associatedCompany && !individual.company) {
-      return <span>{individual.title}</span>;
+      return <span key="title">{individual.title}</span>;
     }
-    subhead.push(<span>{`${individual.title} at `}</span>);
+    subhead.push(<span key="title">{`${individual.title} at `}</span>);
   }
   if (associatedCompany && associatedCompany.length) {
     if (!individual.title) {
-      subhead.push(<span>Associated with </span>);
+      subhead.push(<span key="association">Associated with </span>);
     }
     const companyLinks = associatedCompany.map((company) => (
       <Link href={`/companies/${company}`} key={company}>
@@ -53,7 +54,7 @@ function Subhead({
     ));
     subhead.push(humanizeList(companyLinks));
   } else if (individual.company) {
-    subhead.push(<span>{humanizeList(individual.company)}</span>);
+    subhead.push(<span key="company">{humanizeList(individual.company)}</span>);
   }
   return subhead;
 }
@@ -61,11 +62,12 @@ function Subhead({
 export default async function IndividualPage({
   params,
 }: {
-  params: { individual: string };
+  params: Promise<{ individual: string }>;
 }) {
+  const { individual: individualParam } = await params;
   const [individualData, contributionsData] = await Promise.all([
     fetchConstant("individuals"),
-    fetchIndividual(params.individual),
+    fetchIndividual(individualParam),
   ]);
   if (isError(individualData)) {
     return <ErrorText subject="individual data" />;
@@ -74,7 +76,7 @@ export default async function IndividualPage({
     return <ErrorText subject="individual contributions data" />;
   }
   const individual = (individualData as Record<string, IndividualConstant>)[
-    params.individual
+    individualParam
   ];
   const { associatedCompany, party_summary } =
     contributionsData as IndividualContributions;
@@ -84,7 +86,7 @@ export default async function IndividualPage({
       <section className={styles.imageAndName}>
         <div className={styles.imageAndAttribution}>
           <img
-            src={`https://storage.googleapis.com/follow-the-crypto-misc-assets/${params.individual}.webp`}
+            src={`https://storage.googleapis.com/follow-the-crypto-misc-assets/${individualParam}.webp`}
             alt={`${individual.name} photo`}
             className={styles.individualImage}
           />
@@ -105,7 +107,7 @@ export default async function IndividualPage({
         </div>
       </section>
       <div className={styles.page}>
-        <Contributions individualId={params.individual} />
+        <Contributions individualId={individualParam} />
         <div className={styles.spendingWrapper}>
           <section
             className={`${styles.spendingByPartySection} ${sharedStyles.constrainWidth}`}

@@ -1,4 +1,4 @@
-import { fetchAllRecipients, fetchIndividual } from "@/app/actions/fetch";
+import { fetchAllRecipients, fetchIndividual, fetchNonCandidateCommittees } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import ContributionsGroup from "@/app/components/individualOrCompany/ContributionsGroup";
 import individualStyles from "@/app/components/individualOrCompany/individualOrCompany.module.css";
@@ -14,9 +14,10 @@ export default async function ContributionsByRecipient({
 }: {
   individual: string;
 }) {
-  const [individualData, recipientsData] = await Promise.all([
+  const [individualData, recipientsData, nonCandidateCommittees] = await Promise.all([
     fetchIndividual(individual),
     fetchAllRecipients(),
+    fetchNonCandidateCommittees(),
   ]);
   if (isError(individualData) && !is4xx(individualData)) {
     return (
@@ -47,6 +48,7 @@ export default async function ContributionsByRecipient({
           key={`contrib-group-${ind}`}
           contributionsGroup={contributionsGroup}
           recipient={recipients[contributionsGroup.committee_id]}
+          nonCandidateCommittees={nonCandidateCommittees}
         />
       );
     },

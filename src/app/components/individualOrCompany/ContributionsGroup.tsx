@@ -14,10 +14,12 @@ export default function ContributionsGroup({
   contributionsGroup,
   recipient,
   company,
+  nonCandidateCommittees,
 }: {
   contributionsGroup: IndividualOrCompanyContributionGroup;
   recipient?: RecipientDetails;
   company?: string;
+  nonCandidateCommittees?: Set<string>;
 }) {
   if (contributionsGroup.contributions.length === 1) {
     const donor = contributionsGroup.contributions[0];
@@ -26,6 +28,7 @@ export default function ContributionsGroup({
         contribution={donor}
         recipient={recipient}
         company={company}
+        nonCandidateCommittees={nonCandidateCommittees}
       />
     );
   }
@@ -43,6 +46,7 @@ export default function ContributionsGroup({
               ? titlecaseCommittee(recipient.committee_name, false)
               : contributionsGroup.committee_id}
           </MaybeLink>
+          {` ${recipient?.committee_id}`}
           {isClaimed && (
             <>
               {" "}
@@ -52,7 +56,7 @@ export default function ContributionsGroup({
         </span>
         <span>{formatCurrency(contributionsGroup.total)}</span>
       </div>
-      <CommitteeDetails recipient={recipient} />
+      <CommitteeDetails recipient={recipient} nonCandidateCommittees={nonCandidateCommittees} />
       <div className={styles.contributionsContainer}>
         {contributionsGroup.contributions.map((contribution, ind) => (
           <Contribution
@@ -60,6 +64,7 @@ export default function ContributionsGroup({
             contribution={contribution}
             recipient={recipient}
             company={company}
+            nonCandidateCommittees={nonCandidateCommittees}
             key={`contribution-${ind}`}
           />
         ))}

@@ -4,27 +4,29 @@ import { titlecase } from "@/app/utils/titlecase";
 import { Metadata } from "next";
 import PacList from "./PacList";
 
-export function generateMetadata({
+export async function generateMetadata({
   params,
 }: {
-  params: { type: string };
-}): Metadata {
+  params: Promise<{ type: string }>;
+}): Promise<Metadata> {
+  const { type } = await params;
   return customMetadata({
-    title: `${titlecase(params.type)} PAC rankings`,
-    description: `The most highly funded ${params.type === "super" ? "super PACs" : "political action committees"} in the 2024 election cycle.`,
+    title: `${titlecase(type)} PAC rankings`,
+    description: `The most highly funded ${type === "super" ? "super PACs" : "political action committees"} in the 2024 election cycle.`,
   });
 }
 
 export default async function PACRankingPage({
   params,
 }: {
-  params: { type: string };
+  params: Promise<{ type: string }>;
 }) {
+  const { type } = await params;
   return (
     <section className="full-width">
       <h1>Committees</h1>
-      <PACsByReceipts type={params.type} fullPage={true}>
-        <PacList type={params.type} />
+      <PACsByReceipts type={type} fullPage={true}>
+        <PacList type={type} />
       </PACsByReceipts>
     </section>
   );
