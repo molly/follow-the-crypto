@@ -5,7 +5,7 @@ import {
   BeneficiaryContribution,
 } from "@/app/types/Beneficiaries";
 import { ElectionGroup } from "@/app/types/Elections";
-import { isError } from "@/app/utils/errors";
+import { is4xx, isError } from "@/app/utils/errors";
 import { humanizeList } from "@/app/utils/humanize";
 import { titlecaseCommittee, titlecaseLastFirst } from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
@@ -60,6 +60,14 @@ export default async function OtherSupport({ raceId }: { raceId: string }) {
     fetchBeneficiaries(),
   ]);
   if (isError(electionData) || isError(beneficiaryData)) {
+    if (is4xx(electionData) || is4xx(beneficiaryData)) {
+      return (
+        <span className="secondary">
+          No other support from cryptocurrency industry-associated companies or
+          individuals has been recorded for candidates in this election.
+        </span>
+      );
+    }
     return <ErrorText subject="other candidate support" />;
   }
   const election = electionData as ElectionGroup;

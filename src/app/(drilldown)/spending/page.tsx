@@ -1,8 +1,6 @@
 import { fetchAllExpenditureTotalsByParty } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
-import PartySupport, {
-  PartySupportSkeleton,
-} from "@/app/components/PartySupport";
+import PartySupport from "@/app/components/PartySupport";
 import SpendingByPartyWithOpposition, {
   SpendingByPartySkeleton,
 } from "@/app/components/SpendingByPartyWithOpposition";
@@ -11,11 +9,7 @@ import { ExpendituresByParty } from "@/app/types/Expenditures";
 import { isError } from "@/app/utils/errors";
 import { customMetadata } from "@/app/utils/metadata";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Suspense } from "react";
-import OppositionSpending, {
-  OppositionSpendingSkeleton,
-} from "./OppositionSpending";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = customMetadata({
@@ -74,7 +68,7 @@ export default function SpendingPage() {
           may intend to support a candidate from the opposing party in a later
           election.
         </p>
-        <p>
+        {/* <p>
           In some races where PACs have spent heavily to oppose candidates but
           have not supported any candidates, such as in{" "}
           <Link href="/elections/CA-S">California&rsquo;s Senate primary</Link>{" "}
@@ -99,7 +93,7 @@ export default function SpendingPage() {
         </div>
         <Suspense fallback={<OppositionSpendingSkeleton />}>
           <OppositionSpending />
-        </Suspense>
+        </Suspense> */}
       </section>
     </section>
   );

@@ -260,6 +260,37 @@ export const fetchAllExpenditures = cache(
     fetchSnapshot("expenditures", "all"),
 );
 
+export const fetchAllRaceIds = cache(
+  async (): Promise<Record<string, string[]> | ErrorType> => {
+    const data = await fetchCollection("raceDetails");
+    if (isError(data)) {
+      return data as ErrorType;
+    } else {
+      const electionsData = data as DocumentData[];
+      const raceIds: Record<string, string[]> = {};
+      electionsData.forEach((doc) => {
+        const electionsByState = doc.data() as ElectionsByState;
+        if (!(doc.id in raceIds)) {
+          raceIds[doc.id] = [];
+        }
+        for (const raceId of Object.keys(electionsByState)) {
+          raceIds[doc.id].push(raceId);
+        }
+        raceIds[doc.id].sort((a, b) => {
+          const senateRacePattern = /^S(-special)?$/;
+          const aIsSenate = senateRacePattern.test(a);
+          const bIsSenate = senateRacePattern.test(b);
+
+          if (aIsSenate && !bIsSenate) return -1;
+          if (!aIsSenate && bIsSenate) return 1;
+          return a.localeCompare(b);
+        });
+      });
+      return raceIds;
+    }
+  },
+);
+
 export const fetchMapData = cache(async (): Promise<MapData | ErrorType> => {
   const data = await fetchSnapshot("expenditures", "states");
   if (isError(data)) {
@@ -576,5 +607,34 @@ export const fetchBeneficiariesWithoutExpendituresOrder = cache(
       return beneficiariesOrderData as ErrorType;
     }
     return beneficiariesOrderData.candidatesWithoutExpendituresOrder;
+  },
+);
+
+export const fetchBeneficiariesForRace = cache(
+  async (raceId: string): Promise<Record<string, Beneficiary> | ErrorType> => {
+    const [beneficiariesData, raceData] = await Promise.all([
+      fetchBeneficiaries(),
+      fetchElection(raceId),
+    ]);
+    if (isError(beneficiariesData)) {
+      return beneficiariesData as ErrorType;
+    } else if (isError(raceData)) {
+      return raceData as ErrorType;
+    } else {
+      const beneficiaries = beneficiariesData as Record<string, Beneficiary>;
+      const election = raceData as ElectionGroup;
+      const candidatesInRace = Object.values(election.candidates).map(
+        (candidate) => candidate.candidate_id,
+      );
+      return candidatesInRace.reduce(
+        (acc, candidateId) => {
+          if (candidateId && candidateId in beneficiaries) {
+            acc[candidateId] = beneficiaries[candidateId];
+          }
+          return acc;
+        },
+        {} as Record<string, Beneficiary>,
+      );
+    }
   },
 );

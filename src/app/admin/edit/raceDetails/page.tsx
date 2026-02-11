@@ -14,6 +14,9 @@ interface CandidateFormData {
   declared?: boolean;
   declined?: boolean;
   declineReason?: string;
+  withdrew?: boolean;
+  withdrewRaceType?: string;
+  withdrewRaceParty?: Party;
 }
 
 interface RaceFormData {
@@ -27,6 +30,8 @@ export default function RaceDetailsEditor() {
   const [selectedState, setSelectedState] = useState<string>("");
   const [raceId, setRaceId] = useState<string>("");
   const [existingRaceIds, setExistingRaceIds] = useState<string[]>([]);
+  const [existingManualRaces, setExistingManualRaces] = useState<RaceFormData[]>([]);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null); // null = adding new, number = editing existing
   const [saveState, setSaveState] = useState<"idle" | "pending" | "success" | "error">("idle");
   const [raceForm, setRaceForm] = useState<RaceFormData>({
     type: "",
@@ -49,6 +54,9 @@ export default function RaceDetailsEditor() {
           declared: true,
           declined: false,
           declineReason: "",
+          withdrew: false,
+          withdrewRaceType: "",
+          withdrewRaceParty: undefined,
         },
       ],
     });
@@ -87,6 +95,73 @@ export default function RaceDetailsEditor() {
     } catch (err) {
       console.error("Error fetching existing races:", err);
       setExistingRaceIds([]);
+    }
+  };
+
+  const fetchManualRacesForRaceId = async (state: string, raceIdToFetch: string) => {
+    try {
+      const docRef = doc(db, "raceDetails", state);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        const existingData = docSnap.data();
+        const raceGroup = existingData[raceIdToFetch];
+        if (raceGroup?.manualRaces && raceGroup.manualRaces.length > 0) {
+          setExistingManualRaces(raceGroup.manualRaces);
+          // Auto-select the first manual race for editing if there's only one
+          if (raceGroup.manualRaces.length === 1) {
+            setEditingIndex(0);
+            populateFormFromRace(raceGroup.manualRaces[0]);
+          }
+        } else {
+          setExistingManualRaces([]);
+          setEditingIndex(null);
+        }
+      } else {
+        setExistingManualRaces([]);
+        setEditingIndex(null);
+      }
+    } catch (err) {
+      console.error("Error fetching manual races:", err);
+      setExistingManualRaces([]);
+      setEditingIndex(null);
+    }
+  };
+
+  const populateFormFromRace = (race: RaceFormData) => {
+    setRaceForm({
+      type: race.type || "",
+      party: race.party,
+      date: race.date || "",
+      candidates: race.candidates.map((c: any) => ({
+        name: c.name,
+        party: c.party,
+        incumbent: c.incumbent,
+        declared: c.declared !== false,
+        declined: c.declined,
+        declineReason: c.declineReason,
+        withdrew: c.withdrew,
+        withdrewRaceType: c.withdrew_race?.type || "",
+        withdrewRaceParty: c.withdrew_race?.party,
+      })),
+    });
+  };
+
+  const resetForm = () => {
+    setRaceForm({
+      type: "",
+      party: undefined,
+      date: "",
+      candidates: [],
+    });
+    setEditingIndex(null);
+  };
+
+  const selectManualRaceToEdit = (index: number | null) => {
+    setEditingIndex(index);
+    if (index !== null && existingManualRaces[index]) {
+      populateFormFromRace(existingManualRaces[index]);
+    } else {
+      resetForm();
     }
   };
 
@@ -136,6 +211,22 @@ export default function RaceDetailsEditor() {
             candidateData.declineReason = candidate.declineReason;
           }
 
+          // Only include withdrew if true
+          if (candidate.withdrew) {
+            candidateData.withdrew = true;
+            // Build withdrew_race object
+            const withdrewRace: any = {};
+            if (candidate.withdrewRaceType) {
+              withdrewRace.type = candidate.withdrewRaceType;
+            }
+            if (candidate.withdrewRaceParty) {
+              withdrewRace.party = candidate.withdrewRaceParty;
+            }
+            if (Object.keys(withdrewRace).length > 0) {
+              candidateData.withdrew_race = withdrewRace;
+            }
+          }
+
           return candidateData;
         }),
       };
@@ -155,24 +246,37 @@ export default function RaceDetailsEditor() {
       if (!raceGroup.manualRaces) {
         raceGroup.manualRaces = [];
       }
-      raceGroup.manualRaces.push(race);
+
+      if (editingIndex !== null) {
+        // Update existing manual race
+        raceGroup.manualRaces[editingIndex] = race;
+      } else {
+        // Add new manual race
+        raceGroup.manualRaces.push(race);
+      }
       raceGroup.manualRacesUpdated = Date.now();
 
       await setDoc(docRef, { [raceId]: raceGroup }, { merge: true });
 
       setSaveState("success");
 
-      // Reset form
-      setRaceForm({
-        type: "",
-        party: undefined,
-        date: "",
-        candidates: [],
-      });
-      setRaceId("");
+      // Remember the index we were editing (or the new index if adding)
+      const savedIndex = editingIndex !== null ? editingIndex : raceGroup.manualRaces.length - 1;
 
       // Refresh the existing race IDs
       await fetchExistingRaces(selectedState);
+
+      // Refresh the manual races list and stay on the saved entry
+      const docSnapAfter = await getDoc(docRef);
+      if (docSnapAfter.exists()) {
+        const updatedData = docSnapAfter.data();
+        const updatedRaceGroup = updatedData[raceId];
+        if (updatedRaceGroup?.manualRaces) {
+          setExistingManualRaces(updatedRaceGroup.manualRaces);
+          setEditingIndex(savedIndex);
+          populateFormFromRace(updatedRaceGroup.manualRaces[savedIndex]);
+        }
+      }
 
       setTimeout(() => setSaveState("idle"), 2000);
     } catch (err) {
@@ -196,6 +300,8 @@ export default function RaceDetailsEditor() {
               const state = e.target.value;
               setSelectedState(state);
               setRaceId("");
+              resetForm();
+              setExistingManualRaces([]);
               if (state) {
                 fetchExistingRaces(state);
               } else {
@@ -215,7 +321,7 @@ export default function RaceDetailsEditor() {
 
         {selectedState && (
           <>
-            <h2>Add New Race for {STATES_BY_ABBR[selectedState]}</h2>
+            <h2>{editingIndex !== null ? "Edit" : "Add New"} Race for {STATES_BY_ABBR[selectedState]}</h2>
 
             {/* Race ID Selection/Input */}
             <div className={styles.editorInputGroup}>
@@ -225,7 +331,15 @@ export default function RaceDetailsEditor() {
                   id="race-id"
                   className={styles.editorSelect}
                   value={raceId}
-                  onChange={(e) => setRaceId(e.target.value)}
+                  onChange={(e) => {
+                    const newRaceId = e.target.value;
+                    setRaceId(newRaceId);
+                    resetForm();
+                    setExistingManualRaces([]);
+                    if (newRaceId && newRaceId !== "__custom") {
+                      fetchManualRacesForRaceId(selectedState, newRaceId);
+                    }
+                  }}
                   style={{ minWidth: "200px" }}
                 >
                   <option value="">Select or enter race ID</option>
@@ -251,6 +365,49 @@ export default function RaceDetailsEditor() {
                 Examples: H-01 (House District 1), S (Senate), P (President), G (Governor)
               </small>
             </div>
+
+            {/* Existing Manual Races Selector */}
+            {existingManualRaces.length > 0 && (
+              <div className={styles.editorInputGroup} style={{ backgroundColor: "#f0f7ff", padding: "1rem", borderRadius: "4px" }}>
+                <label>Existing Manual Entries</label>
+                <p style={{ margin: "0.5rem 0", fontSize: "0.9rem", color: "#666" }}>
+                  This race has {existingManualRaces.length} existing manual {existingManualRaces.length === 1 ? "entry" : "entries"}. Select one to edit or add a new one.
+                </p>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                  {existingManualRaces.map((race, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => selectManualRaceToEdit(idx)}
+                      style={{
+                        padding: "0.5rem",
+                        textAlign: "left",
+                        backgroundColor: editingIndex === idx ? "#0066cc" : "#fff",
+                        color: editingIndex === idx ? "#fff" : "#333",
+                        border: "1px solid #ccc",
+                        borderRadius: "4px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      {race.type}{race.party ? ` (${race.party})` : ""}{race.date ? ` - ${race.date}` : ""} — {race.candidates.length} candidate{race.candidates.length !== 1 ? "s" : ""}
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => selectManualRaceToEdit(null)}
+                    style={{
+                      padding: "0.5rem",
+                      textAlign: "left",
+                      backgroundColor: editingIndex === null ? "#0066cc" : "#fff",
+                      color: editingIndex === null ? "#fff" : "#333",
+                      border: "1px solid #ccc",
+                      borderRadius: "4px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    + Add New Race
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* Race Type */}
             <div className={styles.editorInputGroup}>
@@ -391,6 +548,34 @@ export default function RaceDetailsEditor() {
                     />
                   </div>
                 )}
+
+                {/* Withdrew Checkbox */}
+                <div className={styles.editorInputGroup}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={candidate.withdrew || false}
+                      onChange={(e) => {
+                        const isWithdrew = e.target.checked;
+                        const updatedCandidates = [...raceForm.candidates];
+                        updatedCandidates[index] = {
+                          ...updatedCandidates[index],
+                          withdrew: isWithdrew,
+                          // Auto-fill from current race when checking
+                          withdrewRaceType: isWithdrew ? raceForm.type : "",
+                          withdrewRaceParty: isWithdrew ? raceForm.party : undefined,
+                        };
+                        setRaceForm({ ...raceForm, candidates: updatedCandidates });
+                      }}
+                    />
+                    {" "}Withdrew
+                    {candidate.withdrew && (
+                      <span style={{ marginLeft: "0.5rem", color: "#666", fontSize: "0.9rem" }}>
+                        (from {raceForm.type}{raceForm.party ? ` ${raceForm.party}` : ""})
+                      </span>
+                    )}
+                  </label>
+                </div>
               </div>
             ))}
 
@@ -408,11 +593,11 @@ export default function RaceDetailsEditor() {
                   fontWeight: "bold",
                 }}
               >
-                {saveState === "pending" ? "Saving..." : "Save Race"}
+                {saveState === "pending" ? "Saving..." : editingIndex !== null ? "Update Race" : "Save Race"}
               </button>
               {saveState === "success" && (
                 <span style={{ marginLeft: "1rem", color: "green" }}>
-                  Saved successfully to {selectedState}/{raceId}!
+                  {editingIndex !== null ? "Updated" : "Saved"} successfully to {selectedState}/{raceId}!
                 </span>
               )}
               {saveState === "error" && (

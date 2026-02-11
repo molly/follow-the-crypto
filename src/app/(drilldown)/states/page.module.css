@@ -14,7 +14,7 @@
 
 .statesTableCard {
   composes: cardWithTable from "@/app/shared.module.css";
-  min-width: 25rem;
+  width: 28rem;
 }
 
 .statesTableHeader {

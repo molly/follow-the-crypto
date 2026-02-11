@@ -66,9 +66,15 @@ export default async function Elections({ raceId }: { raceId: string }) {
     fetchStateElections(stateAbbr),
   ]);
 
-  if (isError(electionsData)) {
+  if (
+    isError(electionsData) ||
+    !(shortRaceId in (electionsData as ElectionsByState))
+  ) {
     let errorText;
-    if (is4xx(electionsData)) {
+    if (
+      is4xx(electionsData) ||
+      !(shortRaceId in (electionsData as ElectionsByState))
+    ) {
       errorText = (
         <span className="secondary">
           No cryptocurrency PAC spending has been recorded for this election.
@@ -86,13 +92,13 @@ export default async function Elections({ raceId }: { raceId: string }) {
       : (expendituresData as PopulatedStateExpenditures);
   const elections = electionsData as ElectionsByState;
 
-  const upcomingRaces = elections[shortRaceId].races.filter((r) =>
+  const upcomingRaces = elections[shortRaceId]?.races.filter((r) =>
     isUpcomingRace(r),
   );
 
-  return elections[shortRaceId].races.map((race) => (
+  return elections[shortRaceId]?.races.map((race) => (
     <RaceSummary
-      key={`${shortRaceId}-${race.type}`}
+      key={`${shortRaceId}-${race.type}${race.party ? `-${race.party}` : ""}`}
       race={race}
       electionData={elections[shortRaceId]}
       expenditures={expenditures ? expenditures.by_race[raceId] : null}
