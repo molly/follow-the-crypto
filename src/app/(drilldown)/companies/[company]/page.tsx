@@ -19,7 +19,7 @@ import styles from "./page.module.css";
 export async function generateMetadata({
   params,
 }: {
-  params: { company: string };
+  params: Promise<{ company: string }>;
 }): Promise<Metadata> {
   const { company } = await params;
   const companyName = titlecase(company.replaceAll("-", " "));
@@ -32,7 +32,7 @@ export async function generateMetadata({
 export default async function CompanyPage({
   params,
 }: {
-  params: { company: string };
+  params: Promise<{ company: string }>;
 }) {
   const { company: companyParam } = await params;
   const [companyData, recipientData, nonCandidateCommittees] = await Promise.all([

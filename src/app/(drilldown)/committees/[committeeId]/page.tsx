@@ -21,7 +21,7 @@ import styles from "./page.module.css";
 export async function generateMetadata({
   params,
 }: {
-  params: { committeeId: string };
+  params: Promise<{ committeeId: string }>;
 }): Promise<Metadata> {
   const { committeeId } = await params;
   let committeeName =

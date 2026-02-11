@@ -5,7 +5,7 @@ export function useComponentSize(
   defaults: { width: number; height: number } = { width: 0, height: 0 },
 ) {
   const [size, setSize] = useState<{ width: number; height: number }>(defaults);
-  const ref = useRef<any>();
+  const ref = useRef<any>(null);
   useEffect(() => {
     if (!ref.current) {
       return;

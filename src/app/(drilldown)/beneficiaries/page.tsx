@@ -127,14 +127,19 @@ export default async function BeneficiariesList() {
           <tbody>
             {beneficiariesOrder.map((id) => {
               const beneficiary = beneficiaries[id];
-              return beneficiary.type === "committee" ? (
-                <CommitteeBeneficiary
-                  id={id}
-                  beneficiary={beneficiary}
-                  committee={committees[id]}
-                  key={id}
-                />
-              ) : (
+              if (!beneficiary) return null;
+              if (beneficiary.type === "committee") {
+                return (
+                  <CommitteeBeneficiary
+                    id={id}
+                    beneficiary={beneficiary}
+                    committee={committees[id]}
+                    key={id}
+                  />
+                );
+              }
+              if (!beneficiary.candidate_details) return null;
+              return (
                 <CandidateBeneficiary
                   id={id}
                   beneficiary={beneficiary}

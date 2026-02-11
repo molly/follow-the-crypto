@@ -15,7 +15,7 @@ import SpendingCard from "./SpendingCard";
 export async function generateMetadata({
   params,
 }: {
-  params: { raceId: string };
+  params: Promise<{ raceId: string }>;
 }): Promise<Metadata> {
   const { raceId } = await params;
   if (raceId.toUpperCase() === "PRESIDENT") {
@@ -36,7 +36,7 @@ export async function generateMetadata({
 export default async function RacePage({
   params,
 }: {
-  params: { raceId: string };
+  params: Promise<{ raceId: string }>;
 }) {
   const { raceId } = await params;
   const raceIdSplit = raceId.split("-");
