@@ -12,7 +12,7 @@ export async function generateMetadata({
   const { type } = await params;
   return customMetadata({
     title: `${titlecase(type)} PAC rankings`,
-    description: `The most highly funded ${type === "super" ? "super PACs" : "political action committees"} in the 2024 election cycle.`,
+    description: `The most highly funded ${type === "super" ? "super PACs" : "political action committees"} in the 2026 election cycle.`,
   });
 }
 

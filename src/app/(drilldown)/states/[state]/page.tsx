@@ -25,7 +25,7 @@ export async function generateMetadata({
   const state = stateNameFromUrl(stateParam);
   return customMetadata({
     title: state,
-    description: `Cryptocurrency-focused political action committee spending on 2024 elections in ${state}.`,
+    description: `Cryptocurrency-focused political action committee spending on 2026 elections in ${state}.`,
   });
 }
 

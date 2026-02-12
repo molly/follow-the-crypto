@@ -41,7 +41,7 @@ export default async function TotalSpending({
       className={styles.totalSpendingCard}
       topText="Cryptocurrency-focused PACs have spent"
       amount={formatCurrency(expenditures.total, true)}
-      bottomText={`to influence 2024 elections in ${titlecasedState}`}
+      bottomText={`to influence 2026 elections in ${titlecasedState}`}
     />
   );
 }

@@ -12,7 +12,7 @@ import styles from "./page.module.css";
 export const metadata: Metadata = customMetadata({
   title: "Spending by State",
   description:
-    "States in which cryptocurrency-focused political action committees have been spending to influence 2024 elections.",
+    "States in which cryptocurrency-focused political action committees have been spending to influence 2026 elections.",
 });
 
 export default function Page() {

@@ -3,7 +3,7 @@ import { Metadata } from "next";
 export const BASE_METADATA: Metadata = {
   title: "Follow the Crypto",
   description:
-    "Follow the cryptocurrency industry’s influence on 2024 elections in the United States.",
+    "Follow the cryptocurrency industry’s influence on 2026 elections in the United States.",
   authors: [{ name: "Molly White", url: "https://www.mollywhite.net" }],
   creator: "Molly White",
   metadataBase: new URL("https://www.followthecrypto.org"),
@@ -11,14 +11,14 @@ export const BASE_METADATA: Metadata = {
     title: "Follow the Crypto",
     siteName: "Follow the Crypto",
     description:
-      "Follow the cryptocurrency industry’s influence on 2024 elections in the United States.",
+      "Follow the cryptocurrency industry’s influence on 2026 elections in the United States.",
     images: "/opengraph-image.png",
   },
   twitter: {
     card: "summary_large_image",
     title: "Follow the Crypto",
     description:
-      "Follow the cryptocurrency industry’s influence on 2024 elections in the United States.",
+      "Follow the cryptocurrency industry’s influence on 2026 elections in the United States.",
     site: "@follow__crypto",
     siteId: "1804912038184939520",
     creator: "@molly0xfff",

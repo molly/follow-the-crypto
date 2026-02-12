@@ -74,7 +74,7 @@ export default function FAQPage() {
           There are delays between when expenditures are made and when they are
           filed with the FEC. This project attempts to pull as much as possible
           from{" "}
-          <a href="https://www.fec.gov/help-candidates-and-committees/dates-and-deadlines/2024-reporting-dates/24-and-48-hour-reports-independent-expenditures-periods-main-page-2024">
+          <a href="https://www.fec.gov/help-candidates-and-committees/dates-and-deadlines/2026-reporting-dates/24-and-48-hour-reports-independent-expenditures-periods-main-page-2026/">
             24- and 48-hour reports
           </a>
           , but some data{" "}

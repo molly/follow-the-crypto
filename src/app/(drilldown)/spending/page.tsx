@@ -15,7 +15,7 @@ import styles from "./page.module.css";
 export const metadata: Metadata = customMetadata({
   title: "PAC spending by party",
   description:
-    "Cryptocurrency-focused spending in the 2024 election cycle, broken down by political party.",
+    "Cryptocurrency-focused spending in the 2026 election cycle, broken down by political party.",
 });
 
 async function SpendingByPartyWithOppositionChart() {
