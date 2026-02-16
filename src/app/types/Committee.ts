@@ -5,6 +5,7 @@ export type CommitteeConstant = {
   id: string;
   name: string;
   description?: TrustedHTML;
+  claimedCommitted?: number;
 };
 
 export type CommitteeConstantWithContributions = CommitteeConstant & {
@@ -80,3 +81,12 @@ export type AllCommitteesSummary = {
   | "independent_expenditures"
   | "last_cash_on_hand_end_period"
 >;
+
+export type TotalsForCommittees = {
+  cash_on_hand: number;
+  claimed_committed: number;
+  disbursements: number;
+  expenditures: number;
+  net_receipts: number;
+  receipts: number;
+};

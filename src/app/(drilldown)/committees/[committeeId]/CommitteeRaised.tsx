@@ -49,7 +49,8 @@ export default async function CommitteeRaised({
           in total funds.
           {donors.total_transferred > 0 ||
           (committee.last_cash_on_hand_end_period &&
-            committee.last_cash_on_hand_end_period > 0) ? (
+            committee.last_cash_on_hand_end_period > 0) ||
+          (committee.claimedCommitted && committee.claimedCommitted > 0) ? (
             <div className={styles.moneyCardDetails}>
               <div>
                 {`${formatCurrency(donors.total_contributed, true)} came from direct contributions.`}
@@ -59,12 +60,16 @@ export default async function CommitteeRaised({
                   {`${formatCurrency(donors.total_transferred, true)} was transferred from other committees.`}
                 </div>
               )}
-              {committee.last_cash_on_hand_end_period &&
-                committee.last_cash_on_hand_end_period > 0 && (
-                  <div>
-                    {`${formatCurrency(committee.last_cash_on_hand_end_period, true)} was cash on hand.`}
-                  </div>
-                )}
+              {(committee.last_cash_on_hand_end_period || 0) > 0 && (
+                <div>
+                  {`${formatCurrency(committee.last_cash_on_hand_end_period, true)} was cash on hand.`}
+                </div>
+              )}
+              {(committee.claimedCommitted || 0) > 0 && (
+                <div>
+                  {`They claim to have ${formatCurrency(committee.claimedCommitted, true)} in committed funds, though these have not yet been reflected in FEC filings.`}
+                </div>
+              )}
             </div>
           ) : undefined}
         </div>

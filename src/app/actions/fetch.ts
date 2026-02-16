@@ -4,6 +4,7 @@ import {
   CommitteeConstant,
   CommitteeConstantWithContributions,
   CommitteeDetails,
+  TotalsForCommittees,
 } from "@/app/types/Committee";
 import { Contributions, RecipientDetails } from "@/app/types/Contributions";
 import { getAdDate } from "@/app/utils/ads";
@@ -89,12 +90,12 @@ export const fetchConstant = cache(
 // ----------------------------------------------------------------------
 // TOTALS ---------------------------------------------------------------
 export const fetchCommitteeTotalReceipts = cache(
-  async (): Promise<number | ErrorType> => {
+  async (): Promise<TotalsForCommittees | ErrorType> => {
     const snapshot = await fetchSnapshot("totals", "committees");
     if (isError(snapshot)) {
       return snapshot as ErrorType;
     } else {
-      return snapshot.net_receipts + snapshot.cash_on_hand;
+      return snapshot as TotalsForCommittees;
     }
   },
 );
@@ -229,8 +230,16 @@ export const fetchCommitteesWithContributions = cache(
             (committee.total_transferred || 0) +
             (committees[committee.id]?.last_cash_on_hand_end_period || 0),
         }))
-        .filter((committee) => committee.total > 0);
-      committeesWithTotals.sort((a, b) => b.total - a.total);
+        .filter(
+          (committee) =>
+            committee.total + (committee.claimedCommitted || 0) > 0,
+        );
+      committeesWithTotals.sort(
+        (a, b) =>
+          b.total +
+          (b.claimedCommitted || 0) -
+          (a.total + (a.claimedCommitted || 0)),
+      );
       return committeesWithTotals;
     }
   },

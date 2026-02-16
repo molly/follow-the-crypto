@@ -9,15 +9,28 @@ const COLORS = {
   CASH: "#1e3a8a",
   CONTRIBUTED: "#2563eb",
   TRANSFERRED: "#60a5fa",
+  CLAIMED: "#d9d9d9",
 };
 
-const LEGEND_ITEMS = [
+const BASE_LEGEND_ITEMS = [
   { label: "Transfers from other committees", color: COLORS.TRANSFERRED },
   { label: "Contributions", color: COLORS.CONTRIBUTED },
   { label: "Cash on hand", color: COLORS.CASH },
 ];
 
-export default function SpendingByCommittee({
+function getTopSegmentColor(committee: CommitteeConstantWithContributions) {
+  // Make sure there's enough contrast in the text label
+  if ((committee.claimedCommitted || 0) > 0) {
+    return COLORS.CLAIMED;
+  } else if (committee.total_transferred > 0) {
+    return COLORS.TRANSFERRED;
+  } else if (committee.total_contributed > 0) {
+    return COLORS.CONTRIBUTED;
+  }
+  return COLORS.CASH;
+}
+
+export default function AllCashByCommitteeChart({
   committees,
   labelId,
 }: {
@@ -38,8 +51,20 @@ export default function SpendingByCommittee({
   const LEGEND_SWATCH_SIZE = 12;
 
   const committeesToShow = committees.slice(0, 5);
+  const hasClaimedCommitted = committeesToShow.some(
+    (c) => (c.claimedCommitted || 0) > 0,
+  );
+  const legendItems = hasClaimedCommitted
+    ? [
+        { label: "Claimed commitments", color: COLORS.CLAIMED },
+        ...BASE_LEGEND_ITEMS,
+      ]
+    : BASE_LEGEND_ITEMS;
   const maxExpenditure =
-    d3.max(Object.values(committeesToShow), (c) => c.total) || 0;
+    d3.max(
+      Object.values(committeesToShow),
+      (c) => c.total + (c.claimedCommitted || 0),
+    ) || 0;
   const yDomain = [0, maxExpenditure + maxExpenditure * 0.05]; // Add a little breathing room to the chart
   const x = d3
     .scaleBand()
@@ -92,7 +117,9 @@ export default function SpendingByCommittee({
             aria-label="bar graph"
           >
             {committeesToShow.map((committee) => {
-              const height = y(0) - y(committee.total);
+              const barTotal =
+                committee.total + (committee.claimedCommitted || 0);
+              const height = y(0) - y(barTotal);
               let committeeName = committee.name;
               if (committeeName === "Commonwealth Unity Fund") {
                 committeeName = "Common&shy;wealth Unity Fund";
@@ -102,7 +129,7 @@ export default function SpendingByCommittee({
                   key={committee.id}
                   style={{ cursor: "pointer" }}
                   role="link"
-                  aria-label={`~${barLabelFormatter(committee.total)} on hand`}
+                  aria-label={`~${barLabelFormatter(barTotal)} on hand`}
                 >
                   <a href={`/committees/${committee.id}`}>
                     <rect
@@ -149,15 +176,39 @@ export default function SpendingByCommittee({
                       }
                       fill={COLORS.TRANSFERRED}
                     />
+                    {(committee.claimedCommitted || 0) > 0 && (
+                      <rect
+                        x={x(committee.id)}
+                        y={y(
+                          committee.total + (committee.claimedCommitted || 0),
+                        )}
+                        width={x.bandwidth()}
+                        height={
+                          y(committee.total) -
+                          y(committee.total + (committee.claimedCommitted || 0))
+                        }
+                        fill={COLORS.CLAIMED}
+                      />
+                    )}
                     <text
                       x={(x(committee.id) || 0) + x.bandwidth() / 2}
                       fontSize={14}
-                      y={y(committee.total) - 5}
+                      y={
+                        y(barTotal) -
+                        ((committee.claimedCommitted || 0) > 0 ? 19 : 5)
+                      }
                       className={styles.svgText}
                       textAnchor="middle"
                       aria-hidden={true}
                     >
-                      {barLabelFormatter(committee.total)}
+                      {barLabelFormatter(barTotal)}
+                      {(committee.claimedCommitted || 0) > 0 && (
+                        <tspan fontSize={10} x={(x(committee.id) || 0) + x.bandwidth() / 2} dy={14}>
+                          {committee.total === 0
+                            ? "(claimed)"
+                            : `(${barLabelFormatter(committee.claimedCommitted || 0)} claimed)`}
+                        </tspan>
+                      )}
                     </text>
                     <foreignObject
                       x={x(committee.id) || 0}
@@ -165,8 +216,8 @@ export default function SpendingByCommittee({
                       height={height > HEIGHT_CUTOFF ? height - 5 : 70}
                       y={
                         height > HEIGHT_CUTOFF
-                          ? y(committee.total) + 5
-                          : y(committee.total) - 90
+                          ? y(barTotal) + 5
+                          : y(barTotal) - 90
                       }
                       aria-hidden={true}
                     >
@@ -179,7 +230,7 @@ export default function SpendingByCommittee({
                         style={{
                           color:
                             height > HEIGHT_CUTOFF
-                              ? getLabelColor(COLORS.CASH)
+                              ? getLabelColor(getTopSegmentColor(committee))
                               : undefined,
                         }}
                       >
@@ -216,7 +267,7 @@ export default function SpendingByCommittee({
           </g>
         </g>
         <g>
-          {LEGEND_ITEMS.map((item, i) => (
+          {legendItems.map((item, i) => (
             <g
               key={item.label}
               transform={`translate(${BOUNDS_WIDTH - 150}, ${i * LEGEND_ITEM_HEIGHT})`}

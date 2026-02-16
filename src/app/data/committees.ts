@@ -20,6 +20,7 @@ const COMMITTEES: Record<string, string> = {
   C00821082: "Digital Future PAC",
   C00780304: "Robinhood Markets, Inc. PAC",
   C00883116: "Stripe, Inc. Political Action Committee",
+  C00915181: "Fellowship PAC",
 };
 
 export default COMMITTEES;
