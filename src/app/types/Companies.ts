@@ -44,3 +44,8 @@ export type Company = CompanyConstant & {
   contributions: IndividualOrCompanyContributionGroup[];
   party_summary: Record<string, number>;
 };
+
+export type CompanyTotals = {
+  total: number;
+  by_party: Record<string, number>;
+};

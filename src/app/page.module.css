@@ -78,7 +78,7 @@
 
 @media (min-width: 576px) {
   .totalsRow {
-    grid-template-columns: repeat(2, minmax(10rem, 25rem));
+    grid-template-columns: repeat(3, minmax(10rem, 25rem));
   }
 
   .titleH1,

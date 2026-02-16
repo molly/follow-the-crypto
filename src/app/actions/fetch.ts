@@ -20,7 +20,7 @@ import {
 import { cache } from "react";
 import { Ad, AdGroup } from "../types/Ads";
 import { Beneficiary } from "../types/Beneficiaries";
-import { Company } from "../types/Companies";
+import { Company, CompanyTotals } from "../types/Companies";
 import {
   ElectionGroup,
   ElectionsByState,
@@ -148,6 +148,17 @@ export const fetchCommitteeTotalExpenditures = cache(
       ).reduce((acc, disbursementGroup) => acc + disbursementGroup.total, 0);
     }
     return result;
+  },
+);
+
+export const fetchCompanyTotalSpending = cache(
+  async (): Promise<CompanyTotals | ErrorType> => {
+    const snapshot = await fetchSnapshot("totals", "companies");
+    if (isError(snapshot)) {
+      return snapshot as ErrorType;
+    } else {
+      return snapshot as CompanyTotals;
+    }
   },
 );
 

@@ -8,6 +8,7 @@ import AllExpendituresByCommittee from "./components/home/AllExpendituresByCommi
 import AllExpendituresByParty from "./components/home/AllExpendituresByParty";
 import AllRecentExpenditures from "./components/home/AllRecentExpenditures";
 import MapWrapper from "./components/home/MapWrapper";
+import TotalCompanySpending from "./components/home/TotalCompanySpending";
 import TotalExpenditures from "./components/home/TotalExpenditures";
 import TotalRaised from "./components/home/TotalRaised";
 import USMapSkeleton from "./components/skeletons/USMapSkeleton";
@@ -29,13 +30,14 @@ export default function Home() {
         </span>
       </div>
       <div className={styles.totalsRow}>
-        <Suspense
-          fallback={<MoneyCardSkeleton className={styles.raisedCard} />}
-        >
-          <TotalRaised className={styles.raisedCard} />
+        <Suspense fallback={<MoneyCardSkeleton />}>
+          <TotalCompanySpending />
         </Suspense>
-        <Suspense fallback={<MoneyCardSkeleton className={styles.spentCard} />}>
-          <TotalExpenditures className={styles.spentCard} />
+        <Suspense fallback={<MoneyCardSkeleton />}>
+          <TotalRaised />
+        </Suspense>
+        <Suspense fallback={<MoneyCardSkeleton />}>
+          <TotalExpenditures />
         </Suspense>
       </div>
       <div className={styles.mainCards}>

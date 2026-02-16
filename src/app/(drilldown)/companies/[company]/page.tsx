@@ -16,6 +16,7 @@ import {
 import { isError } from "@/app/utils/errors";
 import { customMetadata } from "@/app/utils/metadata";
 import { titlecase } from "@/app/utils/titlecase";
+import { formatCurrency } from "@/app/utils/utils";
 import { Metadata } from "next";
 import Link from "next/link";
 import styles from "./page.module.css";
@@ -52,6 +53,10 @@ export default async function CompanyPage({
   const recipients = isError(recipientData)
     ? {}
     : (recipientData as Record<string, RecipientDetails>);
+  const companyTotal = Object.values(company.party_summary).reduce(
+    (acc, total) => acc + total,
+    0,
+  );
   return (
     <>
       <section className={styles.companyLogoAndName}>
@@ -94,7 +99,10 @@ export default async function CompanyPage({
       </section>
       <div className={styles.page}>
         <section className={styles.contributionSection}>
-          <h3 className={styles.contributionSectionHeader}>Contributions</h3>
+          <h3 className={styles.contributionSectionHeader}>
+            <span>Contributions</span>
+            <span>{formatCurrency(companyTotal, true)}</span>
+          </h3>
           {company.contributions ? (
             company.contributions.map(
               (

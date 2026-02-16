@@ -26,7 +26,7 @@ export default async function TotalRaised({
     <MoneyCard
       topText="Cryptocurrency-focused political action committees have more than"
       amount={humanizeRoundedCurrency(receipts, true)}
-      bottomText="to influence 2026 elections."
+      bottomText="on hand to influence 2026 elections."
       className={className}
     />
   );
