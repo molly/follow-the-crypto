@@ -4,9 +4,12 @@ import {
   IndividualOrCompanyContribution,
   RecipientDetails,
 } from "@/app/types/Contributions";
+import { IndividualConstant } from "@/app/types/Individuals";
 import {
   titlecaseCommittee,
   titlecaseIndividualName,
+  titlecaseLastFirst,
+  titlecaseOccupation,
 } from "@/app/utils/titlecase";
 import { formatCurrency, formatDateFromString } from "@/app/utils/utils";
 import Claimed from "./Claimed";
@@ -16,16 +19,53 @@ import styles from "./individualOrCompany.module.css";
 function Contributor({
   contribution,
   company,
+  relatedIndividuals,
 }: {
   contribution: IndividualOrCompanyContribution;
   company?: string;
+  relatedIndividuals?: IndividualConstant[];
 }) {
-  if (contribution.isIndividual && contribution.individual) {
+  if (contribution.isIndividual) {
+    // Check if this individual is in relatedIndividuals
+    if (contribution.individual) {
+      const individual = relatedIndividuals?.find(
+        (ind) => ind.id === contribution.individual,
+      );
+      if (individual) {
+        // Individual found in relatedIndividuals - show name (linked) and title
+        return (
+          <span className={styles.contributionSource}>
+            <MaybeLink href={`/individuals/${individual.id}`}>
+              {individual.name}
+            </MaybeLink>
+            {individual.title && ` (${individual.title})`}
+            {" – "}
+          </span>
+        );
+      }
+      // Individual ID set but not found in relatedIndividuals (shouldn't happen)
+      const contributorName = contribution.contributor_name
+        ? titlecaseLastFirst(contribution.contributor_name)
+        : titlecaseIndividualName(contribution.individual.replaceAll("-", " "));
+      const occupation = contribution.contributor_occupation;
+      return (
+        <span className={styles.contributionSource}>
+          {contributorName}
+          {occupation && ` (${titlecaseOccupation(occupation)})`}
+          {" – "}
+        </span>
+      );
+    }
+    // isIndividual but no individual ID - high-level individual not in relatedIndividuals
+    const contributorName = contribution.contributor_name
+      ? titlecaseLastFirst(contribution.contributor_name)
+      : "Individual";
+    const occupation = contribution.contributor_occupation;
     return (
       <span className={styles.contributionSource}>
-        {`${titlecaseIndividualName(
-          contribution.individual.replaceAll("-", " "),
-        )} – `}
+        {contributorName}
+        {occupation && ` (${titlecaseOccupation(occupation)})`}
+        {" – "}
       </span>
     );
   } else if (company) {
@@ -48,6 +88,17 @@ function ContributionDate({
         className={styles.contributionDate}
       >{`${formatDateFromString(contribution.contribution_receipt_date)}`}</span>
     );
+  } else if (
+    "oldest" in contribution &&
+    contribution.oldest &&
+    "newest" in contribution &&
+    contribution.newest
+  ) {
+    return (
+      <span
+        className={styles.contributionDate}
+      >{`${contribution.total} contribution${contribution.total > 1 ? "s" : ""} from ${formatDateFromString(contribution.oldest)} to ${formatDateFromString(contribution.newest)}`}</span>
+    );
   }
   return null;
 }
@@ -68,6 +119,15 @@ function ContributionAmount({
         {formatCurrency(contribution.contribution_receipt_amount)}
       </span>
     );
+  } else if (
+    "total_receipt_amount" in contribution &&
+    contribution.total_receipt_amount
+  ) {
+    return (
+      <span className={isSubRow ? styles.subRowCurrency : ""}>
+        {formatCurrency(contribution.total_receipt_amount)}
+      </span>
+    );
   }
   return null;
 }
@@ -76,12 +136,14 @@ export default function Contribution({
   contribution,
   recipient,
   company,
+  relatedIndividuals,
   isSubRow,
   nonCandidateCommittees,
 }: {
   contribution: IndividualOrCompanyContribution;
   recipient?: RecipientDetails;
   company?: string;
+  relatedIndividuals?: IndividualConstant[];
   isSubRow?: boolean;
   nonCandidateCommittees?: Set<string>;
 }) {
@@ -92,7 +154,11 @@ export default function Contribution({
     return (
       <div className={styles.contributionSubRow}>
         <div>
-          <Contributor contribution={contribution} company={company} />
+          <Contributor
+            contribution={contribution}
+            company={company}
+            relatedIndividuals={relatedIndividuals}
+          />
           <ContributionDate contribution={contribution} />{" "}
           {"claimed" in contribution && contribution.claimed && <Claimed />}
         </div>
@@ -106,14 +172,21 @@ export default function Contribution({
         <div className={styles.contributionSummary}>
           <span className={styles.contributionCommittee}>
             <MaybeLink href={recipient?.link}>{formattedName}</MaybeLink>
-            {` ${recipient?.committee_id}`}
             {"claimed" in contribution && contribution.claimed && <Claimed />}
+            {` ${recipient?.committee_id}`}
           </span>
           <ContributionAmount contribution={contribution} />
         </div>
-        <CommitteeDetails recipient={recipient} nonCandidateCommittees={nonCandidateCommittees} />
+        <CommitteeDetails
+          recipient={recipient}
+          nonCandidateCommittees={nonCandidateCommittees}
+        />
         <div>
-          <Contributor contribution={contribution} company={company} />
+          <Contributor
+            contribution={contribution}
+            company={company}
+            relatedIndividuals={relatedIndividuals}
+          />
           <ContributionDate contribution={contribution} />
         </div>
       </div>

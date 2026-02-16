@@ -28,12 +28,12 @@
 }
 
 .titleH2 {
-  composes: title;
+  composes: title accent-text;
   font-size: clamp(2rem, 8vw, 5rem);
 }
 
 .titleH3 {
-  composes: title;
+  composes: title accent-text;
   font-size: clamp(2rem, 6vw, 4rem);
 }
 

@@ -3,6 +3,7 @@ import {
   IndividualOrCompanyContributionGroup,
   RecipientDetails,
 } from "@/app/types/Contributions";
+import { IndividualConstant } from "@/app/types/Individuals";
 import { titlecaseCommittee } from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
 import Claimed from "./Claimed";
@@ -14,11 +15,13 @@ export default function ContributionsGroup({
   contributionsGroup,
   recipient,
   company,
+  relatedIndividuals,
   nonCandidateCommittees,
 }: {
   contributionsGroup: IndividualOrCompanyContributionGroup;
   recipient?: RecipientDetails;
   company?: string;
+  relatedIndividuals?: IndividualConstant[];
   nonCandidateCommittees?: Set<string>;
 }) {
   if (contributionsGroup.contributions.length === 1) {
@@ -28,6 +31,7 @@ export default function ContributionsGroup({
         contribution={donor}
         recipient={recipient}
         company={company}
+        relatedIndividuals={relatedIndividuals}
         nonCandidateCommittees={nonCandidateCommittees}
       />
     );
@@ -46,17 +50,20 @@ export default function ContributionsGroup({
               ? titlecaseCommittee(recipient.committee_name, false)
               : contributionsGroup.committee_id}
           </MaybeLink>
-          {` ${recipient?.committee_id}`}
           {isClaimed && (
             <>
               {" "}
               <Claimed />
             </>
           )}
+          {` ${recipient?.committee_id}`}
         </span>
         <span>{formatCurrency(contributionsGroup.total)}</span>
       </div>
-      <CommitteeDetails recipient={recipient} nonCandidateCommittees={nonCandidateCommittees} />
+      <CommitteeDetails
+        recipient={recipient}
+        nonCandidateCommittees={nonCandidateCommittees}
+      />
       <div className={styles.contributionsContainer}>
         {contributionsGroup.contributions.map((contribution, ind) => (
           <Contribution
@@ -64,6 +71,7 @@ export default function ContributionsGroup({
             contribution={contribution}
             recipient={recipient}
             company={company}
+            relatedIndividuals={relatedIndividuals}
             nonCandidateCommittees={nonCandidateCommittees}
             key={`contribution-${ind}`}
           />

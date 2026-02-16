@@ -1,6 +1,9 @@
 import MaybeLink from "@/app/components/MaybeLink";
 import { STATES_BY_ABBR } from "@/app/data/states";
-import { RecipientDetails } from "@/app/types/Contributions";
+import {
+  RecipientCandidateDetails,
+  RecipientDetails,
+} from "@/app/types/Contributions";
 import { humanizeList } from "@/app/utils/humanize";
 import { getFullPartyName } from "@/app/utils/party";
 import { getRaceName } from "@/app/utils/races";
@@ -104,12 +107,52 @@ function getDesignation(designation_full: string | undefined) {
   }
 }
 
+function CandidateStateAndOffice({
+  details,
+}: {
+  details: RecipientCandidateDetails;
+}) {
+  if (
+    (!details.state || !(details.state in STATES_BY_ABBR)) &&
+    details.office
+  ) {
+    return (
+      <MaybeLink href={details.race_link}>
+        {STATES_BY_ABBR[details.state]}{" "}
+        {getRaceName(`${details.state}-${details.office}-${details.district}`)}
+      </MaybeLink>
+    );
+  } else if (
+    details.state &&
+    details.state in STATES_BY_ABBR &&
+    !details.office
+  ) {
+    return (
+      <span className={styles.committeeDetail}>
+        {details.state && details.state in STATES_BY_ABBR && (
+          <span className={styles.committeeDetail}>
+            {STATES_BY_ABBR[details.state]}
+          </span>
+        )}
+      </span>
+    );
+  }
+  return (
+    <span className={styles.committeeDetail}>
+      <MaybeLink href={details.race_link}>
+        {STATES_BY_ABBR[details.state]}{" "}
+        {getRaceName(`${details.state}-${details.office}-${details.district}`)}
+      </MaybeLink>
+    </span>
+  );
+}
+
 function CandidateCommitteeDetails({
   recipient,
   details,
 }: {
   recipient: RecipientDetails;
-  details: any;
+  details: RecipientCandidateDetails;
 }) {
   return (
     <div className={styles.committeeDetails}>
@@ -122,20 +165,7 @@ function CandidateCommitteeDetails({
           {getFullPartyName((recipient.party || details.party)[0], false)}
         </span>
       )}
-      {details.state && details.state in STATES_BY_ABBR && (
-        <span className={styles.committeeDetail}>
-          {STATES_BY_ABBR[details.state]}
-        </span>
-      )}
-      {details.office && (
-        <span className={styles.committeeDetail}>
-          <MaybeLink href={details.race_link}>
-            {getRaceName(
-              `${details.state}-${details.office}-${details.district}`,
-            )}
-          </MaybeLink>
-        </span>
-      )}
+      <CandidateStateAndOffice details={details} />
     </div>
   );
 }

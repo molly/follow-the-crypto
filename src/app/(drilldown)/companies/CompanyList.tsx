@@ -47,6 +47,10 @@ export default async function CompanyList() {
           } else {
             acc["capital"].push(id);
           }
+        } else if (category.includes("finance" as CompanyCategory)) {
+          acc["finance"].push(id);
+        } else if (category.includes("prediction" as CompanyCategory)) {
+          acc["prediction"].push(id);
         } else if (category.includes("advocacy" as CompanyCategory)) {
           acc["advocacy"].push(id);
         } else if (category.includes("crypto" as CompanyCategory)) {
@@ -55,7 +59,14 @@ export default async function CompanyList() {
       }
       return acc;
     },
-    { capital: [], crypto: [], "crypto-capital": [], advocacy: [] },
+    {
+      capital: [],
+      crypto: [],
+      "crypto-capital": [],
+      advocacy: [],
+      finance: [],
+      prediction: [],
+    },
   );
   for (const key in companyGroups) {
     companyGroups[key].sort();
@@ -82,6 +93,16 @@ export default async function CompanyList() {
       <CompanyListGroup
         title="Investment companies"
         groupIds={companyGroups["capital"]}
+        companies={companies}
+      />
+      <CompanyListGroup
+        title="Finance companies with crypto involvement"
+        groupIds={companyGroups["finance"]}
+        companies={companies}
+      />
+      <CompanyListGroup
+        title="Prediction markets"
+        groupIds={companyGroups["prediction"]}
         companies={companies}
       />
     </>

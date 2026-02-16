@@ -1,5 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
-import { fetchAllRecipients, fetchCompany, fetchNonCandidateCommittees } from "@/app/actions/fetch";
+import {
+  fetchAllRecipients,
+  fetchCompany,
+  fetchNonCandidateCommittees,
+} from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import ContributionsGroup from "@/app/components/individualOrCompany/ContributionsGroup";
 import SpendingByParty from "@/app/components/individualOrCompany/SpendingByParty";
@@ -35,11 +39,12 @@ export default async function CompanyPage({
   params: Promise<{ company: string }>;
 }) {
   const { company: companyParam } = await params;
-  const [companyData, recipientData, nonCandidateCommittees] = await Promise.all([
-    fetchCompany(companyParam),
-    fetchAllRecipients(),
-    fetchNonCandidateCommittees(),
-  ]);
+  const [companyData, recipientData, nonCandidateCommittees] =
+    await Promise.all([
+      fetchCompany(companyParam),
+      fetchAllRecipients(),
+      fetchNonCandidateCommittees(),
+    ]);
   if (isError(companyData)) {
     return <ErrorText subject="company data" />;
   }
@@ -94,7 +99,7 @@ export default async function CompanyPage({
             company.contributions.map(
               (
                 contributionGroup: IndividualOrCompanyContributionGroup,
-                ind: number
+                ind: number,
               ) => {
                 return (
                   <ContributionsGroup
@@ -102,10 +107,11 @@ export default async function CompanyPage({
                     contributionsGroup={contributionGroup}
                     recipient={recipients[contributionGroup.committee_id]}
                     company={company.name}
+                    relatedIndividuals={company.relatedIndividuals}
                     nonCandidateCommittees={nonCandidateCommittees}
                   />
                 );
-              }
+              },
             )
           ) : (
             <div className={`secondary ${styles.contributionRow}`}>

@@ -79,6 +79,11 @@ export type IndividualOrCompanyContribution = {
   individual?: string;
   claimed?: boolean;
   source?: string;
+  // Rollup fields
+  oldest?: string;
+  newest?: string;
+  total?: number;
+  total_receipt_amount?: number;
 } & Pick<
   Committee,
   | "candidate_ids"
@@ -103,6 +108,9 @@ export type IndividualOrCompanyContribution = {
     | "memo_text"
     | "receipt_type"
     | "contributor_name"
+    | "contributor_first_name"
+    | "contributor_last_name"
+    | "contributor_occupation"
   >;
 
 export type IndividualOrCompanyContributionGroup = {

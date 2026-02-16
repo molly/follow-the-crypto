@@ -14,6 +14,12 @@ const COMMITTEES: Record<string, string> = {
   C00880518: "Bitcoin Voter PAC",
   C00881250: "Make Bitcoin Great Again",
   C00875856: "Commonwealth Unity Fund",
+  C00911610: "Digital Freedom Fund",
+  C00894428: "First Principles Digital",
+  C00822775: "Bitcoin Freedom PAC",
+  C00821082: "Digital Future PAC",
+  C00780304: "Robinhood Markets, Inc. PAC",
+  C00883116: "Stripe, Inc. Political Action Committee",
 };
 
 export default COMMITTEES;
