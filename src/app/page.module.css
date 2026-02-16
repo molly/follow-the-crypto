@@ -39,6 +39,7 @@
   grid-template-columns: minmax(20rem, 1fr);
   grid-template-rows: repeat(2, 20rem) repeat(3, auto);
   grid-template-areas:
+    "companySpending"
     "allCash"
     "byCommittee"
     "byParty"
@@ -52,6 +53,11 @@
   align-items: center;
   justify-content: center;
   height: 2.4rem;
+}
+
+.companySpendingCard {
+  composes: card from "@/app/components/expenditures.module.css";
+  grid-area: companySpending;
 }
 
 .allCashCard {
@@ -104,8 +110,9 @@
     grid-template-columns: 2fr 1fr;
     grid-template-rows: 20rem 20rem auto;
     grid-template-areas:
+      "influencedCard companySpending"
       "influencedCard allCash"
-      "influencedCard byCommittee"
+      "superPacCard byCommittee"
       "superPacCard byParty"
       "superPacCard expenditures";
   }

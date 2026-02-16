@@ -23,24 +23,26 @@ const sortParties = (partySummary: Record<string, number>): string[] => {
   );
   return keys.sort((a, b) => {
     const [partyA, partyB] = [a, b];
-    const orderA =
-      PARTY_ORDER[partyA] !== undefined
-        ? PARTY_ORDER[partyA]
-        : partyA === "UNK"
-          ? Infinity
-          : 999;
-    const orderB =
-      PARTY_ORDER[partyB] !== undefined
-        ? PARTY_ORDER[partyB]
-        : partyB === "UNK"
-          ? Infinity
-          : 999;
+    const getOrder = (party: string): number => {
+      if (PARTY_ORDER[party] !== undefined) {
+        return PARTY_ORDER[party];
+      }
+      if (party === "OTH") {
+        return 10001;
+      }
+      if (party === "UNK") {
+        return 10000;
+      }
+      return 999;
+    };
+    const orderA = getOrder(partyA);
+    const orderB = getOrder(partyB);
 
     if (orderA !== orderB) {
       return orderA - orderB;
     }
 
-    // If not in PARTY_ORDER and not "UNK", sort alphabetically
+    // If not in PARTY_ORDER and not "UNK" or "OTH", sort alphabetically
     return partyA.localeCompare(partyB);
   });
 };

@@ -17,6 +17,8 @@ export const getFullPartyName = (
       return adjective ? "non-partisan" : "No party affiliation";
     case "U":
       return adjective ? "unknown" : "Unknown";
+    case "O":
+      return adjective ? "other" : "Other";
     default:
       return party;
   }

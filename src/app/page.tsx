@@ -4,6 +4,7 @@ import { MoneyCardSkeleton } from "./components/MoneyCard";
 import SuperPACsByReceipts from "./components/PACsByReceipts";
 import SuperPACsByReceiptsTableContents from "./components/SuperPACsByReceiptsTableContents";
 import AllCashByCommittee from "./components/home/AllCashByCommittee";
+import AllCompanySpendingByParty from "./components/home/AllCompanySpendingByParty";
 import AllExpendituresByCommittee from "./components/home/AllExpendituresByCommittee";
 import AllExpendituresByParty from "./components/home/AllExpendituresByParty";
 import AllRecentExpenditures from "./components/home/AllRecentExpenditures";
@@ -41,6 +42,7 @@ export default function Home() {
         </Suspense>
       </div>
       <div className={styles.mainCards}>
+        <AllCompanySpendingByParty />
         <AllCashByCommittee />
         <AllExpendituresByCommittee />
         <AllExpendituresByParty />
