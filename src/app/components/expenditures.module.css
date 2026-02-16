@@ -3,11 +3,11 @@
   grid-area: byParty;
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
 }
 
 .svgWrapper {
   overflow: hidden;
+  height: 20rem;
 }
 
 .growWrapper {

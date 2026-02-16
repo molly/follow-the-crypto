@@ -12,6 +12,8 @@ export function hydrateStateExpenditures(
   const populatedStateExpenditures: PopulatedStateExpenditures = {
     by_committee: {},
     by_race: {},
+    by_companies: stateExpenditures.by_companies,
+    companies_total: stateExpenditures.companies_total,
     total: stateExpenditures.total,
   };
 

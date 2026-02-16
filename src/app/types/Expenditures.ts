@@ -70,12 +70,16 @@ export interface PopulatedRaceExpenditureGroup
 export interface StateExpenditures {
   by_committee: Record<string, ExpenditureGroup>;
   by_race: Record<string, RaceExpenditureGroup>;
+  by_companies?: Record<string, number>;
+  companies_total?: number;
   total: number;
 }
 
 export interface PopulatedStateExpenditures {
   by_committee: Record<string, PopulatedExpenditureGroup>;
   by_race: Record<string, PopulatedRaceExpenditureGroup>;
+  by_companies?: Record<string, number>;
+  companies_total?: number;
   total: number;
 }
 

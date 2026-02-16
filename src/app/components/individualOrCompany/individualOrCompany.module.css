@@ -67,6 +67,7 @@
 
 .svgWrapper {
   overflow: hidden;
+  height: 20rem;
 }
 
 .svg {

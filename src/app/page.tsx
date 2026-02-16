@@ -5,10 +5,11 @@ import SuperPACsByReceipts from "./components/PACsByReceipts";
 import SuperPACsByReceiptsTableContents from "./components/SuperPACsByReceiptsTableContents";
 import AllCashByCommittee from "./components/home/AllCashByCommittee";
 import AllCompanySpendingByParty from "./components/home/AllCompanySpendingByParty";
+import AllCompanySpendingMap from "./components/home/AllCompanySpendingMap";
 import AllExpendituresByCommittee from "./components/home/AllExpendituresByCommittee";
 import AllExpendituresByParty from "./components/home/AllExpendituresByParty";
 import AllRecentExpenditures from "./components/home/AllRecentExpenditures";
-import MapWrapper from "./components/home/MapWrapper";
+import SuperPacSpendingMapWrapper from "./components/home/SuperPacSpendingMapWrapper";
 import TotalCompanySpending from "./components/home/TotalCompanySpending";
 import TotalExpenditures from "./components/home/TotalExpenditures";
 import TotalRaised from "./components/home/TotalRaised";
@@ -41,21 +42,30 @@ export default function Home() {
           <TotalExpenditures />
         </Suspense>
       </div>
-      <div className={styles.mainCards}>
-        <AllCompanySpendingByParty />
-        <AllCashByCommittee />
-        <AllExpendituresByCommittee />
-        <AllExpendituresByParty />
-        <InfluencedRaces />
-        <SuperPACsByReceipts type="super">
-          <SuperPACsByReceiptsTableContents />
-        </SuperPACsByReceipts>
-        <AllRecentExpenditures />
-      </div>
-      <div className="full-width">
-        <Suspense fallback={<USMapSkeleton />}>
-          <MapWrapper />
-        </Suspense>
+      <div className={styles.columns}>
+        <div className={styles.mainColumn}>
+          <InfluencedRaces />
+          <div className={sharedStyles.card}>
+            <Suspense fallback={<USMapSkeleton />}>
+              <AllCompanySpendingMap />
+            </Suspense>
+          </div>
+          <div className={sharedStyles.card}>
+            <Suspense fallback={<USMapSkeleton />}>
+              <SuperPacSpendingMapWrapper />
+            </Suspense>
+          </div>
+          <SuperPACsByReceipts type="super">
+            <SuperPACsByReceiptsTableContents />
+          </SuperPACsByReceipts>
+        </div>
+        <div className={styles.sideColumn}>
+          <AllCompanySpendingByParty />
+          <AllCashByCommittee />
+          <AllExpendituresByCommittee />
+          <AllExpendituresByParty />
+          <AllRecentExpenditures />
+        </div>
       </div>
     </main>
   );

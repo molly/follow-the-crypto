@@ -1,4 +1,4 @@
-import MapWrapper from "@/app/components/home/MapWrapper";
+import SuperPacSpendingMapWrapper from "@/app/components/home/SuperPacSpendingMapWrapper";
 import USMapSkeleton from "@/app/components/skeletons/USMapSkeleton";
 import { customMetadata } from "@/app/utils/metadata";
 import type { Metadata } from "next";
@@ -20,7 +20,7 @@ export default function Page() {
     <div className={styles.page}>
       <div className={styles.mapContainer}>
         <Suspense fallback={<USMapSkeleton />}>
-          <MapWrapper />
+          <SuperPacSpendingMapWrapper />
         </Suspense>
       </div>
       <section className={styles.statesTableCard}>

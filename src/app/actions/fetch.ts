@@ -325,6 +325,8 @@ export const fetchMapData = cache(async (): Promise<MapData | ErrorType> => {
       mapData[state] = {
         total: stateData[state].total,
         by_race: {},
+        by_companies: stateData[state].by_companies,
+        companies_total: stateData[state].companies_total,
       };
       stateData[state].total = stateData[state].total || 0;
       for (const raceId of Object.keys(stateData[state].by_race)) {

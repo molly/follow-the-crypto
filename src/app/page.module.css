@@ -33,19 +33,27 @@
   margin: 0 auto;
 }
 
-.mainCards {
-  display: grid;
+.columns {
+  display: flex;
+  align-items: flex-start;
   gap: 1rem;
-  grid-template-columns: minmax(20rem, 1fr);
-  grid-template-rows: repeat(2, 20rem) repeat(3, auto);
-  grid-template-areas:
-    "companySpending"
-    "allCash"
-    "byCommittee"
-    "byParty"
-    "influencedCard"
-    "superPacCard"
-    "expenditures";
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.mainColumn {
+  composes: column;
+  flex: 3;
+}
+
+.sideColumn {
+  composes: column;
+  flex: 2;
 }
 
 .spentTopSection {
@@ -112,8 +120,8 @@
     grid-template-areas:
       "influencedCard companySpending"
       "influencedCard allCash"
-      "superPacCard byCommittee"
-      "superPacCard byParty"
+      "maps byCommittee"
+      "maps byParty"
       "superPacCard expenditures";
   }
 }
