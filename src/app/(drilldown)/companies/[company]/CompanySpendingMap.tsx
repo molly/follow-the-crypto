@@ -37,7 +37,7 @@ export default async function CompanySpendingMap({
   const mapData = data as MapData;
   return (
     <ChloroplethMap
-      domain={generateDomain(1000, 5000000)}
+      domain={generateDomain(5000, 5000000)}
       stateValues={toStateValues(mapData, companyId)}
       labelId={labelId}
     />

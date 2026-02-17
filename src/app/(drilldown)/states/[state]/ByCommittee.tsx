@@ -39,6 +39,14 @@ export default async function CommitteeCard({
   }
   const expenditures = expendituresData as PopulatedStateExpenditures;
 
+  if (Object.keys(expenditures.by_committee).length === 0) {
+    return (
+      <div className="secondary">
+        No spending has been recorded in this state.
+      </div>
+    );
+  }
+
   const committeesSortedByExpenditures = Object.keys(
     expenditures.by_committee,
   ).sort((a, b) => {

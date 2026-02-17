@@ -32,7 +32,7 @@ export default async function SuperPacSpendingMapWrapper() {
     <>
       <h2>Expenditures by pro-crypto super PACs by state</h2>
       <ChloroplethMap
-        domain={generateDomain(50000, 50000000)}
+        domain={generateDomain(10000, 10000000)}
         stateValues={toStateValues(mapData)}
         ariaLabel="Map of the US showing spending by pro-crypto super PACs by state"
       />

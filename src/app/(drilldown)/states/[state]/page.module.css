@@ -15,11 +15,22 @@
 .raceAndCommitteeSection {
   display: flex;
   gap: inherit;
+  align-items: flex-start;
 }
 
 .raceCard {
   composes: card from "@/app/shared.module.css";
   width: 50%;
+  padding: 0 0 2rem 0;
+
+  h2,
+  h3 {
+    padding: 1rem 1rem 0 1rem;
+  }
+
+  .cardSection:nth-child(odd) {
+    background: var(--table-background-secondary);
+  }
 }
 
 .committeeCard {
@@ -29,12 +40,20 @@
 
 .cardSection {
   &:not(:last-child) {
-    padding-bottom: 3rem;
+    padding-bottom: 2rem;
   }
 }
 
 .cardSubsection {
   padding-left: 1rem;
+}
+
+.candidateGroup {
+  padding: 0 1rem;
+}
+
+.candidateGroup + .candidateGroup {
+  margin-top: 2rem;
 }
 
 .candidateResultWithImage {

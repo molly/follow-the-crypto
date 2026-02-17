@@ -36,7 +36,7 @@ export default async function AllCompanySpendingMap() {
         crypto-linked contributions to candidates by state
       </h2>
       <ChloroplethMap
-        domain={generateDomain(10000, 5000000)}
+        domain={generateDomain(10000, 10000000)}
         stateValues={toStateValues(mapData)}
         labelId="company-spending-by-state"
       />

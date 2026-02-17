@@ -68,7 +68,7 @@ export default async function CommitteePage({
           </Suspense>
         </div>
         <div className={styles.committeeCard}>
-          <h2>By group</h2>
+          <h2>By crypto-focused PACs</h2>
           <Suspense fallback={<CommitteeCardContentsSkeleton />}>
             <ByCommittee stateAbbr={stateAbbr} />
           </Suspense>

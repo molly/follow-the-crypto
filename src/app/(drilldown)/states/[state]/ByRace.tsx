@@ -1,4 +1,5 @@
 import {
+  fetchBeneficiaries,
   fetchConstant,
   fetchStateElections,
   fetchStateExpenditures,
@@ -8,6 +9,7 @@ import { CommitteeLink } from "@/app/components/CommitteeLink";
 import ErrorText from "@/app/components/ErrorText";
 import Outcome from "@/app/components/Outcome";
 import Skeleton from "@/app/components/skeletons/Skeleton";
+import { Beneficiary } from "@/app/types/Beneficiaries";
 import { CommitteeConstant } from "@/app/types/Committee";
 import {
   CandidateSummary,
@@ -16,7 +18,7 @@ import {
 } from "@/app/types/Elections";
 import { PopulatedStateExpenditures } from "@/app/types/Expenditures";
 import { is4xx, isError } from "@/app/utils/errors";
-import { humanizeList } from "@/app/utils/humanize";
+import { humanizeList, pluralize } from "@/app/utils/humanize";
 import { getFirstLastName } from "@/app/utils/names";
 import { getRaceName, getSubraceName, sortRaces } from "@/app/utils/races";
 import { range } from "@/app/utils/range";
@@ -31,13 +33,57 @@ const renderAmount = (amount: number, supportOppose: string) => {
   return "";
 };
 
+const MAX_COMPANIES = 3;
+
+function renderOtherSupport(
+  candidate: CandidateSummary,
+  beneficiary: Beneficiary,
+) {
+  const sorted = [...beneficiary.contributions].sort(
+    (a, b) => b.total - a.total,
+  );
+  const topItems: (string | React.ReactElement)[] = sorted
+    .slice(0, MAX_COMPANIES)
+    .map((g) => (
+      <Link key={g.company_id} href={`/companies/${g.company_id}`}>
+        {g.company_name}
+      </Link>
+    ));
+  const remaining = sorted.length - MAX_COMPANIES;
+  if (remaining > 0) {
+    topItems.push(
+      `${remaining} other ${pluralize(remaining, "company", { plural: "companies" })}`,
+    );
+  }
+  const companies = humanizeList(topItems);
+  const isPlural = sorted.length > 1;
+  const executiveNote = isPlural
+    ? " (or their executives)"
+    : " (or executives)";
+  const hasPacSpending =
+    candidate.support_total > 0 || candidate.oppose_total > 0;
+  const alsoPrefix = hasPacSpending
+    ? isPlural
+      ? "have also "
+      : "has also "
+    : "";
+  return (
+    <div>
+      {companies}
+      {`${executiveNote} ${alsoPrefix}contributed ${formatCurrency(beneficiary.total, true)} to support ${candidate.common_name}.`}
+    </div>
+  );
+}
+
 function Influenced({
   candidate,
   committeeNames,
+  beneficiary,
   races,
 }: {
   candidate: CandidateSummary;
   committeeNames: React.ReactElement[];
+  beneficiary?: Beneficiary;
   races: Race[];
 }) {
   const [_, lastName] = getFirstLastName(candidate.common_name);
@@ -65,13 +111,14 @@ function Influenced({
   );
   const raceList = humanizeList(involvedRaces);
   return (
-    <>
+    <div className={styles.candidateGroup}>
       <div>
         {committees}
         {` spent ${amounts} ${candidate.common_name} in the `}
         {raceList}
         {"."}
       </div>
+      {beneficiary && renderOtherSupport(candidate, beneficiary)}
       {candidate.withdrew && (
         <div>{`${lastName} later withdrew from the race.`}</div>
       )}
@@ -84,7 +131,36 @@ function Influenced({
         {candidate.common_name}
         <Outcome candidate={candidate} races={races} inSentence={true} />.
       </div>
-    </>
+    </div>
+  );
+}
+
+function OtherOnlyInfluenced({
+  candidate,
+  beneficiary,
+  races,
+}: {
+  candidate: CandidateSummary;
+  beneficiary: Beneficiary;
+  races: Race[];
+}) {
+  const [_, lastName] = getFirstLastName(candidate.common_name);
+  return (
+    <div className={styles.candidateGroup}>
+      {renderOtherSupport(candidate, beneficiary)}
+      {candidate.withdrew && (
+        <div>{`${lastName} later withdrew from the race.`}</div>
+      )}
+      <div className={styles.candidateResultWithImage}>
+        <Candidate
+          candidateSummary={candidate}
+          defeated={candidate.defeated}
+          imageOnly={true}
+        />
+        {candidate.common_name}
+        <Outcome candidate={candidate} races={races} inSentence={true} />.
+      </div>
+    </div>
   );
 }
 
@@ -106,11 +182,13 @@ export function RaceCardContentsSkeleton() {
 }
 
 export default async function RaceCard({ stateAbbr }: { stateAbbr: string }) {
-  const [expendituresData, electionData, committeeData] = await Promise.all([
-    fetchStateExpenditures(stateAbbr),
-    fetchStateElections(stateAbbr),
-    fetchConstant("committees"),
-  ]);
+  const [expendituresData, electionData, committeeData, beneficiariesData] =
+    await Promise.all([
+      fetchStateExpenditures(stateAbbr),
+      fetchStateElections(stateAbbr),
+      fetchConstant("committees"),
+      fetchBeneficiaries(),
+    ]);
 
   if (isError(electionData) || isError(expendituresData)) {
     if (is4xx(electionData) || is4xx(expendituresData)) {
@@ -126,7 +204,22 @@ export default async function RaceCard({ stateAbbr }: { stateAbbr: string }) {
   const COMMITTEES = (committeeData || {}) as Record<string, CommitteeConstant>;
   const expenditures = expendituresData as PopulatedStateExpenditures;
   const elections = electionData as ElectionsByState;
-  const orderedRaces = Object.keys(expenditures.by_race).sort(sortRaces);
+  const beneficiaries = (
+    isError(beneficiariesData) ? {} : beneficiariesData
+  ) as Record<string, Beneficiary>;
+
+  // Include all races with any spending (super PAC or other industry support)
+  const allRaceIds = new Set(Object.keys(expenditures.by_race));
+  for (const shortId of Object.keys(elections)) {
+    const fullId = `${stateAbbr}-${shortId}`;
+    const hasNonPacSupport = Object.values(elections[shortId].candidates).some(
+      (c: CandidateSummary) => c.has_non_pac_support,
+    );
+    if (hasNonPacSupport) {
+      allRaceIds.add(fullId);
+    }
+  }
+  const orderedRaces = Array.from(allRaceIds).sort(sortRaces);
 
   return (
     <>
@@ -134,6 +227,16 @@ export default async function RaceCard({ stateAbbr }: { stateAbbr: string }) {
         const shortId = raceId.split("-").slice(1).join("-");
         const influenced = Object.values(elections[shortId].candidates).filter(
           (c: CandidateSummary) => c.support_total > 0 || c.oppose_total > 0,
+        );
+        const otherOnlyInfluenced = Object.values(
+          elections[shortId].candidates,
+        ).filter(
+          (c: CandidateSummary) =>
+            c.has_non_pac_support &&
+            c.support_total === 0 &&
+            c.oppose_total === 0 &&
+            c.candidate_id &&
+            beneficiaries[c.candidate_id],
         );
 
         return (
@@ -151,15 +254,28 @@ export default async function RaceCard({ stateAbbr }: { stateAbbr: string }) {
                   committeeName={COMMITTEES ? COMMITTEES[cid].name : cid}
                 />
               ));
+              const beneficiary =
+                candidate.has_non_pac_support && candidate.candidate_id
+                  ? beneficiaries[candidate.candidate_id]
+                  : undefined;
               return (
                 <Influenced
                   key={candidate.candidate_id}
                   candidate={candidate}
                   committeeNames={committeeNames}
+                  beneficiary={beneficiary}
                   races={elections[shortId].races}
                 />
               );
             })}
+            {otherOnlyInfluenced.map((candidate) => (
+              <OtherOnlyInfluenced
+                key={candidate.candidate_id}
+                candidate={candidate}
+                beneficiary={beneficiaries[candidate.candidate_id!]}
+                races={elections[shortId].races}
+              />
+            ))}
           </div>
         );
       })}

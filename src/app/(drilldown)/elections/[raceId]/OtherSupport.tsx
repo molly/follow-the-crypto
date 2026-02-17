@@ -54,7 +54,7 @@ function CompanyGroup({ group }: { group: CompanyContributionGroup }) {
         <Link href={`/companies/${group.company_id}`}>
           {group.company_name}
         </Link>
-        {" — "}
+        {" – "}
         {formatCurrency(group.total, true)}
       </div>
       <ul className={styles.otherSupportContributions}>
