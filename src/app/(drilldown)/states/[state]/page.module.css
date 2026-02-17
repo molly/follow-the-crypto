@@ -21,7 +21,7 @@
 .raceCard {
   composes: card from "@/app/shared.module.css";
   width: 50%;
-  padding: 0 0 2rem 0;
+  padding: 0;
 
   h2,
   h3 {
@@ -39,9 +39,7 @@
 }
 
 .cardSection {
-  &:not(:last-child) {
-    padding-bottom: 2rem;
-  }
+  padding-bottom: 2rem;
 }
 
 .cardSubsection {

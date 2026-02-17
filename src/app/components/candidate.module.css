@@ -90,7 +90,7 @@
 }
 
 .party-unknown {
-  border-color: var(--color-slate-500);
+  border-color: var(--party-unknown);
 }
 
 .party-loading {

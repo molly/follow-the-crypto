@@ -4,6 +4,7 @@ import {
   fetchCandidateExpenditures,
 } from "@/app/actions/fetch";
 import styles from "@/app/components/tables.module.css";
+import pageStyles from "@/app/page.module.css";
 import sharedStyles from "@/app/shared.module.css";
 import { ElectionGroup, ElectionsByState, Race } from "@/app/types/Elections";
 import {
@@ -204,7 +205,10 @@ function CandidateRow({
       <tr className={styles.influencedTableRow} key={candidate.common_name}>
         <td className="text-cell">
           <Link className="unstyled" href={raceHref}>
-            <Candidate candidateSummary={candidate} />
+            <Candidate
+              candidateSummary={candidate}
+              candidateImageClassName={pageStyles.hideImageXs}
+            />
           </Link>
         </td>
         <td className="center-cell">
@@ -215,25 +219,25 @@ function CandidateRow({
             {candidate.state}
           </Link>
         </td>
-        <td className="center-cell">
+        <td className={`${styles.tableCellCollapse2} center-cell`}>
           <Link className="unstyled" href={raceHref}>
             {raceName}
           </Link>
         </td>
-        <td className="number-cell">
+        <td className={`${styles.tableCellCollapse2} number-cell`}>
           {candidate.support_total
             ? formatCurrency(candidate.support_total, true)
             : ""}
         </td>
-        <td className="number-cell">
+        <td className={`${styles.tableCellCollapse2} number-cell`}>
           {candidate.oppose_total
             ? formatCurrency(candidate.oppose_total, true)
             : ""}
         </td>
-        <td className="small-cell number-cell">
+        <td className={`${styles.tableCellCollapse1} small-cell number-cell`}>
           {beneficiary ? formatCurrency(beneficiary.total, true) : ""}
         </td>
-        <td className="small-cell center-cell">
+        <td className={`${styles.tableCellCollapse1} small-cell center-cell`}>
           <GoalOutcome candidate={candidate} races={race.races} />
         </td>
         <td className="text-cell">
@@ -350,10 +354,14 @@ export default function InfluencedRacesContents({
         <tr className={styles.influencedTableHeader}>
           <th className="text-cell">Candidate</th>
           <th className="center-cell">State</th>
-          <th className="center-cell">Office</th>
-          <th className="number-cell">Support</th>
-          <th className="number-cell">Oppose</th>
-          <th className="small-cell center-cell">
+          <th className={`${styles.tableCellCollapse2} center-cell`}>Office</th>
+          <th className={`${styles.tableCellCollapse2} number-cell`}>
+            Support
+          </th>
+          <th className={`${styles.tableCellCollapse2} number-cell`}>Oppose</th>
+          <th
+            className={`${styles.tableCellCollapse1} small-cell center-cell tableCellCollapse2`}
+          >
             Other support
             <InformationalTooltip>
               <span>
@@ -363,7 +371,7 @@ export default function InfluencedRacesContents({
               </span>
             </InformationalTooltip>
           </th>
-          <th className="small-cell center-cell">
+          <th className={`${styles.tableCellCollapse1} small-cell center-cell`}>
             Goal{" "}
             <span className="no-wrap">
               achieved?

@@ -42,7 +42,7 @@
   --party-libertarian: #fed105;
   --party-green: #17aa5c;
   --party-independent: #ddddbb;
-
+  --party-unknown: var(--color-slate-300);
   --background-start: var(--color-slate-50);
   --background-end: var(--color-slate-300);
   --card-background: #fefefe;
@@ -284,8 +284,8 @@ a.unstyled {
 }
 
 .unk {
-  fill: var(--color-slate-400);
-  color: var(--color-slate_400);
+  fill: var(--party-unknown);
+  color: var(--party-unknown);
 }
 
 .banner {

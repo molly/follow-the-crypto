@@ -2,6 +2,7 @@ import { fetchMapData } from "@/app/actions/fetch";
 import { STATES_BY_ABBR } from "@/app/data/states";
 import { MapData } from "@/app/types/MapData";
 import { isError } from "@/app/utils/errors";
+import Link from "next/link";
 import ChloroplethMap from "../ChloroplethMap";
 import ErrorText from "../ErrorText";
 import { generateDomain } from "../chloroplethConstants";
@@ -36,6 +37,7 @@ export default async function SuperPacSpendingMapWrapper() {
         stateValues={toStateValues(mapData)}
         ariaLabel="Map of the US showing spending by pro-crypto super PACs by state"
       />
+      <Link href="/states">&raquo; Spending by state</Link>
     </>
   );
 }

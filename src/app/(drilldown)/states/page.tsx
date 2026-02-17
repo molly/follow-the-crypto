@@ -1,3 +1,4 @@
+import AllCompanySpendingMap from "@/app/components/home/AllCompanySpendingMap";
 import SuperPacSpendingMapWrapper from "@/app/components/home/SuperPacSpendingMapWrapper";
 import USMapSkeleton from "@/app/components/skeletons/USMapSkeleton";
 import { customMetadata } from "@/app/utils/metadata";
@@ -18,46 +19,56 @@ export const metadata: Metadata = customMetadata({
 export default function Page() {
   return (
     <div className={styles.page}>
-      <div className={styles.mapContainer}>
-        <Suspense fallback={<USMapSkeleton />}>
-          <SuperPacSpendingMapWrapper />
-        </Suspense>
-      </div>
-      <section className={styles.statesTableCard}>
-        <h2 className={styles.statesTableHeader}>
-          Cryptocurrency PAC spending by state
-        </h2>
-        <table className={styles.statesTable}>
-          <thead>
-            <tr>
-              <th className="text-cell" colSpan={2}>
-                State
-              </th>
-              <th className="number-cell">Expenditures</th>
-            </tr>
-          </thead>
-          <Suspense fallback={<StateExpendituresSkeleton />}>
-            <StateExpenditures />
+      <section className={styles.mapRow}>
+        <div className={styles.mapContainer}>
+          <Suspense fallback={<USMapSkeleton />}>
+            <SuperPacSpendingMapWrapper />
           </Suspense>
-        </table>
+        </div>
+        <section className={styles.statesTableCard}>
+          <h2 className={styles.statesTableHeader}>
+            Cryptocurrency PAC spending by state
+          </h2>
+          <table className={styles.statesTable}>
+            <thead>
+              <tr>
+                <th className="text-cell" colSpan={2}>
+                  State
+                </th>
+                <th className="number-cell">Expenditures</th>
+              </tr>
+            </thead>
+            <Suspense fallback={<StateExpendituresSkeleton />}>
+              <StateExpenditures />
+            </Suspense>
+          </table>
+        </section>
       </section>
-      <section className={styles.statesTableCard}>
-        <h2 className={styles.statesTableHeader}>
-          Elections with spending by cryptocurrency industry-associated
-          companies or individuals
-        </h2>
-        <table className={styles.statesTable}>
-          <thead>
-            <tr>
-              <th className="text-cell" colSpan={2}>
-                State
-              </th>
-            </tr>
-          </thead>
-          <Suspense fallback={<StateExpendituresSkeleton />}>
-            <StateNonPacExpenditures />
+      <section className={styles.mapRow}>
+        <div className={styles.mapContainer}>
+          <Suspense fallback={<USMapSkeleton />}>
+            <AllCompanySpendingMap />
           </Suspense>
-        </table>
+        </div>
+        <section className={styles.statesTableCard}>
+          <h2 className={styles.statesTableHeader}>
+            Elections with spending by cryptocurrency industry-associated
+            companies or individuals
+          </h2>
+          <table className={styles.statesTable}>
+            <thead>
+              <tr>
+                <th className="text-cell" colSpan={2}>
+                  State
+                </th>
+                <th className="number-cell">Expenditures</th>
+              </tr>
+            </thead>
+            <Suspense fallback={<StateExpendituresSkeleton />}>
+              <StateNonPacExpenditures />
+            </Suspense>
+          </table>
+        </section>
       </section>
     </div>
   );

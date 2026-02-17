@@ -45,12 +45,12 @@ export default function Home() {
       <div className={styles.columns}>
         <div className={styles.mainColumn}>
           <InfluencedRaces />
-          <div className={sharedStyles.card}>
+          <div className={styles.companyMap}>
             <Suspense fallback={<USMapSkeleton />}>
               <AllCompanySpendingMap />
             </Suspense>
           </div>
-          <div className={sharedStyles.card}>
+          <div className={styles.superPacMap}>
             <Suspense fallback={<USMapSkeleton />}>
               <SuperPacSpendingMapWrapper />
             </Suspense>

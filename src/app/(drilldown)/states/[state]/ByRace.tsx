@@ -20,7 +20,12 @@ import { PopulatedStateExpenditures } from "@/app/types/Expenditures";
 import { is4xx, isError } from "@/app/utils/errors";
 import { humanizeList, pluralize } from "@/app/utils/humanize";
 import { getFirstLastName } from "@/app/utils/names";
-import { getRaceName, getSubraceName, sortRaces } from "@/app/utils/races";
+import {
+  getRaceName,
+  getSubraceName,
+  getUpcomingRaceForCandidate,
+  sortRaces,
+} from "@/app/utils/races";
 import { range } from "@/app/utils/range";
 import { formatCurrency } from "@/app/utils/utils";
 import Link from "next/link";
@@ -38,6 +43,7 @@ const MAX_COMPANIES = 3;
 function renderOtherSupport(
   candidate: CandidateSummary,
   beneficiary: Beneficiary,
+  races: Race[],
 ) {
   const sorted = [...beneficiary.contributions].sort(
     (a, b) => b.total - a.total,
@@ -60,17 +66,23 @@ function renderOtherSupport(
   const executiveNote = isPlural
     ? " (or their executives)"
     : " (or executives)";
+  const isUpcoming = !!getUpcomingRaceForCandidate(races, candidate);
   const hasPacSpending =
     candidate.support_total > 0 || candidate.oppose_total > 0;
-  const alsoPrefix = hasPacSpending
-    ? isPlural
-      ? "have also "
-      : "has also "
-    : "";
+  let verb;
+  if (isUpcoming && hasPacSpending) {
+    verb = isPlural ? "have also contributed" : "has also contributed";
+  } else if (isUpcoming) {
+    verb = isPlural ? "have contributed" : "has contributed";
+  } else if (hasPacSpending) {
+    verb = "also contributed";
+  } else {
+    verb = "contributed";
+  }
   return (
     <div>
       {companies}
-      {`${executiveNote} ${alsoPrefix}contributed ${formatCurrency(beneficiary.total, true)} to support ${candidate.common_name}.`}
+      {`${executiveNote} ${verb} ${formatCurrency(beneficiary.total, true)} to support ${candidate.common_name}.`}
     </div>
   );
 }
@@ -110,15 +122,21 @@ function Influenced({
     },
   );
   const raceList = humanizeList(involvedRaces);
+  const isUpcoming = !!getUpcomingRaceForCandidate(races, candidate);
+  const spentVerb = isUpcoming
+    ? committeeNames.length > 1
+      ? "have spent"
+      : "has spent"
+    : "spent";
   return (
     <div className={styles.candidateGroup}>
       <div>
         {committees}
-        {` spent ${amounts} ${candidate.common_name} in the `}
+        {` ${spentVerb} ${amounts} ${candidate.common_name} in the `}
         {raceList}
         {"."}
       </div>
-      {beneficiary && renderOtherSupport(candidate, beneficiary)}
+      {beneficiary && renderOtherSupport(candidate, beneficiary, races)}
       {candidate.withdrew && (
         <div>{`${lastName} later withdrew from the race.`}</div>
       )}
@@ -147,7 +165,7 @@ function OtherOnlyInfluenced({
   const [_, lastName] = getFirstLastName(candidate.common_name);
   return (
     <div className={styles.candidateGroup}>
-      {renderOtherSupport(candidate, beneficiary)}
+      {renderOtherSupport(candidate, beneficiary, races)}
       {candidate.withdrew && (
         <div>{`${lastName} later withdrew from the race.`}</div>
       )}

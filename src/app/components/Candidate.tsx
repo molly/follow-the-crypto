@@ -26,6 +26,7 @@ export function CandidateImage({
   lastName,
   defeated,
   chart,
+  className,
   noMargins = false,
 }: {
   candidate?: CandidateSummary | ExpenditureCandidateSummary;
@@ -34,6 +35,7 @@ export function CandidateImage({
   defeated?: boolean;
   chart?: boolean;
   noMargins?: boolean;
+  className?: string;
 }) {
   let imageUrl;
   if (firstName && lastName) {
@@ -53,6 +55,9 @@ export function CandidateImage({
   }
   if (defeated) {
     candidateImageWrapperClassNames += ` ${styles.defeatedCandidateImage}`;
+  }
+  if (className) {
+    candidateImageWrapperClassNames += ` ${className}`;
   }
 
   let imageEl = (
@@ -131,6 +136,7 @@ export default function Candidate({
   candidateSummary,
   candidateClassName,
   candidateNameClassName,
+  candidateImageClassName,
   defeated,
   writeIn,
   chart,
@@ -141,6 +147,7 @@ export default function Candidate({
   candidateSummary?: CandidateSummary | ExpenditureCandidateSummary;
   candidateClassName?: string;
   candidateNameClassName?: string;
+  candidateImageClassName?: string;
   defeated?: boolean;
   writeIn?: boolean;
   chart?: boolean;
@@ -165,6 +172,7 @@ export default function Candidate({
       defeated={defeated}
       chart={chart}
       noMargins={noMargins}
+      className={candidateImageClassName}
     />
   );
   if (imageOnly) {

@@ -34,26 +34,35 @@
 }
 
 .columns {
-  display: flex;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: start;
   gap: 1rem;
+  grid-template-areas:
+    "influencedCard"
+    "companySpending"
+    "companyMap"
+    "superPacMap"
+    "allCash"
+    "byCommittee"
+    "expenditures"
+    "byParty"
+    "superPacCard";
 }
 
-.column {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  min-width: 0;
-}
-
-.mainColumn {
-  composes: column;
-  flex: 3;
-}
-
+.mainColumn,
 .sideColumn {
-  composes: column;
-  flex: 2;
+  display: contents;
+}
+
+.companyMap {
+  composes: card from "@/app/shared.module.css";
+  grid-area: companyMap;
+}
+
+.superPacMap {
+  composes: card from "@/app/shared.module.css";
+  grid-area: superPacMap;
 }
 
 .spentTopSection {
@@ -90,11 +99,16 @@
   height: 100%;
 }
 
+@media (max-width: 400px) {
+  .hideImageXs {
+    display: none;
+  }
+}
+
 @media (min-width: 576px) {
   .totalsRow {
-    grid-template-columns: repeat(3, minmax(10rem, 25rem));
+    grid-template-columns: repeat(2, minmax(10rem, 25rem));
   }
-
   .titleH1,
   .logoArrow {
     text-shadow: 0.25rem 0.25rem var(--accent);
@@ -102,26 +116,32 @@
 }
 
 @media (min-width: 768px) {
-  .mainCards {
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: 20rem repeat(3, auto);
-    grid-template-areas:
-      "allCash byCommittee byParty"
-      "influencedCard influencedCard"
-      "superPacCard superPacCard"
-      "expenditures expenditures";
+  .totalsRow {
+    grid-template-columns: repeat(3, minmax(10rem, 25rem));
+  }
+  .columns {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "mainColumn sideColumn";
+  }
+
+  .mainColumn,
+  .sideColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .mainColumn {
+    grid-area: mainColumn;
+  }
+
+  .sideColumn {
+    grid-area: sideColumn;
   }
 }
 
 @media (min-width: 1200px) {
-  .mainCards {
-    grid-template-columns: 2fr 1fr;
-    grid-template-rows: 20rem 20rem auto;
-    grid-template-areas:
-      "influencedCard companySpending"
-      "influencedCard allCash"
-      "maps byCommittee"
-      "maps byParty"
-      "superPacCard expenditures";
+  .columns {
+    grid-template-columns: 3fr 2fr;
   }
 }

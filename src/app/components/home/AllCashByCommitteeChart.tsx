@@ -9,7 +9,7 @@ const COLORS = {
   CASH: "#1e3a8a",
   CONTRIBUTED: "#2563eb",
   TRANSFERRED: "#60a5fa",
-  CLAIMED: "#d9d9d9",
+  CLAIMED: "#cbd5e1",
 };
 
 const BASE_LEGEND_ITEMS = [
@@ -56,8 +56,8 @@ export default function AllCashByCommitteeChart({
   );
   const legendItems = hasClaimedCommitted
     ? [
-        { label: "Claimed commitments", color: COLORS.CLAIMED },
         ...BASE_LEGEND_ITEMS,
+        { label: "Claimed commitments", color: COLORS.CLAIMED },
       ]
     : BASE_LEGEND_ITEMS;
   const maxExpenditure =
@@ -203,7 +203,11 @@ export default function AllCashByCommitteeChart({
                     >
                       {barLabelFormatter(barTotal)}
                       {(committee.claimedCommitted || 0) > 0 && (
-                        <tspan fontSize={10} x={(x(committee.id) || 0) + x.bandwidth() / 2} dy={14}>
+                        <tspan
+                          fontSize={10}
+                          x={(x(committee.id) || 0) + x.bandwidth() / 2}
+                          dy={14}
+                        >
                           {committee.total === 0
                             ? "(claimed)"
                             : `(${barLabelFormatter(committee.claimedCommitted || 0)} claimed)`}

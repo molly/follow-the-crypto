@@ -1,10 +1,12 @@
-import { fetchAllRaceIds } from "@/app/actions/fetch";
+import { fetchAllRaceIds, fetchMapData } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import { STATES_BY_ABBR } from "@/app/data/states";
+import { MapData } from "@/app/types/MapData";
 import { isError } from "@/app/utils/errors";
 import { getRaceName } from "@/app/utils/races";
 import { range } from "@/app/utils/range";
+import { formatCurrency } from "@/app/utils/utils";
 import Link from "next/link";
 import { Fragment } from "react";
 import styles from "./page.module.css";
@@ -43,8 +45,11 @@ export function StateExpendituresSkeleton() {
   );
 }
 
-export default async function StateExpenditures() {
-  const allRaceIdsData = await fetchAllRaceIds();
+export default async function StateNonPacExpenditures() {
+  const [allRaceIdsData, mapDataResult] = await Promise.all([
+    fetchAllRaceIds(),
+    fetchMapData(),
+  ]);
   if (isError(allRaceIdsData)) {
     return (
       <tbody>
@@ -57,7 +62,14 @@ export default async function StateExpenditures() {
     );
   }
   const data = allRaceIdsData as Record<string, string[]>;
-  const states = Object.keys(data).sort();
+  const mapData = !isError(mapDataResult) ? (mapDataResult as MapData) : null;
+  const states = Object.keys(data)
+    .filter((k) => (mapData?.[k]?.companies_total ?? 0) > 0)
+    .sort((a, b) => {
+      const aTotal = mapData?.[a]?.companies_total ?? 0;
+      const bTotal = mapData?.[b]?.companies_total ?? 0;
+      return bTotal - aTotal;
+    });
 
   return (
     <tbody>
@@ -66,6 +78,7 @@ export default async function StateExpenditures() {
         if (!stateName) {
           return null;
         }
+        const total = mapData?.[state]?.companies_total;
         return (
           <Fragment key={state}>
             <tr className={styles.headerRow}>
@@ -75,6 +88,9 @@ export default async function StateExpenditures() {
                 >
                   {stateName}
                 </Link>
+              </td>
+              <td className="number-cell">
+                {total ? formatCurrency(total, true) : null}
               </td>
             </tr>
             {data[state].map((raceId) => {

@@ -25,7 +25,7 @@ async function AllCashByCommitteeContent({ labelId }: { labelId: string }) {
 export default function AllCashByCommittee() {
   return (
     <section className={styles.allCashCard}>
-      <h2 id="cash-by-committee-label">Cryptocurrency PAC funds</h2>
+      <h2 id="cash-by-committee-label">Cryptocurrency PAC funds on hand</h2>
       <Suspense fallback={<ExpendituresSkeleton />}>
         <AllCashByCommitteeContent labelId="cash-by-committee-label" />
       </Suspense>

@@ -1,15 +1,19 @@
 .page {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-direction: column;
   width: 100%;
   gap: 1rem;
 }
 
+.mapRow {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
 .mapContainer {
-  width: 100%;
-  max-width: 75rem;
-  margin: 0 auto;
+  width: 66%;
+  min-width: 25rem;
 }
 
 .statesTableCard {

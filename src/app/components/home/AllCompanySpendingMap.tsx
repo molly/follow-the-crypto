@@ -5,6 +5,7 @@ import ErrorText from "@/app/components/ErrorText";
 import { STATES_BY_ABBR } from "@/app/data/states";
 import { MapData } from "@/app/types/MapData";
 import { isError } from "@/app/utils/errors";
+import Link from "next/link";
 import InformationalTooltip from "../InformationalTooltip";
 
 function toStateValues(mapData: MapData): Record<string, number> {
@@ -40,6 +41,7 @@ export default async function AllCompanySpendingMap() {
         stateValues={toStateValues(mapData)}
         labelId="company-spending-by-state"
       />
+      <Link href="/states">&raquo; Spending by state</Link>
     </>
   );
 }

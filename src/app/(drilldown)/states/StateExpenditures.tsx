@@ -59,9 +59,9 @@ export default async function StateExpenditures() {
     );
   }
   const data = mapData as MapData;
-  const states = Object.keys(data).sort(
-    (a, b) => data[b].total - data[a].total,
-  );
+  const states = Object.keys(data)
+    .filter((k) => data[k].total > 0)
+    .sort((a, b) => data[b].total - data[a].total);
 
   return (
     <tbody>
