@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { fetchConstant } from "../actions/fetch";
 import { STATES_BY_ABBR } from "../data/states";
 import { CommitteeConstant } from "../types/Committee";
+import { formatCompanyName } from "../utils/names";
 import { getRaceName } from "../utils/races";
 import { titlecase } from "../utils/titlecase";
 import styles from "./header.module.css";
@@ -55,12 +56,12 @@ export default function Breadcrumbs() {
       }
       const state = segment.split("-")[0].toUpperCase();
       return `${STATES_BY_ABBR[state]} ${getRaceName(segment.toUpperCase())} election`;
-    } else if (
-      (segments[0].toLowerCase() === "individuals" ||
-        segments[0].toLowerCase() === "companies") &&
-      index === 1
-    ) {
+    } else if (segments[0].toLowerCase() === "individuals" && index === 1) {
       return titlecase(segment.toLowerCase().replaceAll("-", " "));
+    } else if (segments[0].toLowerCase() === "companies" && index === 1) {
+      return formatCompanyName(
+        titlecase(segment.toLowerCase().replaceAll("-", " ")),
+      );
     } else if (index === 1 && segment.toLowerCase() === "faq") {
       return "FAQ";
     } else if (index === 0 && segment.toLowerCase() === "quidproquo") {

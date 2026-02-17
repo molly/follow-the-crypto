@@ -14,20 +14,27 @@ export type BeneficiaryContribution = {
   "individual" | "contributor_name" | "isIndividual"
 >;
 
+export type CompanyContributionGroup = {
+  company_id: string;
+  company_name: string;
+  total: number;
+  contributions: BeneficiaryContribution[];
+};
+
 export type BeneficiaryCommittee = { designation_full?: string } & Pick<
   AllCommitteesSummary,
   "committee_type_full" | "description" | "committee_name" | "committee_id"
 >;
 
 export interface CommitteeBeneficiary {
-  contributions: BeneficiaryContribution[];
+  contributions: CompanyContributionGroup[];
   total: number;
   type: "committee";
   committee_details?: BeneficiaryCommittee;
 }
 
 export interface CandidateBeneficiary {
-  contributions: BeneficiaryContribution[];
+  contributions: CompanyContributionGroup[];
   total: number;
   type: "candidate";
   committee_details?: BeneficiaryCommittee;

@@ -8,6 +8,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import ByCommittee, { CommitteeCardContentsSkeleton } from "./ByCommittee";
 import ByRace, { RaceCardContentsSkeleton } from "./ByRace";
+import CompanySpending from "./CompanySpending";
 import TotalSpending from "./TotalSpending";
 import styles from "./page.module.css";
 
@@ -45,14 +46,20 @@ export default async function CommitteePage({
   return (
     <div className={styles.page}>
       <h1 className={sharedStyles.titleH2}>{titlecasedState}</h1>
-      <Suspense
-        fallback={<MoneyCardSkeleton className={styles.totalSpendingCard} />}
-      >
-        <TotalSpending
-          stateAbbr={stateAbbr}
-          titlecasedState={titlecasedState}
-        />
-      </Suspense>
+      <div className={styles.spendingCards}>
+        <Suspense fallback={<MoneyCardSkeleton />}>
+          <TotalSpending
+            stateAbbr={stateAbbr}
+            titlecasedState={titlecasedState}
+          />
+        </Suspense>
+        <Suspense fallback={<MoneyCardSkeleton />}>
+          <CompanySpending
+            stateAbbr={stateAbbr}
+            titlecasedState={titlecasedState}
+          />
+        </Suspense>
+      </div>
       <div className={styles.raceAndCommitteeSection}>
         <div className={styles.raceCard}>
           <h2>By race</h2>

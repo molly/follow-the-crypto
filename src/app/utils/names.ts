@@ -14,3 +14,11 @@ export const getFirstLastName = (commonName: string): string[] => {
   }
   return [firstName, lastName];
 };
+
+export const formatCompanyName = (company: string): string => {
+  let companyName = company.replace(/ Com$/, ".com");
+  companyName = companyName.replace(/\b(BTC|MARA)\b/gi, function (txt) {
+    return txt.toUpperCase();
+  });
+  return companyName;
+};

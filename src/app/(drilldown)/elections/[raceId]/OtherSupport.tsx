@@ -3,6 +3,7 @@ import ErrorText from "@/app/components/ErrorText";
 import {
   Beneficiary,
   BeneficiaryContribution,
+  CompanyContributionGroup,
 } from "@/app/types/Beneficiaries";
 import { ElectionGroup } from "@/app/types/Elections";
 import { is4xx, isError } from "@/app/utils/errors";
@@ -12,36 +13,19 @@ import { formatCurrency } from "@/app/utils/utils";
 import Link from "next/link";
 import styles from "./page.module.css";
 
-function CompanyContribution({
+function Contribution({
   contribution,
 }: {
   contribution: BeneficiaryContribution;
 }) {
-  const contributorName = contribution.contributor_name
-    ? titlecaseCommittee(contribution.contributor_name)
-    : null;
-  const committeeNames = contribution.committees.length
-    ? humanizeList(contribution.committees.map((c) => titlecaseCommittee(c)))
-    : null;
-  return (
-    <li className={styles.otherSupportContribution}>
-      <span>{formatCurrency(contribution.total)}</span>
-      {contributorName && <span>{` from ${contributorName}`}</span>}
-      {committeeNames && <span>{` via ${committeeNames}`}</span>}
-    </li>
-  );
-}
-
-function IndividualContribution({
-  contribution,
-}: {
-  contribution: BeneficiaryContribution;
-}) {
-  const contributorName = contribution.contributor_name ? (
-    <Link href={`/individuals/${contribution.individual}`}>
-      {titlecaseLastFirst(contribution.contributor_name)}
-    </Link>
-  ) : null;
+  const contributorName =
+    contribution.isIndividual && contribution.contributor_name ? (
+      <Link href={`/individuals/${contribution.individual}`}>
+        {titlecaseLastFirst(contribution.contributor_name)}
+      </Link>
+    ) : contribution.contributor_name ? (
+      titlecaseCommittee(contribution.contributor_name)
+    ) : null;
   const committeeNames = contribution.committees.length
     ? humanizeList(contribution.committees.map((c) => titlecaseCommittee(c)))
     : null;
@@ -51,6 +35,28 @@ function IndividualContribution({
       {contributorName && <span> from {contributorName}</span>}
       {committeeNames && <span>{` via ${committeeNames}`}</span>}
     </li>
+  );
+}
+
+function CompanyGroup({ group }: { group: CompanyContributionGroup }) {
+  return (
+    <div className={styles.companyGroup}>
+      <div className={styles.companyGroupHeader}>
+        <Link href={`/companies/${group.company_id}`}>
+          {group.company_name}
+        </Link>
+        {" — "}
+        {formatCurrency(group.total, true)}
+      </div>
+      <ul className={styles.otherSupportContributions}>
+        {group.contributions.map((contribution, ind) => (
+          <Contribution
+            key={`${group.company_id}-${ind}`}
+            contribution={contribution}
+          />
+        ))}
+      </ul>
+    </div>
   );
 }
 
@@ -92,24 +98,12 @@ export default async function OtherSupport({ raceId }: { raceId: string }) {
           <section key={c.candidate_id} className={styles.otherSupportSection}>
             <h3 className="no-margin">{c.common_name}</h3>
             <div>{`${formatCurrency(beneficiary.total, true)} in total other support from companies and individuals`}</div>
-            <ul className={styles.otherSupportContributions}>
-              {beneficiary.contributions.map((contribution, ind) => {
-                if (contribution.isIndividual) {
-                  return (
-                    <IndividualContribution
-                      key={`${c.candidate_id}-${ind}`}
-                      contribution={contribution}
-                    />
-                  );
-                }
-                return (
-                  <CompanyContribution
-                    key={`${c.candidate_id}-${ind}`}
-                    contribution={contribution}
-                  />
-                );
-              })}
-            </ul>
+            {beneficiary.contributions.map((group) => (
+              <CompanyGroup
+                key={`${c.candidate_id}-${group.company_id}`}
+                group={group}
+              />
+            ))}
           </section>
         );
       })}

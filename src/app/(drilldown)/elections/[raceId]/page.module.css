@@ -217,6 +217,14 @@
   margin: 1rem 0;
 }
 
+.companyGroup {
+  margin-top: 0.75rem;
+}
+
+.companyGroupHeader {
+  font-weight: 500;
+}
+
 /* Ads */
 .adsCard {
   composes: card from "@/app/shared.module.css";

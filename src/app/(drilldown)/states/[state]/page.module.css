@@ -5,8 +5,11 @@
   gap: inherit;
 }
 
-.totalSpendingCard {
-  align-self: center;
+.spendingCards {
+  display: grid;
+  gap: inherit;
+  grid-template-columns: repeat(2, minmax(10rem, 25rem));
+  margin: 0 auto;
 }
 
 .raceAndCommitteeSection {

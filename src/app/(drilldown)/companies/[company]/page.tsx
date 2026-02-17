@@ -17,6 +17,7 @@ import {
 } from "@/app/types/Contributions";
 import { isError } from "@/app/utils/errors";
 import { customMetadata } from "@/app/utils/metadata";
+import { formatCompanyName } from "@/app/utils/names";
 import { titlecase } from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
 import { Metadata } from "next";
@@ -31,7 +32,9 @@ export async function generateMetadata({
   params: Promise<{ company: string }>;
 }): Promise<Metadata> {
   const { company } = await params;
-  const companyName = titlecase(company.replaceAll("-", " "));
+  const companyName = formatCompanyName(
+    titlecase(company.replaceAll("-", " ")),
+  );
   return customMetadata({
     title: companyName,
     description: `Election spending by ${companyName} and related individuals.`,
