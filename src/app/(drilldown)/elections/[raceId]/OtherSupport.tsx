@@ -8,7 +8,11 @@ import {
 import { ElectionGroup } from "@/app/types/Elections";
 import { is4xx, isError } from "@/app/utils/errors";
 import { humanizeList } from "@/app/utils/humanize";
-import { titlecaseCommittee, titlecaseLastFirst } from "@/app/utils/titlecase";
+import {
+  titlecaseCommittee,
+  titlecaseLastFirst,
+  titlecaseOccupation,
+} from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
 import Link from "next/link";
 import styles from "./page.module.css";
@@ -33,6 +37,11 @@ function Contribution({
     <li className={styles.otherSupportContribution}>
       <span>{formatCurrency(contribution.total)}</span>
       {contributorName && <span> from {contributorName}</span>}
+      {contribution.contributor_occupation && (
+        <span className="secondary">
+          {` (${titlecaseOccupation(contribution.contributor_occupation)})`}
+        </span>
+      )}
       {committeeNames && <span>{` via ${committeeNames}`}</span>}
     </li>
   );

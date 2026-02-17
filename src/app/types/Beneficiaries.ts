@@ -11,7 +11,7 @@ export type BeneficiaryContribution = {
   committees: string[];
 } & Pick<
   IndividualOrCompanyContribution,
-  "individual" | "contributor_name" | "isIndividual"
+  "individual" | "contributor_name" | "contributor_occupation" | "isIndividual"
 >;
 
 export type CompanyContributionGroup = {

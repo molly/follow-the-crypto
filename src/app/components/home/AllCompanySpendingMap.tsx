@@ -18,11 +18,7 @@ function toStateValues(mapData: MapData): Record<string, number> {
   return values;
 }
 
-export default async function CompanySpendingMap({
-  labelId,
-}: {
-  labelId: string;
-}) {
+export default async function AllCompanySpendingMap() {
   const data = await fetchMapData();
   if (isError(data)) {
     return <ErrorText subject="expenditures by state" />;
@@ -30,7 +26,7 @@ export default async function CompanySpendingMap({
   const mapData = data as MapData;
   return (
     <>
-      <h2>
+      <h2 id="company-spending-by-state">
         Approximate
         <InformationalTooltip>
           Some committees (particularly super PACs) spend cross-state or are not
@@ -42,7 +38,7 @@ export default async function CompanySpendingMap({
       <ChloroplethMap
         domain={generateDomain(10000, 5000000)}
         stateValues={toStateValues(mapData)}
-        labelId={labelId}
+        labelId="company-spending-by-state"
       />
     </>
   );
