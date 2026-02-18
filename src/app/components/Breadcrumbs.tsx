@@ -76,6 +76,11 @@ export default function Breadcrumbs() {
     return titlecase(segment);
   };
 
+  let segmentsToRender = segments;
+  if (segments[0] === "2026") {
+    segmentsToRender = segments.slice(1);
+  }
+
   return (
     <ul className={styles.breadcrumbsContainer}>
       <li className={styles.breadcrumb}>
@@ -83,18 +88,18 @@ export default function Breadcrumbs() {
           Home
         </Link>
       </li>
-      {segments.map((segment, index) => {
-        const segmentText = getSegmentText(segment, index, segments);
+      {segmentsToRender.map((segment, index) => {
+        const segmentText = getSegmentText(segment, index, segmentsToRender);
         return (
           <li key={index} className={styles.breadcrumb}>
-            {index === segments.length - 1 ? (
+            {index === segmentsToRender.length - 1 ? (
               <span>{segmentText}</span>
             ) : (
               <Link
                 className={styles.breadcrumbLink}
-                href={`/${segments.slice(0, index + 1).join("/")}`}
+                href={`/${segmentsToRender.slice(0, index + 1).join("/")}`}
               >
-                {getSegmentText(segment, index, segments)}
+                {getSegmentText(segment, index, segmentsToRender)}
               </Link>
             )}
           </li>
