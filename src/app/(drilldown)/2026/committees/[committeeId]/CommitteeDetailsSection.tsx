@@ -1,4 +1,4 @@
-import { formatDateFromString } from "../../../utils/utils";
+import { formatDateFromString } from "../../../../utils/utils";
 
 import { fetchCommitteeDetails } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";

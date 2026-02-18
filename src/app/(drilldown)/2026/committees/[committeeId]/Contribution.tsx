@@ -9,7 +9,7 @@ import {
   DonorType,
   IndividualDonorType,
   getDonorDetails,
-} from "../../../utils/donorDetails";
+} from "../../../../utils/donorDetails";
 import styles from "./page.module.css";
 
 function ContributorName({

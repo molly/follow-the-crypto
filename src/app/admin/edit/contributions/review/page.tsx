@@ -12,12 +12,20 @@ import {
   SingleContribution,
 } from "@/app/types/Contributions";
 import { isError } from "@/app/utils/errors";
-import { collection, doc, getDoc, getDocs, updateDoc } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
+import { useEffect, useState } from "react";
 import styles from "../../../admin.module.css";
 
 // Helper to check if contribution is a rollup
-function isRollup(contribution: Contribution): contribution is RollupContribution {
+function isRollup(
+  contribution: Contribution,
+): contribution is RollupContribution {
   return "total" in contribution && "oldest" in contribution;
 }
 
@@ -92,14 +100,14 @@ export default function ContributionReviewPage() {
   > | null>(null);
   const [selectedCommitteeId, setSelectedCommitteeId] = useState<string>("");
   const [contributions, setContributions] = useState<Contributions | null>(
-    null
+    null,
   );
   const [loadingState, setLoadingState] = useState<
     "idle" | "loading" | "loaded" | "error"
   >("idle");
   const [saveStates, setSaveStates] = useState<Record<string, string>>({});
   const [editingContribution, setEditingContribution] = useState<string | null>(
-    null
+    null,
   );
   const [editDescription, setEditDescription] = useState("");
   const [reviewCounts, setReviewCounts] = useState<
@@ -179,7 +187,7 @@ export default function ContributionReviewPage() {
   const updateContributionReview = async (
     contribution: Contribution,
     status: "verified" | "omit",
-    description: string
+    description: string,
   ) => {
     if (!selectedCommitteeId || !contributions) return;
 
@@ -204,22 +212,24 @@ export default function ContributionReviewPage() {
               manualReview,
               ...(description && { description }), // Add description at top level if provided
             }
-          : c
+          : c,
       );
 
       // Update in groups
-      updatedContributions.groups = updatedContributions.groups.map((group) => ({
-        ...group,
-        contributions: group.contributions.map((c) =>
-          getContributionId(c) === contributionId
-            ? {
-                ...c,
-                manualReview,
-                ...(description && { description }), // Add description at top level if provided
-              }
-            : c
-        ),
-      }));
+      updatedContributions.groups = updatedContributions.groups.map(
+        (group) => ({
+          ...group,
+          contributions: group.contributions.map((c) =>
+            getContributionId(c) === contributionId
+              ? {
+                  ...c,
+                  manualReview,
+                  ...(description && { description }), // Add description at top level if provided
+                }
+              : c,
+          ),
+        }),
+      );
 
       // Write to Firestore
       const docRef = doc(db, "contributions", selectedCommitteeId);
@@ -235,7 +245,7 @@ export default function ContributionReviewPage() {
             total: prev[selectedCommitteeId]?.total || 0,
             unreviewed: Math.max(
               0,
-              (prev[selectedCommitteeId]?.unreviewed || 0) - 1
+              (prev[selectedCommitteeId]?.unreviewed || 0) - 1,
             ),
           },
         }));
@@ -271,7 +281,7 @@ export default function ContributionReviewPage() {
     if (!selectedCommitteeId || !contributions) return;
     if (
       !window.confirm(
-        "Mark all unreviewed contributions for this committee as verified?"
+        "Mark all unreviewed contributions for this committee as verified?",
       )
     )
       return;
@@ -288,16 +298,16 @@ export default function ContributionReviewPage() {
       const updatedContributions = { ...contributions };
 
       updatedContributions.by_date = updatedContributions.by_date.map((c) =>
-        c.manualReview ? c : { ...c, manualReview }
+        c.manualReview ? c : { ...c, manualReview },
       );
 
       updatedContributions.groups = updatedContributions.groups.map(
         (group) => ({
           ...group,
           contributions: group.contributions.map((c) =>
-            c.manualReview ? c : { ...c, manualReview }
+            c.manualReview ? c : { ...c, manualReview },
           ),
-        })
+        }),
       );
 
       const docRef = doc(db, "contributions", selectedCommitteeId);
@@ -354,7 +364,9 @@ export default function ContributionReviewPage() {
           contribution.contributor_suffix,
         ]
           .filter(Boolean)
-          .join(" ") || contribution.contributor_name || "Unknown";
+          .join(" ") ||
+        contribution.contributor_name ||
+        "Unknown";
 
     return (
       <div
@@ -367,10 +379,22 @@ export default function ContributionReviewPage() {
           backgroundColor: "#f8f9fa",
         }}
       >
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+          }}
+        >
           <div style={{ flex: 1 }}>
             {/* Header with name and status */}
-            <div style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginBottom: "8px",
+              }}
+            >
               <strong style={{ fontSize: "1.1em" }}>{fullName}</strong>
               <div style={{ marginLeft: "auto" }}>
                 <ReviewStatusBadge manualReview={contribution.manualReview} />
@@ -378,7 +402,15 @@ export default function ContributionReviewPage() {
             </div>
 
             {/* Primary details */}
-            <div style={{ display: "grid", gridTemplateColumns: "140px 1fr", gap: "4px", fontSize: "0.9em", marginBottom: "8px" }}>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "140px 1fr",
+                gap: "4px",
+                fontSize: "0.9em",
+                marginBottom: "8px",
+              }}
+            >
               {rollup && (
                 <>
                   <span style={{ color: "#666" }}>Type:</span>
@@ -420,7 +452,8 @@ export default function ContributionReviewPage() {
                 <>
                   <span style={{ color: "#666" }}>Date Range:</span>
                   <span>
-                    {formatDate(contribution.oldest)} - {formatDate(contribution.newest)}
+                    {formatDate(contribution.oldest)} -{" "}
+                    {formatDate(contribution.newest)}
                   </span>
                   <span style={{ color: "#666" }}>Total Amount:</span>
                   <span style={{ fontWeight: "500" }}>
@@ -441,7 +474,9 @@ export default function ContributionReviewPage() {
               {contribution.contributor_aggregate_ytd && (
                 <>
                   <span style={{ color: "#666" }}>Aggregate YTD:</span>
-                  <span>{formatCurrency(contribution.contributor_aggregate_ytd)}</span>
+                  <span>
+                    {formatCurrency(contribution.contributor_aggregate_ytd)}
+                  </span>
                 </>
               )}
 
@@ -544,9 +579,21 @@ export default function ContributionReviewPage() {
         </div>
 
         {isEditing && (
-          <div style={{ marginTop: "10px", borderTop: "1px solid #ddd", paddingTop: "10px" }}>
+          <div
+            style={{
+              marginTop: "10px",
+              borderTop: "1px solid #ddd",
+              paddingTop: "10px",
+            }}
+          >
             <div style={{ marginBottom: "10px" }}>
-              <label style={{ display: "block", marginBottom: "5px", fontSize: "0.9em" }}>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "5px",
+                  fontSize: "0.9em",
+                }}
+              >
                 Description (optional):
               </label>
               <textarea
@@ -561,7 +608,11 @@ export default function ContributionReviewPage() {
             <div style={{ display: "flex", gap: "10px" }}>
               <button
                 onClick={() =>
-                  updateContributionReview(contribution, "verified", editDescription)
+                  updateContributionReview(
+                    contribution,
+                    "verified",
+                    editDescription,
+                  )
                 }
                 disabled={saveState === "pending"}
                 style={{
@@ -577,7 +628,11 @@ export default function ContributionReviewPage() {
               </button>
               <button
                 onClick={() =>
-                  updateContributionReview(contribution, "omit", editDescription)
+                  updateContributionReview(
+                    contribution,
+                    "omit",
+                    editDescription,
+                  )
                 }
                 disabled={saveState === "pending"}
                 style={{
@@ -635,12 +690,16 @@ export default function ContributionReviewPage() {
         )}
 
         {saveState === "success" && (
-          <div style={{ marginTop: "5px", color: "#28a745", fontSize: "0.85em" }}>
+          <div
+            style={{ marginTop: "5px", color: "#28a745", fontSize: "0.85em" }}
+          >
             ✓ Saved successfully
           </div>
         )}
         {saveState === "error" && (
-          <div style={{ marginTop: "5px", color: "#dc3545", fontSize: "0.85em" }}>
+          <div
+            style={{ marginTop: "5px", color: "#dc3545", fontSize: "0.85em" }}
+          >
             ✗ Error saving
           </div>
         )}
@@ -732,7 +791,7 @@ export default function ContributionReviewPage() {
             </div>
             <div>
               {getFlattenedContributions().map((contribution) =>
-                renderContributionRow(contribution)
+                renderContributionRow(contribution),
               )}
             </div>
           </div>
