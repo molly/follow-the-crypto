@@ -23,10 +23,12 @@ export default async function TotalDisbursements({
   return (
     <MoneyCard
       topText={
-        <div className={styles.spentTopSection}>They have spent more than</div>
+        <div className={styles.spentTopSection}>
+          Crypto-focused super PACs have spent more than
+        </div>
       }
       amount={humanizeRoundedCurrency(expenditures, true)}
-      bottomText="of it so far."
+      bottomText="on elections so far this cycle."
       className={className}
     />
   );

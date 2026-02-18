@@ -94,7 +94,11 @@ export function titlecaseOccupation(str: string): string {
   return titlecase(str)
     .split(" ")
     .map((x) => {
-      if (x.match(/^[^A-Z]*([VG]P|C[A-Z]{2}|US|SRE|HR|MD)[^A-Z]*$/i)) {
+      if (
+        x.match(
+          /^[^A-Z]*(S?VP|G[PM]|C[A-Z]{2}|US|SRE|HR|MD|AI|RH[FSM]|PX|ESG|IT)[^A-Z]*$/i,
+        )
+      ) {
         return x.toUpperCase();
       }
       return x;
