@@ -56,8 +56,8 @@ export default function AboutPage() {
             </div>
             <div className={styles.quoteAttribution}>
               &ndash;{" "}
-              <Link href="/individuals/brian-armstrong">Brian Armstrong</Link>,{" "}
-              <Link href="/companies/coinbase">Coinbase</Link> CEO
+              <Link href="/2026/individuals/brian-armstrong">Brian Armstrong</Link>,{" "}
+              <Link href="/2026/companies/coinbase">Coinbase</Link> CEO
             </div>
           </div>
         </div>

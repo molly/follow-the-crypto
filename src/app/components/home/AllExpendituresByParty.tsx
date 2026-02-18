@@ -30,7 +30,7 @@ export default function AllExpendituresByParty() {
       <Suspense fallback={<ExpendituresSkeleton />}>
         <AllExpendituresByPartyContent labelId="expenditures-by-party-label" />
       </Suspense>
-      <Link href="/spending">&raquo; More details</Link>
+      <Link href="/2026/spending">&raquo; More details</Link>
     </section>
   );
 }

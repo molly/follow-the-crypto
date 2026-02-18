@@ -1,7 +1,7 @@
 export const qpqData = {
   coinbase: {
     name: "Coinbase",
-    link: "/companies/coinbase",
+    link: "/2026/companies/coinbase",
     benefits: [
       "SEC enforcement case dismissed with prejudice",
       "Relaunched bitcoin borrowing program previously shut down after SEC warnings",
@@ -47,7 +47,7 @@ export const qpqData = {
   },
   gemini: {
     name: "Gemini",
-    link: "/companies/gemini",
+    link: "/2026/companies/gemini",
     benefits: [
       "SEC enforcement case stayed pending reslution",
       "SEC investigation ended with no action",
@@ -84,7 +84,7 @@ export const qpqData = {
   },
   kraken: {
     name: "Kraken",
-    link: "/companies/kraken",
+    link: "/2026/companies/kraken",
     benefits: [
       "SEC enforcement case dismissed with prejudice",
       "Relaunched staking services which were shut down as part of a February 2023 SEC settlement",
@@ -97,7 +97,7 @@ export const qpqData = {
   },
   circle: {
     name: "Circle",
-    link: "/companies/circle",
+    link: "/2026/companies/circle",
     benefits: ["SEC approved IPO", "Favorable stablecoin regulation"],
     contributions: [
       { amount: 1000000, recipient: "to Trump inauguration fund" },
@@ -106,7 +106,7 @@ export const qpqData = {
   },
   ripple: {
     name: "Ripple",
-    link: "/companies/ripple",
+    link: "/2026/companies/ripple",
     benefits: [
       "SEC enforcement case stayed pending resolution",
       "Joint request to return $75 million of previous SEC fine to Ripple",
@@ -119,7 +119,7 @@ export const qpqData = {
   },
   andreessen: {
     name: "Andreessen Horowitz",
-    link: "/companies/andreessen-horowitz",
+    link: "/2026/companies/andreessen-horowitz",
     benefits: [
       "Four Andreessen Horowitz employees installed in formal or informal positions of influence at the White House",
     ],
@@ -130,7 +130,7 @@ export const qpqData = {
   },
   cumberland: {
     name: "Cumberland DRW",
-    link: "/individuals/donald-wilson",
+    link: "/2026/individuals/donald-wilson",
     benefits: ["SEC enforcement case dismissed with prejudice"],
     contributions: [
       {

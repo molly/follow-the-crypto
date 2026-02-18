@@ -131,7 +131,7 @@ export default function AllCashByCommitteeChart({
                   role="link"
                   aria-label={`~${barLabelFormatter(barTotal)} on hand`}
                 >
-                  <a href={`/committees/${committee.id}`}>
+                  <a href={`/2026/committees/${committee.id}`}>
                     <rect
                       x={x(committee.id)}
                       y={y(committee.last_cash_on_hand_end_period)}

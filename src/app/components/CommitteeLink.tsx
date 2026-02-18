@@ -7,5 +7,5 @@ export function CommitteeLink({
   committeeId: string;
   committeeName: string;
 }) {
-  return <Link href={`/committees/${committeeId}`}>{committeeName}</Link>;
+  return <Link href={`/2026/committees/${committeeId}`}>{committeeName}</Link>;
 }

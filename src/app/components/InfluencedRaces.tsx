@@ -24,7 +24,7 @@ export default function InfluencedRaces({
       <InfluencedRacesContents small={useCompact} fullPage={fullPage} />
       {!fullPage && (
         <div className={styles.tableCardContent}>
-          <Link href="/elections">&raquo; All races with crypto spending</Link>
+          <Link href="/2026/elections">&raquo; All races with crypto spending</Link>
         </div>
       )}
     </div>

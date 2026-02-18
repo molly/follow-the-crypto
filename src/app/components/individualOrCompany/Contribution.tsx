@@ -35,7 +35,7 @@ function Contributor({
         // Individual found in relatedIndividuals - show name (linked) and title
         return (
           <span className={styles.contributionSource}>
-            <MaybeLink href={`/individuals/${individual.id}`}>
+            <MaybeLink href={`/2026/individuals/${individual.id}`}>
               {individual.name}
             </MaybeLink>
             {individual.title && (

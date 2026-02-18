@@ -194,7 +194,7 @@ function CandidateRow({
   beneficiary?: Beneficiary;
   small?: boolean;
 }) {
-  const raceHref = `/elections/${candidate.state}-${candidate.race}`;
+  const raceHref = `/2026/elections/${candidate.state}-${candidate.race}`;
   const raceName = getRaceName(
     `${candidate.state}-${candidate.race}`,
     race.year,
@@ -214,7 +214,7 @@ function CandidateRow({
         <td className="center-cell">
           <Link
             className="unstyled"
-            href={`/states/${STATES_BY_ABBR[candidate.state].replaceAll(" ", "-").toLowerCase()}`}
+            href={`/2026/states/${STATES_BY_ABBR[candidate.state].replaceAll(" ", "-").toLowerCase()}`}
           >
             {candidate.state}
           </Link>

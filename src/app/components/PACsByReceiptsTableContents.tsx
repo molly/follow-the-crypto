@@ -59,7 +59,7 @@ export default async function PACsByReceiptsTableContents({
         let committeeIdentifier: string | React.ReactElement = committeeName;
         if (committee.is_crypto) {
           committeeIdentifier = (
-            <Link href={`/committees/${committee.committee_id}`}>
+            <Link href={`/2026/committees/${committee.committee_id}`}>
               <b>{committeeName}</b>
             </Link>
           );

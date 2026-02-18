@@ -25,7 +25,7 @@ export default function RecentExpenditures({
       {children}
       {!fullPage && (
         <div className={styles.tableCardContent}>
-          <Link href="/expenditures">&raquo; All recent expenditures</Link>
+          <Link href="/2026/expenditures">&raquo; All recent expenditures</Link>
         </div>
       )}
     </section>

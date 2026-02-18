@@ -80,7 +80,7 @@ export default function ChloroplethMap({
           }
           return (
             <Link
-              href={`/states/${stateFullName.toLowerCase().replace(" ", "-")}`}
+              href={`/2026/states/${stateFullName.toLowerCase().replace(" ", "-")}`}
               key={d.id}
               onMouseEnter={() => setActiveState(stateFullName)}
               onMouseLeave={() => setActiveState(null)}

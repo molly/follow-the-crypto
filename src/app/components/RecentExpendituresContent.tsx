@@ -142,7 +142,7 @@ export default function RecentExpendituresContent({
             {expenditure.candidate_office_state && (
               <span className="no-wrap">
                 <Link
-                  href={`/elections/${getRaceId(expenditure, true)}`}
+                  href={`/2026/elections/${getRaceId(expenditure, true)}`}
                 >{`${STATES_BY_ABBR[expenditure.candidate_office_state]} ${getRaceName(
                   getRaceId(expenditure),
                 )}`}</Link>
@@ -151,7 +151,7 @@ export default function RecentExpendituresContent({
           </div>
         </div>
         {committees && expenditure.committee_id && (
-          <Link href={`/committees/${expenditure.committee_id}`}>
+          <Link href={`/2026/committees/${expenditure.committee_id}`}>
             {committees[expenditure.committee_id].name}
           </Link>
         )}

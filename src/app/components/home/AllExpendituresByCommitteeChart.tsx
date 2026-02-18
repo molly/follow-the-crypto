@@ -107,7 +107,7 @@ export default function SpendingByCommittee({
                   role="link"
                   aria-label={`~${barLabelFormatter(spending)} spent by ${committeeName}`}
                 >
-                  <a href={`/committees/${committee}`}>
+                  <a href={`/2026/committees/${committee}`}>
                     <rect
                       x={x(committee)}
                       y={y(spending)}

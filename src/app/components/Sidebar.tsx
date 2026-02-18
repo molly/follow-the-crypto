@@ -109,7 +109,7 @@ export default function Sidebar() {
                 <Link
                   className={styles.sidebarLink}
                   onClick={() => setCollapsed(true)}
-                  href="/committees"
+                  href="/2026/committees"
                   ref={sidebarRef}
                 >
                   By cryptocurrency-focused committees
@@ -122,7 +122,7 @@ export default function Sidebar() {
                 <Link
                   className={styles.sidebarLink}
                   onClick={() => setCollapsed(true)}
-                  href="/companies"
+                  href="/2026/companies"
                 >
                   By companies
                 </Link>
@@ -134,7 +134,7 @@ export default function Sidebar() {
                 <Link
                   className={styles.sidebarLink}
                   onClick={() => setCollapsed(true)}
-                  href="/individuals"
+                  href="/2026/individuals"
                 >
                   By individuals
                 </Link>
@@ -146,7 +146,7 @@ export default function Sidebar() {
                 <Link
                   className={styles.sidebarLink}
                   onClick={() => setCollapsed(true)}
-                  href="/expenditures"
+                  href="/2026/expenditures"
                 >
                   Most recent expenditures
                 </Link>
@@ -164,7 +164,7 @@ export default function Sidebar() {
                 <Link
                   className={styles.sidebarLink}
                   onClick={() => setCollapsed(true)}
-                  href="/states"
+                  href="/2026/states"
                 >
                   By state
                 </Link>
@@ -176,7 +176,7 @@ export default function Sidebar() {
                 <Link
                   className={styles.sidebarLink}
                   onClick={() => setCollapsed(true)}
-                  href="/elections"
+                  href="/2026/elections"
                 >
                   All elections
                 </Link>
@@ -194,7 +194,7 @@ export default function Sidebar() {
                 <Link
                   className={styles.sidebarLink}
                   onClick={() => setCollapsed(true)}
-                  href="/committees/ranking/super"
+                  href="/2026/committees/ranking/super"
                 >
                   Super PACs
                 </Link>
@@ -206,7 +206,7 @@ export default function Sidebar() {
                 <Link
                   className={styles.sidebarLink}
                   onClick={() => setCollapsed(true)}
-                  href="/committees/ranking/all"
+                  href="/2026/committees/ranking/all"
                 >
                   All committees
                 </Link>

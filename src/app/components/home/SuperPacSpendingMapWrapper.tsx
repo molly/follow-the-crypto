@@ -43,7 +43,7 @@ export default async function SuperPacSpendingMapWrapper({
         stateValues={toStateValues(mapData)}
         labelId="super-pac-spending-by-state"
       />
-      {showLink && <Link href="/states">&raquo; Spending by state</Link>}
+      {showLink && <Link href="/2026/states">&raquo; Spending by state</Link>}
     </>
   );
 }

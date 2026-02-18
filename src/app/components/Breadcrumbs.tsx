@@ -21,11 +21,14 @@ export default function Breadcrumbs() {
   const pathname = usePathname();
   const segments = pathname.split("/").filter(Boolean);
 
+  const yearOffset = segments[0] === "2026" ? 1 : 0;
+
   useEffect(() => {
     (async function () {
+      const routeBase = segments[yearOffset]?.toLowerCase();
       if (
-        pathname.startsWith("/committees") &&
-        !pathname.startsWith("/committees/ranking/")
+        routeBase === "committees" &&
+        !pathname.includes("/committees/ranking/")
       ) {
         const committeeDetails = await fetchConstant("committees");
         if (isError(committeeDetails)) {
@@ -41,30 +44,33 @@ export default function Breadcrumbs() {
     index: number,
     segments: string[],
   ): string => {
+    const offset = segments[0] === "2026" ? 1 : 0;
+    const routeBase = segments[offset]?.toLowerCase();
+    const detailIndex = 1 + offset;
     if (
-      segments[0].toLowerCase() === "committees" &&
-      index === 1 &&
+      routeBase === "committees" &&
+      index === detailIndex &&
       segment.toLowerCase() !== "ranking"
     ) {
       if (!committees || !(segment.toUpperCase() in committees)) {
         return segment;
       }
       return committees[segment.toUpperCase()].name;
-    } else if (segments[0].toLowerCase() === "elections" && index === 1) {
+    } else if (routeBase === "elections" && index === detailIndex) {
       if (segment.toUpperCase() === "PRESIDENT") {
         return "President";
       }
       const state = segment.split("-")[0].toUpperCase();
       return `${STATES_BY_ABBR[state]} ${getRaceName(segment.toUpperCase())} election`;
-    } else if (segments[0].toLowerCase() === "individuals" && index === 1) {
+    } else if (routeBase === "individuals" && index === detailIndex) {
       return titlecase(segment.toLowerCase().replaceAll("-", " "));
-    } else if (segments[0].toLowerCase() === "companies" && index === 1) {
+    } else if (routeBase === "companies" && index === detailIndex) {
       return formatCompanyName(
         titlecase(segment.toLowerCase().replaceAll("-", " ")),
       );
-    } else if (index === 1 && segment.toLowerCase() === "faq") {
+    } else if (index === detailIndex && segment.toLowerCase() === "faq") {
       return "FAQ";
-    } else if (index === 0 && segment.toLowerCase() === "quidproquo") {
+    } else if (index === offset && segment.toLowerCase() === "quidproquo") {
       return "Quid pro quo";
     }
     return titlecase(segment);

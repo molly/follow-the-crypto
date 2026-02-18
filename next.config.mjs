@@ -9,6 +9,31 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    const routes = [
+      "beneficiaries",
+      "committees",
+      "companies",
+      "elections",
+      "expenditures",
+      "individuals",
+      "quidproquo",
+      "spending",
+      "states",
+    ];
+    return routes.flatMap((route) => [
+      {
+        source: `/${route}`,
+        destination: `/2026/${route}`,
+        permanent: false,
+      },
+      {
+        source: `/${route}/:path*`,
+        destination: `/2026/${route}/:path*`,
+        permanent: false,
+      },
+    ]);
+  },
 };
 
 export default nextConfig;

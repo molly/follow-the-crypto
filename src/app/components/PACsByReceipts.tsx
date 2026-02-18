@@ -55,7 +55,7 @@ export default function PACsByReceipts({
             independent expenditure only political committees (super PACs), and
             does not include hybrid PACs. To view all political action and party
             committees, including hybrid PACs, see the{" "}
-            <Link href="/committees/ranking/all">list of all PACs</Link>.
+            <Link href="/2026/committees/ranking/all">list of all PACs</Link>.
           </p>
         )}
       </div>
@@ -86,16 +86,16 @@ export default function PACsByReceipts({
               independent expenditure only political committees (super PACs),
               and does not include hybrid PACs. To view all political action and
               party committees, including hybrid PACs, see the{" "}
-              <Link href="/committees/ranking/all">list of all PACs</Link>.
+              <Link href="/2026/committees/ranking/all">list of all PACs</Link>.
             </div>
             <div className={styles.viewMoreLinks}>
               <div className={styles.viewMoreLink}>
-                <Link href="/committees/ranking/super">
+                <Link href="/2026/committees/ranking/super">
                   &raquo; All super PACs
                 </Link>
               </div>
               <div className={styles.viewMoreLink}>
-                <Link href="/committees/ranking/all">&raquo; All PACs</Link>
+                <Link href="/2026/committees/ranking/all">&raquo; All PACs</Link>
               </div>
             </div>
           </>
