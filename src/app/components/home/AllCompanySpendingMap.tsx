@@ -19,7 +19,11 @@ function toStateValues(mapData: MapData): Record<string, number> {
   return values;
 }
 
-export default async function AllCompanySpendingMap() {
+export default async function AllCompanySpendingMap({
+  showLink,
+}: {
+  showLink?: boolean;
+}) {
   const data = await fetchMapData();
   if (isError(data)) {
     return <ErrorText subject="expenditures by state" />;
@@ -30,9 +34,15 @@ export default async function AllCompanySpendingMap() {
       <h2 id="company-spending-by-state">
         Approximate
         <InformationalTooltip>
-          Some committees (particularly super PACs) spend cross-state or are not
-          associated with a specific candidate, and contributions to them are
-          omitted from this chart.
+          <p>
+            Some committees (particularly super PACs) spend cross-state or are
+            not associated with a specific candidate, and contributions to them
+            are omitted from this chart.
+          </p>
+          <p>
+            This relies on manual classification and so represents a
+            conservative estimate of industry spending.
+          </p>
         </InformationalTooltip>{" "}
         crypto-linked contributions to candidates by state
       </h2>
@@ -41,7 +51,7 @@ export default async function AllCompanySpendingMap() {
         stateValues={toStateValues(mapData)}
         labelId="company-spending-by-state"
       />
-      <Link href="/states">&raquo; Spending by state</Link>
+      {showLink && <Link href="/states">&raquo; Spending by state</Link>}
     </>
   );
 }

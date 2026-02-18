@@ -364,11 +364,15 @@ export default function InfluencedRacesContents({
           >
             Other support
             <InformationalTooltip>
-              <span>
+              <p>
                 Contributions from cryptocurrency industry companies or
                 associated individuals to this candidate or aligned committees,
-                which have not gone through the crypto-focused super PACs
-              </span>
+                which have not gone through the crypto-focused super PACs.
+              </p>
+              <p>
+                This relies on manual classification and so represents a
+                conservative estimate of industry spending.
+              </p>
             </InformationalTooltip>
           </th>
           <th className={`${styles.tableCellCollapse1} small-cell center-cell`}>

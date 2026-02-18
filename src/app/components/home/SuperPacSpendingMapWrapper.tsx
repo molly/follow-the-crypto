@@ -18,7 +18,11 @@ function toStateValues(mapData: MapData): Record<string, number> {
   return values;
 }
 
-export default async function SuperPacSpendingMapWrapper() {
+export default async function SuperPacSpendingMapWrapper({
+  showLink,
+}: {
+  showLink?: boolean;
+}) {
   const data = await fetchMapData();
   if (isError(data)) {
     return (
@@ -31,13 +35,15 @@ export default async function SuperPacSpendingMapWrapper() {
   const mapData = data as MapData;
   return (
     <>
-      <h2>Expenditures by pro-crypto super PACs by state</h2>
+      <h2 id="super-pac-spending-by-state">
+        Expenditures by pro-crypto super PACs by state
+      </h2>
       <ChloroplethMap
         domain={generateDomain(10000, 10000000)}
         stateValues={toStateValues(mapData)}
-        ariaLabel="Map of the US showing spending by pro-crypto super PACs by state"
+        labelId="super-pac-spending-by-state"
       />
-      <Link href="/states">&raquo; Spending by state</Link>
+      {showLink && <Link href="/states">&raquo; Spending by state</Link>}
     </>
   );
 }

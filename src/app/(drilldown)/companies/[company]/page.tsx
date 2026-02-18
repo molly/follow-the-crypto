@@ -142,9 +142,15 @@ export default async function CompanyPage({
               <h2 id="company-spending-by-state">
                 Approximate
                 <InformationalTooltip>
-                  Some committees (particularly super PACs) spend cross-state or
-                  are not associated with a specific candidate, and
-                  contributions to them are omitted from this chart.
+                  <p>
+                    Some committees (particularly super PACs) spend cross-state
+                    or are not associated with a specific candidate, and
+                    contributions to them are omitted from this chart.
+                  </p>
+                  <p>
+                    This relies on manual classification and so represents a
+                    conservative estimate of industry spending.
+                  </p>
                 </InformationalTooltip>{" "}
                 spending by state
               </h2>

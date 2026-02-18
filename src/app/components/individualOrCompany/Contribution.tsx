@@ -38,7 +38,12 @@ function Contributor({
             <MaybeLink href={`/individuals/${individual.id}`}>
               {individual.name}
             </MaybeLink>
-            {individual.title && ` (${individual.title})`}
+            {individual.title && (
+              <>
+                {" "}
+                <span className="secondary">({individual.title})</span>
+              </>
+            )}
             {" – "}
           </span>
         );
@@ -51,7 +56,14 @@ function Contributor({
       return (
         <span className={styles.contributionSource}>
           {contributorName}
-          {occupation && ` (${titlecaseOccupation(occupation)})`}
+          {occupation && (
+            <>
+              {" "}
+              <span className="secondary">
+                ({titlecaseOccupation(occupation)})
+              </span>
+            </>
+          )}
           {" – "}
         </span>
       );
@@ -64,7 +76,14 @@ function Contributor({
     return (
       <span className={styles.contributionSource}>
         {contributorName}
-        {occupation && ` (${titlecaseOccupation(occupation)})`}
+        {occupation && (
+          <>
+            {" "}
+            <span className="secondary">
+              ({titlecaseOccupation(occupation)})
+            </span>
+          </>
+        )}
         {" – "}
       </span>
     );

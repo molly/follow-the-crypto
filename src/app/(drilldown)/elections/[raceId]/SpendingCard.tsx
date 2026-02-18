@@ -3,6 +3,7 @@ import {
   fetchStateElections,
 } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
+import { Beneficiary } from "@/app/types/Beneficiaries";
 import { ElectionsByState } from "@/app/types/Elections";
 import { is4xx, isError } from "@/app/utils/errors";
 import Spending from "./Spending";
@@ -42,7 +43,15 @@ export default async function SpendingCard({ raceId }: { raceId: string }) {
     );
   }
 
+  const beneficiaries = isError(beneficiariesData)
+    ? {}
+    : (beneficiariesData as Record<string, Beneficiary>);
+
   return (
-    <Spending election={elections[shortRaceId]} labelId="spending-label" />
+    <Spending
+      election={elections[shortRaceId]}
+      labelId="spending-label"
+      beneficiaries={beneficiaries}
+    />
   );
 }

@@ -18,4 +18,8 @@
   background-color: var(--card-background);
   max-width: 12rem;
   font-size: 0.9rem;
+
+  p:last-child {
+    margin-bottom: 0;
+  }
 }

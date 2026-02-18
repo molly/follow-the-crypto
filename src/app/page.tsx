@@ -47,12 +47,12 @@ export default function Home() {
           <InfluencedRaces />
           <div className={styles.companyMap}>
             <Suspense fallback={<USMapSkeleton />}>
-              <AllCompanySpendingMap />
+              <AllCompanySpendingMap showLink={true} />
             </Suspense>
           </div>
           <div className={styles.superPacMap}>
             <Suspense fallback={<USMapSkeleton />}>
-              <SuperPacSpendingMapWrapper />
+              <SuperPacSpendingMapWrapper showLink={true} />
             </Suspense>
           </div>
           <SuperPACsByReceipts type="super">

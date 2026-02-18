@@ -31,16 +31,19 @@ function Contribution({
       titlecaseCommittee(contribution.contributor_name)
     ) : null;
   const committeeNames = contribution.committees.length
-    ? humanizeList(contribution.committees.map((c) => titlecaseCommittee(c)))
+    ? humanizeList(contribution.committees.map((c) => titlecaseCommittee(c.name)))
     : null;
   return (
     <li className={styles.otherSupportContribution}>
       <span>{formatCurrency(contribution.total)}</span>
       {contributorName && <span> from {contributorName}</span>}
       {contribution.contributor_occupation && (
-        <span className="secondary">
-          {` (${titlecaseOccupation(contribution.contributor_occupation)})`}
-        </span>
+        <>
+          {" "}
+          <span className="secondary">
+            {`(${titlecaseOccupation(contribution.contributor_occupation)})`}
+          </span>
+        </>
       )}
       {committeeNames && <span>{` via ${committeeNames}`}</span>}
     </li>

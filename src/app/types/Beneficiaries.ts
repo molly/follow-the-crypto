@@ -4,11 +4,16 @@ import {
   RecipientCandidateDetails,
 } from "./Contributions";
 
+export type BeneficiaryCommitteeRef = {
+  name: string;
+  committee_type_full?: string | null;
+};
+
 export type BeneficiaryContribution = {
   total: number;
   oldest: string;
   newest: string;
-  committees: string[];
+  committees: BeneficiaryCommitteeRef[];
 } & Pick<
   IndividualOrCompanyContribution,
   "individual" | "contributor_name" | "contributor_occupation" | "isIndividual"

@@ -3,6 +3,7 @@
 import Candidate, { CandidateImage } from "@/app/components/Candidate";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import { useBreakpoint } from "@/app/hooks/useBreakpoint";
+import { Beneficiary } from "@/app/types/Beneficiaries";
 import { CandidateSummary, ElectionGroup } from "@/app/types/Elections";
 import * as d3 from "d3";
 import { motion } from "framer-motion";
@@ -84,6 +85,7 @@ type SpendingHoverState = {
   candidate: string;
   bar:
     | "raised"
+    | "industry_direct"
     | "outside_support"
     | "outside_oppose"
     | "crypto_support"
@@ -142,7 +144,7 @@ export function SpendingSkeleton() {
             </g>
           );
         })}
-        {["1", "2", "3"].map((candidate, ind) => {
+        {["1", "2", "3"].map((candidate) => {
           const { raised, outside_oppose } = DUMMY_DATA[candidate];
           const yCandidate = y(candidate) || 0;
           const x0 = x(0);
@@ -196,9 +198,11 @@ export function SpendingSkeleton() {
 export default function Spending({
   election,
   labelId,
+  beneficiaries,
 }: {
   election: ElectionGroup;
   labelId: string;
+  beneficiaries?: Record<string, Beneficiary>;
 }) {
   const [hovered, setHovered] = useState<SpendingHoverState | null>(null);
   const shouldUseXLFont = useBreakpoint(500);
@@ -225,6 +229,8 @@ export default function Spending({
         const summary = election.candidates[candidate];
         const candidateData = {
           raised: 0,
+          industry_direct: 0,
+          industry_super_pac: 0,
           outside_support: 0,
           outside_oppose: 0,
           crypto_support: 0,
@@ -242,9 +248,27 @@ export default function Spending({
           candidateData.outside_oppose =
             summary.outside_spending.oppose_total || 0;
         }
+        const candidateId = summary.candidate_id;
+        if (candidateId && beneficiaries?.[candidateId]) {
+          const beneficiary = beneficiaries[candidateId];
+          for (const companyGroup of beneficiary.contributions) {
+            for (const contribution of companyGroup.contributions) {
+              const isSuperPAC = contribution.committees.some(
+                (c) =>
+                  c.committee_type_full?.startsWith("Super") ||
+                  c.committee_type_full?.startsWith("Hybrid"),
+              );
+              if (!isSuperPAC) {
+                candidateData.industry_direct += contribution.total;
+              } else {
+                candidateData.industry_super_pac += contribution.total;
+              }
+            }
+          }
+        }
         return candidateData;
       }),
-    [candidateNames, election.candidates],
+    [candidateNames, election.candidates, beneficiaries],
   );
 
   const xDomain = useMemo(
@@ -318,6 +342,8 @@ export default function Spending({
         {candidateNames.map((candidate, ind) => {
           const {
             raised,
+            industry_direct,
+            industry_super_pac,
             outside_support,
             crypto_support,
             outside_oppose,
@@ -327,10 +353,15 @@ export default function Spending({
           const x0 = x(0);
           const xRaised = x(raised);
           const xRaisedWidth = Math.max(1, xRaised - x0);
+          const xIndustryDirectWidth =
+            Math.max(1, x(industry_direct) - x0) - GRIDLINE_WIDTH / 2;
           const xOutsideSupport = x(outside_support) - x0;
           const xOutsideSupportWidth = Math.max(1, xOutsideSupport);
-          const xCryptoSupport = x(crypto_support) - x0;
-          const xCryptoSupportWidth = Math.max(1, xCryptoSupport);
+          const combinedCryptoSupport = crypto_support + industry_super_pac;
+          const xCryptoSupportWidth = Math.max(
+            1,
+            x(combinedCryptoSupport) - x0,
+          );
           const xOutsideOpposeStart = Math.min(x0 - 1, x(-outside_oppose));
           const xOutsideOpposeWidth =
             Math.max(1, x(outside_oppose) - x0) - GRIDLINE_WIDTH / 2;
@@ -374,6 +405,45 @@ export default function Spending({
                     )}
                 </g>
               )}
+              {raised && industry_direct > 0 && (
+                <g
+                  onMouseEnter={() =>
+                    setHovered({ candidate, bar: "industry_direct" })
+                  }
+                  onMouseLeave={() => setHovered(null)}
+                >
+                  <motion.rect
+                    x={x0 + GRIDLINE_WIDTH / 2}
+                    y={yCandidate}
+                    width={xIndustryDirectWidth}
+                    height={y.bandwidth()}
+                    fill="url(#hatch)"
+                    className={styles.spendingBar}
+                    initial={false}
+                    animate={{
+                      strokeOpacity:
+                        hovered !== null &&
+                        hovered.candidate === candidate &&
+                        hovered.bar === "industry_direct"
+                          ? 1
+                          : 0,
+                    }}
+                  />
+                  {hovered !== null &&
+                    hovered.candidate === candidate &&
+                    hovered.bar === "industry_direct" && (
+                      <BarLabel
+                        x={x0 + xIndustryDirectWidth}
+                        width={xIndustryDirectWidth}
+                        y={yCandidate}
+                        height={y.bandwidth()}
+                        label={gridLabelFormatter(industry_direct)}
+                        shouldUseXLFont={shouldUseXLFont}
+                        backgroundClass={styles.raisedBar}
+                      />
+                    )}
+                </g>
+              )}
               {outside_support && (
                 <g
                   onMouseEnter={() =>
@@ -397,7 +467,7 @@ export default function Spending({
                           : 0,
                     }}
                   />
-                  {crypto_support && (
+                  {combinedCryptoSupport > 0 && (
                     <g
                       onMouseEnter={() =>
                         setHovered({ candidate, bar: "crypto_support" })
@@ -429,7 +499,7 @@ export default function Spending({
                             width={xCryptoSupportWidth}
                             y={yCandidate}
                             height={y.bandwidth()}
-                            label={gridLabelFormatter(crypto_support)}
+                            label={gridLabelFormatter(combinedCryptoSupport)}
                             shouldUseXLFont={shouldUseXLFont}
                             backgroundClass={styles.barLabelSupport}
                           />
@@ -627,6 +697,15 @@ export default function Spending({
           </g>
         </g>
       </svg>
+      {data.some((d) => d.industry_super_pac > 0) && (
+        <div className="secondary small">
+          Outside spending bars show money already spent by super PACs. Hatching
+          shows crypto industry contributions to super PACs regardless of
+          whether the super PAC has deployed the funds. Because super PACs can
+          hold unspent cash, the hatched amount may exceed outside spending to
+          date.
+        </div>
+      )}
     </div>
   );
 }
