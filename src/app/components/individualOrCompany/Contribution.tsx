@@ -192,7 +192,6 @@ export default function Contribution({
           <span className={styles.contributionCommittee}>
             <MaybeLink href={recipient?.link}>{formattedName}</MaybeLink>
             {"claimed" in contribution && contribution.claimed && <Claimed />}
-            {` ${recipient?.committee_id}`}
           </span>
           <ContributionAmount contribution={contribution} />
         </div>

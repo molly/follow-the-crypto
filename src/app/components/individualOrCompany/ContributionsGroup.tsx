@@ -56,7 +56,6 @@ export default function ContributionsGroup({
               <Claimed />
             </>
           )}
-          {` ${recipient?.committee_id}`}
         </span>
         <span>{formatCurrency(contributionsGroup.total)}</span>
       </div>
