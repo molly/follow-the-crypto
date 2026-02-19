@@ -215,6 +215,24 @@ export default function Sidebar() {
                 variants={itemVariants}
                 className={styles.sidebarHeader}
               >
+                Trump influence
+              </motion.li>
+              <motion.li
+                variants={itemVariants}
+                className={styles.sidebarListItem}
+              >
+                <Link
+                  className={styles.sidebarLink}
+                  onClick={() => setCollapsed(true)}
+                  href="/influence/trump"
+                >
+                  Contributions to Trump
+                </Link>
+              </motion.li>
+              <motion.li
+                variants={itemVariants}
+                className={styles.sidebarHeader}
+              >
                 About this site
               </motion.li>
               <motion.li

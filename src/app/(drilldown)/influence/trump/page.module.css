@@ -1,0 +1,28 @@
+.heroSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.25rem;
+  padding: 1rem 0;
+  width: 100%;
+}
+
+.totalAmount {
+  font-size: clamp(2rem, 8vw, 4rem);
+  font-weight: bold;
+  color: transparent;
+  text-shadow: 0.1rem 0.1rem var(--accent);
+  text-stroke: 1px var(--text-stroke);
+  -webkit-text-stroke: 1px var(--text-stroke);
+}
+
+.card {
+  composes: cardWithTable from "@/app/shared.module.css";
+  width: 100%;
+}
+
+.emptyMessage {
+  padding: 1rem;
+  color: var(--secondary-text);
+}

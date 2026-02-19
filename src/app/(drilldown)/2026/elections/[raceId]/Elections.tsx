@@ -92,11 +92,24 @@ export default async function Elections({ raceId }: { raceId: string }) {
       : (expendituresData as PopulatedStateExpenditures);
   const elections = electionsData as ElectionsByState;
 
-  const upcomingRaces = elections[shortRaceId]?.races.filter((r) =>
-    isUpcomingRace(r),
+  const sortedRaces = [...(elections[shortRaceId]?.races ?? [])].sort(
+    (a, b) => {
+      if (!a.date && !b.date) {
+        return 0;
+      }
+      if (!a.date) {
+        return 1;
+      }
+      if (!b.date) {
+        return -1;
+      }
+      return b.date.localeCompare(a.date);
+    },
   );
 
-  return elections[shortRaceId]?.races.map((race) => (
+  const upcomingRaces = sortedRaces.filter((r) => isUpcomingRace(r));
+
+  return sortedRaces.map((race) => (
     <RaceSummary
       key={`${shortRaceId}-${race.type}${race.party ? `-${race.party}` : ""}`}
       race={race}
