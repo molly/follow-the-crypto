@@ -3,7 +3,7 @@
 import { STATES_BY_ABBR } from "@/app/data/states";
 import { db } from "@/app/lib/db";
 import { ElectionsByState, Race } from "@/app/types/Elections";
-import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import styles from "../../../admin.module.css";
 
@@ -29,6 +29,10 @@ export default function RaceReviewPage() {
   const [saveState, setSaveState] = useState<
     "idle" | "pending" | "success" | "error"
   >("idle");
+  const [draftRace, setDraftRace] = useState<Race | null>(null);
+  const [draftCandidatesEnabled, setDraftCandidatesEnabled] = useState<
+    boolean[]
+  >([]);
 
   useEffect(() => {
     loadConflicts();
@@ -61,11 +65,17 @@ export default function RaceReviewPage() {
           const manualRacesUpdated = raceGroup.manualRacesUpdated || 0;
           const scrapedRacesUpdated = raceGroup.scrapedRacesUpdated || 0;
 
-          // Check if there are new changes since last review
+          // Check if there are new changes since last review.
+          // If lastReviewed is 0 the race has never been reviewed, so show it
+          // regardless of whether the update timestamp is set (covers scraped
+          // races that were written before the timestamp field was introduced).
+          const neverReviewed = lastReviewed === 0;
           const hasUnreviewedManual =
-            manualRaces.length > 0 && manualRacesUpdated > lastReviewed;
+            manualRaces.length > 0 &&
+            (neverReviewed || manualRacesUpdated > lastReviewed);
           const hasUnreviewedScraped =
-            scrapedRaces.length > 0 && scrapedRacesUpdated > lastReviewed;
+            scrapedRaces.length > 0 &&
+            (neverReviewed || scrapedRacesUpdated > lastReviewed);
 
           if (hasUnreviewedManual || hasUnreviewedScraped) {
             foundConflicts.push({
@@ -79,11 +89,66 @@ export default function RaceReviewPage() {
         });
       });
 
+      foundConflicts.sort((a, b) => {
+        if (a.state !== b.state) {
+          return a.state.localeCompare(b.state);
+        }
+        return a.raceId.localeCompare(b.raceId);
+      });
       setConflicts(foundConflicts);
     } catch (error) {
       console.error("Error loading conflicts:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const copyScrapedToManual = (race: Race) => {
+    setDraftRace({ ...race, candidates: [...race.candidates] });
+    setDraftCandidatesEnabled(race.candidates.map(() => true));
+  };
+
+  const toggleDraftCandidate = (idx: number) => {
+    setDraftCandidatesEnabled((prev) =>
+      prev.map((enabled, i) => (i === idx ? !enabled : enabled)),
+    );
+  };
+
+  const saveDraftToManual = async () => {
+    if (!draftRace || !selectedConflict) {
+      return;
+    }
+
+    const filteredCandidates = draftRace.candidates.filter(
+      (_, i) => draftCandidatesEnabled[i],
+    );
+    const raceToSave = { ...draftRace, candidates: filteredCandidates };
+
+    setSaveState("pending");
+    try {
+      const docRef = doc(db, "raceDetails", selectedConflict.state);
+      const docSnap = await getDoc(docRef);
+      const existingData = docSnap.exists() ? docSnap.data() : {};
+      const raceGroup = existingData[selectedConflict.raceId] || {};
+      const existingManualRaces = raceGroup.manualRaces || [];
+
+      await updateDoc(docRef, {
+        [`${selectedConflict.raceId}.manualRaces`]: [
+          ...existingManualRaces,
+          raceToSave,
+        ],
+        [`${selectedConflict.raceId}.manualRacesUpdated`]: Date.now(),
+      });
+
+      setSaveState("success");
+      setDraftRace(null);
+      setDraftCandidatesEnabled([]);
+      setTimeout(() => setSaveState("idle"), 2000);
+      await loadConflicts();
+    } catch (error) {
+      console.error("Error saving draft to manual:", error);
+      setSaveState("error");
+      setTimeout(() => setSaveState("idle"), 3000);
     }
   };
 
@@ -287,6 +352,16 @@ export default function RaceReviewPage() {
                       </li>
                     ))}
                   </ul>
+                  <button
+                    onClick={() => copyScrapedToManual(race)}
+                    style={{
+                      marginTop: "8px",
+                      fontSize: "0.85em",
+                      padding: "3px 8px",
+                    }}
+                  >
+                    Copy to Manual
+                  </button>
                 </div>
               ))
             )}
@@ -336,6 +411,79 @@ export default function RaceReviewPage() {
           <p style={{ color: "red", textAlign: "center", marginTop: "10px" }}>
             ✗ Error saving changes
           </p>
+        )}
+
+        {/* Draft Manual Race Editor */}
+        {draftRace && (
+          <div
+            style={{
+              marginTop: "30px",
+              border: "2px solid #0066cc",
+              borderRadius: "5px",
+              padding: "15px",
+            }}
+          >
+            <h2 style={{ marginTop: 0 }}>
+              Draft Manual Race: {formatRace(draftRace)}
+            </h2>
+            <p style={{ color: "#666", fontSize: "0.9em" }}>
+              Uncheck candidates to exclude them before saving.
+            </p>
+            <ul style={{ listStyle: "none", padding: 0 }}>
+              {draftRace.candidates.map((candidate, idx) => (
+                <li
+                  key={idx}
+                  style={{
+                    padding: "6px 0",
+                    borderBottom: "1px solid #eee",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    opacity: draftCandidatesEnabled[idx] ? 1 : 0.4,
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    checked={draftCandidatesEnabled[idx] ?? true}
+                    onChange={() => toggleDraftCandidate(idx)}
+                  />
+                  <span
+                    style={{
+                      textDecoration: draftCandidatesEnabled[idx]
+                        ? "none"
+                        : "line-through",
+                      fontSize: "0.9em",
+                    }}
+                  >
+                    {formatCandidate(candidate)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+            <div style={{ display: "flex", gap: "10px", marginTop: "12px" }}>
+              <button
+                onClick={saveDraftToManual}
+                disabled={
+                  saveState === "pending" ||
+                  draftCandidatesEnabled.every((e) => !e)
+                }
+                style={{ padding: "8px 16px", fontWeight: "bold" }}
+              >
+                {saveState === "pending"
+                  ? "Saving..."
+                  : "Save to Manual Races"}
+              </button>
+              <button
+                onClick={() => {
+                  setDraftRace(null);
+                  setDraftCandidatesEnabled([]);
+                }}
+                style={{ padding: "8px 16px" }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
         )}
       </div>
     );

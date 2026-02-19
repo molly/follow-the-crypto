@@ -36,6 +36,7 @@ export interface CommitteeBeneficiary {
   total: number;
   type: "committee";
   committee_details?: BeneficiaryCommittee;
+  by_committee?: Record<string, number>;
 }
 
 export interface CandidateBeneficiary {
@@ -46,6 +47,7 @@ export interface CandidateBeneficiary {
   candidate_details: RecipientCandidateDetails & {
     isRunningThisCycle: boolean;
   };
+  by_committee?: Record<string, number>;
 }
 
 export type Beneficiary = CommitteeBeneficiary | CandidateBeneficiary;

@@ -76,11 +76,22 @@ function CandidateRow({
   let shortRaceId = getShortRaceId(candidateDetails);
   let electionCandidate = getElectionCandidate(shortRaceId, id, stateElections);
 
-  // Try special election if candidate not found in regular election
+  // Try special election if candidate not found in regular election.
+  // Only switch to the special-election identifiers if the candidate is
+  // actually found there; otherwise keep the regular race so the name and
+  // link remain correct even when candidate details are missing.
   if (!electionCandidate) {
-    raceId = `${raceId}-special`;
-    shortRaceId = `${shortRaceId}-special`;
-    electionCandidate = getElectionCandidate(shortRaceId, id, stateElections);
+    const specialShortRaceId = `${shortRaceId}-special`;
+    const specialElectionCandidate = getElectionCandidate(
+      specialShortRaceId,
+      id,
+      stateElections,
+    );
+    if (specialElectionCandidate) {
+      raceId = `${raceId}-special`;
+      shortRaceId = specialShortRaceId;
+      electionCandidate = specialElectionCandidate;
+    }
   }
 
   const raceHref = `/2026/elections/${raceId === "P" ? "president" : raceId}`;

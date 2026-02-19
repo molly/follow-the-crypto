@@ -442,6 +442,7 @@ export default function RaceDetailsEditor() {
                 <option value={Party.Libertarian}>Libertarian (L)</option>
                 <option value={Party.Green}>Green (G)</option>
                 <option value={Party.Independent}>Independent (I)</option>
+                <option value={Party.Nonpartisan}>Non-Partisan (N)</option>
               </select>
             </div>
 
@@ -496,6 +497,7 @@ export default function RaceDetailsEditor() {
                     <option value={Party.Libertarian}>Libertarian (L)</option>
                     <option value={Party.Green}>Green (G)</option>
                     <option value={Party.Independent}>Independent (I)</option>
+                    <option value={Party.Nonpartisan}>Non-Partisan (N)</option>
                   </select>
                 </div>
 
