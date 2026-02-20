@@ -17,6 +17,7 @@ export interface RaceCandidate {
   withdrew?: boolean;
   declined?: boolean;
   writeIn?: boolean;
+  incumbent?: boolean;
 }
 
 export enum RaceType {

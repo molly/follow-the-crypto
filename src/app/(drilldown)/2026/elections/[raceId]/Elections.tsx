@@ -95,15 +95,23 @@ export default async function Elections({ raceId }: { raceId: string }) {
   const sortedRaces = [...(elections[shortRaceId]?.races ?? [])].sort(
     (a, b) => {
       if (!a.date && !b.date) {
-        return 0;
-      }
-      if (!a.date) {
+        // fall through to secondary sort
+      } else if (!a.date) {
         return 1;
-      }
-      if (!b.date) {
+      } else if (!b.date) {
         return -1;
+      } else {
+        const dateCmp = b.date.localeCompare(a.date);
+        if (dateCmp !== 0) {
+          return dateCmp;
+        }
       }
-      return b.date.localeCompare(a.date);
+      const hasIncumbentA = a.candidates.some((c) => c.incumbent === true) ? 1 : 0;
+      const hasIncumbentB = b.candidates.some((c) => c.incumbent === true) ? 1 : 0;
+      if (hasIncumbentB !== hasIncumbentA) {
+        return hasIncumbentB - hasIncumbentA;
+      }
+      return (a.party ?? "").localeCompare(b.party ?? "");
     },
   );
 

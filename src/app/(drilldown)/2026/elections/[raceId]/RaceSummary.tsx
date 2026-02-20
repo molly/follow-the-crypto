@@ -33,6 +33,11 @@ export default function RaceSummary({
     ? expenditures.expenditures.filter((e) => e.subrace === raceType)
     : [];
   const candidates = [...race.candidates].sort((a, b) => {
+    const wonA = a.won === true ? 1 : 0;
+    const wonB = b.won === true ? 1 : 0;
+    if (wonB !== wonA) {
+      return wonB - wonA;
+    }
     const summaryA = electionData.candidates[a.name] || {};
     const summaryB = electionData.candidates[b.name] || {};
     const raisedA = summaryA.raised_total ?? 0;
