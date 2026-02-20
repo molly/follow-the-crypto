@@ -57,15 +57,10 @@ export default function Sidebar() {
   const itemVariants: Variants = {
     open: {
       opacity: 1,
-      transition: { duration: 0.2, ease: [0.4, 0.0, 0.2, 1] }
+      transition: { duration: 0.2, ease: [0.4, 0.0, 0.2, 1] },
     },
     closed: { opacity: 0 },
   };
-
-  // const buttonVariants = {
-  //   open: { left: "unset", right: "1rem" },
-  //   closed: { left: "1rem", right: "unset" },
-  // };
 
   return (
     <>
@@ -77,246 +72,228 @@ export default function Sidebar() {
         className={styles.sidebarContainer}
       >
         <nav className={styles.sidebarContent}>
-            <div className={styles.logoAndCollapse}>
+          <div className={styles.logoAndCollapse}>
+            <Link
+              href="/"
+              className={styles.logo}
+              onClick={() => setCollapsed(true)}
+            >
+              <span>Follow the Crypto</span>
+            </Link>
+            <button
+              className={styles.onCardCollapseButton}
+              title="Collapse sidebar"
+              onClick={() => setCollapsed(true)}
+              aria-expanded={!isCollapsed}
+              aria-controls="#sidebar"
+            >
+              <LeftArrowIcon />
+            </button>
+          </div>
+          <ul className={styles.sidebarList}>
+            <motion.li variants={itemVariants} className={styles.sidebarHeader}>
+              Spending
+            </motion.li>
+            <motion.li
+              variants={itemVariants}
+              className={styles.sidebarListItem}
+            >
               <Link
-                href="/"
-                className={styles.logo}
+                className={styles.sidebarLink}
                 onClick={() => setCollapsed(true)}
+                href="/2026/committees"
+                ref={sidebarRef}
               >
-                <span>Follow the Crypto</span>
+                By cryptocurrency-focused committees
               </Link>
-              <button
-                className={styles.onCardCollapseButton}
-                title="Collapse sidebar"
+            </motion.li>
+            <motion.li
+              variants={itemVariants}
+              className={styles.sidebarListItem}
+            >
+              <Link
+                className={styles.sidebarLink}
                 onClick={() => setCollapsed(true)}
-                aria-expanded={!isCollapsed}
-                aria-controls="#sidebar"
+                href="/2026/companies"
               >
-                <LeftArrowIcon />
-              </button>
-            </div>
-            <ul className={styles.sidebarList}>
-              <motion.li
-                variants={itemVariants}
-                className={styles.sidebarHeader}
+                By companies
+              </Link>
+            </motion.li>
+            <motion.li
+              variants={itemVariants}
+              className={styles.sidebarListItem}
+            >
+              <Link
+                className={styles.sidebarLink}
+                onClick={() => setCollapsed(true)}
+                href="/2026/individuals"
               >
-                Spending
-              </motion.li>
-              <motion.li
-                variants={itemVariants}
-                className={styles.sidebarListItem}
+                By individuals
+              </Link>
+            </motion.li>
+            <motion.li
+              variants={itemVariants}
+              className={styles.sidebarListItem}
+            >
+              <Link
+                className={styles.sidebarLink}
+                onClick={() => setCollapsed(true)}
+                href="/2026/expenditures"
               >
-                <Link
-                  className={styles.sidebarLink}
-                  onClick={() => setCollapsed(true)}
-                  href="/2026/committees"
-                  ref={sidebarRef}
-                >
-                  By cryptocurrency-focused committees
-                </Link>
-              </motion.li>
-              <motion.li
-                variants={itemVariants}
-                className={styles.sidebarListItem}
+                Most recent expenditures
+              </Link>
+            </motion.li>
+            <motion.li variants={itemVariants} className={styles.sidebarHeader}>
+              Elections
+            </motion.li>
+            <motion.li
+              variants={itemVariants}
+              className={styles.sidebarListItem}
+            >
+              <Link
+                className={styles.sidebarLink}
+                onClick={() => setCollapsed(true)}
+                href="/2026/states"
               >
-                <Link
-                  className={styles.sidebarLink}
-                  onClick={() => setCollapsed(true)}
-                  href="/2026/companies"
-                >
-                  By companies
-                </Link>
-              </motion.li>
-              <motion.li
-                variants={itemVariants}
-                className={styles.sidebarListItem}
+                By state
+              </Link>
+            </motion.li>
+            <motion.li
+              variants={itemVariants}
+              className={styles.sidebarListItem}
+            >
+              <Link
+                className={styles.sidebarLink}
+                onClick={() => setCollapsed(true)}
+                href="/2026/elections"
               >
-                <Link
-                  className={styles.sidebarLink}
-                  onClick={() => setCollapsed(true)}
-                  href="/2026/individuals"
-                >
-                  By individuals
-                </Link>
-              </motion.li>
-              <motion.li
-                variants={itemVariants}
-                className={styles.sidebarListItem}
+                All elections
+              </Link>
+            </motion.li>
+            <motion.li variants={itemVariants} className={styles.sidebarHeader}>
+              Fundraising compared to other committees
+            </motion.li>
+            <motion.li
+              variants={itemVariants}
+              className={styles.sidebarListItem}
+            >
+              <Link
+                className={styles.sidebarLink}
+                onClick={() => setCollapsed(true)}
+                href="/2026/committees/ranking/super"
               >
-                <Link
-                  className={styles.sidebarLink}
-                  onClick={() => setCollapsed(true)}
-                  href="/2026/expenditures"
-                >
-                  Most recent expenditures
-                </Link>
-              </motion.li>
-              <motion.li
-                variants={itemVariants}
-                className={styles.sidebarHeader}
+                Super PACs
+              </Link>
+            </motion.li>
+            <motion.li
+              variants={itemVariants}
+              className={styles.sidebarListItem}
+            >
+              <Link
+                className={styles.sidebarLink}
+                onClick={() => setCollapsed(true)}
+                href="/2026/committees/ranking/all"
               >
-                Elections
-              </motion.li>
-              <motion.li
-                variants={itemVariants}
-                className={styles.sidebarListItem}
+                All committees
+              </Link>
+            </motion.li>
+            {/* <motion.li variants={itemVariants} className={styles.sidebarHeader}>
+              Trump influence
+            </motion.li>
+            <motion.li
+              variants={itemVariants}
+              className={styles.sidebarListItem}
+            >
+              <Link
+                className={styles.sidebarLink}
+                onClick={() => setCollapsed(true)}
+                href="/influence/trump"
               >
-                <Link
-                  className={styles.sidebarLink}
-                  onClick={() => setCollapsed(true)}
-                  href="/2026/states"
-                >
-                  By state
-                </Link>
-              </motion.li>
-              <motion.li
-                variants={itemVariants}
-                className={styles.sidebarListItem}
+                Contributions to Trump
+              </Link>
+            </motion.li> */}
+            <motion.li variants={itemVariants} className={styles.sidebarHeader}>
+              About this site
+            </motion.li>
+            <motion.li
+              variants={itemVariants}
+              className={styles.sidebarListItem}
+            >
+              <Link
+                className={styles.sidebarLink}
+                onClick={() => setCollapsed(true)}
+                href="/about"
               >
-                <Link
-                  className={styles.sidebarLink}
-                  onClick={() => setCollapsed(true)}
-                  href="/2026/elections"
-                >
-                  All elections
-                </Link>
-              </motion.li>
-              <motion.li
-                variants={itemVariants}
-                className={styles.sidebarHeader}
+                About
+              </Link>
+            </motion.li>
+            <motion.li
+              variants={itemVariants}
+              className={styles.sidebarListItem}
+            >
+              <Link
+                className={styles.sidebarLink}
+                onClick={() => setCollapsed(true)}
+                href="/about/faq"
               >
-                Fundraising compared to other committees
-              </motion.li>
-              <motion.li
-                variants={itemVariants}
-                className={styles.sidebarListItem}
+                FAQ
+              </Link>
+            </motion.li>
+            <motion.li
+              variants={itemVariants}
+              className={styles.sidebarListItem}
+            >
+              <Link
+                className={styles.sidebarLink}
+                onClick={() => setCollapsed(true)}
+                href="/about/contact"
               >
-                <Link
-                  className={styles.sidebarLink}
-                  onClick={() => setCollapsed(true)}
-                  href="/2026/committees/ranking/super"
-                >
-                  Super PACs
-                </Link>
-              </motion.li>
-              <motion.li
-                variants={itemVariants}
-                className={styles.sidebarListItem}
+                Contact
+              </Link>
+            </motion.li>
+            <motion.li variants={itemVariants} className={styles.sidebarHeader}>
+              Follow
+            </motion.li>
+            <motion.li
+              variants={itemVariants}
+              className={styles.sidebarListItem}
+            >
+              <a
+                className={styles.sidebarLink}
+                onClick={() => setCollapsed(true)}
+                href="https://twitter.com/follow__crypto"
+                rel="me"
               >
-                <Link
-                  className={styles.sidebarLink}
-                  onClick={() => setCollapsed(true)}
-                  href="/2026/committees/ranking/all"
-                >
-                  All committees
-                </Link>
-              </motion.li>
-              <motion.li
-                variants={itemVariants}
-                className={styles.sidebarHeader}
+                Twitter
+              </a>
+            </motion.li>
+            <motion.li
+              variants={itemVariants}
+              className={styles.sidebarListItem}
+            >
+              <a
+                className={styles.sidebarLink}
+                onClick={() => setCollapsed(true)}
+                href="https://hachyderm.io/@followthecrypto"
+                rel="me"
               >
-                Trump influence
-              </motion.li>
-              <motion.li
-                variants={itemVariants}
-                className={styles.sidebarListItem}
+                Mastodon
+              </a>
+            </motion.li>
+            <motion.li
+              variants={itemVariants}
+              className={styles.sidebarListItem}
+            >
+              <a
+                className={styles.sidebarLink}
+                onClick={() => setCollapsed(true)}
+                href="https://bsky.app/profile/followthecrypto.org"
+                rel="me"
               >
-                <Link
-                  className={styles.sidebarLink}
-                  onClick={() => setCollapsed(true)}
-                  href="/influence/trump"
-                >
-                  Contributions to Trump
-                </Link>
-              </motion.li>
-              <motion.li
-                variants={itemVariants}
-                className={styles.sidebarHeader}
-              >
-                About this site
-              </motion.li>
-              <motion.li
-                variants={itemVariants}
-                className={styles.sidebarListItem}
-              >
-                <Link
-                  className={styles.sidebarLink}
-                  onClick={() => setCollapsed(true)}
-                  href="/about"
-                >
-                  About
-                </Link>
-              </motion.li>
-              <motion.li
-                variants={itemVariants}
-                className={styles.sidebarListItem}
-              >
-                <Link
-                  className={styles.sidebarLink}
-                  onClick={() => setCollapsed(true)}
-                  href="/about/faq"
-                >
-                  FAQ
-                </Link>
-              </motion.li>
-              <motion.li
-                variants={itemVariants}
-                className={styles.sidebarListItem}
-              >
-                <Link
-                  className={styles.sidebarLink}
-                  onClick={() => setCollapsed(true)}
-                  href="/about/contact"
-                >
-                  Contact
-                </Link>
-              </motion.li>
-              <motion.li
-                variants={itemVariants}
-                className={styles.sidebarHeader}
-              >
-                Follow
-              </motion.li>
-              <motion.li
-                variants={itemVariants}
-                className={styles.sidebarListItem}
-              >
-                <a
-                  className={styles.sidebarLink}
-                  onClick={() => setCollapsed(true)}
-                  href="https://twitter.com/follow__crypto"
-                  rel="me"
-                >
-                  Twitter
-                </a>
-              </motion.li>
-              <motion.li
-                variants={itemVariants}
-                className={styles.sidebarListItem}
-              >
-                <a
-                  className={styles.sidebarLink}
-                  onClick={() => setCollapsed(true)}
-                  href="https://hachyderm.io/@followthecrypto"
-                  rel="me"
-                >
-                  Mastodon
-                </a>
-              </motion.li>
-              <motion.li
-                variants={itemVariants}
-                className={styles.sidebarListItem}
-              >
-                <a
-                  className={styles.sidebarLink}
-                  onClick={() => setCollapsed(true)}
-                  href="https://bsky.app/profile/followthecrypto.org"
-                  rel="me"
-                >
-                  Bluesky
-                </a>
-              </motion.li>
-            </ul>
+                Bluesky
+              </a>
+            </motion.li>
+          </ul>
         </nav>
       </motion.aside>
       {isCollapsed && (
