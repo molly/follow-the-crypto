@@ -34,11 +34,13 @@ export default function CandidateExpendituresTable({
   electionData,
   relatedExpenditures,
   isRaceUpcoming,
+  presumptiveCandidateNames,
 }: {
   candidates: RaceCandidate[];
   electionData: ElectionGroup;
   relatedExpenditures: Expenditure[];
   isRaceUpcoming: boolean;
+  presumptiveCandidateNames: Set<string>;
 }) {
   const trimmedCandidates = candidates.filter(
     (c) => c.name in electionData.candidates,
@@ -60,6 +62,7 @@ export default function CandidateExpendituresTable({
             electionData.candidates[candidate.name],
             relatedExpenditures,
           );
+          const isPresumptive = presumptiveCandidateNames.has(candidate.name);
           return (
             <CandidateResult
               key={candidate.name}
@@ -69,6 +72,7 @@ export default function CandidateExpendituresTable({
               opposeTotal={opposeTotal}
               rowClass={ind < candidates.length - 1 ? styles.candidateRow : ""}
               isRaceUpcoming={isRaceUpcoming}
+              isPresumptive={isPresumptive}
             />
           );
         })}

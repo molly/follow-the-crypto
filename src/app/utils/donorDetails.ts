@@ -43,7 +43,7 @@ function getIndividualDonorName(donor: Contribution): IndividualDonorType {
     donor.contributor_middle_name,
     donor.contributor_last_name,
   ]
-    .filter((x) => !!x)
+    .filter((x) => !!x && x.toUpperCase() !== "N/A")
     .map((x) => titlecase(x as string))
     .join(" ");
   if (donor.contributor_suffix) {
@@ -76,7 +76,7 @@ function getDonorCompanyDetails(
   let company;
   if (donor.contributor_employer && donor.contributor_employer !== "N/A") {
     company = donor.contributor_employer;
-  } else {
+  } else if (donor.contributor_name && donor.contributor_name.toUpperCase() !== "N/A") {
     company = donor.contributor_name;
   }
   if (company && !INDIVIDUAL_EMPLOYERS.includes(company)) {
@@ -103,7 +103,13 @@ export function getDonorDetails(
       isIndividual: false,
     };
   }
-  if (donor.contributor_first_name || donor.contributor_last_name) {
+  const hasRealFirstName =
+    !!donor.contributor_first_name &&
+    donor.contributor_first_name.toUpperCase() !== "N/A";
+  const hasRealLastName =
+    !!donor.contributor_last_name &&
+    donor.contributor_last_name.toUpperCase() !== "N/A";
+  if (hasRealFirstName || hasRealLastName) {
     return {
       ...getIndividualDonorName(donor),
       ...getDonorCompanyDetails(donor, COMPANY_ALIASES, INDIVIDUAL_EMPLOYERS),

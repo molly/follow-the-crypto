@@ -139,6 +139,7 @@ export default function Candidate({
   candidateImageClassName,
   defeated,
   writeIn,
+  presumptive,
   chart,
   imageOnly,
   noMargins,
@@ -150,6 +151,7 @@ export default function Candidate({
   candidateImageClassName?: string;
   defeated?: boolean;
   writeIn?: boolean;
+  presumptive?: boolean;
   chart?: boolean;
   imageOnly?: boolean;
   noMargins?: boolean;
@@ -188,13 +190,24 @@ export default function Candidate({
         {!chart && (
           <span>
             <span className={candidateNameClassName}>{name}</span>
-            {candidateSummary && candidateSummary.party && (
-              <span className="secondary">
-                {" "}
-                ({candidateSummary.party}
-                {writeIn ? ", write-in" : ""})
-              </span>
-            )}
+            {(() => {
+              const parts: string[] = [];
+              if (candidateSummary?.party) {
+                parts.push(candidateSummary.party);
+              }
+              if (writeIn) {
+                parts.push("write-in");
+              }
+              if (presumptive) {
+                parts.push("presumptive");
+              }
+              if (parts.length === 0) {
+                return null;
+              }
+              return (
+                <span className="secondary"> ({parts.join(", ")})</span>
+              );
+            })()}
           </span>
         )}
       </div>

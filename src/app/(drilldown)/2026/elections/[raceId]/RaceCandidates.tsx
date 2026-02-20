@@ -56,6 +56,7 @@ export default function RaceCandidates({
   electionData,
   hasSpendingInOtherRaces,
   isRaceUpcoming,
+  presumptiveCandidateNames,
   intermediateRaces,
 }: {
   candidates: RaceCandidate[];
@@ -63,6 +64,7 @@ export default function RaceCandidates({
   electionData: ElectionGroup;
   hasSpendingInOtherRaces: CandidateSummary[];
   isRaceUpcoming: boolean;
+  presumptiveCandidateNames: Set<string>;
   intermediateRaces?: Race[];
 }) {
   return (
@@ -80,10 +82,11 @@ export default function RaceCandidates({
             ("won" in candidate && candidate.won === false) ||
             ("withdrew" in candidate && candidate.withdrew) ||
             ("declined" in candidate && candidate.declined);
+          const isPresumptive = presumptiveCandidateNames.has(candidate.name);
           let candidateNameClassName;
           if (defeated) {
             candidateNameClassName = styles.defeatedCandidateName;
-          } else if (!isRaceUpcoming) {
+          } else if (!isRaceUpcoming || isPresumptive) {
             candidateNameClassName = styles.wonCandidateName;
           }
           const isLastRow =
@@ -99,6 +102,7 @@ export default function RaceCandidates({
                   candidateSummary={summary}
                   candidateNameClassName={candidateNameClassName}
                   writeIn={candidate.writeIn}
+                  presumptive={isPresumptive}
                   noMargins={true}
                 />
               </td>

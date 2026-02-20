@@ -38,6 +38,17 @@ export default function ContributionsGroup({
     }
   }
 
+  // Don't group contributions under a meaningless "N/A" header — render individually instead
+  if (!donorGroup.company || donorGroup.company.toUpperCase() === "N/A") {
+    return (
+      <>
+        {donorGroup.contributions.map((donor, ind) => (
+          <Contribution contribution={donor} key={`donor-${ind}`} />
+        ))}
+      </>
+    );
+  }
+
   if (donorGroup.contributions.length === 1) {
     const donor = donorGroup.contributions[0];
     return <Contribution contribution={donor} groupName={name} />;

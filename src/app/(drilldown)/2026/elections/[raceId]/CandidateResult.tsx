@@ -10,6 +10,7 @@ export default function CandidateResult({
   opposeTotal,
   rowClass,
   isRaceUpcoming,
+  isPresumptive,
 }: {
   candidate: RaceCandidate;
   candidateSummary: CandidateSummary;
@@ -17,6 +18,7 @@ export default function CandidateResult({
   opposeTotal: number;
   rowClass?: string;
   isRaceUpcoming: boolean;
+  isPresumptive?: boolean;
 }) {
   let candidateNameClassName;
   if (
@@ -25,7 +27,7 @@ export default function CandidateResult({
     ("declined" in candidate && candidate.declined)
   ) {
     candidateNameClassName = styles.defeatedCandidateName;
-  } else if (!isRaceUpcoming) {
+  } else if (!isRaceUpcoming || isPresumptive) {
     candidateNameClassName = styles.wonCandidateName;
   }
   return (
@@ -37,6 +39,7 @@ export default function CandidateResult({
           candidateClassName={styles.candidate}
           candidateNameClassName={candidateNameClassName}
           writeIn={candidate.writeIn}
+          presumptive={isPresumptive}
           noMargins={true}
         />
       </td>
