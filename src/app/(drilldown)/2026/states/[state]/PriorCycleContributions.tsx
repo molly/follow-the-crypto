@@ -75,7 +75,7 @@ export default async function PriorCycleContributions({
   const companies = groupByCompany(details);
 
   return (
-    <>
+    <div className={styles.priorCycleCard}>
       <h2>Contributions not tied to 2026 races</h2>
       <p>
         {formatCurrency(total, true)} of the company contributions above went to
@@ -109,6 +109,6 @@ export default async function PriorCycleContributions({
           })}
         </div>
       ))}
-    </>
+    </div>
   );
 }

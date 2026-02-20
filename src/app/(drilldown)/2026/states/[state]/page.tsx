@@ -75,11 +75,9 @@ export default async function CommitteePage({
               <ByCommittee stateAbbr={stateAbbr} />
             </Suspense>
           </div>
-          <div className={styles.priorCycleCard}>
-            <Suspense>
-              <PriorCycleContributions stateAbbr={stateAbbr} />
-            </Suspense>
-          </div>
+          <Suspense>
+            <PriorCycleContributions stateAbbr={stateAbbr} />
+          </Suspense>
         </div>
       </div>
     </div>
