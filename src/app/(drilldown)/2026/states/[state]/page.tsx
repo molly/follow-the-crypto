@@ -9,6 +9,7 @@ import { Suspense } from "react";
 import ByCommittee, { CommitteeCardContentsSkeleton } from "./ByCommittee";
 import ByRace, { RaceCardContentsSkeleton } from "./ByRace";
 import CompanySpending from "./CompanySpending";
+import PriorCycleContributions from "./PriorCycleContributions";
 import TotalSpending from "./TotalSpending";
 import styles from "./page.module.css";
 
@@ -67,11 +68,18 @@ export default async function CommitteePage({
             <ByRace stateAbbr={stateAbbr} />
           </Suspense>
         </div>
-        <div className={styles.committeeCard}>
-          <h2>By crypto-focused PACs</h2>
-          <Suspense fallback={<CommitteeCardContentsSkeleton />}>
-            <ByCommittee stateAbbr={stateAbbr} />
-          </Suspense>
+        <div className={styles.sideColumn}>
+          <div className={styles.committeeCard}>
+            <h2>By crypto-focused PACs</h2>
+            <Suspense fallback={<CommitteeCardContentsSkeleton />}>
+              <ByCommittee stateAbbr={stateAbbr} />
+            </Suspense>
+          </div>
+          <div className={styles.priorCycleCard}>
+            <Suspense>
+              <PriorCycleContributions stateAbbr={stateAbbr} />
+            </Suspense>
+          </div>
         </div>
       </div>
     </div>

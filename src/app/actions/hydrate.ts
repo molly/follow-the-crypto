@@ -14,6 +14,8 @@ export function hydrateStateExpenditures(
     by_race: {},
     by_companies: stateExpenditures.by_companies,
     companies_total: stateExpenditures.companies_total,
+    prior_cycle_details: stateExpenditures.prior_cycle_details,
+    prior_cycle_companies_total: stateExpenditures.prior_cycle_companies_total,
     total: stateExpenditures.total,
   };
 

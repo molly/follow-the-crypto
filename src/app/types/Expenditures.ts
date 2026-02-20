@@ -67,11 +67,28 @@ export interface PopulatedRaceExpenditureGroup
   details: RaceDetails;
 }
 
+export interface PriorCycleCandidate {
+  name: string;
+  office: string;
+  election_years: number[];
+}
+
+export interface PriorCycleDetail {
+  company_id: string;
+  company_name: string;
+  committee_id: string;
+  committee_name: string;
+  amount: number;
+  candidates: PriorCycleCandidate[];
+}
+
 export interface StateExpenditures {
   by_committee: Record<string, ExpenditureGroup>;
   by_race: Record<string, RaceExpenditureGroup>;
   by_companies?: Record<string, number>;
   companies_total?: number;
+  prior_cycle_details?: PriorCycleDetail[];
+  prior_cycle_companies_total?: number;
   total: number;
 }
 
@@ -80,6 +97,8 @@ export interface PopulatedStateExpenditures {
   by_race: Record<string, PopulatedRaceExpenditureGroup>;
   by_companies?: Record<string, number>;
   companies_total?: number;
+  prior_cycle_details?: PriorCycleDetail[];
+  prior_cycle_companies_total?: number;
   total: number;
 }
 
