@@ -1,8 +1,9 @@
 "use client";
 
 import { db } from "@/app/lib/db";
+import { RecipientDetails } from "@/app/types/Contributions";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styles from "../../admin.module.css";
 
 type AffiliationType = "party" | "candidate_ids" | "sponsor_candidate_ids";
@@ -83,14 +84,19 @@ export default function ConstantsEditor() {
   const [loadingState, setLoadingState] = useState("loading");
   const [entries, setEntries] = useState<CommitteeEntry[]>([]);
   const [saveState, setSaveState] = useState<SaveState>("idle");
+  const [incompleteCommittees, setIncompleteCommittees] = useState<
+    Array<[string, string]>
+  >([]);
 
   useEffect(() => {
     (async () => {
       try {
-        const [committeesSnap, affiliationsSnap] = await Promise.all([
-          getDoc(doc(db, "constants", "allCommittees")),
-          getDoc(doc(db, "constants", "committeeAffiliations")),
-        ]);
+        const [committeesSnap, affiliationsSnap, recipientsSnap] =
+          await Promise.all([
+            getDoc(doc(db, "constants", "allCommittees")),
+            getDoc(doc(db, "constants", "committeeAffiliations")),
+            getDoc(doc(db, "allRecipients", "recipients")),
+          ]);
 
         const descriptions: Record<string, string> = committeesSnap.exists()
           ? (committeesSnap.data() as Record<string, string>)
@@ -105,19 +111,63 @@ export default function ConstantsEditor() {
           ...Object.keys(affiliations),
         ]);
 
-        setEntries(
-          [...allIds]
-            .sort((a, b) => a.localeCompare(b))
-            .map((id) =>
-              buildEntry(id, descriptions[id] ?? "", affiliations[id] ?? null),
-            ),
+        const recipients: Record<string, RecipientDetails> =
+          recipientsSnap.exists()
+            ? (recipientsSnap.data() as Record<string, RecipientDetails>)
+            : {};
+        const names: Record<string, string> = {};
+        for (const [id, details] of Object.entries(recipients)) {
+          names[id] = details.committee_name ?? id;
+        }
+        const entryList = [...allIds]
+          .sort((a, b) => a.localeCompare(b))
+          .map((id) =>
+            buildEntry(id, descriptions[id] ?? "", affiliations[id] ?? null),
+          );
+        for (const id of Object.keys(recipients)) {
+          if (!allIds.has(id)) {
+            entryList.push(buildEntry(id, "", null));
+          }
+        }
+        entryList.sort((a, b) => a.committeeId.localeCompare(b.committeeId));
+        setEntries(entryList);
+
+        const initialEntryMap = new Map(entryList.map((e) => [e.committeeId, e]));
+        setIncompleteCommittees(
+          Object.entries(names).filter(([id]) => {
+            const recipient = recipients[id];
+            if (recipient?.candidate_ids?.length) {
+              return false;
+            }
+            if (recipient?.sponsor_candidate_ids?.length) {
+              return false;
+            }
+            const entry = initialEntryMap.get(id);
+            if (!entry) {
+              return true;
+            }
+            const hasDescription = !!entry.description.trim();
+            const hasCandidateIds =
+              entry.affiliationType === "candidate_ids" &&
+              !!entry.candidateIds.trim();
+            const hasSponsorCandidateIds =
+              entry.affiliationType === "sponsor_candidate_ids" &&
+              !!entry.sponsorCandidateIds.trim();
+            return !hasDescription && !hasCandidateIds && !hasSponsorCandidateIds;
+          }),
         );
+
         setLoadingState("loaded");
       } catch {
         setLoadingState("error");
       }
     })();
   }, []);
+
+  const entryIndexMap = useMemo(
+    () => new Map(entries.map((e, i) => [e.committeeId, i])),
+    [entries],
+  );
 
   const updateEntry = (
     index: number,
@@ -184,6 +234,146 @@ export default function ConstantsEditor() {
   return (
     <>
       <h1>Committee Constants</h1>
+      {incompleteCommittees.length > 0 && (
+        <section className={styles.editorCard}>
+          <h2>
+            Needs attention ({incompleteCommittees.length})
+          </h2>
+          <p style={{ marginBottom: "0.5rem" }}>
+            These committees have received contributions but are missing a
+            description, candidate IDs, and sponsor candidate IDs:
+          </p>
+          <table className={styles.constantsTable}>
+            <thead>
+              <tr>
+                <th>Committee ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Affiliation</th>
+              </tr>
+            </thead>
+            <tbody>
+              {incompleteCommittees.map(([id, name]) => {
+                const i = entryIndexMap.get(id);
+                if (i === undefined) {
+                  return null;
+                }
+                const entry = entries[i];
+                return (
+                  <tr key={id} style={{ verticalAlign: "top" }}>
+                    <td>
+                      <code>{id}</code>
+                    </td>
+                    <td>{name}</td>
+                    <td>
+                      <input
+                        type="text"
+                        className={styles.editorInput}
+                        value={entry.description}
+                        onChange={(e) =>
+                          updateEntry(i, "description", e.target.value)
+                        }
+                        placeholder="Description (optional)"
+                        style={{ minWidth: 250 }}
+                      />
+                    </td>
+                    <td>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: "0.25rem",
+                        }}
+                      >
+                        <label style={{ fontSize: "0.85em" }}>
+                          <input
+                            type="checkbox"
+                            checked={entry.hasAffiliation}
+                            onChange={(e) =>
+                              updateEntry(i, "hasAffiliation", e.target.checked)
+                            }
+                          />{" "}
+                          Has affiliation
+                        </label>
+                        {entry.hasAffiliation && (
+                          <div style={{ display: "flex", gap: "0.25rem" }}>
+                            <select
+                              className={styles.editorSelect}
+                              value={entry.affiliationType}
+                              onChange={(e) =>
+                                updateEntry(
+                                  i,
+                                  "affiliationType",
+                                  e.target.value,
+                                )
+                              }
+                            >
+                              <option value="party">Party</option>
+                              <option value="candidate_ids">
+                                Candidate IDs
+                              </option>
+                              <option value="sponsor_candidate_ids">
+                                Sponsor Candidate IDs
+                              </option>
+                            </select>
+                            {entry.affiliationType === "party" && (
+                              <select
+                                className={styles.editorSelect}
+                                value={entry.party}
+                                onChange={(e) =>
+                                  updateEntry(i, "party", e.target.value)
+                                }
+                              >
+                                <option value="DEM">DEM</option>
+                                <option value="REP">REP</option>
+                                <option value="LIB">LIB</option>
+                                <option value="UNK">UNK</option>
+                              </select>
+                            )}
+                            {entry.affiliationType === "candidate_ids" && (
+                              <input
+                                type="text"
+                                className={styles.editorInput}
+                                value={entry.candidateIds}
+                                onChange={(e) =>
+                                  updateEntry(
+                                    i,
+                                    "candidateIds",
+                                    e.target.value,
+                                  )
+                                }
+                                placeholder="Comma-separated candidate IDs"
+                                style={{ minWidth: 250 }}
+                              />
+                            )}
+                            {entry.affiliationType ===
+                              "sponsor_candidate_ids" && (
+                              <input
+                                type="text"
+                                className={styles.editorInput}
+                                value={entry.sponsorCandidateIds}
+                                onChange={(e) =>
+                                  updateEntry(
+                                    i,
+                                    "sponsorCandidateIds",
+                                    e.target.value,
+                                  )
+                                }
+                                placeholder="Comma-separated sponsor candidate IDs"
+                                style={{ minWidth: 250 }}
+                              />
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </section>
+      )}
       <section className={styles.editorCard}>
         <table className={styles.constantsTable}>
           <thead>
