@@ -67,6 +67,7 @@ export const qpqData = {
   },
   cryptocom: {
     name: "Crypto.com",
+    link: "/2026/companies/crypto-com",
     benefits: ["SEC investigation ended with no action"],
     contributions: [
       {
