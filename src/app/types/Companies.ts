@@ -45,7 +45,13 @@ export type Company = CompanyConstant & {
   party_summary: Record<string, number>;
 };
 
+export type CompanyTotalByCompany = {
+  by_party: Record<string, number>;
+  total: number;
+};
+
 export type CompanyTotals = {
   total: number;
   by_party: Record<string, number>;
+  by_company: Record<string, CompanyTotalByCompany>;
 };

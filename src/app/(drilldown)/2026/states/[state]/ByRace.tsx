@@ -238,11 +238,12 @@ export default async function RaceCard({ stateAbbr }: { stateAbbr: string }) {
     }
   }
   const orderedRaces = Array.from(allRaceIds).sort(sortRaces);
-
+  console.log(elections);
   return (
     <>
       {orderedRaces.map(async (raceId) => {
         const shortId = raceId.split("-").slice(1).join("-");
+        console.log(shortId);
         const influenced = Object.values(elections[shortId].candidates).filter(
           (c: CandidateSummary) => c.support_total > 0 || c.oppose_total > 0,
         );

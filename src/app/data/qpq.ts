@@ -11,7 +11,7 @@ export const qpqData = {
       { amount: 1000000, recipient: "to Senate super PACs" },
       { amount: 1000000, recipient: "to Trump inauguration fund" },
       { benefit: "Sponsored Trump birthday military parade" },
-      { benefit: "Contributed to fund Trump's $300 million ballroom project'" },
+      { benefit: "Contributed to fund Trump's $300 million ballroom project" },
     ],
   },
   tron: {

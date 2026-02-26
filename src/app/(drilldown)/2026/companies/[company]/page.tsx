@@ -60,10 +60,28 @@ export default async function CompanyPage({
   const recipients = isError(recipientData)
     ? {}
     : (recipientData as Record<string, RecipientDetails>);
-  const companyTotal = Object.values(company.party_summary).reduce(
-    (acc, total) => acc + total,
+
+  // Filter out omitted contributions and recompute group totals
+  const visibleContributions = (company.contributions ?? [])
+    .map((group) => {
+      const visibleContribs = group.contributions.filter(
+        (c) => c.manualReview?.status !== "omit",
+      );
+      const visibleTotal = visibleContribs.reduce(
+        (sum, c) =>
+          sum +
+          (c.contribution_receipt_amount ?? c.total_receipt_amount ?? 0),
+        0,
+      );
+      return { ...group, contributions: visibleContribs, total: visibleTotal };
+    })
+    .filter((group) => group.contributions.length > 0);
+
+  const companyTotal = visibleContributions.reduce(
+    (sum, group) => sum + group.total,
     0,
   );
+
   return (
     <>
       <section className={styles.companyLogoAndName}>
@@ -110,8 +128,8 @@ export default async function CompanyPage({
             <span>Contributions</span>
             <span>{formatCurrency(companyTotal, true)}</span>
           </h3>
-          {company.contributions ? (
-            company.contributions.map(
+          {visibleContributions.length > 0 ? (
+            visibleContributions.map(
               (
                 contributionGroup: IndividualOrCompanyContributionGroup,
                 ind: number,

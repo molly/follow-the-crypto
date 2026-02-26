@@ -1,17 +1,13 @@
 "use client";
 
-import { uncachedFetchCommittees } from "@/app/actions/fetch";
 import ReviewStatusBadge from "@/app/components/ReviewStatusBadge";
 import { db } from "@/app/lib/db";
-import { CommitteeConstant } from "@/app/types/Committee";
+import { CompanyConstant } from "@/app/types/Companies";
 import {
-  Contribution,
-  Contributions,
+  IndividualOrCompanyContribution,
+  IndividualOrCompanyContributionGroup,
   ManualReview,
-  RollupContribution,
-  SingleContribution,
 } from "@/app/types/Contributions";
-import { isError } from "@/app/utils/errors";
 import {
   collection,
   doc,
@@ -20,33 +16,41 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import styles from "../../../admin.module.css";
+import styles from "../../../../admin/admin.module.css";
 
-// Helper to check if contribution is a rollup
-function isRollup(
-  contribution: Contribution,
-): contribution is RollupContribution {
-  return "total" in contribution && "oldest" in contribution;
+type CompanyData = {
+  contributions?: IndividualOrCompanyContributionGroup[];
+  [key: string]: unknown;
+};
+
+type ContributionWithCommittee = IndividualOrCompanyContribution & {
+  _committeeId: string;
+  _committeeName?: string;
+  _groupIndex: number;
+  _contribIndex: number;
+};
+
+function getUniqueKey(contribution: ContributionWithCommittee): string {
+  return `${getContributionId(contribution)}_${contribution._groupIndex}_${contribution._contribIndex}`;
 }
 
 // Generate contribution ID matching Python backend logic
-function getContributionId(contribution: Contribution): string {
-  if (isRollup(contribution)) {
-    // Rollup: rollup_{name}_{amount}_{date}
+function getContributionId(contribution: IndividualOrCompanyContribution): string {
+  if (contribution.total !== undefined && contribution.oldest !== undefined) {
+    // Rollup
     const name = contribution.contributor_name || "";
     const amount = contribution.total_receipt_amount || 0;
     const date = contribution.oldest || "";
     return `rollup_${name}_${amount}_${date}`;
   } else {
-    // Single contribution: txn_{transaction_id}
-    const single = contribution as SingleContribution;
-    return `txn_${single.transaction_id}`;
+    return `txn_${contribution.transaction_id}`;
   }
 }
 
-// Format currency
-function formatCurrency(amount?: number): string {
-  if (amount === undefined) return "$0";
+function formatCurrency(amount?: number | null): string {
+  if (amount === undefined || amount === null) {
+    return "$0";
+  }
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
@@ -55,11 +59,11 @@ function formatCurrency(amount?: number): string {
   }).format(amount);
 }
 
-// Format date - parse as local date to avoid timezone issues
 function formatDate(dateStr?: string | null): string {
-  if (!dateStr) return "";
+  if (!dateStr) {
+    return "";
+  }
   try {
-    // Parse YYYY-MM-DD as local date (not UTC) to avoid timezone conversion
     const match = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})/);
     if (match) {
       const [, year, month, day] = match;
@@ -73,8 +77,6 @@ function formatDate(dateStr?: string | null): string {
         day: "numeric",
       });
     }
-
-    // Fallback for other formats
     const date = new Date(dateStr);
     if (isNaN(date.getTime())) {
       return `Invalid: ${dateStr}`;
@@ -89,32 +91,35 @@ function formatDate(dateStr?: string | null): string {
   }
 }
 
-type ContributionWithGroup = Contribution & {
-  groupName?: string;
-  _groupIndex: number;
-  _contribIndex: number;
-};
-
-function getUniqueKey(contribution: ContributionWithGroup): string {
-  return `${getContributionId(contribution)}_${contribution._groupIndex}_${contribution._contribIndex}`;
+function countUnreviewed(groups: IndividualOrCompanyContributionGroup[]): {
+  total: number;
+  unreviewed: number;
+} {
+  let total = 0;
+  let unreviewed = 0;
+  for (const group of groups) {
+    for (const c of group.contributions) {
+      total++;
+      if (!c.manualReview) {
+        unreviewed++;
+      }
+    }
+  }
+  return { total, unreviewed };
 }
 
-export default function ContributionReviewPage() {
-  const [committees, setCommittees] = useState<Record<
+export default function CompanyContributionReviewPage() {
+  const [companies, setCompanies] = useState<Record<
     string,
-    CommitteeConstant
+    CompanyConstant
   > | null>(null);
-  const [selectedCommitteeId, setSelectedCommitteeId] = useState<string>("");
-  const [contributions, setContributions] = useState<Contributions | null>(
-    null,
-  );
+  const [selectedCompanyId, setSelectedCompanyId] = useState<string>("");
+  const [companyData, setCompanyData] = useState<CompanyData | null>(null);
   const [loadingState, setLoadingState] = useState<
     "idle" | "loading" | "loaded" | "error"
   >("idle");
   const [saveStates, setSaveStates] = useState<Record<string, string>>({});
-  const [editingContribution, setEditingContribution] = useState<string | null>(
-    null,
-  );
+  const [editingContribution, setEditingContribution] = useState<string | null>(null);
   const [editDescription, setEditDescription] = useState("");
   const [reviewCounts, setReviewCounts] = useState<
     Record<string, { total: number; unreviewed: number }>
@@ -126,40 +131,32 @@ export default function ContributionReviewPage() {
     "idle" | "pending" | "success" | "error"
   >("idle");
 
-  // Count unreviewed contributions for a committee's data
-  function countUnreviewed(data: Contributions): {
-    total: number;
-    unreviewed: number;
-  } {
-    let total = 0;
-    let unreviewed = 0;
-    for (const group of data.groups) {
-      for (const c of group.contributions) {
-        total++;
-        if (!c.manualReview) unreviewed++;
-      }
-    }
-    return { total, unreviewed };
-  }
-
-  // Load committees and review counts on mount
+  // Load company constants and review counts on mount
   useEffect(() => {
     (async () => {
-      const data = await uncachedFetchCommittees();
-      if (isError(data)) {
-        console.error("Error loading committees");
+      try {
+        const constantsDoc = await getDoc(doc(db, "constants", "companies"));
+        if (!constantsDoc.exists()) {
+          console.error("No company constants found");
+          return;
+        }
+        setCompanies(constantsDoc.data() as Record<string, CompanyConstant>);
+      } catch (error) {
+        console.error("Error loading company constants:", error);
         return;
       }
-      setCommittees(data as Record<string, CommitteeConstant>);
 
-      // Fetch all contributions to compute per-committee review counts
+      // Fetch all company docs to compute per-company review counts
       try {
-        const snapshot = await getDocs(collection(db, "contributions"));
-        const counts: Record<string, { total: number; unreviewed: number }> =
-          {};
-        snapshot.forEach((doc) => {
-          const contribs = doc.data() as Contributions;
-          counts[doc.id] = countUnreviewed(contribs);
+        const snapshot = await getDocs(collection(db, "companies"));
+        const counts: Record<string, { total: number; unreviewed: number }> = {};
+        snapshot.forEach((docSnap) => {
+          const data = docSnap.data() as CompanyData;
+          if (data.contributions) {
+            counts[docSnap.id] = countUnreviewed(data.contributions);
+          } else {
+            counts[docSnap.id] = { total: 0, unreviewed: 0 };
+          }
         });
         setReviewCounts(counts);
       } catch (error) {
@@ -168,40 +165,41 @@ export default function ContributionReviewPage() {
     })();
   }, []);
 
-  // Load contributions when committee is selected
+  // Load company data when a company is selected
   useEffect(() => {
-    if (!selectedCommitteeId) {
-      setContributions(null);
+    if (!selectedCompanyId) {
+      setCompanyData(null);
       return;
     }
 
     (async () => {
       setLoadingState("loading");
       try {
-        const docRef = doc(db, "contributions", selectedCommitteeId);
+        const docRef = doc(db, "companies", selectedCompanyId);
         const snapshot = await getDoc(docRef);
         if (snapshot.exists()) {
-          setContributions(snapshot.data() as Contributions);
+          setCompanyData(snapshot.data() as CompanyData);
           setLoadingState("loaded");
         } else {
           setLoadingState("error");
         }
       } catch (error) {
-        console.error("Error loading contributions:", error);
+        console.error("Error loading company:", error);
         setLoadingState("error");
       }
     })();
-  }, [selectedCommitteeId]);
+  }, [selectedCompanyId]);
 
   const updateContributionReview = async (
-    contribution: ContributionWithGroup,
+    contribution: ContributionWithCommittee,
     status: "verified" | "omit",
     description: string,
   ) => {
-    if (!selectedCommitteeId || !contributions) return;
+    if (!selectedCompanyId || !companyData?.contributions) {
+      return;
+    }
 
     const uniqueKey = getUniqueKey(contribution);
-    const contributionId = getContributionId(contribution);
     setSaveStates({ ...saveStates, [uniqueKey]: "pending" });
 
     const manualReview: ManualReview = {
@@ -211,43 +209,36 @@ export default function ContributionReviewPage() {
     };
 
     try {
-      const updatedContributions = { ...contributions };
-
-      // Update in by_date by ID (denormalized view, ID-based is fine here)
-      updatedContributions.by_date = updatedContributions.by_date.map((c) =>
-        getContributionId(c) === contributionId
-          ? { ...c, manualReview, ...(description && { description }) }
-          : c,
-      );
-
-      // Update in groups by index to handle duplicate IDs
-      updatedContributions.groups = updatedContributions.groups.map(
-        (group, gi) => ({
+      const updatedGroups: IndividualOrCompanyContributionGroup[] =
+        companyData.contributions.map((group, gi) => ({
           ...group,
-          contributions: group.contributions.map((c, ci) =>
-            gi === contribution._groupIndex && ci === contribution._contribIndex
-              ? { ...c, manualReview, ...(description && { description }) }
-              : c,
-          ),
-        }),
-      );
+          contributions: group.contributions.map((c, ci) => {
+            if (gi === contribution._groupIndex && ci === contribution._contribIndex) {
+              return {
+                ...c,
+                manualReview,
+                ...(description && { description }),
+              };
+            }
+            return c;
+          }),
+        }));
 
-      const docRef = doc(db, "contributions", selectedCommitteeId);
-      await updateDoc(docRef, updatedContributions);
+      const docRef = doc(db, "companies", selectedCompanyId);
+      await updateDoc(docRef, { contributions: updatedGroups });
 
-      setContributions(updatedContributions);
-      if (!contribution.manualReview && selectedCommitteeId) {
+      setCompanyData({ ...companyData, contributions: updatedGroups });
+
+      if (!contribution.manualReview) {
         setReviewCounts((prev) => ({
           ...prev,
-          [selectedCommitteeId]: {
-            total: prev[selectedCommitteeId]?.total || 0,
-            unreviewed: Math.max(
-              0,
-              (prev[selectedCommitteeId]?.unreviewed || 0) - 1,
-            ),
+          [selectedCompanyId]: {
+            total: prev[selectedCompanyId]?.total || 0,
+            unreviewed: Math.max(0, (prev[selectedCompanyId]?.unreviewed || 0) - 1),
           },
         }));
       }
+
       setSaveStates({ ...saveStates, [uniqueKey]: "success" });
       setEditingContribution(null);
       setEditDescription("");
@@ -274,13 +265,16 @@ export default function ContributionReviewPage() {
   };
 
   const markAllAsVerified = async () => {
-    if (!selectedCommitteeId || !contributions) return;
+    if (!selectedCompanyId || !companyData?.contributions) {
+      return;
+    }
     if (
       !window.confirm(
-        "Mark all unreviewed contributions for this committee as verified?",
+        "Mark all unreviewed contributions for this company as verified?",
       )
-    )
+    ) {
       return;
+    }
 
     setBulkSaveState("pending");
 
@@ -291,29 +285,22 @@ export default function ContributionReviewPage() {
     };
 
     try {
-      const updatedContributions = { ...contributions };
-
-      updatedContributions.by_date = updatedContributions.by_date.map((c) =>
-        c.manualReview ? c : { ...c, manualReview },
-      );
-
-      updatedContributions.groups = updatedContributions.groups.map(
-        (group) => ({
+      const updatedGroups: IndividualOrCompanyContributionGroup[] =
+        companyData.contributions.map((group) => ({
           ...group,
           contributions: group.contributions.map((c) =>
             c.manualReview ? c : { ...c, manualReview },
           ),
-        }),
-      );
+        }));
 
-      const docRef = doc(db, "contributions", selectedCommitteeId);
-      await updateDoc(docRef, updatedContributions);
+      const docRef = doc(db, "companies", selectedCompanyId);
+      await updateDoc(docRef, { contributions: updatedGroups });
 
-      setContributions(updatedContributions);
+      setCompanyData({ ...companyData, contributions: updatedGroups });
       setReviewCounts((prev) => ({
         ...prev,
-        [selectedCommitteeId]: {
-          total: prev[selectedCommitteeId]?.total || 0,
+        [selectedCompanyId]: {
+          total: prev[selectedCompanyId]?.total || 0,
           unreviewed: 0,
         },
       }));
@@ -327,13 +314,16 @@ export default function ContributionReviewPage() {
   };
 
   const markAllAsOmit = async () => {
-    if (!selectedCommitteeId || !contributions) return;
+    if (!selectedCompanyId || !companyData?.contributions) {
+      return;
+    }
     if (
       !window.confirm(
-        "Mark all unreviewed contributions for this committee as omit?",
+        "Mark all unreviewed contributions for this company as omit?",
       )
-    )
+    ) {
       return;
+    }
 
     setBulkOmitState("pending");
 
@@ -344,29 +334,22 @@ export default function ContributionReviewPage() {
     };
 
     try {
-      const updatedContributions = { ...contributions };
-
-      updatedContributions.by_date = updatedContributions.by_date.map((c) =>
-        c.manualReview ? c : { ...c, manualReview },
-      );
-
-      updatedContributions.groups = updatedContributions.groups.map(
-        (group) => ({
+      const updatedGroups: IndividualOrCompanyContributionGroup[] =
+        companyData.contributions.map((group) => ({
           ...group,
           contributions: group.contributions.map((c) =>
             c.manualReview ? c : { ...c, manualReview },
           ),
-        }),
-      );
+        }));
 
-      const docRef = doc(db, "contributions", selectedCommitteeId);
-      await updateDoc(docRef, updatedContributions);
+      const docRef = doc(db, "companies", selectedCompanyId);
+      await updateDoc(docRef, { contributions: updatedGroups });
 
-      setContributions(updatedContributions);
+      setCompanyData({ ...companyData, contributions: updatedGroups });
       setReviewCounts((prev) => ({
         ...prev,
-        [selectedCommitteeId]: {
-          total: prev[selectedCommitteeId]?.total || 0,
+        [selectedCompanyId]: {
+          total: prev[selectedCompanyId]?.total || 0,
           unreviewed: 0,
         },
       }));
@@ -379,22 +362,23 @@ export default function ContributionReviewPage() {
     }
   };
 
-  // Flatten contributions with group info (including omitted for review)
-  const getFlattenedContributions = (): ContributionWithGroup[] => {
-    if (!contributions) return [];
+  const getFlattenedContributions = (): ContributionWithCommittee[] => {
+    if (!companyData?.contributions) {
+      return [];
+    }
 
-    const flattened: ContributionWithGroup[] = [];
-    contributions.groups.forEach((group, gi) => {
+    const flattened: ContributionWithCommittee[] = [];
+    companyData.contributions.forEach((group, gi) => {
       group.contributions.forEach((c, ci) => {
         flattened.push({
           ...c,
-          groupName: group.company === "OMITTED" ? "Omitted" : group.company,
+          _committeeId: group.committee_id,
+          _committeeName: c.committee_name,
           _groupIndex: gi,
           _contribIndex: ci,
         });
       });
     });
-
     flattened.sort((a, b) => {
       if (!a.manualReview && b.manualReview) return -1;
       if (a.manualReview && !b.manualReview) return 1;
@@ -404,26 +388,19 @@ export default function ContributionReviewPage() {
     return flattened;
   };
 
-  const renderContributionRow = (contribution: ContributionWithGroup) => {
+  const renderContributionRow = (contribution: ContributionWithCommittee) => {
     const contributionId = getUniqueKey(contribution);
     const isEditing = editingContribution === contributionId;
     const saveState = saveStates[contributionId];
-    const rollup = isRollup(contribution);
-    const single = !rollup ? (contribution as SingleContribution) : null;
+    const isRollup =
+      contribution.total !== undefined && contribution.oldest !== undefined;
 
-    // Build full name from components
-    const fullName = contribution.redacted
-      ? "REDACTED"
-      : [
-          contribution.contributor_first_name,
-          contribution.contributor_middle_name,
-          contribution.contributor_last_name,
-          contribution.contributor_suffix,
-        ]
-          .filter(Boolean)
-          .join(" ") ||
-        contribution.contributor_name ||
-        "Unknown";
+    const contributorLabel =
+      contribution.contributor_name ||
+      [contribution.contributor_first_name, contribution.contributor_last_name]
+        .filter(Boolean)
+        .join(" ") ||
+      "Unknown";
 
     return (
       <div
@@ -452,13 +429,13 @@ export default function ContributionReviewPage() {
                 marginBottom: "8px",
               }}
             >
-              <strong style={{ fontSize: "1.1em" }}>{fullName}</strong>
+              <strong style={{ fontSize: "1.1em" }}>{contributorLabel}</strong>
               <div style={{ marginLeft: "auto" }}>
                 <ReviewStatusBadge manualReview={contribution.manualReview} />
               </div>
             </div>
 
-            {/* Primary details */}
+            {/* Details grid */}
             <div
               style={{
                 display: "grid",
@@ -468,7 +445,7 @@ export default function ContributionReviewPage() {
                 marginBottom: "8px",
               }}
             >
-              {rollup && (
+              {isRollup && (
                 <>
                   <span style={{ color: "#666" }}>Type:</span>
                   <span style={{ color: "#856404", fontWeight: "500" }}>
@@ -476,6 +453,18 @@ export default function ContributionReviewPage() {
                   </span>
                 </>
               )}
+
+              {contribution.isIndividual && contribution.individual && (
+                <>
+                  <span style={{ color: "#666" }}>Individual:</span>
+                  <span>{contribution.individual}</span>
+                </>
+              )}
+
+              <span style={{ color: "#666" }}>Recipient:</span>
+              <span>
+                {contribution._committeeName || contribution._committeeId}
+              </span>
 
               {contribution.entity_type && (
                 <>
@@ -491,25 +480,11 @@ export default function ContributionReviewPage() {
                 </>
               )}
 
-              {contribution.contributor_employer && (
-                <>
-                  <span style={{ color: "#666" }}>Employer:</span>
-                  <span>{contribution.contributor_employer}</span>
-                </>
-              )}
-
-              {contribution.groupName && (
-                <>
-                  <span style={{ color: "#666" }}>Group:</span>
-                  <span>{contribution.groupName}</span>
-                </>
-              )}
-
-              {rollup ? (
+              {isRollup ? (
                 <>
                   <span style={{ color: "#666" }}>Date Range:</span>
                   <span>
-                    {formatDate(contribution.oldest)} -{" "}
+                    {formatDate(contribution.oldest)} –{" "}
                     {formatDate(contribution.newest)}
                   </span>
                   <span style={{ color: "#666" }}>Total Amount:</span>
@@ -520,10 +495,12 @@ export default function ContributionReviewPage() {
               ) : (
                 <>
                   <span style={{ color: "#666" }}>Date:</span>
-                  <span>{formatDate(single?.contribution_receipt_date)}</span>
+                  <span>
+                    {formatDate(contribution.contribution_receipt_date)}
+                  </span>
                   <span style={{ color: "#666" }}>Amount:</span>
                   <span style={{ fontWeight: "500" }}>
-                    {formatCurrency(single?.contribution_receipt_amount)}
+                    {formatCurrency(contribution.contribution_receipt_amount)}
                   </span>
                 </>
               )}
@@ -537,31 +514,39 @@ export default function ContributionReviewPage() {
                 </>
               )}
 
-              {single?.transaction_id && (
+              {contribution.transaction_id && (
                 <>
                   <span style={{ color: "#666" }}>Transaction ID:</span>
                   <span style={{ fontFamily: "monospace", fontSize: "0.85em" }}>
-                    {single.transaction_id}
+                    {contribution.transaction_id}
                   </span>
                 </>
               )}
 
-              {single?.receipt_type_full && (
+              {contribution.receipt_type_full && (
                 <>
                   <span style={{ color: "#666" }}>Receipt Type:</span>
                   <span>
-                    {single.receipt_type_full}
-                    {single.receipt_type && ` (${single.receipt_type})`}
+                    {contribution.receipt_type_full}
+                    {contribution.receipt_type &&
+                      ` (${contribution.receipt_type})`}
                   </span>
                 </>
               )}
 
-              {single?.pdf_url && (
+              {contribution.memo_text && (
+                <>
+                  <span style={{ color: "#666" }}>Memo:</span>
+                  <span>{contribution.memo_text}</span>
+                </>
+              )}
+
+              {contribution.pdf_url && (
                 <>
                   <span style={{ color: "#666" }}>FEC Filing:</span>
                   <span>
                     <a
-                      href={single.pdf_url}
+                      href={contribution.pdf_url}
                       target="_blank"
                       rel="noopener noreferrer"
                       style={{ color: "#007bff", textDecoration: "underline" }}
@@ -602,22 +587,22 @@ export default function ContributionReviewPage() {
                   Claimed
                 </span>
               )}
-              {contribution.redacted && (
+              {contribution.isIndividual && (
                 <span
                   style={{
                     padding: "2px 6px",
-                    backgroundColor: "#f8d7da",
-                    color: "#721c24",
+                    backgroundColor: "#e2d9f3",
+                    color: "#4a235a",
                     borderRadius: "3px",
                     marginRight: "5px",
                   }}
                 >
-                  Redacted
+                  Individual
                 </span>
               )}
             </div>
 
-            {/* Current review description */}
+            {/* Review note */}
             {contribution.description && !isEditing && (
               <div
                 style={{
@@ -665,11 +650,7 @@ export default function ContributionReviewPage() {
             <div style={{ display: "flex", gap: "10px" }}>
               <button
                 onClick={() =>
-                  updateContributionReview(
-                    contribution,
-                    "verified",
-                    editDescription,
-                  )
+                  updateContributionReview(contribution, "verified", editDescription)
                 }
                 disabled={saveState === "pending"}
                 style={{
@@ -685,11 +666,7 @@ export default function ContributionReviewPage() {
               </button>
               <button
                 onClick={() =>
-                  updateContributionReview(
-                    contribution,
-                    "omit",
-                    editDescription,
-                  )
+                  updateContributionReview(contribution, "omit", editDescription)
                 }
                 disabled={saveState === "pending"}
                 style={{
@@ -794,47 +771,53 @@ export default function ContributionReviewPage() {
     );
   };
 
-  if (!committees) {
-    return <div className={styles.container}>Loading committees...</div>;
+  if (!companies) {
+    return <div className={styles.container}>Loading companies...</div>;
   }
 
-  // Sort: committees with unreviewed contributions first, then alphabetical
-  const committeeKeys = Object.keys(committees).sort((a, b) => {
+  // Sort: companies with unreviewed contributions first, then alphabetical
+  const companyKeys = Object.keys(companies).sort((a, b) => {
     const aUnreviewed = reviewCounts[a]?.unreviewed || 0;
     const bUnreviewed = reviewCounts[b]?.unreviewed || 0;
-    if (aUnreviewed > 0 && bUnreviewed === 0) return -1;
-    if (aUnreviewed === 0 && bUnreviewed > 0) return 1;
-    return committees[a].name.localeCompare(committees[b].name);
+    if (aUnreviewed > 0 && bUnreviewed === 0) {
+      return -1;
+    }
+    if (aUnreviewed === 0 && bUnreviewed > 0) {
+      return 1;
+    }
+    return companies[a].name.localeCompare(companies[b].name);
   });
+
+  const flattened = getFlattenedContributions();
 
   return (
     <div className={styles.container}>
-      <h1>Review Contributions</h1>
-      <p>Review and mark contributions as verified or omitted</p>
+      <h1>Review Company Contributions</h1>
+      <p>Review and mark company contributions as verified or omitted</p>
 
       <section className={styles.editorCard}>
         <select
           className={styles.editorSelect}
-          value={selectedCommitteeId}
-          onChange={(e) => setSelectedCommitteeId(e.target.value)}
+          value={selectedCompanyId}
+          onChange={(e) => setSelectedCompanyId(e.target.value)}
         >
-          <option value="">Select a committee</option>
-          {committeeKeys.map((key) => {
+          <option value="">Select a company</option>
+          {companyKeys.map((key) => {
             const counts = reviewCounts[key];
             const unreviewed = counts?.unreviewed || 0;
             return (
               <option key={key} value={key}>
                 {unreviewed > 0
-                  ? `* ${committees[key].name} (${unreviewed} unreviewed)`
-                  : committees[key].name}
+                  ? `* ${companies[key].name} (${unreviewed} unreviewed)`
+                  : companies[key].name}
               </option>
             );
           })}
         </select>
 
         {loadingState === "loading" && <p>Loading contributions...</p>}
-        {loadingState === "error" && <p>Error loading contributions.</p>}
-        {loadingState === "loaded" && contributions && (
+        {loadingState === "error" && <p>Error loading company data.</p>}
+        {loadingState === "loaded" && companyData && (
           <div style={{ marginTop: "20px" }}>
             <div
               style={{
@@ -845,9 +828,9 @@ export default function ContributionReviewPage() {
               }}
             >
               <p style={{ color: "#666", margin: 0 }}>
-                Total contributions: {getFlattenedContributions().length}
+                Total contributions: {flattened.length}
               </p>
-              {getFlattenedContributions().some((c) => !c.manualReview) && (
+              {flattened.some((c) => !c.manualReview) && (
                 <button
                   onClick={markAllAsVerified}
                   disabled={bulkSaveState === "pending"}
@@ -875,7 +858,7 @@ export default function ContributionReviewPage() {
                   Error saving — please try again
                 </span>
               )}
-              {getFlattenedContributions().some((c) => !c.manualReview) && (
+              {flattened.some((c) => !c.manualReview) && (
                 <button
                   onClick={markAllAsOmit}
                   disabled={bulkOmitState === "pending"}
@@ -905,7 +888,7 @@ export default function ContributionReviewPage() {
               )}
             </div>
             <div>
-              {getFlattenedContributions().map((contribution) =>
+              {flattened.map((contribution) =>
                 renderContributionRow(contribution),
               )}
             </div>

@@ -79,6 +79,8 @@ export type IndividualOrCompanyContribution = {
   individual?: string;
   claimed?: boolean;
   source?: string;
+  description?: string;
+  manualReview?: ManualReview;
   // Rollup fields
   oldest?: string;
   newest?: string;
