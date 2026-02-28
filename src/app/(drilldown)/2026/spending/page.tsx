@@ -1,6 +1,5 @@
 import { fetchAllExpenditureTotalsByParty } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
-import PartySupport from "@/app/components/PartySupport";
 import SpendingByPartyWithOpposition, {
   SpendingByPartySkeleton,
 } from "@/app/components/SpendingByPartyWithOpposition";
@@ -9,7 +8,11 @@ import { ExpendituresByParty } from "@/app/types/Expenditures";
 import { isError } from "@/app/utils/errors";
 import { customMetadata } from "@/app/utils/metadata";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Suspense } from "react";
+import OppositionSpending, {
+  OppositionSpendingSkeleton,
+} from "./OppositionSpending";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = customMetadata({
@@ -26,20 +29,6 @@ async function SpendingByPartyWithOppositionChart() {
   const expenditures = data as ExpendituresByParty;
   return (
     <SpendingByPartyWithOpposition
-      expenditures={expenditures}
-      labelId="expenditures-by-party-label"
-    />
-  );
-}
-
-async function PartySupportChart() {
-  const data = await fetchAllExpenditureTotalsByParty();
-  if (isError(data)) {
-    return <ErrorText subject="expenditures by party" />;
-  }
-  const expenditures = data as ExpendituresByParty;
-  return (
-    <PartySupport
       expenditures={expenditures}
       labelId="expenditures-by-party-label"
     />
@@ -68,15 +57,12 @@ export default function SpendingPage() {
           may intend to support a candidate from the opposing party in a later
           election.
         </p>
-        {/* <p>
+        <p>
           In some races where PACs have spent heavily to oppose candidates but
-          have not supported any candidates, such as in{" "}
-          <Link href="/elections/CA-S">California&rsquo;s Senate primary</Link>{" "}
-          and in{" "}
-          <Link href="/elections/NY-H-16">
-            New York&rsquo;s District 16 Democratic primary
-          </Link>
-          , these PACs seem more focused on ousting candidates they view as
+          have not supported any candidates, such as in Illinois&rsquo;{" "}
+          <Link href="/2026/elections/IL-S">Senate primary</Link> and{" "}
+          <Link href="/2026/elections/IL-H-07">District 7 House primary</Link>,
+          these PACs seem more focused on ousting candidates they view as
           anti-crypto, rather than supporting any specific candidate. The
           incidental beneficiaries in these cases are marked in lighter italic
           text in the table below.
@@ -86,14 +72,9 @@ export default function SpendingPage() {
           candidates, and statements supporting other candidates, opposition
           spending can be categorized based on likely beneficiary:
         </p>
-        <div className={styles.chartWrapper}>
-          <Suspense fallback={<PartySupportSkeleton />}>
-            <PartySupportChart />
-          </Suspense>
-        </div>
         <Suspense fallback={<OppositionSpendingSkeleton />}>
           <OppositionSpending />
-        </Suspense> */}
+        </Suspense>
       </section>
     </section>
   );
