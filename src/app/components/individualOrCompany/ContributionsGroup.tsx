@@ -44,7 +44,10 @@ export default function ContributionsGroup({
   return (
     <div className={styles.contributionRow}>
       <div className={styles.contributionSummary}>
-        <span className={styles.contributionCommittee}>
+        <span
+          className={styles.contributionCommittee}
+          data-committee-id={contributionsGroup.committee_id}
+        >
           <MaybeLink href={recipient?.link}>
             {recipient?.committee_name
               ? titlecaseCommittee(recipient.committee_name, false)

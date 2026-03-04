@@ -189,7 +189,10 @@ export default function Contribution({
     return (
       <div className={styles.contributionRow}>
         <div className={styles.contributionSummary}>
-          <span className={styles.contributionCommittee}>
+          <span
+            className={styles.contributionCommittee}
+            data-committee-id={contribution.committee_id}
+          >
             <MaybeLink href={recipient?.link}>{formattedName}</MaybeLink>
             {"claimed" in contribution && contribution.claimed && <Claimed />}
           </span>

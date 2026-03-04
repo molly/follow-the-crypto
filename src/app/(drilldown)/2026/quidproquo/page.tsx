@@ -1,4 +1,9 @@
-import { fetchAllRecipients, fetchBeneficiaries } from "@/app/actions/fetch";
+import {
+  fetchAllRecipients,
+  fetchBeneficiaries,
+  fetchConstant,
+} from "@/app/actions/fetch";
+import ExternalLinkIcon from "@/app/components/ExternalLinkIcon";
 import tableStyles from "@/app/components/tables.module.css";
 import { qpqData } from "@/app/data/qpq";
 import { TRUMP_CANDIDATE_ID } from "@/app/data/trump";
@@ -23,14 +28,39 @@ export const metadata: Metadata = customMetadata({
 });
 
 export default async function QuidProQuoPage() {
-  // Fetch Trump PAC contribution data from the backend
-  const [beneficiariesResult, recipientsResult] = await Promise.all([
+  // Fetch contribution data from the backend
+  const [
+    beneficiariesResult,
+    recipientsResult,
+    committeesConstant,
+    senateConstant,
+    houseConstant,
+  ] = await Promise.all([
     fetchBeneficiaries(),
     fetchAllRecipients(),
+    fetchConstant<Record<string, { id: string; name: string }>>("committees"),
+    fetchConstant<{ ids: string[] }>("senateCommittees"),
+    fetchConstant<{ ids: string[] }>("houseCommittees"),
   ]);
 
-  // Build a map of company_id -> total contributions to Trump PACs
+  const cryptoCommitteeIds = new Set(
+    committeesConstant ? Object.keys(committeesConstant) : [],
+  );
+  const senateCommitteeIds = new Set(senateConstant?.ids ?? []);
+  const houseCommitteeIds = new Set(houseConstant?.ids ?? []);
+
+  // Company ID aliases: contributions from these IDs are attributed to the target company
+  const companyIdAliases: Record<string, string> = {
+    "winklevoss-capital-management": "gemini",
+  };
+
+  const resolveCompanyId = (id: string): string => companyIdAliases[id] ?? id;
+
+  // Build maps of company_id -> total contributions per committee category
   const trumpContribsByCompany = new Map<string, number>();
+  const cryptoContribsByCompany = new Map<string, number>();
+  const senateContribsByCompany = new Map<string, number>();
+  const houseContribsByCompany = new Map<string, number>();
   if (!isError(beneficiariesResult) && !isError(recipientsResult)) {
     const beneficiaries = beneficiariesResult as Record<string, Beneficiary>;
     const recipients = recipientsResult as Record<string, RecipientDetails>;
@@ -46,12 +76,24 @@ export default async function QuidProQuoPage() {
       }
     }
 
-    // Aggregate Trump PAC contributions by company across all Trump committees
+    // Aggregate contributions by company for each committee category
     for (const [id, beneficiary] of Object.entries(beneficiaries)) {
-      if (trumpCommitteeIds.has(id)) {
+      const isTrump = trumpCommitteeIds.has(id);
+      const targetMap = isTrump
+        ? trumpContribsByCompany
+        : cryptoCommitteeIds.has(id)
+          ? cryptoContribsByCompany
+          : senateCommitteeIds.has(id)
+            ? senateContribsByCompany
+            : houseCommitteeIds.has(id)
+              ? houseContribsByCompany
+              : null;
+
+      if (targetMap) {
         for (const group of beneficiary.contributions as CompanyContributionGroup[]) {
-          const existing = trumpContribsByCompany.get(group.company_id) || 0;
-          trumpContribsByCompany.set(group.company_id, existing + group.total);
+          const companyId = resolveCompanyId(group.company_id);
+          const existing = targetMap.get(companyId) || 0;
+          targetMap.set(companyId, existing + group.total);
         }
       }
     }
@@ -77,10 +119,41 @@ export default async function QuidProQuoPage() {
     const companyId = getCompanyId(entry);
     const trumpTotal =
       companyId !== null ? (trumpContribsByCompany.get(companyId) ?? 0) : 0;
-    return manualAmount + trumpTotal;
+    const cryptoTotal =
+      companyId !== null ? (cryptoContribsByCompany.get(companyId) ?? 0) : 0;
+    const senateTotal =
+      companyId !== null ? (senateContribsByCompany.get(companyId) ?? 0) : 0;
+    const houseTotal =
+      companyId !== null ? (houseContribsByCompany.get(companyId) ?? 0) : 0;
+    return manualAmount + trumpTotal + cryptoTotal + senateTotal + houseTotal;
   };
 
-  const sortedQpq = Object.values(qpqData).sort((a, b) => {
+  const hasContributions = (entry: QPQ): boolean => {
+    const manualContributions =
+      "contributions" in entry && entry.contributions
+        ? entry.contributions
+        : [];
+    if (manualContributions.length > 0) {
+      return true;
+    }
+    const companyId = getCompanyId(entry);
+    if (companyId === null) {
+      return false;
+    }
+    return (
+      (trumpContribsByCompany.get(companyId) ?? 0) >= 10000 ||
+      (cryptoContribsByCompany.get(companyId) ?? 0) >= 10000 ||
+      (senateContribsByCompany.get(companyId) ?? 0) >= 10000 ||
+      (houseContribsByCompany.get(companyId) ?? 0) >= 10000
+    );
+  };
+
+  const sortedQpq = (Object.values(qpqData) as QPQ[]).sort((a, b) => {
+    const aHas = hasContributions(a);
+    const bHas = hasContributions(b);
+    if (aHas !== bHas) {
+      return aHas ? -1 : 1;
+    }
     const aAmount = getTotalAmount(a);
     const bAmount = getTotalAmount(b);
     if (aAmount === bAmount) {
@@ -97,7 +170,23 @@ export default async function QuidProQuoPage() {
   };
 
   const renderBenefit = (entry: QPQ) => {
-    return entry.benefits.map((benefit) => <li key={benefit}>{benefit}</li>);
+    return entry.benefits.map((benefit) => {
+      const text = typeof benefit === "string" ? benefit : benefit.text;
+      const link = typeof benefit === "string" ? undefined : benefit.link;
+      return (
+        <li key={text}>
+          <span dangerouslySetInnerHTML={{ __html: text }} />
+          {link && (
+            <>
+              {" "}
+              <a href={link} target="_blank" rel="noreferrer">
+                <ExternalLinkIcon />
+              </a>
+            </>
+          )}
+        </li>
+      );
+    });
   };
 
   const renderContribution = (entry: QPQ) => {
@@ -109,31 +198,89 @@ export default async function QuidProQuoPage() {
         : [];
 
     const allItems: Item[] = manualContributions.map((contribution) => {
+      const linkMarker = contribution.link ? (
+        <>
+          {" "}
+          <a href={contribution.link} target="_blank" rel="noreferrer">
+            <ExternalLinkIcon />
+          </a>
+        </>
+      ) : null;
       if (contribution.amount) {
+        const text = `${humanizeRoundedCurrency(contribution.amount)} ${contribution.recipient}`;
         return {
           amount: contribution.amount,
           jsx: (
-            <li
-              key={contribution.recipient}
-            >{`${humanizeRoundedCurrency(contribution.amount)} ${contribution.recipient}`}</li>
+            <li key={contribution.recipient}>
+              {text}
+              {linkMarker}
+            </li>
           ),
         };
       }
       return {
-        jsx: <li key={contribution.benefit}>{contribution.benefit}</li>,
+        jsx: (
+          <li key={contribution.benefit}>
+            {contribution.benefit}
+            {linkMarker}
+          </li>
+        ),
       };
     });
 
     const companyId = getCompanyId(entry);
+
     const trumpTotal =
       companyId !== null ? trumpContribsByCompany.get(companyId) : undefined;
-    if (trumpTotal) {
+    if (trumpTotal && trumpTotal >= 10000) {
       allItems.push({
         amount: trumpTotal,
         jsx: (
           <li key="trump-fec">
             {humanizeRoundedCurrency(Math.floor(trumpTotal / 10000) * 10000)} to
-            Trump-affiliated PACs (2026)
+            Trump-affiliated PACs (2026 cycle)
+          </li>
+        ),
+      });
+    }
+
+    const cryptoTotal =
+      companyId !== null ? cryptoContribsByCompany.get(companyId) : undefined;
+    if (cryptoTotal && cryptoTotal >= 10000) {
+      allItems.push({
+        amount: cryptoTotal,
+        jsx: (
+          <li key="crypto-fec">
+            {humanizeRoundedCurrency(Math.floor(cryptoTotal / 10000) * 10000)}{" "}
+            to crypto-focused super PACs (2026 cycle)
+          </li>
+        ),
+      });
+    }
+
+    const senateTotal =
+      companyId !== null ? senateContribsByCompany.get(companyId) : undefined;
+    if (senateTotal && senateTotal >= 10000) {
+      allItems.push({
+        amount: senateTotal,
+        jsx: (
+          <li key="senate-fec">
+            {humanizeRoundedCurrency(Math.floor(senateTotal / 10000) * 10000)}{" "}
+            to Senate super PACs (2026 cycle)
+          </li>
+        ),
+      });
+    }
+
+    const houseTotal =
+      companyId !== null ? houseContribsByCompany.get(companyId) : undefined;
+    if (houseTotal && houseTotal >= 10000) {
+      allItems.push({
+        amount: houseTotal,
+        jsx: (
+          <li key="house-fec">
+            {humanizeRoundedCurrency(Math.floor(houseTotal / 10000) * 10000)} to
+            House super PACs (2026 cycle)
           </li>
         ),
       });
@@ -166,9 +313,9 @@ export default async function QuidProQuoPage() {
         <table className={styles.qpqTable}>
           <thead>
             <tr>
-              <th className={styles.companyColumn}>Company</th>
-              <th>Benefit</th>
-              <th>Contribution</th>
+              <th className={styles.companyColumn}>Entity</th>
+              <th>Benefit to entity</th>
+              <th>Benefit to Trump and family</th>
             </tr>
           </thead>
           <tbody>

@@ -197,10 +197,22 @@ export default function Sidebar() {
                 All committees
               </Link>
             </motion.li>
-            {/* <motion.li variants={itemVariants} className={styles.sidebarHeader}>
-              Trump influence
+            <motion.li variants={itemVariants} className={styles.sidebarHeader}>
+              Influence
             </motion.li>
             <motion.li
+              variants={itemVariants}
+              className={styles.sidebarListItem}
+            >
+              <Link
+                className={styles.sidebarLink}
+                onClick={() => setCollapsed(true)}
+                href="/2026/quid-pro-quo"
+              >
+                Quid pro quo
+              </Link>
+            </motion.li>
+            {/* <motion.li
               variants={itemVariants}
               className={styles.sidebarListItem}
             >
