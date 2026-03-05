@@ -207,7 +207,7 @@ export default function Sidebar() {
               <Link
                 className={styles.sidebarLink}
                 onClick={() => setCollapsed(true)}
-                href="/2026/quid-pro-quo"
+                href="/2026/quidproquo"
               >
                 Quid pro quo
               </Link>

@@ -82,6 +82,12 @@ export const qpqData = {
         recipient: "to purchase $TRUMP memecoins (via HTX)",
         link: "https://www.nbcnews.com/tech/crypto/trumps-crypto-dinner-cost-1-million-seat-average-rcna207802",
       },
+      {
+        amount: 20000000,
+        recipient:
+          "to purchase shares of the Trump-linked Alt5 Sigma and more $WLFI (announced but unconfirmed)",
+        link: "https://www.dlnews.com/articles/defi/justin-sun-vows-to-buy-trump-affiliated-assets-after-world-liberty-financial-blocks-his-wallet/",
+      },
       { benefit: "Listed USD1 for trading on HTX" },
     ],
   },
