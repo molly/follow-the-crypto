@@ -137,9 +137,6 @@ function Influenced({
         {"."}
       </div>
       {beneficiary && renderOtherSupport(candidate, beneficiary, races)}
-      {candidate.withdrew && (
-        <div>{`${lastName} later withdrew from the race.`}</div>
-      )}
       <div className={styles.candidateResultWithImage}>
         <Candidate
           candidateSummary={candidate}
@@ -166,9 +163,6 @@ function OtherOnlyInfluenced({
   return (
     <div className={styles.candidateGroup}>
       {renderOtherSupport(candidate, beneficiary, races)}
-      {candidate.withdrew && (
-        <div>{`${lastName} later withdrew from the race.`}</div>
-      )}
       <div className={styles.candidateResultWithImage}>
         <Candidate
           candidateSummary={candidate}

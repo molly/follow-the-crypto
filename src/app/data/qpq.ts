@@ -49,8 +49,8 @@ export const qpqData = {
     name: "Justin Sun and Tron",
     benefits: [
       {
-        text: "SEC enforcement case stayed pending resolution",
-        link: "https://www.citationneeded.news/issue-78/#sec",
+        text: "SEC enforcement case settled for $10 million fine with no admission of wrongdoing",
+        link: "https://www.courtlistener.com/docket/67071330/96/securities-and-exchange-commission-v-sun/",
       },
       {
         text: "Criminal investigation likely ended",
@@ -259,6 +259,7 @@ export const qpqData = {
         text: "Criminal investigation into Chairman and former CEO Jesse Powell closed",
         link: "https://www.citationneeded.news/issue-89/#in-courts-and-criminal-investigations",
       },
+      { text: "Kraken granted Federal Reserve master account" },
     ],
     contributions: [
       { amount: 1000000, recipient: "to Trump-affiliated PACs (2024 cycle)" },
