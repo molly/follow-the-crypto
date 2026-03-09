@@ -14,6 +14,7 @@ export type BeneficiaryContribution = {
   oldest: string;
   newest: string;
   committees: BeneficiaryCommitteeRef[];
+  individual_employer?: string;
 } & Pick<
   IndividualOrCompanyContribution,
   "individual" | "contributor_name" | "contributor_occupation" | "isIndividual"
@@ -22,6 +23,7 @@ export type BeneficiaryContribution = {
 export type CompanyContributionGroup = {
   company_id: string;
   company_name: string;
+  individual_id?: string;
   total: number;
   contributions: BeneficiaryContribution[];
 };

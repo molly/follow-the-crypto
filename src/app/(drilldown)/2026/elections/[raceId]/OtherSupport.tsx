@@ -22,26 +22,42 @@ function Contribution({
 }: {
   contribution: BeneficiaryContribution;
 }) {
-  const contributorName =
-    contribution.isIndividual && contribution.contributor_name ? (
-      <Link href={`/2026/individuals/${contribution.individual}`}>
-        {titlecaseLastFirst(contribution.contributor_name)}
-      </Link>
-    ) : contribution.contributor_name ? (
-      titlecaseCommittee(contribution.contributor_name)
-    ) : null;
+  let contributorName = null;
+  if (contribution.contributor_name) {
+    if (contribution.isIndividual && contribution.individual) {
+      contributorName = (
+        <Link href={`/2026/individuals/${contribution.individual}`}>
+          {titlecaseLastFirst(contribution.contributor_name)}
+        </Link>
+      );
+    } else if (contribution.isIndividual) {
+      contributorName = titlecaseLastFirst(contribution.contributor_name);
+    } else {
+      contributorName = titlecaseCommittee(contribution.contributor_name);
+    }
+  }
   const committeeNames = contribution.committees.length
-    ? humanizeList(contribution.committees.map((c) => titlecaseCommittee(c.name)))
+    ? humanizeList(
+        contribution.committees.map((c) => titlecaseCommittee(c.name)),
+      )
     : null;
   return (
     <li className={styles.otherSupportContribution}>
       <span>{formatCurrency(contribution.total)}</span>
       {contributorName && <span> from {contributorName}</span>}
-      {contribution.contributor_occupation && (
+      {(contribution.contributor_occupation ||
+        contribution.individual_employer) && (
         <>
           {" "}
           <span className="secondary">
-            {`(${titlecaseOccupation(contribution.contributor_occupation)})`}
+            {`(${[
+              contribution.contributor_occupation
+                ? titlecaseOccupation(contribution.contributor_occupation)
+                : null,
+              contribution.individual_employer ?? null,
+            ]
+              .filter(Boolean)
+              .join(", ")})`}
           </span>
         </>
       )}
@@ -54,7 +70,13 @@ function CompanyGroup({ group }: { group: CompanyContributionGroup }) {
   return (
     <div className={styles.companyGroup}>
       <div className={styles.companyGroupHeader}>
-        <Link href={`/2026/companies/${group.company_id}`}>
+        <Link
+          href={
+            group.individual_id
+              ? `/2026/individuals/${group.individual_id}`
+              : `/2026/companies/${group.company_id}`
+          }
+        >
           {group.company_name}
         </Link>
         {" – "}
