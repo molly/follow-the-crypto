@@ -148,7 +148,7 @@ export default async function QuidProQuoPage() {
     );
   };
 
-  const sortedQpq = (Object.values(qpqData) as QPQ[]).sort((a, b) => {
+  const sortedQpq = (Object.entries(qpqData) as [string, QPQ][]).sort(([, a], [, b]) => {
     const aHas = hasContributions(a);
     const bHas = hasContributions(b);
     if (aHas !== bHas) {
@@ -319,10 +319,10 @@ export default async function QuidProQuoPage() {
             </tr>
           </thead>
           <tbody>
-            {sortedQpq.map((entry) => {
+            {sortedQpq.map(([slug, entry]) => {
               const contributions = renderContribution(entry);
               return (
-                <tr key={entry.name} className={tableStyles.qpqRow}>
+                <tr key={slug} id={slug} className={tableStyles.qpqRow}>
                   <td>{renderName(entry)}</td>
                   <td>
                     <ul>{renderBenefit(entry)}</ul>

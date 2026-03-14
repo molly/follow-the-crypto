@@ -296,13 +296,59 @@ export default function Spending({
     [xDomain],
   );
   const gridLabelFormatter = (d: number) => d3.format("$.2s")(Math.abs(d));
+
+  const altText = useMemo(() => {
+    const altFormatter = (d: number) => d3.format("$.3~s")(Math.abs(d));
+    const lines = ["Money involved in this election"];
+    candidateNames.forEach((candidate, ind) => {
+      const summary = election.candidates[candidate];
+      const {
+        raised,
+        industry_direct,
+        outside_support,
+        crypto_support,
+        outside_oppose,
+        crypto_oppose,
+      } = data[ind];
+      const parts: string[] = [];
+      if (raised) {
+        let raisedStr = `Raised ${altFormatter(raised)}`;
+        if (industry_direct > 0) {
+          raisedStr += ` (${altFormatter(industry_direct)} from crypto donors)`;
+        }
+        parts.push(raisedStr);
+      }
+      if (outside_support) {
+        let supportStr = `${altFormatter(outside_support)} in outside spending to support`;
+        if (crypto_support > 0) {
+          supportStr += ` (${altFormatter(crypto_support)} from crypto PACs)`;
+        }
+        parts.push(supportStr);
+      }
+      if (outside_oppose) {
+        let opposeStr = `${altFormatter(outside_oppose)} in outside spending to oppose`;
+        if (crypto_oppose > 0) {
+          opposeStr += ` (${altFormatter(crypto_oppose)} from crypto PACs)`;
+        }
+        parts.push(opposeStr);
+      }
+      const nameWithParty = summary?.party
+        ? `${candidate} (${summary.party})`
+        : candidate;
+      lines.push(`${nameWithParty}: ${parts.join(", ")}`);
+    });
+    return lines.join("\n");
+  }, [candidateNames, election.candidates, data]);
+
   return (
     <div>
       <svg
         viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`}
-        role="group"
+        role="img"
         aria-labelledby={labelId}
+        aria-describedby={`${labelId}-desc`}
       >
+        <desc id={`${labelId}-desc`}>{altText}</desc>
         <defs>
           <pattern
             id="hatch"

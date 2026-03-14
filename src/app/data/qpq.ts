@@ -243,6 +243,10 @@ export const qpqData = {
         text: "SEC investigation ended with no action",
         link: "https://www.citationneeded.news/issue-78/#sec",
       },
+      {
+        text: '"Preferred platform" for Trump\'s second $TRUMP memecoin event',
+        link: "https://www.citationneeded.news/issue-102/#trump-business-interests",
+      },
     ],
   },
   kraken: {
