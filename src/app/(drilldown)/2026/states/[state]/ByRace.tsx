@@ -250,43 +250,71 @@ export default async function RaceCard({ stateAbbr }: { stateAbbr: string }) {
             beneficiaries[c.candidate_id],
         );
 
+        const allCandidates = [
+          ...influenced.map((c) => ({ candidate: c, isInfluenced: true as const })),
+          ...otherOnlyInfluenced.map((c) => ({ candidate: c, isInfluenced: false as const })),
+        ];
+
+        const hasWinnersAndLosers =
+          allCandidates.some(({ candidate }) => candidate.won) &&
+          allCandidates.some(({ candidate }) => candidate.defeated);
+
+        const getTotal = (candidate: CandidateSummary) => {
+          const directTotal =
+            candidate.candidate_id
+              ? (beneficiaries[candidate.candidate_id]?.total ?? 0)
+              : 0;
+          return candidate.support_total + candidate.oppose_total + directTotal;
+        };
+
+        const sortedCandidates = [...allCandidates].sort((a, b) => {
+          if (hasWinnersAndLosers) {
+            if (a.candidate.won && !b.candidate.won) { return -1; }
+            if (!a.candidate.won && b.candidate.won) { return 1; }
+          }
+          return getTotal(b.candidate) - getTotal(a.candidate);
+        });
+
         return (
           <div key={raceId} className={styles.cardSection}>
             <Link href={`/2026/elections/${raceId}`}>
               <h3>{getRaceName(raceId)}</h3>
             </Link>
-            {influenced.map((candidate) => {
-              const committeeNames = Object.keys(
-                elections[shortId].spending,
-              ).map((cid) => (
-                <CommitteeLink
-                  key={cid}
-                  committeeId={cid}
-                  committeeName={COMMITTEES ? COMMITTEES[cid].name : cid}
-                />
-              ));
-              const beneficiary =
-                candidate.has_non_pac_support && candidate.candidate_id
-                  ? beneficiaries[candidate.candidate_id]
-                  : undefined;
-              return (
-                <Influenced
-                  key={candidate.candidate_id}
-                  candidate={candidate}
-                  committeeNames={committeeNames}
-                  beneficiary={beneficiary}
-                  races={elections[shortId].races}
-                />
-              );
+            {sortedCandidates.map(({ candidate, isInfluenced }) => {
+              if (isInfluenced) {
+                const committeeNames = Object.keys(
+                  elections[shortId].spending,
+                ).map((cid) => (
+                  <CommitteeLink
+                    key={cid}
+                    committeeId={cid}
+                    committeeName={COMMITTEES ? COMMITTEES[cid].name : cid}
+                  />
+                ));
+                const beneficiary =
+                  candidate.has_non_pac_support && candidate.candidate_id
+                    ? beneficiaries[candidate.candidate_id]
+                    : undefined;
+                return (
+                  <Influenced
+                    key={candidate.candidate_id}
+                    candidate={candidate}
+                    committeeNames={committeeNames}
+                    beneficiary={beneficiary}
+                    races={elections[shortId].races}
+                  />
+                );
+              } else {
+                return (
+                  <OtherOnlyInfluenced
+                    key={candidate.candidate_id}
+                    candidate={candidate}
+                    beneficiary={beneficiaries[candidate.candidate_id!]}
+                    races={elections[shortId].races}
+                  />
+                );
+              }
             })}
-            {otherOnlyInfluenced.map((candidate) => (
-              <OtherOnlyInfluenced
-                key={candidate.candidate_id}
-                candidate={candidate}
-                beneficiary={beneficiaries[candidate.candidate_id!]}
-                races={elections[shortId].races}
-              />
-            ))}
           </div>
         );
       })}

@@ -32,7 +32,21 @@ export async function generateMetadata({
   });
 }
 
-export default async function CommitteePage({
+export default function CommitteePage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ committeeId: string }>;
+  searchParams: Promise<{ sort?: string }>;
+}) {
+  return (
+    <Suspense fallback={<CommitteeDetailsSkeleton />}>
+      <CommitteePageContent params={params} searchParams={searchParams} />
+    </Suspense>
+  );
+}
+
+async function CommitteePageContent({
   params,
   searchParams,
 }: {

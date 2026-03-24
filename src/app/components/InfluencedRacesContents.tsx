@@ -200,6 +200,7 @@ function CandidateRow({
     race.year,
     true,
   );
+  console.log(candidate);
   if (!small) {
     return (
       <tr className={styles.influencedTableRow} key={candidate.common_name}>

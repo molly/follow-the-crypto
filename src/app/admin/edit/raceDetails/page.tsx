@@ -17,6 +17,7 @@ interface CandidateFormData {
   withdrew?: boolean;
   withdrewRaceType?: string;
   withdrewRaceParty?: Party;
+  won?: boolean;
 }
 
 interface RaceFormData {
@@ -82,6 +83,17 @@ export default function RaceDetailsEditor() {
     });
   };
 
+  const setWinner = (winnerIndex: number | null) => {
+    const updatedCandidates = raceForm.candidates.map((c, i) => {
+      if (winnerIndex === null) {
+        const { won: _won, ...rest } = c;
+        return rest as CandidateFormData;
+      }
+      return { ...c, won: i === winnerIndex ? true : false };
+    });
+    setRaceForm({ ...raceForm, candidates: updatedCandidates });
+  };
+
   const fetchExistingRaces = async (state: string) => {
     try {
       const docRef = doc(db, "raceDetails", state);
@@ -142,6 +154,7 @@ export default function RaceDetailsEditor() {
         withdrew: c.withdrew,
         withdrewRaceType: c.withdrew_race?.type || "",
         withdrewRaceParty: c.withdrew_race?.party,
+        won: c.won,
       })),
     });
   };
@@ -211,6 +224,11 @@ export default function RaceDetailsEditor() {
             candidateData.declineReason = candidate.declineReason;
           }
 
+          // Only include won if explicitly set
+          if (candidate.won !== undefined) {
+            candidateData.won = candidate.won;
+          }
+
           // Only include withdrew if true
           if (candidate.withdrew) {
             candidateData.withdrew = true;
@@ -255,6 +273,23 @@ export default function RaceDetailsEditor() {
         raceGroup.manualRaces.push(race);
       }
       raceGroup.manualRacesUpdated = Date.now();
+
+      // Update candidates dict for those who did not win
+      const hasWinner = raceForm.candidates.some((c) => c.won === true);
+      if (hasWinner) {
+        if (!raceGroup.candidates) {
+          raceGroup.candidates = {};
+        }
+        for (const candidate of raceForm.candidates) {
+          if (candidate.won === false) {
+            raceGroup.candidates[candidate.name] = {
+              ...(raceGroup.candidates[candidate.name] || {}),
+              defeated: true,
+              defeatedRace: raceForm.type,
+            };
+          }
+        }
+      }
 
       await setDoc(docRef, { [raceId]: raceGroup }, { merge: true });
 
@@ -577,6 +612,27 @@ export default function RaceDetailsEditor() {
                       </span>
                     )}
                   </label>
+                </div>
+
+                {/* Won Checkbox */}
+                <div className={styles.editorInputGroup}>
+                  <label style={{ color: candidate.won === true ? "#006600" : candidate.won === false ? "#990000" : undefined }}>
+                    <input
+                      type="checkbox"
+                      checked={candidate.won === true}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setWinner(index);
+                        } else {
+                          setWinner(null);
+                        }
+                      }}
+                    />
+                    {" "}Won
+                  </label>
+                  {candidate.won === false && (
+                    <span style={{ marginLeft: "1rem", fontSize: "0.85rem", color: "#990000" }}>Did not win</span>
+                  )}
                 </div>
               </div>
             ))}
