@@ -1,4 +1,4 @@
-import { fetchBeneficiaries, fetchElection } from "@/app/actions/fetch";
+import { fetchBeneficiaries, fetchConstant, fetchElection } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import {
   Beneficiary,
@@ -19,14 +19,19 @@ import styles from "./page.module.css";
 
 function Contribution({
   contribution,
+  individualAliases,
 }: {
   contribution: BeneficiaryContribution;
+  individualAliases: Record<string, string>;
 }) {
   let contributorName = null;
   if (contribution.contributor_name) {
-    if (contribution.isIndividual && contribution.individual) {
+    const individualId =
+      contribution.individual ??
+      individualAliases[contribution.contributor_name];
+    if (contribution.isIndividual && individualId) {
       contributorName = (
-        <Link href={`/2026/individuals/${contribution.individual}`}>
+        <Link href={`/2026/individuals/${individualId}`}>
           {titlecaseLastFirst(contribution.contributor_name)}
         </Link>
       );
@@ -66,7 +71,13 @@ function Contribution({
   );
 }
 
-function CompanyGroup({ group }: { group: CompanyContributionGroup }) {
+function CompanyGroup({
+  group,
+  individualAliases,
+}: {
+  group: CompanyContributionGroup;
+  individualAliases: Record<string, string>;
+}) {
   return (
     <div className={styles.companyGroup}>
       <div className={styles.companyGroupHeader}>
@@ -87,6 +98,7 @@ function CompanyGroup({ group }: { group: CompanyContributionGroup }) {
           <Contribution
             key={`${group.company_id}-${ind}`}
             contribution={contribution}
+            individualAliases={individualAliases}
           />
         ))}
       </ul>
@@ -95,9 +107,10 @@ function CompanyGroup({ group }: { group: CompanyContributionGroup }) {
 }
 
 export default async function OtherSupport({ raceId }: { raceId: string }) {
-  const [electionData, beneficiaryData] = await Promise.all([
+  const [electionData, beneficiaryData, individualAliases] = await Promise.all([
     fetchElection(raceId),
     fetchBeneficiaries(),
+    fetchConstant<Record<string, string>>("individualAliases"),
   ]);
   if (isError(electionData) || isError(beneficiaryData)) {
     if (is4xx(electionData) || is4xx(beneficiaryData)) {
@@ -136,6 +149,7 @@ export default async function OtherSupport({ raceId }: { raceId: string }) {
               <CompanyGroup
                 key={`${c.candidate_id}-${group.company_id}`}
                 group={group}
+                individualAliases={individualAliases ?? {}}
               />
             ))}
           </section>
