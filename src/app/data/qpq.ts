@@ -794,4 +794,13 @@ export const qpqData = {
       },
     ],
   },
+  bitclout: {
+    name: "BitClout",
+    benefits: [
+      {
+        text: "SEC enforcement case dismissed with prejudice",
+        link: "https://www.citationneeded.news/issue-103/#in-regulators",
+      },
+    ],
+  },
 };
