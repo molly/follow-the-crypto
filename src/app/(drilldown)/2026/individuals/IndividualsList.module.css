@@ -1,0 +1,56 @@
+.individualRow {
+  display: grid;
+  grid-template-columns: 2.5rem 12rem 1fr 5rem;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.4rem 0;
+}
+
+.avatarWrapper {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+
+.nameAndCompany {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.company {
+  font-size: 0.8rem;
+  color: var(--secondary-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 500px) {
+  .individualRow {
+    grid-template-columns: 2rem 7rem 1fr 3.5rem;
+    gap: 0.5rem;
+  }
+
+  .avatarWrapper {
+    width: 2rem;
+    height: 2rem;
+  }
+}

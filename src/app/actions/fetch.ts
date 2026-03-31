@@ -38,7 +38,7 @@ import {
   RecentExpenditures,
   StateExpenditures,
 } from "../types/Expenditures";
-import { IndividualContributions } from "../types/Individuals";
+import { IndividualContributions, IndividualTotals } from "../types/Individuals";
 import { MapData } from "../types/MapData";
 import { hydrateStateExpenditures } from "./hydrate";
 
@@ -587,6 +587,17 @@ export const fetchAdsByRace = cache(
 export const fetchCompany = cache(
   async (company: string): Promise<Company | ErrorType> =>
     fetchSnapshot("companies", company),
+);
+
+export const fetchIndividualTotalSpending = cache(
+  async (): Promise<IndividualTotals | ErrorType> => {
+    const snapshot = await fetchSnapshot("totals", "individuals");
+    if (isError(snapshot)) {
+      return snapshot as ErrorType;
+    } else {
+      return snapshot as IndividualTotals;
+    }
+  },
 );
 
 // INDIVIDUALS ------------------------------------------------------------

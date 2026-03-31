@@ -8,6 +8,7 @@ import {
 import { isError } from "@/app/utils/errors";
 import { humanizeRoundedCurrency } from "@/app/utils/humanize";
 import Link from "next/link";
+import listStyles from "../listStyles.module.css";
 import styles from "./page.module.css";
 
 type CompanyGroup = {
@@ -31,7 +32,7 @@ function CompanyListGroup({
   }
   return (
     <>
-      <h3 className={styles.subhead}>{title}</h3>
+      <h3 className={listStyles.subhead}>{title}</h3>
       {groups.map(({ id, total }) => {
         const barPct = maxTotal > 0 ? (total / maxTotal) * 100 : 0;
         let roundedTotal = Math.floor(total / 10000) * 10000;
@@ -40,10 +41,10 @@ function CompanyListGroup({
             <div className={styles.companyName} title={companies[id].name}>
               <Link href={`/2026/companies/${id}`}>{companies[id].name}</Link>
             </div>
-            <div className={styles.barTrack}>
-              <div className={styles.bar} style={{ width: `${barPct}%` }} />
+            <div className={listStyles.barTrack}>
+              <div className={listStyles.bar} style={{ width: `${barPct}%` }} />
             </div>
-            <div className={styles.amount}>
+            <div className={listStyles.amount}>
               {humanizeRoundedCurrency(roundedTotal || total)}
             </div>
           </div>

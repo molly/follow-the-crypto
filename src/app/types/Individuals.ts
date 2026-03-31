@@ -11,6 +11,17 @@ export interface IndividualConstant {
   photoCredit?: string;
 }
 
+export type IndividualTotalByIndividual = {
+  by_party: Record<string, number>;
+  total: number;
+};
+
+export type IndividualTotals = {
+  total: number;
+  by_party: Record<string, number>;
+  by_individual: Record<string, IndividualTotalByIndividual>;
+};
+
 export type IndividualContributions = {
   associatedCompany: string[];
   party_summary: Record<string, number>;
