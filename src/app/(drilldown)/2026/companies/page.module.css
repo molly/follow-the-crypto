@@ -1,3 +1,97 @@
 .subhead {
-  margin: 1rem 0 0 0;
+  margin: 1.5rem 0 0.25rem 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--secondary-text);
+}
+
+.summaryCard {
+  background: var(--color-blue-800);
+  border-radius: var(--border-radius);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.summaryCardLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.summaryLabel {
+  color: var(--color-blue-200);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.summaryTotal {
+  color: var(--color-white);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.summaryCount {
+  color: var(--color-blue-200);
+  font-size: 0.95rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.companyRow {
+  display: grid;
+  grid-template-columns: 10rem 1fr 5rem;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.4rem 0;
+}
+
+.companyName {
+  font-size: 0.95rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.barTrack {
+  background: var(--color-slate-300);
+  height: 0.75rem;
+  width: 100%;
+  overflow: hidden;
+}
+
+.bar {
+  background: var(--accent);
+  height: 100%;
+  min-width: 2px;
+}
+
+.amount {
+  font-size: 0.875rem;
+  color: var(--secondary-text);
+  text-align: right;
+  white-space: nowrap;
+}
+
+@media (prefers-color-scheme: dark) {
+  .barTrack {
+    background: var(--color-slate-600);
+  }
+}
+
+@media (max-width: 500px) {
+  .companyRow {
+    grid-template-columns: 8rem 1fr 3.5rem;
+    gap: 0.5rem;
+  }
+
+  .summaryTotal {
+    font-size: 1.5rem;
+  }
 }

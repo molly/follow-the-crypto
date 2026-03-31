@@ -1,13 +1,12 @@
 import { fetchCompanyTotalSpending, fetchConstant } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
-import sharedStyles from "@/app/shared.module.css";
 import {
   CompanyCategory,
   CompanyConstant,
   CompanyTotals,
 } from "@/app/types/Companies";
 import { isError } from "@/app/utils/errors";
-import { formatCurrency } from "@/app/utils/utils";
+import { humanizeRoundedCurrency } from "@/app/utils/humanize";
 import Link from "next/link";
 import styles from "./page.module.css";
 
@@ -20,22 +19,36 @@ function CompanyListGroup({
   title,
   groups,
   companies,
+  maxTotal,
 }: {
   title: string;
   groups: CompanyGroup[];
   companies: Record<string, CompanyConstant>;
+  maxTotal: number;
 }) {
+  if (groups.length === 0) {
+    return null;
+  }
   return (
     <>
       <h3 className={styles.subhead}>{title}</h3>
-      <ul className={sharedStyles.plainList}>
-        {groups.map(({ id, total }) => (
-          <li key={id} className={sharedStyles.plainListItem}>
-            <Link href={`/2026/companies/${id}`}>{companies[id].name}</Link>
-            {` - ${formatCurrency(total)}`}
-          </li>
-        ))}
-      </ul>
+      {groups.map(({ id, total }) => {
+        const barPct = maxTotal > 0 ? (total / maxTotal) * 100 : 0;
+        let roundedTotal = Math.floor(total / 10000) * 10000;
+        return (
+          <div key={id} className={styles.companyRow}>
+            <div className={styles.companyName} title={companies[id].name}>
+              <Link href={`/2026/companies/${id}`}>{companies[id].name}</Link>
+            </div>
+            <div className={styles.barTrack}>
+              <div className={styles.bar} style={{ width: `${barPct}%` }} />
+            </div>
+            <div className={styles.amount}>
+              {humanizeRoundedCurrency(roundedTotal || total)}
+            </div>
+          </div>
+        );
+      })}
     </>
   );
 }
@@ -49,8 +62,11 @@ export default async function CompanyList() {
     return <ErrorText subject="the list of companies" />;
   }
   let totals: Record<string, any> = {};
+  let grandTotal = 0;
   if (!isError(totalsData)) {
-    totals = (totalsData as CompanyTotals).by_company;
+    const t = totalsData as CompanyTotals;
+    totals = t.by_company;
+    grandTotal = t.total;
   }
 
   const companyGroups: Record<string, CompanyGroup[]> = Object.values(
@@ -87,41 +103,62 @@ export default async function CompanyList() {
     },
   );
   for (const key in companyGroups) {
+    companyGroups[key] = companyGroups[key].filter((c) => c.total > 0);
     companyGroups[key].sort((a, b) => b.total - a.total);
   }
+
+  const allCompanies = Object.values(companyGroups).flat();
+  const maxTotal = Math.max(...allCompanies.map((c) => c.total), 1);
+  const companyCount = allCompanies.length;
+
   const companies = data as Record<string, CompanyConstant>;
 
   return (
     <>
+      <div className={styles.summaryCard}>
+        <div className={styles.summaryCardLeft}>
+          <span className={styles.summaryLabel}>Total tracked spending</span>
+          <span className={styles.summaryTotal}>
+            {humanizeRoundedCurrency(grandTotal, true)}
+          </span>
+        </div>
+        <span className={styles.summaryCount}>{companyCount} companies</span>
+      </div>
       <CompanyListGroup
         title="Cryptocurrency companies"
         groups={companyGroups["crypto"]}
         companies={companies}
+        maxTotal={maxTotal}
       />
       <CompanyListGroup
         title="Advocacy groups"
         groups={companyGroups["advocacy"]}
         companies={companies}
+        maxTotal={maxTotal}
       />
       <CompanyListGroup
         title="Crypto-specific investment companies"
         groups={companyGroups["crypto-capital"]}
         companies={companies}
+        maxTotal={maxTotal}
       />
       <CompanyListGroup
         title="Investment companies"
         groups={companyGroups["capital"]}
         companies={companies}
+        maxTotal={maxTotal}
       />
       <CompanyListGroup
         title="Finance companies with crypto involvement"
         groups={companyGroups["finance"]}
         companies={companies}
+        maxTotal={maxTotal}
       />
       <CompanyListGroup
         title="Prediction markets"
         groups={companyGroups["prediction"]}
         companies={companies}
+        maxTotal={maxTotal}
       />
     </>
   );

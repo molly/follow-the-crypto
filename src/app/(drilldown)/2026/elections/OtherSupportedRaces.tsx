@@ -98,9 +98,6 @@ function CandidateRow({
   const raceName = getRaceName(raceId);
   const election = stateElections?.[shortRaceId];
 
-  if (!STATES_BY_ABBR[candidateDetails.state]) {
-    console.log(candidateDetails.state);
-  }
   return (
     <tr className={styles.influencedTableRow} key={id}>
       <td className="text-cell">
