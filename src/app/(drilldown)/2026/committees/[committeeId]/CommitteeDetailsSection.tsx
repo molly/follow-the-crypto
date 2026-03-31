@@ -1,3 +1,5 @@
+import React from "react";
+
 import { formatDateFromString } from "../../../../utils/utils";
 
 import { fetchCommitteeDetails } from "@/app/actions/fetch";
@@ -34,20 +36,37 @@ export default async function CommitteeDetailsSection({
 
   const committee = committeeData as CommitteeDetails;
 
-  const renderDetails = (): string => {
-    return ""
-      .concat(
-        committee.committee_type_full ? committee.committee_type_full : "",
-      )
-      .concat(
-        committee.designation_full ? ` - ${committee.designation_full}` : "",
-      )
-      .concat(` | ID: ${committee.id}`)
-      .concat(
-        committee.first_f1_date
-          ? ` | Registration date: ${formatDateFromString(committee.first_f1_date)}`
-          : "",
+  const renderDetails = () => {
+    const parts: React.ReactNode[] = [];
+
+    if (committee.committee_type_full) {
+      parts.push(committee.committee_type_full);
+    }
+
+    if (committee.designation_full) {
+      parts.push(` - ${committee.designation_full}`);
+    }
+
+    parts.push(
+      <span key="id">
+        {" | ID: "}
+        <a
+          href={`https://www.fec.gov/data/committee/${committee.id}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {committee.id}
+        </a>
+      </span>,
+    );
+
+    if (committee.first_f1_date) {
+      parts.push(
+        ` | Registration date: ${formatDateFromString(committee.first_f1_date)}`,
       );
+    }
+
+    return parts;
   };
 
   return (

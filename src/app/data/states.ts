@@ -46,6 +46,7 @@ export const STATES_BY_ABBR: Record<string, string> = {
   UT: "Utah",
   VT: "Vermont",
   VA: "Virginia",
+  VI: "US Virgin Islands",
   WA: "Washington",
   WV: "West Virginia",
   WI: "Wisconsin",
@@ -98,6 +99,7 @@ export const STATES_BY_FULL: Record<string, string> = {
   Tennessee: "TN",
   Texas: "TX",
   Utah: "UT",
+  "US Virgin Islands": "VI",
   Vermont: "VT",
   Virginia: "VA",
   Washington: "WA",
@@ -106,4 +108,4 @@ export const STATES_BY_FULL: Record<string, string> = {
   Wyoming: "WY",
 };
 
-export const SINGLE_MEMBER_STATES = ["AK", "DE", "ND", "SD", "VT", "WY"];
+export const SINGLE_MEMBER_STATES = ["AK", "DE", "ND", "SD", "VI", "VT", "WY"];
