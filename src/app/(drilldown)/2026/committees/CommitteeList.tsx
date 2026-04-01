@@ -1,9 +1,189 @@
 import { fetchCommitteesWithContributions } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
-import sharedStyles from "@/app/shared.module.css";
 import type { CommitteeConstantWithContributions } from "@/app/types/Committee";
 import { isError } from "@/app/utils/errors";
+import { humanizeRoundedCurrency } from "@/app/utils/humanize";
 import Link from "next/link";
+import listStyles from "../listStyles.module.css";
+import styles from "./CommitteeList.module.css";
+
+type PacGroup = "super" | "hybrid" | "connected" | "other";
+
+function getPacGroup(committee: CommitteeConstantWithContributions): PacGroup {
+  if (committee.committee_type === "O") {
+    return "super";
+  }
+  if (committee.committee_type === "V" || committee.committee_type === "W") {
+    return "hybrid";
+  }
+  if (committee.designation === "B" || committee.organization_type === "C") {
+    return "connected";
+  }
+  return "other";
+}
+
+const PAC_GROUP_LABELS: Record<PacGroup, string> = {
+  super: "Super PAC",
+  hybrid: "Hybrid PAC",
+  connected: "Corporation or lobbyist PAC",
+  other: "PAC",
+};
+
+const PAC_GROUP_ORDER: PacGroup[] = ["super", "hybrid", "connected", "other"];
+
+function CommitteeRow({
+  committee,
+  maxTotal,
+  indented = false,
+}: {
+  committee: CommitteeConstantWithContributions;
+  maxTotal: number;
+  indented?: boolean;
+}) {
+  const spent = committee.independent_expenditures || 0;
+  const totalRaised = committee.total;
+  const spentBarPct = maxTotal > 0 ? (spent / maxTotal) * 100 : 0;
+  const cashBarPct =
+    maxTotal > 0 ? (Math.max(0, totalRaised - spent) / maxTotal) * 100 : 0;
+  const roundedSpent = Math.floor(spent / 10000) * 10000;
+  const roundedRaised = Math.floor(totalRaised / 10000) * 10000;
+  return (
+    <div className={`${styles.committeeRow}${indented ? ` ${styles.committeeRowIndented}` : ""}`}>
+      <div
+        className={`${styles.committeeName}${indented ? ` ${styles.committeeNameIndented}` : ""}`}
+        title={committee.name}
+      >
+        <Link href={`/2026/committees/${committee.id}`}>{committee.name}</Link>
+      </div>
+      <div className={listStyles.barTrack}>
+        {spent > 0 && (
+          <div
+            className={listStyles.bar}
+            style={{ width: `${spentBarPct}%` }}
+          />
+        )}
+        {cashBarPct > 0 && (
+          <div
+            className={listStyles.barRaised}
+            style={{ width: `${cashBarPct}%` }}
+          />
+        )}
+      </div>
+      <div className={listStyles.amountCell}>
+        {spent > 0 ? (
+          <>
+            <span className={listStyles.amountCash}>
+              {humanizeRoundedCurrency(roundedSpent || spent)} spent
+            </span>
+            <span className={listStyles.amountDivider}>/</span>
+            <span className={listStyles.amountRaised}>
+              {humanizeRoundedCurrency(roundedRaised || totalRaised)} raised
+            </span>
+          </>
+        ) : (
+          <span className={listStyles.amountRaised}>
+            {humanizeRoundedCurrency(roundedRaised || totalRaised)}
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function CommitteeGroup({
+  title,
+  committees,
+  maxTotal,
+}: {
+  title: string;
+  committees: CommitteeConstantWithContributions[];
+  maxTotal: number;
+}) {
+  if (committees.length === 0) {
+    return null;
+  }
+
+  const groupTotal = committees.reduce((sum, c) => sum + c.total, 0);
+  const roundedGroupTotal = Math.floor(groupTotal / 1000000) * 1000000;
+
+  // Split into network subgroups and standalone committees
+  const networkMap = new Map<string, CommitteeConstantWithContributions[]>();
+  const standalone: CommitteeConstantWithContributions[] = [];
+
+  for (const committee of committees) {
+    if (committee.network) {
+      const existing = networkMap.get(committee.network) ?? [];
+      existing.push(committee);
+      networkMap.set(committee.network, existing);
+    } else {
+      standalone.push(committee);
+    }
+  }
+
+  // Interleave networks and standalones sorted by their max total descending
+  type Slot =
+    | {
+        kind: "network";
+        name: string;
+        members: CommitteeConstantWithContributions[];
+      }
+    | { kind: "standalone"; committee: CommitteeConstantWithContributions };
+
+  const slots: Slot[] = [];
+  for (const [name, members] of networkMap) {
+    slots.push({ kind: "network", name, members });
+  }
+  for (const committee of standalone) {
+    slots.push({ kind: "standalone", committee });
+  }
+  slots.sort((a, b) => {
+    const aTotal =
+      a.kind === "network"
+        ? Math.max(...a.members.map((c) => c.total))
+        : a.committee.total;
+    const bTotal =
+      b.kind === "network"
+        ? Math.max(...b.members.map((c) => c.total))
+        : b.committee.total;
+    return bTotal - aTotal;
+  });
+
+  return (
+    <>
+      <h3 className={listStyles.subhead}>
+        {title}{" "}
+        <span className={listStyles.subheadTotal}>
+          {humanizeRoundedCurrency(roundedGroupTotal || groupTotal, true)} cash
+          on hand
+        </span>
+      </h3>
+      {slots.map((slot) => {
+        if (slot.kind === "network") {
+          return (
+            <div key={slot.name} className={styles.networkGroup}>
+              <div className={styles.networkLabel}>{slot.name} network</div>
+              {slot.members.map((committee) => (
+                <CommitteeRow
+                  key={committee.id}
+                  committee={committee}
+                  maxTotal={maxTotal}
+                  indented
+                />
+              ))}
+            </div>
+          );
+        }
+        return (
+          <CommitteeRow
+            key={slot.committee.id}
+            committee={slot.committee}
+            maxTotal={maxTotal}
+          />
+        );
+      })}
+    </>
+  );
+}
 
 export default async function CommitteeList() {
   const data = await fetchCommitteesWithContributions();
@@ -14,13 +194,52 @@ export default async function CommitteeList() {
 
   const committees = data as CommitteeConstantWithContributions[];
 
+  const grouped: Record<PacGroup, CommitteeConstantWithContributions[]> = {
+    super: [],
+    hybrid: [],
+    connected: [],
+    other: [],
+  };
+  for (const committee of committees) {
+    grouped[getPacGroup(committee)].push(committee);
+  }
+
+  const grandTotal = committees.reduce((sum, c) => sum + c.total, 0);
+  const maxTotal = Math.max(...committees.map((c) => c.total), 1);
+
   return (
-    <ul className={sharedStyles.plainList}>
-      {committees.map((committee) => (
-        <li key={committee.id} className={sharedStyles.plainListItem}>
-          <Link href={`/2026/committees/${committee.id}`}>{committee.name}</Link>
-        </li>
+    <>
+      <div className={styles.summaryCard}>
+        <div className={styles.summaryCardLeft}>
+          <span className={styles.summaryLabel}>Total cash on hand</span>
+          <span className={styles.summaryTotal}>
+            {humanizeRoundedCurrency(grandTotal, true)}
+          </span>
+        </div>
+        <span className={styles.summaryCount}>{committees.length} PACs</span>
+      </div>
+      <div className={styles.legend}>
+        <div className={styles.legendItem}>
+          <div
+            className={`${styles.legendSwatch} ${styles.legendSwatchCash}`}
+          />
+          <span>Spent</span>
+        </div>
+        <div className={styles.legendItem}>
+          <div
+            className={`${styles.legendSwatch} ${styles.legendSwatchRaised}`}
+          />
+          <span>Cash on hand</span>
+        </div>
+      </div>
+      {PAC_GROUP_ORDER.map((group) => (
+        <CommitteeGroup
+          key={group}
+          title={PAC_GROUP_LABELS[group]}
+          committees={grouped[group]}
+          maxTotal={maxTotal}
+        />
       ))}
-    </ul>
+    </>
   );
 }

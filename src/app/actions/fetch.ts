@@ -191,11 +191,12 @@ export const fetchSuperPACsByReceipts = cache(
 // Fetch all committees and sort them by total receipts
 export const fetchCommitteesWithContributions = cache(
   async (): Promise<CommitteeConstantWithContributions[] | ErrorType> => {
-    const [contributionsData, committeesData, committeeConstants] =
+    const [contributionsData, committeesData, committeeConstants, expendituresData] =
       await Promise.all([
         fetchCollection("contributions"),
         fetchCollection("committees"),
         fetchConstant<Record<string, CommitteeConstant>>("committees"),
+        fetchSnapshot("expenditures", "total"),
       ]);
     if (isError(contributionsData)) {
       return contributionsData as ErrorType;
@@ -213,6 +214,9 @@ export const fetchCommitteesWithContributions = cache(
       committeesDocData.forEach((doc) => {
         committees[doc.id] = doc.data() as CommitteeDetails;
       });
+      const expendituresByCommittee: Record<string, number> = isError(expendituresData)
+        ? {}
+        : (expendituresData as { by_committee: Record<string, number> }).by_committee ?? {};
       const contributionsCommittees = contributions.map((doc) => ({
         ...doc.data(),
         id: doc.id,
@@ -225,6 +229,10 @@ export const fetchCommitteesWithContributions = cache(
           total_transferred: committee.total_transferred || 0,
           last_cash_on_hand_end_period:
             committees[committee.id]?.last_cash_on_hand_end_period || 0,
+          committee_type: committees[committee.id]?.committee_type,
+          designation: committees[committee.id]?.designation,
+          organization_type: committees[committee.id]?.organization_type,
+          independent_expenditures: expendituresByCommittee[committee.id] ?? null,
           total:
             (committee.total_contributed || 0) +
             (committee.total_transferred || 0) +
@@ -234,12 +242,7 @@ export const fetchCommitteesWithContributions = cache(
           (committee) =>
             committee.total + (committee.claimedCommitted || 0) > 0,
         );
-      committeesWithTotals.sort(
-        (a, b) =>
-          b.total +
-          (b.claimedCommitted || 0) -
-          (a.total + (a.claimedCommitted || 0)),
-      );
+      committeesWithTotals.sort((a, b) => b.total - a.total);
       return committeesWithTotals;
     }
   },

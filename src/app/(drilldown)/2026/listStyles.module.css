@@ -7,17 +7,36 @@
   color: var(--secondary-text);
 }
 
+.subheadTotal {
+  background: var(--color-blue-100);
+  color: var(--color-blue-700);
+  border-radius: 999px;
+  padding: 0.1em 0.6em;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
 .barTrack {
   background: var(--color-slate-300);
   height: 0.75rem;
   width: 100%;
   overflow: hidden;
+  display: flex;
 }
 
 .bar {
   background: var(--accent);
   height: 100%;
   min-width: 2px;
+  flex-shrink: 0;
+}
+
+.barRaised {
+  background: var(--color-blue-400);
+  height: 100%;
+  flex-shrink: 0;
 }
 
 .amount {
@@ -27,8 +46,50 @@
   white-space: nowrap;
 }
 
+.amountCommitted {
+  font-size: 0.75rem;
+  color: var(--secondary-text);
+  opacity: 0.7;
+  text-align: right;
+}
+
+.amountCell {
+  font-size: 0.875rem;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.amountCash {
+  color: var(--accent);
+}
+
+.amountDivider {
+  color: var(--secondary-text);
+  opacity: 0.4;
+  margin: 0 0.2em;
+}
+
+.amountRaised {
+  color: var(--color-blue-400);
+}
+
 @media (prefers-color-scheme: dark) {
   .barTrack {
     background: var(--color-slate-600);
+  }
+}
+
+@media (max-width: 500px) {
+  .amountCash {
+    display: block;
+  }
+
+  .amountDivider {
+    display: none;
+  }
+
+  .amountRaised {
+    display: block;
+    font-size: 0.75rem;
   }
 }
