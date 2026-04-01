@@ -1,6 +1,7 @@
-import { fetchCommitteesWithContributions } from "@/app/actions/fetch";
+import { fetchCommitteeTotalReceipts, fetchCommitteesWithContributions } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
-import type { CommitteeConstantWithContributions } from "@/app/types/Committee";
+import MoneyCard from "@/app/components/MoneyCard";
+import type { CommitteeConstantWithContributions, TotalsForCommittees } from "@/app/types/Committee";
 import { isError } from "@/app/utils/errors";
 import { humanizeRoundedCurrency } from "@/app/utils/humanize";
 import Link from "next/link";
@@ -48,7 +49,9 @@ function CommitteeRow({
   const roundedSpent = Math.floor(spent / 10000) * 10000;
   const roundedRaised = Math.floor(totalRaised / 10000) * 10000;
   return (
-    <div className={`${styles.committeeRow}${indented ? ` ${styles.committeeRowIndented}` : ""}`}>
+    <div
+      className={`${styles.committeeRow}${indented ? ` ${styles.committeeRowIndented}` : ""}`}
+    >
       <div
         className={`${styles.committeeName}${indented ? ` ${styles.committeeNameIndented}` : ""}`}
         title={committee.name}
@@ -186,7 +189,10 @@ function CommitteeGroup({
 }
 
 export default async function CommitteeList() {
-  const data = await fetchCommitteesWithContributions();
+  const [data, receiptsData] = await Promise.all([
+    fetchCommitteesWithContributions(),
+    fetchCommitteeTotalReceipts(),
+  ]);
 
   if (isError(data)) {
     return <ErrorText subject="the list of committees" />;
@@ -204,20 +210,37 @@ export default async function CommitteeList() {
     grouped[getPacGroup(committee)].push(committee);
   }
 
-  const grandTotal = committees.reduce((sum, c) => sum + c.total, 0);
   const maxTotal = Math.max(...committees.map((c) => c.total), 1);
+
+  let cardAmount: string;
+  let cardBottomText: string | React.ReactElement = "on hand to influence 2026 elections.";
+  if (!isError(receiptsData)) {
+    const totals = receiptsData as TotalsForCommittees;
+    const confirmedCash = totals.net_receipts + totals.cash_on_hand;
+    cardAmount = humanizeRoundedCurrency(confirmedCash, true);
+    if (totals.claimed_committed) {
+      cardBottomText = (
+        <div>
+          on hand to influence 2026 elections.
+          <p>{`They claim to have another ${humanizeRoundedCurrency(totals.claimed_committed, true)} committed.`}</p>
+        </div>
+      );
+    }
+  } else {
+    cardAmount = humanizeRoundedCurrency(
+      committees.reduce((sum, c) => sum + c.total, 0),
+      true,
+    );
+  }
 
   return (
     <>
-      <div className={styles.summaryCard}>
-        <div className={styles.summaryCardLeft}>
-          <span className={styles.summaryLabel}>Total cash on hand</span>
-          <span className={styles.summaryTotal}>
-            {humanizeRoundedCurrency(grandTotal, true)}
-          </span>
-        </div>
-        <span className={styles.summaryCount}>{committees.length} PACs</span>
-      </div>
+      <MoneyCard
+        topText={`${committees.length} cryptocurrency-focused PACs have`}
+        amount={cardAmount}
+        bottomText={cardBottomText}
+        className={listStyles.centeredCard}
+      />
       <div className={styles.legend}>
         <div className={styles.legendItem}>
           <div

@@ -1,3 +1,7 @@
+.centeredCard {
+  margin: 1rem auto 0;
+}
+
 .subhead {
   margin: 1.5rem 0 0.25rem 0;
   font-size: 0.75rem;

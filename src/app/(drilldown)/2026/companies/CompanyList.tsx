@@ -1,5 +1,6 @@
 import { fetchCompanyTotalSpending, fetchConstant } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
+import MoneyCard from "@/app/components/MoneyCard";
 import {
   CompanyCategory,
   CompanyConstant,
@@ -116,15 +117,12 @@ export default async function CompanyList() {
 
   return (
     <>
-      <div className={styles.summaryCard}>
-        <div className={styles.summaryCardLeft}>
-          <span className={styles.summaryLabel}>Total tracked spending</span>
-          <span className={styles.summaryTotal}>
-            {humanizeRoundedCurrency(grandTotal, true)}
-          </span>
-        </div>
-        <span className={styles.summaryCount}>{companyCount} companies</span>
-      </div>
+      <MoneyCard
+        topText={`${companyCount} companies and their executives have contributed`}
+        amount={humanizeRoundedCurrency(grandTotal, true)}
+        bottomText="to candidates and political action committees"
+        className={listStyles.centeredCard}
+      />
       <CompanyListGroup
         title="Cryptocurrency companies"
         groups={companyGroups["crypto"]}
