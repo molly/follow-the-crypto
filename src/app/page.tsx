@@ -8,6 +8,7 @@ import AllCompanySpendingByParty from "./components/home/AllCompanySpendingByPar
 import AllCompanySpendingMap from "./components/home/AllCompanySpendingMap";
 import AllExpendituresByCommittee from "./components/home/AllExpendituresByCommittee";
 import AllExpendituresByParty from "./components/home/AllExpendituresByParty";
+import AllRecentContributions from "./components/home/AllRecentContributions";
 import AllRecentExpenditures from "./components/home/AllRecentExpenditures";
 import SuperPacSpendingMapWrapper from "./components/home/SuperPacSpendingMapWrapper";
 import TotalCompanySpending from "./components/home/TotalCompanySpending";
@@ -65,6 +66,7 @@ export default function Home() {
           <AllExpendituresByCommittee />
           <AllExpendituresByParty />
           <AllRecentExpenditures />
+          <AllRecentContributions />
         </div>
       </div>
     </main>

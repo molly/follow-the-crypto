@@ -131,6 +131,17 @@ export type RecipientCandidateDetails = {
   election_years?: number[];
 };
 
+export type RecentContribution = IndividualOrCompanyContribution & {
+  source_id: string;
+  source_name: string;
+  source_type: "individual" | "company";
+  source_company?: string[];
+  source_company_ids?: string[];
+  committee_description?: string;
+  candidate_ids?: string[];
+  candidate_details?: Record<string, RecipientCandidateDetails>;
+};
+
 export type RecipientDetails = {
   committee_id: string;
   committee_name?: string;

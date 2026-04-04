@@ -95,6 +95,13 @@
   flex-direction: column;
 }
 
+.recentContributions {
+  composes: cardWithTable from "@/app/shared.module.css";
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
 .recentExpendituresWrapper {
   height: 100%;
 }

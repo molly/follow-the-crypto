@@ -6,7 +6,11 @@ import {
   CommitteeDetails,
   TotalsForCommittees,
 } from "@/app/types/Committee";
-import { Contributions, RecipientDetails } from "@/app/types/Contributions";
+import {
+  Contributions,
+  RecentContribution,
+  RecipientDetails,
+} from "@/app/types/Contributions";
 import { getAdDate } from "@/app/utils/ads";
 import { ErrorType, isError } from "@/app/utils/errors";
 import {
@@ -425,6 +429,18 @@ export const fetchAllExpenditureTotalsByParty = cache(
       return data as ErrorType;
     } else {
       return data as ExpendituresByParty;
+    }
+  },
+);
+
+// Fetch recent contributions from all tracked individuals and companies
+export const fetchAllRecentContributions = cache(
+  async (): Promise<RecentContribution[] | ErrorType> => {
+    const data = await fetchSnapshot("contributions", "recent");
+    if (isError(data)) {
+      return data as ErrorType;
+    } else {
+      return (data as { all: RecentContribution[] }).all;
     }
   },
 );
