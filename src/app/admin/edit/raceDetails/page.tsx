@@ -26,6 +26,21 @@ interface RaceFormData {
   candidates: CandidateFormData[];
 }
 
+function shardIndex(raceId: string): number {
+  const parts = raceId.split("-");
+  if (parts[0] === "H" && parts.length > 1) {
+    const district = parseInt(parts[1], 10);
+    if (!isNaN(district)) {
+      return district % 10;
+    }
+  }
+  return 0;
+}
+
+function shardDocName(state: string, raceId: string): string {
+  return `${state}_${shardIndex(raceId)}`;
+}
+
 export default function RaceDetailsEditor() {
   const [selectedState, setSelectedState] = useState<string>("");
   const [raceId, setRaceId] = useState<string>("");
@@ -84,14 +99,15 @@ export default function RaceDetailsEditor() {
 
   const fetchExistingRaces = async (state: string) => {
     try {
-      const docRef = doc(db, "raceDetails", state);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        const existingData = docSnap.data();
-        setExistingRaceIds(Object.keys(existingData).sort());
-      } else {
-        setExistingRaceIds([]);
+      const allRaceIds: string[] = [];
+      for (let i = 0; i < 10; i++) {
+        const docRef = doc(db, "raceDetails", `${state}_${i}`);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          allRaceIds.push(...Object.keys(docSnap.data()));
+        }
       }
+      setExistingRaceIds(allRaceIds.sort());
     } catch (err) {
       console.error("Error fetching existing races:", err);
       setExistingRaceIds([]);
@@ -100,7 +116,7 @@ export default function RaceDetailsEditor() {
 
   const fetchManualRacesForRaceId = async (state: string, raceIdToFetch: string) => {
     try {
-      const docRef = doc(db, "raceDetails", state);
+      const docRef = doc(db, "raceDetails", shardDocName(state, raceIdToFetch));
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         const existingData = docSnap.data();
@@ -173,8 +189,8 @@ export default function RaceDetailsEditor() {
     setSaveState("pending");
 
     try {
-      // Fetch existing raceDetails for the state
-      const docRef = doc(db, "raceDetails", selectedState);
+      // Fetch existing raceDetails for the state (correct shard)
+      const docRef = doc(db, "raceDetails", shardDocName(selectedState, raceId));
       const docSnap = await getDoc(docRef);
       const existingData = docSnap.exists() ? docSnap.data() : {};
 

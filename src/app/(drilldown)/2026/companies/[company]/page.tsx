@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import {
-  fetchAllRecipients,
   fetchCompany,
   fetchNonCandidateCommittees,
 } from "@/app/actions/fetch";
@@ -11,10 +10,7 @@ import InformationalTooltip from "@/app/components/InformationalTooltip";
 import USMapSkeleton from "@/app/components/skeletons/USMapSkeleton";
 import sharedStyles from "@/app/shared.module.css";
 import { Company } from "@/app/types/Companies";
-import {
-  IndividualOrCompanyContributionGroup,
-  RecipientDetails,
-} from "@/app/types/Contributions";
+import { IndividualOrCompanyContributionGroup } from "@/app/types/Contributions";
 import { isError } from "@/app/utils/errors";
 import { customMetadata } from "@/app/utils/metadata";
 import { formatCompanyName } from "@/app/utils/names";
@@ -47,19 +43,15 @@ export default async function CompanyPage({
   params: Promise<{ company: string }>;
 }) {
   const { company: companyParam } = await params;
-  const [companyData, recipientData, nonCandidateCommittees] =
+  const [companyData, nonCandidateCommittees] =
     await Promise.all([
       fetchCompany(companyParam),
-      fetchAllRecipients(),
       fetchNonCandidateCommittees(),
     ]);
   if (isError(companyData)) {
     return <ErrorText subject="company data" />;
   }
   const company = companyData as Company;
-  const recipients = isError(recipientData)
-    ? {}
-    : (recipientData as Record<string, RecipientDetails>);
 
   // Filter out omitted contributions and recompute group totals
   const visibleContributions = (company.contributions ?? [])
@@ -138,7 +130,7 @@ export default async function CompanyPage({
                   <ContributionsGroup
                     key={`contrib-group-${ind}`}
                     contributionsGroup={contributionGroup}
-                    recipient={recipients[contributionGroup.committee_id]}
+                    recipient={contributionGroup.recipient}
                     company={company.name}
                     relatedIndividuals={company.relatedIndividuals}
                     nonCandidateCommittees={nonCandidateCommittees}

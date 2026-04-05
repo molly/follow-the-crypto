@@ -119,6 +119,7 @@ export type IndividualOrCompanyContributionGroup = {
   contributions: IndividualOrCompanyContribution[];
   committee_id: string;
   total: number;
+  recipient?: RecipientDetails;
 };
 
 export type RecipientCandidateDetails = {

@@ -514,6 +514,15 @@ export default function CompanyContributionReviewPage() {
                 </>
               )}
 
+              {contribution.receipt_type && (
+                <>
+                  <span style={{ color: "#666" }}>Line Number:</span>
+                  <span style={{ fontFamily: "monospace", fontSize: "0.85em" }}>
+                    {contribution.receipt_type}
+                  </span>
+                </>
+              )}
+
               {contribution.transaction_id && (
                 <>
                   <span style={{ color: "#666" }}>Transaction ID:</span>

@@ -1,7 +1,7 @@
 import {
-  fetchAllRecipients,
   fetchBeneficiaries,
   fetchConstant,
+  fetchTrumpCommittees,
 } from "@/app/actions/fetch";
 import ExternalLinkIcon from "@/app/components/ExternalLinkIcon";
 import tableStyles from "@/app/components/tables.module.css";
@@ -11,7 +11,7 @@ import {
   type Beneficiary,
   type CompanyContributionGroup,
 } from "@/app/types/Beneficiaries";
-import { type RecipientDetails } from "@/app/types/Contributions";
+
 import { QPQ } from "@/app/types/Qpq";
 import { isError } from "@/app/utils/errors";
 import { humanizeRoundedCurrency } from "@/app/utils/humanize";
@@ -31,13 +31,13 @@ export default async function QuidProQuoPage() {
   // Fetch contribution data from the backend
   const [
     beneficiariesResult,
-    recipientsResult,
+    trumpCommitteesData,
     committeesConstant,
     senateConstant,
     houseConstant,
   ] = await Promise.all([
     fetchBeneficiaries(),
-    fetchAllRecipients(),
+    fetchTrumpCommittees(),
     fetchConstant<Record<string, { id: string; name: string }>>("committees"),
     fetchConstant<{ ids: string[] }>("senateCommittees"),
     fetchConstant<{ ids: string[] }>("houseCommittees"),
@@ -56,25 +56,18 @@ export default async function QuidProQuoPage() {
 
   const resolveCompanyId = (id: string): string => companyIdAliases[id] ?? id;
 
+  const trumpCommitteeIds = new Set<string>([
+    TRUMP_CANDIDATE_ID,
+    ...(trumpCommitteesData?.ids ?? []),
+  ]);
+
   // Build maps of company_id -> total contributions per committee category
   const trumpContribsByCompany = new Map<string, number>();
   const cryptoContribsByCompany = new Map<string, number>();
   const senateContribsByCompany = new Map<string, number>();
   const houseContribsByCompany = new Map<string, number>();
-  if (!isError(beneficiariesResult) && !isError(recipientsResult)) {
+  if (!isError(beneficiariesResult)) {
     const beneficiaries = beneficiariesResult as Record<string, Beneficiary>;
-    const recipients = recipientsResult as Record<string, RecipientDetails>;
-
-    // Discover all Trump-affiliated committee IDs
-    const trumpCommitteeIds = new Set<string>([TRUMP_CANDIDATE_ID]);
-    for (const [id, details] of Object.entries(recipients)) {
-      if (
-        details.candidate_ids?.includes(TRUMP_CANDIDATE_ID) ||
-        details.sponsor_candidate_ids?.includes(TRUMP_CANDIDATE_ID)
-      ) {
-        trumpCommitteeIds.add(id);
-      }
-    }
 
     // Aggregate contributions by company for each committee category
     for (const [id, beneficiary] of Object.entries(beneficiaries)) {

@@ -20,6 +20,21 @@ interface ConflictGroup {
   raceId: string;
 }
 
+function shardIndex(raceId: string): number {
+  const parts = raceId.split("-");
+  if (parts[0] === "H" && parts.length > 1) {
+    const district = parseInt(parts[1], 10);
+    if (!isNaN(district)) {
+      return district % 10;
+    }
+  }
+  return 0;
+}
+
+function shardDocName(state: string, raceId: string): string {
+  return `${state}_${shardIndex(raceId)}`;
+}
+
 export default function RaceReviewPage() {
   const [conflicts, setConflicts] = useState<RaceConflict[]>([]);
   const [selectedConflict, setSelectedConflict] = useState<RaceConflict | null>(
@@ -54,7 +69,12 @@ export default function RaceReviewPage() {
       const foundConflicts: RaceConflict[] = [];
 
       snapshot.forEach((stateDoc) => {
-        const state = stateDoc.id;
+        const docId = stateDoc.id;
+        const lastUnderscore = docId.lastIndexOf("_");
+        const state =
+          lastUnderscore !== -1 && /^\d$/.test(docId.slice(lastUnderscore + 1))
+            ? docId.slice(0, lastUnderscore)
+            : docId;
         const stateData = stateDoc.data() as ElectionsByState;
 
         Object.entries(stateData).forEach(([raceId, raceGroup]) => {
@@ -126,7 +146,7 @@ export default function RaceReviewPage() {
 
     setSaveState("pending");
     try {
-      const docRef = doc(db, "raceDetails", selectedConflict.state);
+      const docRef = doc(db, "raceDetails", shardDocName(selectedConflict.state, selectedConflict.raceId));
       const docSnap = await getDoc(docRef);
       const existingData = docSnap.exists() ? docSnap.data() : {};
       const raceGroup = existingData[selectedConflict.raceId] || {};
@@ -183,7 +203,7 @@ export default function RaceReviewPage() {
           break;
       }
 
-      const docRef = doc(db, "raceDetails", conflict.state);
+      const docRef = doc(db, "raceDetails", shardDocName(conflict.state, conflict.raceId));
       await updateDoc(docRef, {
         [`${conflict.raceId}.races`]: newRaces,
         [`${conflict.raceId}.lastReviewed`]: Date.now(),

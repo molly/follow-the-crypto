@@ -1,5 +1,4 @@
 import {
-  fetchAllRecipients,
   fetchBeneficiaries,
   fetchBeneficiariesOrder,
 } from "@/app/actions/fetch";
@@ -10,10 +9,10 @@ import COMMITTEES from "@/app/data/committees";
 import { SINGLE_MEMBER_STATES, STATES_BY_ABBR } from "@/app/data/states";
 import {
   Beneficiary,
+  BeneficiaryCommittee,
   CandidateBeneficiary as CandidateBeneficiaryType,
   CommitteeBeneficiary as CommitteeBeneficiaryType,
 } from "@/app/types/Beneficiaries";
-import { RecipientDetails } from "@/app/types/Contributions";
 import { isError } from "@/app/utils/errors";
 import { getRaceName } from "@/app/utils/races";
 import { titlecaseCommittee, titlecaseLastFirst } from "@/app/utils/titlecase";
@@ -28,7 +27,7 @@ function CommitteeBeneficiary({
 }: {
   id: string;
   beneficiary: CommitteeBeneficiaryType;
-  committee?: RecipientDetails;
+  committee?: BeneficiaryCommittee;
 }) {
   return (
     <tr className={tableStyles.beneficiariesRow}>
@@ -95,11 +94,10 @@ function CandidateBeneficiary({
 }
 
 export default async function BeneficiariesList() {
-  const [beneficiariesData, beneficiariesOrderData, recipientCommitteesData] =
+  const [beneficiariesData, beneficiariesOrderData] =
     await Promise.all([
       fetchBeneficiaries(),
       fetchBeneficiariesOrder(),
-      fetchAllRecipients(),
     ]);
   if (isError(beneficiariesData) || isError(beneficiariesOrderData)) {
     return <ErrorText subject="the list of beneficiaries" />;
@@ -107,9 +105,6 @@ export default async function BeneficiariesList() {
 
   const beneficiaries = beneficiariesData as Record<string, Beneficiary>;
   const beneficiariesOrder = beneficiariesOrderData as string[];
-  const committees = isError(recipientCommitteesData)
-    ? {}
-    : (recipientCommitteesData as Record<string, RecipientDetails>);
 
   return (
     <div className="single-column-page">
@@ -133,7 +128,7 @@ export default async function BeneficiariesList() {
                   <CommitteeBeneficiary
                     id={id}
                     beneficiary={beneficiary}
-                    committee={committees[id]}
+                    committee={beneficiary.committee_details}
                     key={id}
                   />
                 );

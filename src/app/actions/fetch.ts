@@ -281,6 +281,11 @@ export const fetchNonCandidateCommittees = cache(
   },
 );
 
+export const fetchTrumpCommittees = cache(
+  async (): Promise<{ ids: string[]; names: Record<string, string> } | null> =>
+    fetchConstant("trumpCommittees"),
+);
+
 // EXPENDITURES ----------------------------------------------------------
 export const fetchAllExpenditures = cache(
   async (): Promise<Record<ExpenditureId, Expenditure> | ErrorType> =>
@@ -295,24 +300,30 @@ export const fetchAllRaceIds = cache(
     } else {
       const electionsData = data as DocumentData[];
       const raceIds: Record<string, string[]> = {};
-      electionsData.forEach((doc) => {
-        const electionsByState = doc.data() as ElectionsByState;
-        if (!(doc.id in raceIds)) {
-          raceIds[doc.id] = [];
+      electionsData.forEach((stateDoc) => {
+        const lastUnderscore = stateDoc.id.lastIndexOf("_");
+        const state =
+          lastUnderscore !== -1 && /^\d$/.test(stateDoc.id.slice(lastUnderscore + 1))
+            ? stateDoc.id.slice(0, lastUnderscore)
+            : stateDoc.id;
+        const electionsByState = stateDoc.data() as ElectionsByState;
+        if (!(state in raceIds)) {
+          raceIds[state] = [];
         }
         for (const raceId of Object.keys(electionsByState)) {
-          raceIds[doc.id].push(raceId);
+          raceIds[state].push(raceId);
         }
-        raceIds[doc.id].sort((a, b) => {
+      });
+      for (const state of Object.keys(raceIds)) {
+        raceIds[state].sort((a, b) => {
           const senateRacePattern = /^S(-special)?$/;
           const aIsSenate = senateRacePattern.test(a);
           const bIsSenate = senateRacePattern.test(b);
-
           if (aIsSenate && !bIsSenate) return -1;
           if (!aIsSenate && bIsSenate) return 1;
           return a.localeCompare(b);
         });
-      });
+      }
       return raceIds;
     }
   },
@@ -455,8 +466,16 @@ export const fetchAllStateElections = cache(
     } else {
       const electionsData = data as DocumentData[];
       const electionsByState: Record<string, ElectionsByState> = {};
-      electionsData.forEach((doc) => {
-        electionsByState[doc.id] = doc.data() as ElectionsByState;
+      electionsData.forEach((stateDoc) => {
+        const lastUnderscore = stateDoc.id.lastIndexOf("_");
+        const state =
+          lastUnderscore !== -1 && /^\d$/.test(stateDoc.id.slice(lastUnderscore + 1))
+            ? stateDoc.id.slice(0, lastUnderscore)
+            : stateDoc.id;
+        if (!(state in electionsByState)) {
+          electionsByState[state] = {};
+        }
+        Object.assign(electionsByState[state], stateDoc.data() as ElectionsByState);
       });
       return electionsByState;
     }
@@ -464,8 +483,24 @@ export const fetchAllStateElections = cache(
 );
 
 export const fetchStateElections = cache(
-  async (stateAbbr: string): Promise<ElectionsByState | ErrorType> =>
-    fetchSnapshot("raceDetails", stateAbbr),
+  async (stateAbbr: string): Promise<ElectionsByState | ErrorType> => {
+    try {
+      const merged: ElectionsByState = {};
+      for (let i = 0; i < 10; i++) {
+        const docRef = doc(db, "raceDetails", `${stateAbbr}_${i}`);
+        const snapshot = await getDoc(docRef);
+        if (snapshot.exists()) {
+          Object.assign(merged, snapshot.data() as ElectionsByState);
+        }
+      }
+      if (Object.keys(merged).length > 0) {
+        return merged;
+      }
+      return { error: true, statusCode: 404 };
+    } catch (e) {
+      return { error: true };
+    }
+  },
 );
 
 export const fetchElection = cache(

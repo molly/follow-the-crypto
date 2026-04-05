@@ -91,11 +91,14 @@ export default function ConstantsEditor() {
   useEffect(() => {
     (async () => {
       try {
-        const [committeesSnap, affiliationsSnap, recipientsSnap] =
+        const shardIds = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+        const [committeesSnap, affiliationsSnap, ...recipientShards] =
           await Promise.all([
             getDoc(doc(db, "constants", "allCommittees")),
             getDoc(doc(db, "constants", "committeeAffiliations")),
-            getDoc(doc(db, "allRecipients", "recipients")),
+            ...shardIds.map((d) =>
+              getDoc(doc(db, "allRecipients", `recipients_${d}`)),
+            ),
           ]);
 
         const descriptions: Record<string, string> = committeesSnap.exists()
@@ -111,10 +114,12 @@ export default function ConstantsEditor() {
           ...Object.keys(affiliations),
         ]);
 
-        const recipients: Record<string, RecipientDetails> =
-          recipientsSnap.exists()
-            ? (recipientsSnap.data() as Record<string, RecipientDetails>)
-            : {};
+        const recipients: Record<string, RecipientDetails> = {};
+        for (const shard of recipientShards) {
+          if (shard.exists()) {
+            Object.assign(recipients, shard.data() as Record<string, RecipientDetails>);
+          }
+        }
         const names: Record<string, string> = {};
         for (const [id, details] of Object.entries(recipients)) {
           names[id] = details.committee_name ?? id;

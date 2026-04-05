@@ -28,7 +28,7 @@ export type CompanyContributionGroup = {
   contributions: BeneficiaryContribution[];
 };
 
-export type BeneficiaryCommittee = { designation_full?: string } & Pick<
+export type BeneficiaryCommittee = { designation_full?: string; party?: string } & Pick<
   AllCommitteesSummary,
   "committee_type_full" | "description" | "committee_name" | "committee_id"
 >;

@@ -13,11 +13,11 @@ import styles from "./page.module.css";
 
 function ByDate({
   individual,
-  recipients,
+  recipientsByCommitteeId,
   nonCandidateCommittees,
 }: {
   individual: IndividualContributions;
-  recipients: Record<string, RecipientDetails>;
+  recipientsByCommitteeId: Record<string, RecipientDetails>;
   nonCandidateCommittees: Set<string>;
 }) {
   if (!individual.contributions_by_date) {
@@ -28,8 +28,8 @@ function ByDate({
       contribution={contribution}
       key={`contribution-${ind}`}
       recipient={
-        contribution.committee_id && contribution.committee_id in recipients
-          ? recipients[contribution.committee_id]
+        contribution.committee_id
+          ? recipientsByCommitteeId[contribution.committee_id]
           : undefined
       }
       nonCandidateCommittees={nonCandidateCommittees}
@@ -39,11 +39,9 @@ function ByDate({
 
 function ByRecipient({
   individual,
-  recipients,
   nonCandidateCommittees,
 }: {
   individual: IndividualContributions;
-  recipients: Record<string, RecipientDetails>;
   nonCandidateCommittees: Set<string>;
 }) {
   return individual.contributions.map(
@@ -52,7 +50,7 @@ function ByRecipient({
         <ContributionsGroup
           key={`contrib-group-${ind}`}
           contributionsGroup={contributionsGroup}
-          recipient={recipients[contributionsGroup.committee_id]}
+          recipient={contributionsGroup.recipient}
           nonCandidateCommittees={nonCandidateCommittees}
         />
       );
@@ -62,17 +60,21 @@ function ByRecipient({
 
 export default function ContributionsCardContent({
   individual,
-  recipients,
   nonCandidateCommittees: nonCandidateCommitteesArray = [],
 }: {
   individual: IndividualContributions;
-  recipients: Record<string, RecipientDetails>;
   nonCandidateCommittees?: string[];
 }) {
   const nonCandidateCommittees = new Set(nonCandidateCommitteesArray);
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const sort = searchParams.get("sort") || "recipient";
+
+  const recipientsByCommitteeId = Object.fromEntries(
+    individual.contributions
+      .filter((g) => g.recipient)
+      .map((g) => [g.committee_id, g.recipient!]),
+  );
 
   return (
     <>
@@ -86,10 +88,10 @@ export default function ContributionsCardContent({
         </Link>
       </div>
       {sort === "recipient" && (
-        <ByRecipient individual={individual} recipients={recipients} nonCandidateCommittees={nonCandidateCommittees} />
+        <ByRecipient individual={individual} nonCandidateCommittees={nonCandidateCommittees} />
       )}
       {sort === "date" && (
-        <ByDate individual={individual} recipients={recipients} nonCandidateCommittees={nonCandidateCommittees} />
+        <ByDate individual={individual} recipientsByCommitteeId={recipientsByCommitteeId} nonCandidateCommittees={nonCandidateCommittees} />
       )}
     </>
   );

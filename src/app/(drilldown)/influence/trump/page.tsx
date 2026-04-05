@@ -1,6 +1,6 @@
 import {
-  fetchAllRecipients,
   fetchBeneficiaries,
+  fetchTrumpCommittees,
 } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import tableStyles from "@/app/components/tables.module.css";
@@ -10,7 +10,6 @@ import {
   type CompanyContributionGroup,
   type Beneficiary,
 } from "@/app/types/Beneficiaries";
-import { RecipientDetails } from "@/app/types/Contributions";
 import { isError } from "@/app/utils/errors";
 import { customMetadata } from "@/app/utils/metadata";
 import { titlecaseCommittee } from "@/app/utils/titlecase";
@@ -26,9 +25,9 @@ export const metadata: Metadata = customMetadata({
 });
 
 export default async function TrumpContributionsPage() {
-  const [beneficiariesData, recipientsData] = await Promise.all([
+  const [beneficiariesData, trumpCommitteesData] = await Promise.all([
     fetchBeneficiaries(),
-    fetchAllRecipients(),
+    fetchTrumpCommittees(),
   ]);
 
   if (isError(beneficiariesData)) {
@@ -36,21 +35,11 @@ export default async function TrumpContributionsPage() {
   }
 
   const beneficiaries = beneficiariesData as Record<string, Beneficiary>;
-  const recipients = isError(recipientsData)
-    ? {}
-    : (recipientsData as Record<string, RecipientDetails>);
-
-  // Dynamically discover all Trump-affiliated committee IDs by checking
-  // which recipients list Trump as an associated or sponsor candidate.
-  const trumpCommitteeIds = new Set<string>([TRUMP_CANDIDATE_ID]);
-  for (const [id, details] of Object.entries(recipients)) {
-    if (
-      details.candidate_ids?.includes(TRUMP_CANDIDATE_ID) ||
-      details.sponsor_candidate_ids?.includes(TRUMP_CANDIDATE_ID)
-    ) {
-      trumpCommitteeIds.add(id);
-    }
-  }
+  const trumpCommitteeIds = new Set<string>([
+    TRUMP_CANDIDATE_ID,
+    ...(trumpCommitteesData?.ids ?? []),
+  ]);
+  const trumpCommitteeNames: Record<string, string> = trumpCommitteesData?.names ?? {};
 
   // Filter beneficiaries to Trump-affiliated committees/candidate.
   const trumpBeneficiaries = Object.fromEntries(
@@ -95,7 +84,7 @@ export default async function TrumpContributionsPage() {
     .map(([id, total]) => ({
       id,
       name:
-        recipients[id]?.committee_name ??
+        trumpCommitteeNames[id] ??
         trumpBeneficiary?.committee_details?.committee_name ??
         id,
       total,

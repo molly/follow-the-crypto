@@ -1,7 +1,6 @@
-import { fetchAllRecipients, fetchIndividual, fetchNonCandidateCommittees } from "@/app/actions/fetch";
+import { fetchIndividual, fetchNonCandidateCommittees } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import individualStyles from "@/app/components/individualOrCompany/individualOrCompany.module.css";
-import { RecipientDetails } from "@/app/types/Contributions";
 import { IndividualContributions } from "@/app/types/Individuals";
 import { is4xx, isError } from "@/app/utils/errors";
 import ContributionsCardContent from "./ContributionsCardContent";
@@ -12,9 +11,8 @@ export default async function Contributions({
 }: {
   individualId: string;
 }) {
-  const [individualData, recipientsData, nonCandidateCommittees] = await Promise.all([
+  const [individualData, nonCandidateCommittees] = await Promise.all([
     fetchIndividual(individualId),
-    fetchAllRecipients(),
     fetchNonCandidateCommittees(),
   ]);
   if (isError(individualData) && !is4xx(individualData)) {
@@ -34,14 +32,10 @@ export default async function Contributions({
     );
   }
   const individual = individualData as IndividualContributions;
-  const recipients = isError(recipientsData)
-    ? {}
-    : (recipientsData as Record<string, RecipientDetails>);
   return (
     <section className={styles.contributionSection}>
       <ContributionsCardContent
         individual={individual}
-        recipients={recipients}
         nonCandidateCommittees={Array.from(nonCandidateCommittees)}
       />
     </section>
