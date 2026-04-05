@@ -98,6 +98,17 @@
   color: var(--color-black);
 }
 
+.sectorBadge {
+  background-color: var(--color-black);
+  color: var(--color-white);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  padding: 0.1rem 0.25rem;
+  border-radius: 0.25rem;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+
 .plainList {
   list-style: none;
   padding: 0;
@@ -136,6 +147,10 @@
 
 .goalInline {
   max-height: 100%;
+}
+
+.linkRow {
+  margin-top: 0.5rem;
 }
 
 @media (min-width: 500px) {

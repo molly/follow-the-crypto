@@ -62,8 +62,8 @@ export default async function Home({
           </div>
           <div className={styles.sideColumn}>
             <AllCompanySpendingByParty />
-            <AllCashByCommittee />
-            <AllExpendituresByCommittee />
+            <AllCashByCommittee sector={sector} />
+            <AllExpendituresByCommittee sector={sector} />
             <AllExpendituresByParty />
             <AllRecentExpenditures />
             <AllRecentContributions />

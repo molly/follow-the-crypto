@@ -44,11 +44,9 @@ export default function SpendingPage() {
           Cryptocurrency-focused PACs have contributed to both support and
           oppose candidates from Republican and Democratic parties.
         </p>
-        <div className={styles.chartWrapper}>
-          <Suspense fallback={<SpendingByPartySkeleton />}>
-            <SpendingByPartyWithOppositionChart />
-          </Suspense>
-        </div>
+        <Suspense fallback={<SpendingByPartySkeleton />}>
+          <SpendingByPartyWithOppositionChart />
+        </Suspense>
         <p>
           However, spending to oppose Democrats does not always support
           Republicans, and vice versa. For example, when a PAC opposes a

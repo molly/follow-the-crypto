@@ -1,9 +1,10 @@
-import styles from "@/app/components/tables.module.css";
+import sharedStyles from "@/app/shared.module.css";
 import { AllCommitteesSummary } from "@/app/types/Committee";
 import { ErrorType, isError } from "@/app/utils/errors";
 import { titlecaseCommittee } from "@/app/utils/titlecase";
 import Link from "next/link";
 import ErrorText from "./ErrorText";
+import styles from "./tables.module.css";
 
 export default async function PACsByReceiptsTableContents({
   data,
@@ -62,7 +63,7 @@ export default async function PACsByReceiptsTableContents({
           committeeIdentifier = (
             <Link href={`/2026/committees/${committee.committee_id}`}>
               <span className={styles.trackedCommittee}>{committeeName}</span>{" "}
-              <span className={styles.sectorBadge}>{sector}</span>
+              <span className={sharedStyles.sectorBadge}>{sector}</span>
             </Link>
           );
         }

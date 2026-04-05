@@ -53,8 +53,30 @@ export const humanizeRoundedCurrency = (
     }
     return `$${amount} million`;
   }
+  if (value >= 1000) {
+    let amount;
+    if (round) {
+      amount = Math.floor(value / 1000) * 1000;
+    } else {
+      amount = value;
+    }
+    return formatCurrency(amount, true);
+  }
   return formatCurrency(value, true);
 };
+
+export function formatCompact(value: number): string {
+  if (value >= 1_000_000_000) {
+    return `$${parseFloat((value / 1_000_000_000).toPrecision(3))}B`;
+  }
+  if (value >= 1_000_000) {
+    return `$${parseFloat((value / 1_000_000).toPrecision(3))}M`;
+  }
+  if (value >= 1_000) {
+    return `$${parseFloat((value / 1_000).toPrecision(3))}K`;
+  }
+  return `$${value}`;
+}
 
 export const pluralize = (
   value: number,

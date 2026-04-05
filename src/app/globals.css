@@ -40,10 +40,10 @@
   --accent: #7ab800;
   --accent-on-light: #5a8a00;
 
-  --party-republican: #e81b23;
-  --party-democrat: #3333ff;
-  --party-libertarian: #fed105;
-  --party-green: #17aa5c;
+  --party-republican: #b57a7a;
+  --party-democrat: #7a9ab5;
+  --party-libertarian: #c9a84c;
+  --party-green: #6a9e7f;
   --party-independent: #ddddbb;
   --party-unknown: var(--color-neutral-300);
   --background-start: var(--color-neutral-50);

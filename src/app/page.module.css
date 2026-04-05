@@ -38,17 +38,17 @@
 }
 
 .companySpendingCard {
-  composes: card from "@/app/components/expenditures.module.css";
+  composes: section from "@/app/shared.module.css";
   grid-area: companySpending;
 }
 
 .allCashCard {
-  composes: card from "@/app/components/expenditures.module.css";
+  composes: section from "@/app/shared.module.css";
   grid-area: allCash;
 }
 
 .expendituresByCommitteeCard {
-  composes: card from "@/app/components/expenditures.module.css";
+  composes: section from "@/app/shared.module.css";
   grid-area: byCommittee;
 }
 

@@ -4,6 +4,7 @@ import {
 } from "@/app/actions/fetch";
 import styles from "@/app/page.module.css";
 import { CommitteeConstant } from "@/app/types/Committee";
+import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
 import { Suspense } from "react";
 import ErrorText from "../ErrorText";
@@ -12,8 +13,10 @@ import AllExpendituresByCommitteeChart from "./AllExpendituresByCommitteeChart";
 
 async function AllExpendituresByCommitteeContent({
   labelId,
+  sector,
 }: {
   labelId: string;
+  sector: Sector;
 }) {
   const [expendituresData, committeeConstantData] = await Promise.all([
     fetchAllCommitteeExpenditures(),
@@ -28,16 +31,19 @@ async function AllExpendituresByCommitteeContent({
       expenditures={expendituresData as Record<string, number>}
       committeeConstants={committeeConstants}
       labelId={labelId}
+      sector={sector}
     />
   );
 }
 
-export default function AllExpendituresByCommittee() {
+export default function AllExpendituresByCommittee({ sector }: { sector: Sector }) {
   return (
     <section className={styles.expendituresByCommitteeCard}>
-      <h2 id="expenditures-by-committee-label">PAC expenditures</h2>
+      <h2 id="expenditures-by-committee-label">
+        PAC expenditures by committee
+      </h2>
       <Suspense fallback={<ExpendituresSkeleton />}>
-        <AllExpendituresByCommitteeContent labelId="expenditures-by-committee-label" />
+        <AllExpendituresByCommitteeContent labelId="expenditures-by-committee-label" sector={sector} />
       </Suspense>
     </section>
   );

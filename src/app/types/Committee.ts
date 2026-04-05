@@ -8,6 +8,7 @@ export type CommitteeConstant = {
   description?: TrustedHTML;
   claimedCommitted?: number;
   network?: string;
+  sector?: BESector;
 };
 
 export type CommitteeConstantWithContributions = CommitteeConstant & {

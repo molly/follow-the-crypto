@@ -1,0 +1,143 @@
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.25rem;
+  margin-bottom: 1rem;
+  font-size: 0.8rem;
+  color: var(--secondary-text);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.legendSwatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.bars {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.barRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.labelRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.value {
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--secondary-text);
+  white-space: nowrap;
+}
+
+.track {
+  width: 100%;
+  height: 14px;
+  background: transparent;
+  border-radius: 2px;
+  overflow: hidden;
+  display: flex;
+}
+
+/* Single-color fill (HorizontalPartyBars) */
+.fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+/* Stacked segments (AllCashByCommitteeChart) */
+.segment {
+  height: 100%;
+  flex-shrink: 0;
+}
+
+/* Grouped layout (SpendingByPartyWithOpposition) */
+.groups {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.groupHeader {
+  font-size: 0.75rem;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--secondary-text);
+}
+
+.inlineRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.inlineLabel {
+  composes: label;
+  width: 7rem;
+  flex-shrink: 0;
+}
+
+.inlineTrack {
+  flex: 1;
+  height: 14px;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.inlineValue {
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--secondary-text);
+  white-space: nowrap;
+  width: 4.5rem;
+}
+
+/* Segment / swatch colors */
+.colorCash {
+  background: #3a5c00;
+}
+
+.colorContributed {
+  background: var(--accent-on-light);
+}
+
+.colorTransferred {
+  background: #b8db3d;
+}
+
+.colorClaimed {
+  background: #d4d4d4;
+}

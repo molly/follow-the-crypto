@@ -1,5 +1,5 @@
 import { fetchAllExpenditureTotalsByParty } from "@/app/actions/fetch";
-import styles from "@/app/components/expenditures.module.css";
+import styles from "@/app/shared.module.css";
 import { ExpendituresByParty } from "@/app/types/Expenditures";
 import { isError } from "@/app/utils/errors";
 import Link from "next/link";
@@ -23,14 +23,16 @@ async function AllExpendituresByPartyContent({ labelId }: { labelId: string }) {
 
 export default function AllExpendituresByParty() {
   return (
-    <section className={styles.card}>
+    <section className={styles.section}>
       <h2 id="expenditures-by-party-label">
-        All crypto PAC expenditures by party
+        PAC expenditures by political outcome
       </h2>
       <Suspense fallback={<ExpendituresSkeleton />}>
         <AllExpendituresByPartyContent labelId="expenditures-by-party-label" />
       </Suspense>
-      <Link href="/2026/spending">&raquo; More details</Link>
+      <div className={styles.linkRow}>
+        <Link href="/2026/spending">&raquo; More details</Link>
+      </div>
     </section>
   );
 }

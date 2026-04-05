@@ -16,38 +16,38 @@ export default function Header() {
             <div className={styles.navItem}>
               <a href="#">Spending</a>
               <div className={styles.dropdown}>
-                <a href="#">By committees</a>
-                <a href="#">By companies</a>
-                <a href="#">By individuals</a>
-                <a href="#">Recent expenditures</a>
+                <Link href="/2026/committees">By committees</Link>
+                <Link href="/2026/companies">By companies</Link>
+                <Link href="/2026/individuals">By individuals</Link>
+                <Link href="/2026/expenditures">Recent expenditures</Link>
               </div>
             </div>
             <div className={styles.navItem}>
               <a href="#">Elections</a>
               <div className={styles.dropdown}>
-                <a href="#">By state</a>
-                <a href="#">All elections</a>
+                <Link href="/2026/states">By state</Link>
+                <Link href="/2026/elections">All elections</Link>
               </div>
             </div>
             <div className={styles.navItem}>
               <a href="#">Rankings</a>
               <div className={styles.dropdown}>
-                <a href="#">Super PACs</a>
-                <a href="#">All committees</a>
+                <Link href="/2026/committees/ranking/super">Super PACs</Link>
+                <Link href="/2026/committees/ranking/all">All committees</Link>
               </div>
             </div>
             <div className={styles.navItem}>
               <a href="#">Influence</a>
               <div className={styles.dropdown}>
-                <a href="#">Quid pro quo</a>
+                <Link href="/2026/quidproquo">Quid pro quo</Link>
               </div>
             </div>
             <div className={styles.navItem}>
               <a href="#">About</a>
               <div className={styles.dropdown}>
-                <a href="#">About</a>
-                <a href="#">FAQ</a>
-                <a href="#">Contact</a>
+                <Link href="/about">About</Link>
+                <Link href="/about/faq">FAQ</Link>
+                <Link href="/about/contact">Contact</Link>
               </div>
             </div>
           </div>
