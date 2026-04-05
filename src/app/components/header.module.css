@@ -18,14 +18,21 @@
 .title {
   composes: accent-text from "@/app/shared.module.css";
   display: flex;
+  flex-direction: column;
   color: var(--color-white);
-  margin-left: 1rem;
+  margin: 0.5rem 0 0.5rem 1rem;
 }
 
 .titleH1 {
   display: block;
   font-size: 1.8rem;
   margin: 0;
+}
+
+.titleSubtext {
+  font-size: 0.8rem;
+  color: var(--color-neutral-400);
+  margin-top: -0.25rem;
 }
 
 .titleWatch {

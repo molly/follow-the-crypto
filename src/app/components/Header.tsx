@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Logo from "./Logo";
 import SectorButtons from "./SectorButtons";
 import styles from "./header.module.css";
@@ -52,7 +53,9 @@ export default function Header() {
       <div className={styles.sectorWrapper}>
         <div className={styles.sectorContents}>
           Showing:
-          <SectorButtons />
+          <Suspense fallback={null}>
+            <SectorButtons />
+          </Suspense>
         </div>
       </div>
     </header>

@@ -5,14 +5,9 @@ export function MoneyCardSkeleton({ className }: { className?: string }) {
   return (
     <div className={`${sharedStyles.smallCard} ${className || ""}`}>
       <Skeleton width="100%" onCard={true} />
-      <Skeleton width="80%" onCard={true} style={{ margin: "0 auto" }} />
-      <Skeleton
-        width="90%"
-        height="3rem"
-        onCard={true}
-        style={{ margin: "1.5rem auto" }}
-      />
-      <Skeleton width="80%" onCard={true} style={{ margin: "0 auto" }} />
+      <Skeleton width="80%" onCard={true} />
+      <Skeleton width="60%" height="3rem" onCard={true} />
+      <Skeleton width="80%" onCard={true} />
     </div>
   );
 }

@@ -18,21 +18,29 @@ import TotalRaised from "./components/home/TotalRaised";
 import USMapSkeleton from "./components/skeletons/USMapSkeleton";
 import styles from "./page.module.css";
 import sharedStyles from "./shared.module.css";
+import { parseSector } from "./utils/sector";
 
-export default function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ sector?: string }>;
+}) {
+  const { sector: rawSector } = await searchParams;
+  const sector = parseSector(rawSector);
+
   return (
     <div className={sharedStyles.mainLayout}>
       <Header />
       <main className={sharedStyles.main}>
         <div className={styles.totalsRow}>
           <Suspense fallback={<MoneyCardSkeleton />}>
-            <TotalCompanySpending />
+            <TotalCompanySpending sector={sector} />
           </Suspense>
           <Suspense fallback={<MoneyCardSkeleton />}>
-            <TotalRaised />
+            <TotalRaised sector={sector} />
           </Suspense>
           <Suspense fallback={<MoneyCardSkeleton />}>
-            <TotalExpenditures />
+            <TotalExpenditures sector={sector} />
           </Suspense>
         </div>
         <div className={styles.columns}>

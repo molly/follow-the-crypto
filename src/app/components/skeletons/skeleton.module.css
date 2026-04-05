@@ -15,7 +15,7 @@
     var(--skeleton-start) 100%
   );
   background-size: 400% 400%;
-  animation: pulse 1.2s ease-in-out infinite;
+  animation: pulse 2s ease-in-out infinite;
 }
 
 .cardPulse {
@@ -26,7 +26,7 @@
     var(--skeleton-on-card-start) 100%
   );
   background-size: 400% 400%;
-  animation: pulse 1.2s ease-in-out infinite;
+  animation: pulse 2s ease-in-out infinite;
 }
 
 .skeletonLayout {

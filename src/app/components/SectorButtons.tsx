@@ -1,5 +1,7 @@
 "use client";
-import { useSector, type Sector } from "@/app/context/SectorContext";
+
+import { useRouter, useSearchParams } from "next/navigation";
+import { type Sector } from "@/app/utils/sector";
 import styles from "./header.module.css";
 
 const SECTORS: { label: string; value: Sector }[] = [
@@ -9,7 +11,22 @@ const SECTORS: { label: string; value: Sector }[] = [
 ];
 
 export default function SectorButtons() {
-  const { sector, setSector } = useSector();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const rawSector = searchParams.get("sector");
+  const sector: Sector =
+    rawSector === "crypto" || rawSector === "ai" ? rawSector : "all";
+
+  function handleSelect(value: Sector) {
+    const params = new URLSearchParams(searchParams.toString());
+    if (value === "all") {
+      params.delete("sector");
+    } else {
+      params.set("sector", value);
+    }
+    const query = params.toString();
+    router.push(query ? `?${query}` : "?");
+  }
 
   return (
     <>
@@ -17,7 +34,7 @@ export default function SectorButtons() {
         <button
           key={value}
           className={`${styles.sector} ${sector === value ? styles.sectorActive : ""}`}
-          onClick={() => setSector(value)}
+          onClick={() => handleSelect(value)}
         >
           {label}
         </button>

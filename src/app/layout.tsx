@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Barlow_Semi_Condensed, Big_Shoulders } from "next/font/google";
 import "./globals.css";
 import { BASE_METADATA } from "./utils/metadata";
-import { SectorProvider } from "./context/SectorContext";
 
 export const revalidate = 3600;
 const sourceSans = Barlow_Semi_Condensed({
@@ -29,7 +28,7 @@ export default function RootLayout({
         <link rel="me" href="https://hachyderm.io/@followthecrypto" />
       </head>
       <body className={`${sourceSans.variable} ${bebasNueue.variable}`}>
-        <SectorProvider>{children}</SectorProvider>
+        {children}
       </body>
     </html>
   );
