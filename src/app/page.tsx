@@ -61,10 +61,10 @@ export default async function Home({
             </SuperPACsByReceipts>
           </div>
           <div className={styles.sideColumn}>
-            <AllCompanySpendingByParty />
+            <AllCompanySpendingByParty sector={sector} />
             <AllCashByCommittee sector={sector} />
             <AllExpendituresByCommittee sector={sector} />
-            <AllExpendituresByParty />
+            <AllExpendituresByParty sector={sector} />
             <AllRecentExpenditures />
             <AllRecentContributions />
           </div>

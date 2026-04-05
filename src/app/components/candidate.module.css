@@ -7,10 +7,10 @@
 .candidateImageWrapper {
   flex-shrink: 0;
   border-radius: 50%;
-  border-width: 2px;
+  border-width: 3px;
   border-style: solid;
-  width: 54px;
-  height: 54px;
+  width: 56px;
+  height: 56px;
   margin-left: 0.5em;
   margin-right: 0.5em;
   color: var(--placeholder-color);

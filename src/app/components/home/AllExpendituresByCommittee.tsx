@@ -36,14 +36,19 @@ async function AllExpendituresByCommitteeContent({
   );
 }
 
-export default function AllExpendituresByCommittee({ sector }: { sector: Sector }) {
+export default function AllExpendituresByCommittee({
+  sector,
+}: {
+  sector: Sector;
+}) {
   return (
     <section className={styles.expendituresByCommitteeCard}>
-      <h2 id="expenditures-by-committee-label">
-        PAC expenditures by committee
-      </h2>
+      <h2 id="expenditures-by-committee-label">PAC expenditures</h2>
       <Suspense fallback={<ExpendituresSkeleton />}>
-        <AllExpendituresByCommitteeContent labelId="expenditures-by-committee-label" sector={sector} />
+        <AllExpendituresByCommitteeContent
+          labelId="expenditures-by-committee-label"
+          sector={sector}
+        />
       </Suspense>
     </section>
   );

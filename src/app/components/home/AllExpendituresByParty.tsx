@@ -1,7 +1,10 @@
 import { fetchAllExpenditureTotalsByParty } from "@/app/actions/fetch";
+import pageStyles from "@/app/page.module.css";
 import styles from "@/app/shared.module.css";
 import { ExpendituresByParty } from "@/app/types/Expenditures";
+import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
+import { humanizeSector } from "@/app/utils/sector";
 import Link from "next/link";
 import { Suspense } from "react";
 import ErrorText from "../ErrorText";
@@ -21,12 +24,19 @@ async function AllExpendituresByPartyContent({ labelId }: { labelId: string }) {
   );
 }
 
-export default function AllExpendituresByParty() {
+export default function AllExpendituresByParty({ sector }: { sector: Sector }) {
+  const sectorText = humanizeSector(sector, {
+    abbrev: true,
+    lowercase: true,
+    hyphen: true,
+  });
   return (
     <section className={styles.section}>
-      <h2 id="expenditures-by-party-label">
-        PAC expenditures by political outcome
-      </h2>
+      <h2 id="expenditures-by-party-label">PAC expenditures by party</h2>
+      <div className={pageStyles.subtitle}>
+        Independent expenditures by {sectorText}focused PACs in support of or
+        opposition to candidates
+      </div>
       <Suspense fallback={<ExpendituresSkeleton />}>
         <AllExpendituresByPartyContent labelId="expenditures-by-party-label" />
       </Suspense>

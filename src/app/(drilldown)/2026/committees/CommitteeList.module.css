@@ -20,22 +20,22 @@
 }
 
 .legendSwatchCash {
-  background: var(--accent);
+  background: var(--color-lime-800);
 }
 
 .legendSwatchRaised {
-  background: var(--color-blue-400);
+  background: var(--color-lime-500);
 }
 
 .networkGroup {
-  border-left: 2px solid var(--color-blue-800);
+  border-left: 2px solid var(--color-lime-800);
   margin: 0.5rem 0;
 }
 
 .networkLabel {
   font-size: 0.95rem;
   font-weight: 600;
-  color: var(--color-blue-800);
+  color: var(--color-lime-800);
   margin-bottom: 0.1rem;
   padding-left: 0.75rem;
 }
@@ -82,5 +82,4 @@
     grid-column: 2;
     grid-row: 1;
   }
-
 }

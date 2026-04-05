@@ -71,6 +71,13 @@
   height: 100%;
 }
 
+.subtitle {
+  color: var(--secondary-text);
+  font-size: 0.9em;
+  margin-top: -0.5em;
+  margin-bottom: 1em;
+}
+
 @media (max-width: 400px) {
   .hideImageXs {
     display: none;

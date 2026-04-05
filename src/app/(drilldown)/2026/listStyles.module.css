@@ -12,8 +12,8 @@
 }
 
 .subheadTotal {
-  background: var(--color-blue-100);
-  color: var(--color-blue-700);
+  background: var(--color-neutral-200);
+  color: var(--color-black);
   border-radius: 999px;
   padding: 0.1em 0.6em;
   font-size: 0.75rem;
@@ -31,14 +31,14 @@
 }
 
 .bar {
-  background: var(--accent);
+  background: var(--color-lime-800);
   height: 100%;
   min-width: 2px;
   flex-shrink: 0;
 }
 
 .barRaised {
-  background: var(--color-blue-400);
+  background: var(--color-lime-500);
   height: 100%;
   flex-shrink: 0;
 }
@@ -64,7 +64,7 @@
 }
 
 .amountCash {
-  color: var(--accent);
+  color: var(--color-lime-800);
 }
 
 .amountDivider {
@@ -74,7 +74,7 @@
 }
 
 .amountRaised {
-  color: var(--color-blue-400);
+  color: var(--color-lime-500);
 }
 
 @media (prefers-color-scheme: dark) {

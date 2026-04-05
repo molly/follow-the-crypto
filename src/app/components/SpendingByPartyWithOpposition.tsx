@@ -57,10 +57,7 @@ export default function SpendingByPartyWithOpposition({
                     <div className={styles.fill} style={{ width: `${pct}%` }} />
                   </div>
                 ) : (
-                  <span
-                    className={styles.inlineTrack}
-                    aria-hidden={true}
-                  ></span>
+                  <span className={styles.inlineTrack} aria-hidden={true} />
                 )}
                 <span className={styles.inlineValue}>
                   {formatCompact(value)}

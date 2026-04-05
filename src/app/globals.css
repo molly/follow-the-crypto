@@ -37,8 +37,16 @@
   --color-green-400: #4ade80;
   --color-green-700: #15803d;
 
-  --accent: #7ab800;
-  --accent-on-light: #5a8a00;
+  --color-lime-50: #f2f9e0;
+  --color-lime-100: #d6ed8f;
+  --color-lime-300: #b8db3d;
+  --color-lime-500: #7ab800;
+  --color-lime-600: #5a8a00;
+  --color-lime-800: #3a5c00;
+  --color-lime-950: #1e2f00;
+
+  --accent: var(--color-lime-500);
+  --accent-on-light: var(--color-lime-600);
 
   --party-republican: #b57a7a;
   --party-democrat: #7a9ab5;

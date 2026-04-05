@@ -46,31 +46,31 @@
 }
 
 .stateFill1 {
-  fill: #f2f9e0;
+  fill: var(--color-lime-50);
 }
 
 .stateFill2 {
-  fill: #d6ed8f;
+  fill: var(--color-lime-100);
 }
 
 .stateFill3 {
-  fill: #b8db3d;
+  fill: var(--color-lime-300);
 }
 
 .stateFill4 {
-  fill: #7ab800;
+  fill: var(--color-lime-500);
 }
 
 .stateFill5 {
-  fill: #5a8a00;
+  fill: var(--color-lime-600);
 }
 
 .stateFill6 {
-  fill: #3a5c00;
+  fill: var(--color-lime-800);
 }
 
 .stateFill7 {
-  fill: #1e2f00;
+  fill: var(--color-lime-950);
 }
 
 .stateFill1,
