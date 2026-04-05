@@ -23,7 +23,7 @@
 }
 
 .barTrack {
-  background: var(--color-slate-300);
+  background: var(--color-neutral-300);
   height: 0.75rem;
   width: 100%;
   overflow: hidden;
@@ -79,7 +79,7 @@
 
 @media (prefers-color-scheme: dark) {
   .barTrack {
-    background: var(--color-slate-600);
+    background: var(--color-neutral-600);
   }
 }
 

@@ -11,10 +11,6 @@
 .totalAmount {
   font-size: clamp(2rem, 8vw, 4rem);
   font-weight: bold;
-  color: transparent;
-  text-shadow: 0.1rem 0.1rem var(--accent);
-  text-stroke: 1px var(--text-stroke);
-  -webkit-text-stroke: 1px var(--text-stroke);
 }
 
 .card {

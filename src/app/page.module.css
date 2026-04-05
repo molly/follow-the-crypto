@@ -1,36 +1,8 @@
-.titleWrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0;
-}
-
-.title {
-  composes: accent-text from "@/app/shared.module.css";
-  display: flex;
-  justify-content: center;
-  margin: 0 2rem;
-}
-
-.titleH1 {
-  display: block;
-  text-align: center;
-  font-size: clamp(2rem, 5vw, 6rem);
-  margin: 0;
-}
-
-.logoArrow {
-  composes: accent-text from "@/app/shared.module.css";
-  display: flex;
-  font-weight: bold;
-  font-size: clamp(2rem, 5vw, 6rem);
-}
-
 .totalsRow {
   display: grid;
   gap: inherit;
   grid-template-columns: 1fr;
-  margin: 0 auto;
+  margin: 1rem auto 2rem auto;
 }
 
 .columns {
@@ -63,13 +35,6 @@
 .superPacMap {
   composes: card from "@/app/shared.module.css";
   grid-area: superPacMap;
-}
-
-.spentTopSection {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 2.4rem;
 }
 
 .companySpendingCard {
@@ -115,10 +80,6 @@
 @media (min-width: 576px) {
   .totalsRow {
     grid-template-columns: repeat(2, minmax(10rem, 25rem));
-  }
-  .titleH1,
-  .logoArrow {
-    text-shadow: 0.25rem 0.25rem var(--accent);
   }
 }
 

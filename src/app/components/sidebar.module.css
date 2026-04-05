@@ -109,6 +109,6 @@
 
 @media (prefers-color-scheme: dark) {
   .onCardCollapseButton {
-    border-color: var(--color-slate-500);
+    border-color: var(--color-neutral-500);
   }
 }

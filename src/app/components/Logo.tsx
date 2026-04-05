@@ -1,13 +1,11 @@
-import Link from "next/link";
 import styles from "./header.module.css";
 
-export default function Logo({ className }: { className?: string }) {
+export default function Logo() {
   return (
-    <div className={`${styles.logo} ${className ? className : ""}`}>
-      <Link className={styles.logoText} href="/">
-        <span aria-hidden={true}>&darr;</span> Follow the Crypto{" "}
-        <span aria-hidden={true}>&darr;</span>
-      </Link>
+    <div className={styles.title}>
+      <h1 className={styles.titleH1}>
+        Tech Influence <span className={styles.titleWatch}>Watch</span>
+      </h1>
     </div>
   );
 }

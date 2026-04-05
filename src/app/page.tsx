@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import Header from "./components/Header";
 import InfluencedRaces from "./components/InfluencedRaces";
 import { MoneyCardSkeleton } from "./components/MoneyCard";
 import SuperPACsByReceipts from "./components/PACsByReceipts";
@@ -20,55 +21,47 @@ import sharedStyles from "./shared.module.css";
 
 export default function Home() {
   return (
-    <main className={sharedStyles.mainLayout}>
-      <div className={styles.titleWrapper}>
-        <span className={styles.logoArrow} aria-hidden={true}>
-          &darr;
-        </span>
-        <div className={styles.title}>
-          <h1 className={styles.titleH1}>Follow the crypto</h1>
+    <div className={sharedStyles.mainLayout}>
+      <Header />
+      <main className={sharedStyles.main}>
+        <div className={styles.totalsRow}>
+          <Suspense fallback={<MoneyCardSkeleton />}>
+            <TotalCompanySpending />
+          </Suspense>
+          <Suspense fallback={<MoneyCardSkeleton />}>
+            <TotalRaised />
+          </Suspense>
+          <Suspense fallback={<MoneyCardSkeleton />}>
+            <TotalExpenditures />
+          </Suspense>
         </div>
-        <span className={styles.logoArrow} aria-hidden={true}>
-          &darr;
-        </span>
-      </div>
-      <div className={styles.totalsRow}>
-        <Suspense fallback={<MoneyCardSkeleton />}>
-          <TotalCompanySpending />
-        </Suspense>
-        <Suspense fallback={<MoneyCardSkeleton />}>
-          <TotalRaised />
-        </Suspense>
-        <Suspense fallback={<MoneyCardSkeleton />}>
-          <TotalExpenditures />
-        </Suspense>
-      </div>
-      <div className={styles.columns}>
-        <div className={styles.mainColumn}>
-          <InfluencedRaces />
-          <div className={styles.companyMap}>
-            <Suspense fallback={<USMapSkeleton />}>
-              <AllCompanySpendingMap showLink={true} />
-            </Suspense>
+        <div className={styles.columns}>
+          <div className={styles.mainColumn}>
+            <InfluencedRaces />
+            <div className={styles.companyMap}>
+              <Suspense fallback={<USMapSkeleton />}>
+                <AllCompanySpendingMap showLink={true} />
+              </Suspense>
+            </div>
+            <div className={styles.superPacMap}>
+              <Suspense fallback={<USMapSkeleton />}>
+                <SuperPacSpendingMapWrapper showLink={true} />
+              </Suspense>
+            </div>
+            <SuperPACsByReceipts type="super">
+              <SuperPACsByReceiptsTableContents />
+            </SuperPACsByReceipts>
           </div>
-          <div className={styles.superPacMap}>
-            <Suspense fallback={<USMapSkeleton />}>
-              <SuperPacSpendingMapWrapper showLink={true} />
-            </Suspense>
+          <div className={styles.sideColumn}>
+            <AllCompanySpendingByParty />
+            <AllCashByCommittee />
+            <AllExpendituresByCommittee />
+            <AllExpendituresByParty />
+            <AllRecentExpenditures />
+            <AllRecentContributions />
           </div>
-          <SuperPACsByReceipts type="super">
-            <SuperPACsByReceiptsTableContents />
-          </SuperPACsByReceipts>
         </div>
-        <div className={styles.sideColumn}>
-          <AllCompanySpendingByParty />
-          <AllCashByCommittee />
-          <AllExpendituresByCommittee />
-          <AllExpendituresByParty />
-          <AllRecentExpenditures />
-          <AllRecentContributions />
-        </div>
-      </div>
-    </main>
+      </main>
+    </div>
   );
 }

@@ -3,19 +3,21 @@
   --single-column-max-width: 1200px;
   --border-radius: 8px;
 
-  --color-black: #000;
-  --color-white: #fff;
-  --color-slate-50: #f8fafc;
-  --color-slate-100: #f1f5f9;
-  --color-slate-200: #e2e8f0;
-  --color-slate-300: #cbd5e1;
-  --color-slate-400: #94a3b8;
-  --color-slate-500: #64748b;
-  --color-slate-600: #475569;
-  --color-slate-700: #334155;
-  --color-slate-800: #1e293b;
-  --color-slate-900: #0f172a;
-  --color-slate-950: #020617;
+  --color-black: #0a0a0a;
+  --color-true-black: #000000;
+  --color-white: #ffffff;
+
+  --color-neutral-50: oklch(98.5% 0 0);
+  --color-neutral-100: oklch(97% 0 0);
+  --color-neutral-200: oklch(92.2% 0 0);
+  --color-neutral-300: oklch(87% 0 0);
+  --color-neutral-400: oklch(70.8% 0 0);
+  --color-neutral-500: oklch(55.6% 0 0);
+  --color-neutral-600: oklch(43.9% 0 0);
+  --color-neutral-700: oklch(37.1% 0 0);
+  --color-neutral-800: oklch(26.9% 0 0);
+  --color-neutral-900: oklch(20.5% 0 0);
+  --color-neutral-950: oklch(14.5% 0 0);
 
   --color-blue-50: #eff6ff;
   --color-blue-100: #dbeafe;
@@ -35,40 +37,40 @@
   --color-green-400: #4ade80;
   --color-green-700: #15803d;
 
-  --accent: var(--color-blue-600);
+  --accent: #7ab800;
 
   --party-republican: #e81b23;
   --party-democrat: #3333ff;
   --party-libertarian: #fed105;
   --party-green: #17aa5c;
   --party-independent: #ddddbb;
-  --party-unknown: var(--color-slate-300);
-  --background-start: var(--color-slate-50);
-  --background-end: var(--color-slate-300);
+  --party-unknown: var(--color-neutral-300);
+  --background-start: var(--color-neutral-50);
+  --background-end: var(--color-neutral-300);
   --card-background: #fefefe;
   --card-background-rgb: 254, 254, 254;
-  --card-border: var(--color-slate-200);
+  --card-border: var(--color-neutral-200);
   --breadcrumbs-background: var(--color-blue-800);
   --map-background: var(--color-white);
   --logo-background: var(--card-background);
-  --placeholder-color: var(--color-slate-300);
-  --table-color: var(--color-slate-200);
+  --placeholder-color: var(--color-neutral-300);
+  --table-color: var(--color-neutral-200);
   --table-highlight-color: var(--color-blue-100);
-  --table-background-secondary: var(--color-slate-100);
-  --sidebar-border: var(--color-slate-400);
-  --chart-skeleton: var(--color-slate-200);
+  --table-background-secondary: var(--color-neutral-100);
+  --sidebar-border: var(--color-neutral-400);
+  --chart-skeleton: var(--color-neutral-200);
 
-  --main-text: var(--color-slate-950);
-  --text-stroke: var(--color-slate-950);
-  --secondary-text: var(--color-slate-500);
-  --tertiary-text: var(--color-slate-400);
+  --main-text: var(--color-neutral-950);
+  --text-stroke: var(--color-neutral-950);
+  --secondary-text: var(--color-neutral-500);
+  --tertiary-text: var(--color-neutral-400);
   --link-text: var(--accent);
   --link-text-hover: #0a338a;
-  --on-dark-text: var(--color-slate-200);
+  --on-dark-text: var(--color-neutral-200);
 
-  --skeleton-start: var(--color-slate-300);
+  --skeleton-start: var(--color-neutral-300);
   --skeleton-end: #bbc8d8;
-  --skeleton-on-card-start: var(--color-slate-200);
+  --skeleton-on-card-start: var(--color-neutral-200);
   --skeleton-on-card-end: #dbe3ed;
 
   --background-gradient: radial-gradient(
@@ -78,34 +80,34 @@
   );
   --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1),
-    0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-lg:
+    0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background-start: var(--color-slate-900);
-    --background-end: var(--color-slate-950);
-    --card-background: var(--color-slate-800);
+    --background-start: var(--color-neutral-900);
+    --background-end: var(--color-neutral-950);
+    --card-background: var(--color-neutral-800);
     --card-background-rgb: 30, 41, 59;
-    --card-border: var(--color-slate-700);
+    --card-border: var(--color-neutral-700);
     --map-background: var(--card-background);
-    --logo-background: var(--color-slate-400);
-    --placeholder-color: var(--color-slate-300);
-    --table-color: var(--color-slate-700);
+    --logo-background: var(--color-neutral-400);
+    --placeholder-color: var(--color-neutral-300);
+    --table-color: var(--color-neutral-700);
     --table-highlight-color: var(--color-blue-900);
-    --table-background-secondary: var(--color-slate-900);
-    --chart-skeleton: var(--color-slate-700);
+    --table-background-secondary: var(--color-neutral-900);
+    --chart-skeleton: var(--color-neutral-700);
 
-    --main-text: var(--color-slate-200);
-    --text-stroke: var(--color-slate-200);
-    --secondary-text: var(--color-slate-400);
+    --main-text: var(--color-neutral-200);
+    --text-stroke: var(--color-neutral-200);
+    --secondary-text: var(--color-neutral-400);
     --link-text: #a0bcf8;
     --link-text-hover: #c1cff0;
 
-    --skeleton-start: var(--color-slate-800);
+    --skeleton-start: var(--color-neutral-800);
     --skeleton-end: #212e42;
-    --skeleton-on-card-start: var(--color-slate-700);
+    --skeleton-on-card-start: var(--color-neutral-700);
     --skeleton-on-card-end: #37465b;
 
     --party-republican: #a61117;
@@ -117,17 +119,25 @@
   box-sizing: border-box;
 }
 
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
 html,
 body {
   max-width: 100vw;
   min-height: 100vh;
   overflow-x: hidden;
+  font-family: var(--font-sans);
+  font-weight: 400;
 }
 
 body {
   color: var(--main-text);
-  background: var(--background-start);
-  background-image: var(--background-gradient);
+  background: var(--color-white);
   line-height: 1.3;
   padding: 0;
   margin: 0;

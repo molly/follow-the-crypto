@@ -1,19 +1,146 @@
-.header {
-  background-color: var(--card-background);
-  box-shadow: var(--shadow-md);
+.headerWrapper {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  width: 100%;
+  background: var(--color-black);
 }
 
-.logo {
+.logoAndNav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.title {
   composes: accent-text from "@/app/shared.module.css";
-  margin: 0 0 0 3rem;
-  padding: 1rem;
-  font-size: 1.5rem;
-  font-weight: bold;
+  display: flex;
+  color: var(--color-white);
+  margin-left: 1rem;
 }
 
-.logoText {
-  color: transparent;
+.titleH1 {
+  display: block;
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+.titleWatch {
+  color: var(--accent);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-right: 1rem;
+}
+
+.navLinks {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.navItem {
+  position: relative;
+}
+
+.navItem > a {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-neutral-300);
   text-decoration: none;
+  padding: 1rem 0.5rem;
+  display: block;
+  transition: color 0.15s;
+}
+
+.navItem > a:hover {
+  color: var(--color-neutral-200);
+}
+
+.dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: var(--color-black);
+  border: 0.5px solid var(--color-neutral-800);
+  border-top: 2px solid var(--accent);
+  min-width: 11rem;
+  z-index: 200;
+}
+
+.dropdown a {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--color-neutral-200);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-bottom: 0.5px solid var(--color-neutral-900);
+  transition:
+    color 0.15s,
+    background 0.15s;
+}
+
+.dropdown a:last-child {
+  border-bottom: none;
+}
+
+.dropdown a:hover {
+  color: var(--color-white);
+  background: var(--color-neutral-800);
+}
+
+.navItem:hover .dropdown {
+  display: block;
+}
+
+.navItem:nth-last-child(-n + 2) .dropdown {
+  left: auto;
+  right: -1rem;
+}
+
+.sectorWrapper {
+  background-color: var(--color-white);
+  color: var(--color-neutral-500);
+  border-bottom: 1px solid var(--color-neutral-200);
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  text-transform: uppercase;
+}
+
+.sectorContents {
+  padding: 0.5rem 1rem;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.sector {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-neutral-200);
+  color: var(--color-neutral-500);
+  text-transform: inherit;
+  font-weight: 600;
+  margin-left: 0.5rem;
+}
+
+.sector:not(.sectorActive):hover {
+  background-color: var(--color-neutral-100);
+  border-color: var(--color-neutral-300);
+  color: var(--color-neutral-700);
+}
+
+.sectorActive {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: var(--color-white);
 }
 
 .breadcrumbsContainer {
@@ -40,6 +167,6 @@
 
 @media (prefers-color-scheme: dark) {
   .logoText {
-    -webkit-text-stroke-color: var(--color-slate-200);
+    -webkit-text-stroke-color: var(--color-neutral-200);
   }
 }

@@ -1,11 +1,20 @@
 import type { Metadata } from "next";
-import { Source_Sans_3 } from "next/font/google";
-import Sidebar from "./components/Sidebar";
+import { Barlow_Semi_Condensed, Big_Shoulders } from "next/font/google";
 import "./globals.css";
 import { BASE_METADATA } from "./utils/metadata";
+import { SectorProvider } from "./context/SectorContext";
 
 export const revalidate = 3600;
-const sourceSans = Source_Sans_3({ subsets: ["latin"] });
+const sourceSans = Barlow_Semi_Condensed({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  weight: ["400", "500", "600"],
+});
+const bebasNueue = Big_Shoulders({
+  subsets: ["latin"],
+  axes: ["opsz"],
+  variable: "--font-display",
+});
 
 export const metadata: Metadata = BASE_METADATA;
 
@@ -19,18 +28,8 @@ export default function RootLayout({
       <head>
         <link rel="me" href="https://hachyderm.io/@followthecrypto" />
       </head>
-      <body className={sourceSans.className}>
-        <div className="banner">
-          This website has been updated to track ongoing Congressional activity
-          and the 2026 midterm elections. If you are looking for 2024 data,
-          please visit{" "}
-          <a href="https://www.followthecrypto.org/2024/">
-            Follow the Crypto 2024
-          </a>
-          .
-        </div>
-        <Sidebar />
-        {children}
+      <body className={`${sourceSans.variable} ${bebasNueue.variable}`}>
+        <SectorProvider>{children}</SectorProvider>
       </body>
     </html>
   );

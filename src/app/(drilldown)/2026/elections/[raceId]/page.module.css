@@ -146,11 +146,11 @@
 .spendingBar {
   cursor: pointer;
   stroke-width: 0.5;
-  stroke: var(--color-slate-600);
+  stroke: var(--color-neutral-600);
 }
 
 .raisedBar {
-  fill: var(--color-slate-300);
+  fill: var(--color-neutral-300);
 }
 
 .outside_supportBar {
@@ -297,19 +297,19 @@
 
 @media (prefers-color-scheme: dark) {
   .mainLayoutLine {
-    stroke: var(--color-slate-400);
+    stroke: var(--color-neutral-400);
   }
 
   .raisedBar {
-    fill: var(--color-slate-500);
+    fill: var(--color-neutral-500);
   }
 
   .cryptoSpendingLabel {
-    fill: var(--color-slate-300);
+    fill: var(--color-neutral-300);
   }
 
   .spendingBar {
-    stroke: var(--color-slate-300);
+    stroke: var(--color-neutral-300);
   }
 
   .outside_supportBar {

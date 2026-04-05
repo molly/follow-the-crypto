@@ -22,7 +22,7 @@
 
 .svgSkeleton {
   fill: transparent;
-  stroke: var(--color-slate-300);
+  stroke: var(--color-neutral-300);
 }
 
 .mapLoadingError {
