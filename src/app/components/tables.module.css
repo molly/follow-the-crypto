@@ -1,15 +1,8 @@
-.inheritBorderRadius {
-  border-top-left-radius: inherit;
-  border-top-right-radius: inherit;
-  border-bottom-left-radius: inherit;
-  border-bottom-right-radius: inherit;
-}
-
 .superPacCard,
 .influencedCard,
 .recentExpendituresCard,
 .qpqCard {
-  composes: cardWithTable from "@/app/shared.module.css";
+  composes: section from "@/app/shared.module.css";
   position: relative;
   display: flex;
   flex-direction: column;
@@ -26,18 +19,20 @@
 
 .superPacTable,
 .influencedTable {
-  composes: inheritBorderRadius;
   width: 100%;
   flex-grow: 1;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
 }
 
 .superPacTableHeader,
 .influencedTableHeader {
-  composes: inheritBorderRadius;
   position: sticky;
   top: 0;
-  background-color: var(--card-background);
-  border-radius: inherit;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  border-bottom: 1px solid var(--color-black);
+  vertical-align: bottom;
 }
 
 .superPacRow,
@@ -45,9 +40,7 @@
 .oppositionSpendingRow,
 .beneficiariesRow,
 .qpqRow {
-  &:nth-child(odd) {
-    background: var(--table-background-secondary);
-  }
+  border-bottom: 1px solid var(--table-color);
 }
 
 .superPacErrorRow {
@@ -63,15 +56,12 @@
   min-width: 7rem;
 }
 
-.tableCardContent {
-  padding: 1rem;
-}
-
 .viewMoreLinks {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
   gap: 0.25rem;
+  margin-top: 0.5rem;
 }
 
 .viewMoreLink:not(:last-child) {
@@ -105,6 +95,24 @@
   width: 0.9em;
   height: 0.7rem;
   align-items: center;
+}
+
+.nilCell {
+  color: var(--tertiary-text);
+}
+
+.trackedCommittee {
+  font-weight: 700;
+}
+
+.sectorBadge {
+  background-color: var(--color-black);
+  color: var(--color-white);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  padding: 0.1rem 0.25rem;
+  border-radius: 0.25rem;
+  margin-left: 0.5rem;
 }
 
 @media (max-width: 1100px) {

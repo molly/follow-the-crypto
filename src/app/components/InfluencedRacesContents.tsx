@@ -219,23 +219,37 @@ function CandidateRow({
             {candidate.state}
           </Link>
         </td>
-        <td className={`${styles.tableCellCollapse2} center-cell`}>
+        <td className={`${styles.tableCellCollapse2} center-cell small-cell`}>
           <Link className="unstyled" href={raceHref}>
             {raceName}
           </Link>
         </td>
-        <td className={`${styles.tableCellCollapse2} number-cell`}>
-          {candidate.support_total
-            ? formatCurrency(candidate.support_total, true)
-            : ""}
+        <td
+          className={`${styles.tableCellCollapse2} ${candidate.support_total ? "number-cell" : "center-cell"}`}
+        >
+          {candidate.support_total ? (
+            formatCurrency(candidate.support_total, true)
+          ) : (
+            <span className={styles.nilCell}>—</span>
+          )}
         </td>
-        <td className={`${styles.tableCellCollapse2} number-cell`}>
-          {candidate.oppose_total
-            ? formatCurrency(candidate.oppose_total, true)
-            : ""}
+        <td
+          className={`${styles.tableCellCollapse2} ${candidate.oppose_total ? "number-cell" : "center-cell"}`}
+        >
+          {candidate.oppose_total ? (
+            formatCurrency(candidate.oppose_total, true)
+          ) : (
+            <span className={styles.nilCell}>—</span>
+          )}
         </td>
-        <td className={`${styles.tableCellCollapse1} small-cell number-cell`}>
-          {beneficiary ? formatCurrency(beneficiary.total, true) : ""}
+        <td
+          className={`${styles.tableCellCollapse1} small-cell ${beneficiary ? "number-cell" : "center-cell"}  `}
+        >
+          {beneficiary ? (
+            formatCurrency(beneficiary.total, true)
+          ) : (
+            <span className={styles.nilCell}>—</span>
+          )}
         </td>
         <td className={`${styles.tableCellCollapse1} small-cell center-cell`}>
           <GoalOutcome candidate={candidate} races={race.races} />
@@ -354,7 +368,9 @@ export default function InfluencedRacesContents({
         <tr className={styles.influencedTableHeader}>
           <th className="text-cell">Candidate</th>
           <th className="center-cell">State</th>
-          <th className={`${styles.tableCellCollapse2} center-cell`}>Office</th>
+          <th className={`${styles.tableCellCollapse2} center-cell small-cell`}>
+            Office
+          </th>
           <th className={`${styles.tableCellCollapse2} number-cell`}>
             Support
           </th>

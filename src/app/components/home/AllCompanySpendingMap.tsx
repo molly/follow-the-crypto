@@ -5,6 +5,8 @@ import ErrorText from "@/app/components/ErrorText";
 import { STATES_BY_ABBR } from "@/app/data/states";
 import { MapData } from "@/app/types/MapData";
 import { isError } from "@/app/utils/errors";
+import { type Sector } from "@/app/types/Sector";
+import { humanizeSector } from "@/app/utils/sector";
 import Link from "next/link";
 import InformationalTooltip from "../InformationalTooltip";
 
@@ -20,11 +22,18 @@ function toStateValues(mapData: MapData): Record<string, number> {
 }
 
 export default async function AllCompanySpendingMap({
+  sector,
   showLink,
 }: {
+  sector: Sector;
   showLink?: boolean;
 }) {
   const data = await fetchMapData();
+  const sectorText = humanizeSector(sector, {
+    abbrev: true,
+    lowercase: true,
+    hyphen: true,
+  });
   if (isError(data)) {
     return <ErrorText subject="expenditures by state" />;
   }
@@ -44,7 +53,7 @@ export default async function AllCompanySpendingMap({
             conservative estimate of industry spending.
           </p>
         </InformationalTooltip>{" "}
-        crypto-linked contributions to candidates by state
+        {sectorText}linked contributions to candidates by state
       </h2>
       <ChloroplethMap
         domain={generateDomain(10000, 10000000)}

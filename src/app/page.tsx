@@ -45,18 +45,18 @@ export default async function Home({
         </div>
         <div className={styles.columns}>
           <div className={styles.mainColumn}>
-            <InfluencedRaces />
+            <InfluencedRaces sector={sector} />
             <div className={styles.companyMap}>
               <Suspense fallback={<USMapSkeleton />}>
-                <AllCompanySpendingMap showLink={true} />
+                <AllCompanySpendingMap sector={sector} showLink={true} />
               </Suspense>
             </div>
             <div className={styles.superPacMap}>
               <Suspense fallback={<USMapSkeleton />}>
-                <SuperPacSpendingMapWrapper showLink={true} />
+                <SuperPacSpendingMapWrapper sector={sector} showLink={true} />
               </Suspense>
             </div>
-            <SuperPACsByReceipts type="super">
+            <SuperPACsByReceipts type="super" sector={sector}>
               <SuperPACsByReceiptsTableContents />
             </SuperPACsByReceipts>
           </div>

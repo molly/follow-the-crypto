@@ -7,7 +7,7 @@ export const revalidate = 3600;
 const sourceSans = Barlow_Semi_Condensed({
   subsets: ["latin"],
   variable: "--font-sans",
-  weight: ["400", "500", "600"],
+  weight: ["400", "500", "600", "700"],
 });
 const bebasNueue = Big_Shoulders({
   subsets: ["latin"],

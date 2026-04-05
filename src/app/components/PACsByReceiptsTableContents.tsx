@@ -33,7 +33,7 @@ export default async function PACsByReceiptsTableContents({
     let firstCryptoIndex = -1;
     let lastCryptoIndex = -1;
     for (let i = 0; i < PACs.length; i++) {
-      if (PACs[i].is_crypto) {
+      if (PACs[i].is_tracked) {
         if (firstCryptoIndex === -1) {
           firstCryptoIndex = i;
         }
@@ -57,22 +57,17 @@ export default async function PACsByReceiptsTableContents({
           ? titlecaseCommittee(committee.committee_name)
           : "";
         let committeeIdentifier: string | React.ReactElement = committeeName;
-        if (committee.is_crypto) {
+        if (committee.is_tracked) {
+          const sector = committee.sector || "tech";
           committeeIdentifier = (
             <Link href={`/2026/committees/${committee.committee_id}`}>
-              <b>{committeeName}</b>
+              <span className={styles.trackedCommittee}>{committeeName}</span>{" "}
+              <span className={styles.sectorBadge}>{sector}</span>
             </Link>
           );
         }
         return (
-          <tr
-            key={committee.committee_id}
-            className={
-              committee.is_crypto
-                ? styles.superPacCryptoRow
-                : styles.superPacRow
-            }
-          >
+          <tr key={committee.committee_id} className={styles.superPacRow}>
             <td>{ind + 1}</td>
             <td className="text-cell">{committeeIdentifier}</td>
             <td className={`text-cell ${styles.tableCellCollapse1}`}>

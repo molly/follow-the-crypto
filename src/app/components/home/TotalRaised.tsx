@@ -3,7 +3,8 @@ import sharedStyles from "@/app/shared.module.css";
 import { TotalsForCommittees } from "@/app/types/Committee";
 import { isError } from "@/app/utils/errors";
 import { humanizeRoundedCurrency } from "@/app/utils/humanize";
-import { humanizeSector, type Sector } from "@/app/utils/sector";
+import { type Sector } from "@/app/types/Sector";
+import { humanizeSector } from "@/app/utils/sector";
 import ErrorText from "../ErrorText";
 import MoneyCard from "../MoneyCard";
 

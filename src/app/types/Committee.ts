@@ -1,5 +1,6 @@
 import { ExpendituresByParty } from "./Expenditures";
 import { CommitteeDetail, CommitteeTotals, ScheduleB } from "./FECTypes";
+import { BESector } from "./Sector";
 
 export type CommitteeConstant = {
   id: string;
@@ -71,7 +72,8 @@ export type CommitteeDetails = CommitteeConstant & {
   >;
 
 export type AllCommitteesSummary = {
-  is_crypto: boolean;
+  is_tracked: boolean;
+  sector: BESector | null;
   description?: string;
 } & Pick<
   CommitteeTotals,

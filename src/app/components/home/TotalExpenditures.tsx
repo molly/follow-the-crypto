@@ -3,7 +3,8 @@ import styles from "@/app/page.module.css";
 import sharedStyles from "@/app/shared.module.css";
 import { isError } from "@/app/utils/errors";
 import { humanizeRoundedCurrency } from "@/app/utils/humanize";
-import { humanizeSector, type Sector } from "@/app/utils/sector";
+import { type Sector } from "@/app/types/Sector";
+import { humanizeSector } from "@/app/utils/sector";
 import ErrorText from "../ErrorText";
 import MoneyCard from "../MoneyCard";
 
@@ -28,7 +29,8 @@ export default async function TotalDisbursements({
     <MoneyCard
       topText={
         <div className={styles.spentTopSection}>
-          {sectorText}-focused PACs have spent more than
+          {humanizeSector(sector, { abbrev: true, hyphen: true })}focused PACs
+          have spent more than
         </div>
       }
       amount={humanizeRoundedCurrency(expenditures, true)}

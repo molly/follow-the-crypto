@@ -1,4 +1,4 @@
-export type Sector = "all" | "crypto" | "ai";
+import { Sector } from "../types/Sector";
 
 const SECTOR_LABELS: Record<Sector, string> = {
   all: "Cryptocurrency and artificial intelligence",
@@ -16,18 +16,32 @@ interface HumanizeSectorOptions {
   context?: "industry";
   abbrev?: boolean;
   lowercase?: boolean;
+  hyphen?: boolean;
 }
 
 export function humanizeSector(
   sector: Sector,
   options?: HumanizeSectorOptions,
 ): string {
+  if (!sector) {
+    return "";
+  }
   let label = options?.abbrev
     ? SECTOR_LABELS_ABBREV[sector]
     : SECTOR_LABELS[sector];
-  label = options?.lowercase ? label.toLowerCase() : label;
-  if (options?.context === "industry" && sector !== "all") {
-    return `${label} industry`;
+  if (options?.lowercase) {
+    label = options?.abbrev
+      ? label.replace(/\b(?!AI\b)\w+/g, (w) => w.toLowerCase())
+      : label.toLowerCase();
+  }
+  if (options?.context === "industry") {
+    label = `${label} industry`;
+  }
+  if (options?.hyphen) {
+    if (sector === "all") {
+      return label.replace(" and ", "- and ") + "-";
+    }
+    return `${label}-`;
   }
   return label;
 }

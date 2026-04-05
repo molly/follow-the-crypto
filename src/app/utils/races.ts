@@ -57,7 +57,7 @@ export const getRaceName = (
   }
   if (raceParts[raceParts.length - 1] === "SPECIAL") {
     if (parens) {
-      raceName += ` (${year ? `${year} ` : ""}special election)`;
+      raceName += ` (${year ? `${year} ` : ""}special)`;
     } else {
       raceName += ` ${year ? `${year} ` : ""}special`;
     }

@@ -38,6 +38,7 @@
   --color-green-700: #15803d;
 
   --accent: #7ab800;
+  --accent-on-light: #5a8a00;
 
   --party-republican: #e81b23;
   --party-democrat: #3333ff;
@@ -64,7 +65,7 @@
   --text-stroke: var(--color-neutral-950);
   --secondary-text: var(--color-neutral-500);
   --tertiary-text: var(--color-neutral-400);
-  --link-text: var(--accent);
+  --link-text: var(--accent-on-light);
   --link-text-hover: #0a338a;
   --on-dark-text: var(--color-neutral-200);
 
@@ -151,12 +152,12 @@ h5,
 h6 {
   margin-top: 0;
   margin-block-end: 0.5em;
+  font-weight: 600;
 }
 
 a {
   color: var(--link-text);
-  text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
+  text-decoration: none;
 }
 
 p {
@@ -176,6 +177,10 @@ p {
 
 table {
   border-collapse: collapse;
+
+  th {
+    font-weight: 600;
+  }
 
   td,
   th {
@@ -211,6 +216,7 @@ table.lined {
 }
 
 .number-cell {
+  font-variant-numeric: tabular-nums;
   text-align: right;
 }
 

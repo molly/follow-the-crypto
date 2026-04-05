@@ -28,12 +28,12 @@
 }
 
 .companyMap {
-  composes: card from "@/app/shared.module.css";
+  composes: section from "@/app/shared.module.css";
   grid-area: companyMap;
 }
 
 .superPacMap {
-  composes: card from "@/app/shared.module.css";
+  composes: section from "@/app/shared.module.css";
   grid-area: superPacMap;
 }
 

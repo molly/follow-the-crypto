@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Suspense } from "react";
 import Logo from "./Logo";
 import SectorButtons from "./SectorButtons";
@@ -7,7 +8,9 @@ export default function Header() {
   return (
     <header className={styles.headerWrapper}>
       <div className={styles.logoAndNav}>
-        <Logo />
+        <Link href="/" className={styles.logoLink}>
+          <Logo />
+        </Link>
         <nav className={styles.nav}>
           <div className={styles.navLinks}>
             <div className={styles.navItem}>

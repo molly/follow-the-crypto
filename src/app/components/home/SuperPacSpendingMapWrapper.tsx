@@ -2,6 +2,8 @@ import { fetchMapData } from "@/app/actions/fetch";
 import { STATES_BY_ABBR } from "@/app/data/states";
 import { MapData } from "@/app/types/MapData";
 import { isError } from "@/app/utils/errors";
+import { type Sector } from "@/app/types/Sector";
+import { humanizeSector } from "@/app/utils/sector";
 import Link from "next/link";
 import ChloroplethMap from "../ChloroplethMap";
 import ErrorText from "../ErrorText";
@@ -19,15 +21,22 @@ function toStateValues(mapData: MapData): Record<string, number> {
 }
 
 export default async function SuperPacSpendingMapWrapper({
+  sector,
   showLink,
 }: {
+  sector: Sector;
   showLink?: boolean;
 }) {
   const data = await fetchMapData();
+  const sectorText = humanizeSector(sector, {
+    context: "industry",
+    abbrev: true,
+    lowercase: true,
+  });
   if (isError(data)) {
     return (
       <div>
-        <h2>Expenditures by pro-crypto super PACs by state</h2>
+        <h2>Expenditures by {sectorText} PACs by state</h2>
         <ErrorText subject="PAC expenditures by state" />
       </div>
     );
@@ -36,7 +45,7 @@ export default async function SuperPacSpendingMapWrapper({
   return (
     <>
       <h2 id="super-pac-spending-by-state">
-        Expenditures by pro-crypto super PACs by state
+        Expenditures by {sectorText} PACs by state
       </h2>
       <ChloroplethMap
         domain={generateDomain(10000, 10000000)}

@@ -29,12 +29,6 @@
   margin: 0;
 }
 
-.titleSubtext {
-  font-size: 0.8rem;
-  color: var(--color-neutral-400);
-  margin-top: -0.25rem;
-}
-
 .titleWatch {
   color: var(--accent);
 }

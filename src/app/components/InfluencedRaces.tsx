@@ -1,31 +1,33 @@
 "use client";
 
 import styles from "@/app/components/tables.module.css";
+import { type Sector } from "@/app/types/Sector";
+import { humanizeSector } from "@/app/utils/sector";
 import Link from "next/link";
 import { useBreakpoint } from "../hooks/useBreakpoint";
 import InfluencedRacesContents from "./InfluencedRacesContents";
 
 export default function InfluencedRaces({
+  sector,
   fullPage = false,
 }: {
+  sector: Sector;
   fullPage?: boolean;
 }) {
   const useCompact = useBreakpoint(650);
-
+  const sectorText = humanizeSector(sector, {
+    context: "industry",
+    abbrev: true,
+    lowercase: true,
+  });
   return (
     <div className={styles.influencedCard}>
-      <div className={styles.tableCardContent}>
-        <p>
-          These PACs have already spent heavily to influence the outcome of
-          multiple Congressional races.
-        </p>
-        <h2>{`${fullPage ? "R" : "Top r"}aces influenced by crypto industry super PAC money`}</h2>
-      </div>
+      <h2>{`${fullPage ? "R" : "Top r"}aces influenced by ${sectorText} super PAC money`}</h2>
       <InfluencedRacesContents small={useCompact} fullPage={fullPage} />
       {!fullPage && (
-        <div className={styles.tableCardContent}>
-          <Link href="/2026/elections">&raquo; All races with crypto spending</Link>
-        </div>
+        <Link href="/2026/elections" className={styles.viewMoreLink}>
+          &raquo; All races with {sectorText} spending
+        </Link>
       )}
     </div>
   );

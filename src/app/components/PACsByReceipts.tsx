@@ -1,5 +1,7 @@
 import styles from "@/app/components/tables.module.css";
+import { type Sector } from "@/app/types/Sector";
 import { range } from "@/app/utils/range";
+import { humanizeSector } from "@/app/utils/sector";
 import Link from "next/link";
 import { Suspense } from "react";
 import Skeleton from "./skeletons/Skeleton";
@@ -28,26 +30,27 @@ function TableContentsSkeleton({ type }: { type: string }) {
 export default function PACsByReceipts({
   children,
   type,
+  sector,
   fullPage = false,
 }: {
   children: React.ReactNode;
+  sector: Sector;
   type: string;
   fullPage?: boolean;
 }) {
+  const sectorText = humanizeSector(sector);
   return (
     <div className={styles.superPacCard}>
       <div className={styles.tableCardContent}>
         <p>
-          Despite the relatively small size of the cryptocurrency industry,
-          cryptocurrency-focused PACs are among the most well-funded this
-          election cycle.
+          {sectorText} PACs are among the most well-funded this election cycle.
         </p>
         <p className="secondary smaller">
           Issues in FEC reporting may affect this list; see the{" "}
           <Link href="/about/faq#pacs-data">FAQ</Link>.
         </p>
         <h2 className={styles.superPacHeader}>
-          {`Where crypto-focused PACs fall among the most highly funded ${type === "super" ? "super " : ""}PACs`}
+          {`Where ${humanizeSector(sector, { abbrev: true, hyphen: true, lowercase: true })}focused PACs fall among the most highly funded ${type === "super" ? "super " : ""}PACs`}
         </h2>
         {fullPage && type === "super" && (
           <p className="secondary smaller">
@@ -62,7 +65,7 @@ export default function PACsByReceipts({
       <table className={styles.superPacTable}>
         <thead>
           <tr className={styles.superPacTableHeader}>
-            <th></th>
+            <th>#</th>
             <th className="text-cell">Name</th>
             <th className={`text-cell ${styles.tableCellCollapse1}`}>
               Description
@@ -95,7 +98,9 @@ export default function PACsByReceipts({
                 </Link>
               </div>
               <div className={styles.viewMoreLink}>
-                <Link href="/2026/committees/ranking/all">&raquo; All PACs</Link>
+                <Link href="/2026/committees/ranking/all">
+                  &raquo; All PACs
+                </Link>
               </div>
             </div>
           </>

@@ -26,7 +26,7 @@
 }
 
 .mapLoadingError {
-  composes: card from "@/app/shared.module.css";
+  composes: section from "@/app/shared.module.css";
   position: absolute;
   top: 0;
   left: 0;
@@ -46,31 +46,31 @@
 }
 
 .stateFill1 {
-  fill: var(--color-blue-50);
+  fill: #f2f9e0;
 }
 
 .stateFill2 {
-  fill: var(--color-blue-100);
+  fill: #d6ed8f;
 }
 
 .stateFill3 {
-  fill: var(--color-blue-200);
+  fill: #b8db3d;
 }
 
 .stateFill4 {
-  fill: var(--color-blue-300);
+  fill: #7ab800;
 }
 
 .stateFill5 {
-  fill: var(--color-blue-400);
+  fill: #5a8a00;
 }
 
 .stateFill6 {
-  fill: var(--color-blue-600);
+  fill: #3a5c00;
 }
 
 .stateFill7 {
-  fill: var(--color-blue-800);
+  fill: #1e2f00;
 }
 
 .stateFill1,
@@ -97,6 +97,7 @@
     stroke: var(--secondary-text);
   }
 
+  /* TODO: Update for green */
   .stateFill1,
   .stateFill2,
   .stateFill3,
