@@ -2,10 +2,13 @@ import {
   RecentContribution,
   RecipientCandidateDetails,
 } from "@/app/types/Contributions";
+import { getRaceName } from "@/app/utils/races";
 import { titlecaseCommittee, titlecaseLastFirst } from "@/app/utils/titlecase";
 import { formatCurrency, formatDateFromString } from "@/app/utils/utils";
 import Link from "next/link";
+import { STATES_BY_ABBR } from "../data/states";
 import { range } from "../utils/range";
+import MaybeLink from "./MaybeLink";
 import styles from "./recentExpenditures.module.css";
 import Skeleton from "./skeletons/Skeleton";
 
@@ -38,7 +41,7 @@ function getCandidateDisplay(
   name: string;
   race_id?: string;
   race_link?: string;
-  notRunning?: boolean;
+  isRunningThisCycle: boolean;
 } | null {
   if (!candidateIds || !candidateDetails) {
     return null;
@@ -85,10 +88,7 @@ function getCandidateDisplay(
     name: titlecaseLastFirst(details.name),
     race_id,
     race_link,
-    notRunning:
-      !race_link &&
-      !!race_id &&
-      !(details.election_years ?? []).some((y) => y >= 2026),
+    isRunningThisCycle: details.isRunningThisCycle,
   };
 }
 
@@ -196,13 +196,27 @@ export default function RecentContributionsContent({
                   )}
                 </>
               )}
-              {candidate.notRunning && " (not on 2026 ballot)"}
+              {!candidate.isRunningThisCycle && " (not on 2026 ballot)"}
             </div>
           )}
           {!contribution.committee_description && sponsorCandidate && (
             <div className={styles.expenditureDescription}>
               {sponsorCandidate.name}
-              {" · leadership PAC"}
+              {sponsorCandidate.race_id && (
+                <>
+                  {" ("}
+                  {STATES_BY_ABBR[sponsorCandidate.race_id.split("-")[0]]}{" "}
+                  {sponsorCandidate.race_link ? (
+                    <MaybeLink href={`/2026${sponsorCandidate.race_link}`}>
+                      {getRaceName(sponsorCandidate.race_id)}
+                    </MaybeLink>
+                  ) : (
+                    sponsorCandidate.race_id
+                  )}
+                </>
+              )}
+              {")"}
+              {" leadership PAC"}
             </div>
           )}
         </div>
