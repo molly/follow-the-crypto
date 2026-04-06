@@ -1,6 +1,6 @@
 import Link from "next/link";
-import tableStyles from "./tables.module.css";
 import styles from "./recentExpenditures.module.css";
+import tableStyles from "./tables.module.css";
 
 export default function RecentContributions({
   children,
@@ -17,15 +17,11 @@ export default function RecentContributions({
     <section
       className={`${className ? className : ""} ${tableStyles.recentExpendituresCard}`}
     >
-      {!noHeader && (
-        <h3 className={styles.recentExpendituresSectionHeader}>
-          Recent contributions
-        </h3>
-      )}
+      {!noHeader && <h2>Recent contributions</h2>}
       {children}
       {!fullPage && (
-        <div className={styles.tableCardContent}>
-          <Link href="/2026/contributions">
+        <div className={styles.viewMoreLinks}>
+          <Link href="/2026/contributions" className={styles.viewMoreLink}>
             &raquo; All recent contributions
           </Link>
         </div>

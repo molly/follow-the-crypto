@@ -1,9 +1,9 @@
 import { fetchCompanyTotalSpending } from "@/app/actions/fetch";
 import sharedStyles from "@/app/shared.module.css";
 import { CompanyTotals } from "@/app/types/Companies";
+import { type Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
 import { humanizeRoundedCurrency } from "@/app/utils/humanize";
-import { type Sector } from "@/app/types/Sector";
 import { humanizeSector } from "@/app/utils/sector";
 import ErrorText from "../ErrorText";
 import InformationalTooltip from "../InformationalTooltip";
@@ -30,12 +30,12 @@ export default async function TotalCompanySpending({
   const spending = companyTotalsData as CompanyTotals;
   return (
     <MoneyCard
-      topText={`${sectorText} companies and associated individuals have spent more than`}
+      topText="Industry contributions"
       amount={humanizeRoundedCurrency(spending.total, true)}
-      bottomText="to influence 2026 elections."
+      bottomText={`from tracked ${sectorText.toLowerCase()} companies and individuals.`}
       tooltip={
         <InformationalTooltip>
-          {`This includes contributions to ${sectorText.toLowerCase()}-focused PACs, as well as direct contributions to other candidates and committees. This relies on manual classification and so represents a conservative estimate of industry spending.`}
+          {`This figure includes direct contributions to candidates and committees from ${sectorText.toLowerCase()} companies and individuals, as well as contributions from these entities to the PACs tracked on this site. It is based on manual classification and may not capture all industry-related spending — treat it as a conservative estimate.`}
         </InformationalTooltip>
       }
       className={className}

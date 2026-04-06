@@ -3,6 +3,7 @@ import styles from "@/app/page.module.css";
 import sharedStyles from "@/app/shared.module.css";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { Expenditure } from "@/app/types/Expenditures";
+import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
 import { Suspense } from "react";
 import ErrorText from "../ErrorText";
@@ -13,8 +14,10 @@ import RecentExpendituresContent, {
 
 async function AllRecentExpendituresContent({
   fullPage,
+  sector,
 }: {
   fullPage?: boolean;
+  sector?: Sector;
 }) {
   const [expendituresData, committeeConstantData] = await Promise.all([
     fetchAllRecentExpenditures(),
@@ -41,14 +44,17 @@ async function AllRecentExpendituresContent({
         fullPage ? allRecentExpenditures : allRecentExpenditures.slice(0, 5)
       }
       committees={committeeConstantData as Record<string, CommitteeConstant>}
+      sector={sector}
     />
   );
 }
 
 export default async function AllRecentExpenditures({
   fullPage,
+  sector,
 }: {
   fullPage?: boolean;
+  sector?: Sector;
 }) {
   return (
     <RecentExpenditures
@@ -59,7 +65,7 @@ export default async function AllRecentExpenditures({
       <Suspense
         fallback={<RecentExpendituresContentSkeleton fullPage={fullPage} />}
       >
-        <AllRecentExpendituresContent fullPage={fullPage} />
+        <AllRecentExpendituresContent fullPage={fullPage} sector={sector} />
       </Suspense>
     </RecentExpenditures>
   );

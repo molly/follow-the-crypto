@@ -75,6 +75,11 @@
   justify-content: center;
 }
 
+.moneyCardHeader {
+  color: var(--main-text);
+  text-transform: uppercase;
+}
+
 .constrainedWrapper {
   display: flex;
   flex-direction: column;

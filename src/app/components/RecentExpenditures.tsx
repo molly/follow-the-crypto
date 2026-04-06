@@ -17,15 +17,13 @@ export default function RecentExpenditures({
     <section
       className={`${className ? className : ""} ${tableStyles.recentExpendituresCard}`}
     >
-      {!noHeader && (
-        <h3 className={styles.recentExpendituresSectionHeader}>
-          Recent expenditures
-        </h3>
-      )}
+      {!noHeader && <h2>Recent PAC expenditures</h2>}
       {children}
       {!fullPage && (
-        <div className={styles.tableCardContent}>
-          <Link href="/2026/expenditures">&raquo; All recent expenditures</Link>
+        <div className={styles.viewMoreLinks}>
+          <Link href="/2026/expenditures" className={styles.viewMoreLink}>
+            &raquo; More recent expenditures
+          </Link>
         </div>
       )}
     </section>

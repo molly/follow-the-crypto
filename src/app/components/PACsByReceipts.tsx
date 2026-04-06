@@ -42,16 +42,13 @@ export default function PACsByReceipts({
   return (
     <div className={styles.superPacCard}>
       <div className={styles.tableCardContent}>
-        <p>
-          {sectorText} PACs are among the most well-funded this election cycle.
-        </p>
+        <h2 className={styles.superPacHeader}>
+          Top super PACs by total receipts
+        </h2>
         <p className="secondary smaller">
           Issues in FEC reporting may affect this list; see the{" "}
           <Link href="/about/faq#pacs-data">FAQ</Link>.
         </p>
-        <h2 className={styles.superPacHeader}>
-          {`Where ${humanizeSector(sector, { abbrev: true, hyphen: true, lowercase: true })}focused PACs fall among the most highly funded ${type === "super" ? "super " : ""}PACs`}
-        </h2>
         {fullPage && type === "super" && (
           <p className="secondary smaller">
             This list includes only PACs that are designated with the FEC as
@@ -94,12 +91,12 @@ export default function PACsByReceipts({
             <div className={styles.viewMoreLinks}>
               <div className={styles.viewMoreLink}>
                 <Link href="/2026/committees/ranking/super">
-                  &raquo; All super PACs
+                  &raquo; More super PACs
                 </Link>
               </div>
               <div className={styles.viewMoreLink}>
                 <Link href="/2026/committees/ranking/all">
-                  &raquo; All PACs
+                  &raquo; More PACs
                 </Link>
               </div>
             </div>

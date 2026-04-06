@@ -27,7 +27,8 @@ export default function MoneyCard({
 }) {
   return (
     <div className={`${sharedStyles.smallCard} ${className || ""}`}>
-      {topText} <div className={sharedStyles.highlight}>{amount}</div>{" "}
+      <div className={sharedStyles.moneyCardHeader}>{topText}</div>
+      <div className={sharedStyles.highlight}>{amount}</div>{" "}
       <div>
         {bottomText}
         {tooltip}

@@ -65,7 +65,7 @@ export default async function Home({
             <AllCashByCommittee sector={sector} />
             <AllExpendituresByCommittee sector={sector} />
             <AllExpendituresByParty sector={sector} />
-            <AllRecentExpenditures />
+            <AllRecentExpenditures sector={sector} />
             <AllRecentContributions />
           </div>
         </div>

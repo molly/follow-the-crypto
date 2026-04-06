@@ -140,6 +140,7 @@ export type RecentContribution = IndividualOrCompanyContribution & {
   source_company_ids?: string[];
   committee_description?: string;
   candidate_ids?: string[];
+  sponsor_candidate_ids?: string[];
   candidate_details?: Record<string, RecipientCandidateDetails>;
 };
 

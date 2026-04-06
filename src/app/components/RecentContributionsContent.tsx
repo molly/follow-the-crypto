@@ -1,4 +1,7 @@
-import { RecipientCandidateDetails, RecentContribution } from "@/app/types/Contributions";
+import {
+  RecentContribution,
+  RecipientCandidateDetails,
+} from "@/app/types/Contributions";
 import { titlecaseCommittee, titlecaseLastFirst } from "@/app/utils/titlecase";
 import { formatCurrency, formatDateFromString } from "@/app/utils/utils";
 import Link from "next/link";
@@ -31,7 +34,12 @@ export function RecentContributionsContentSkeleton({
 function getCandidateDisplay(
   candidateIds: string[] | undefined,
   candidateDetails: Record<string, RecipientCandidateDetails> | undefined,
-): { name: string; race_id?: string; race_link?: string; notRunning?: boolean } | null {
+): {
+  name: string;
+  race_id?: string;
+  race_link?: string;
+  notRunning?: boolean;
+} | null {
   if (!candidateIds || !candidateDetails) {
     return null;
   }
@@ -48,7 +56,9 @@ function getCandidateDisplay(
     if (!existing) {
       lastNameMap.set(lastName, id);
     } else {
-      const existingMax = Math.max(...(candidateDetails[existing].election_years ?? [0]));
+      const existingMax = Math.max(
+        ...(candidateDetails[existing].election_years ?? [0]),
+      );
       const currentMax = Math.max(...(details.election_years ?? [0]));
       if (currentMax > existingMax) {
         lastNameMap.set(lastName, id);
@@ -75,7 +85,10 @@ function getCandidateDisplay(
     name: titlecaseLastFirst(details.name),
     race_id,
     race_link,
-    notRunning: !race_link && !!race_id,
+    notRunning:
+      !race_link &&
+      !!race_id &&
+      !(details.election_years ?? []).some((y) => y >= 2026),
   };
 }
 
@@ -100,6 +113,11 @@ export default function RecentContributionsContent({
       contribution.candidate_details,
     );
 
+    const sponsorCandidate = getCandidateDisplay(
+      contribution.sponsor_candidate_ids,
+      contribution.candidate_details,
+    );
+
     const sourceHref =
       contribution.source_type === "individual"
         ? `/2026/individuals/${contribution.source_id}`
@@ -109,15 +127,15 @@ export default function RecentContributionsContent({
       contribution.contribution_receipt_amount ??
       contribution.total_receipt_amount;
 
-    const date =
-      contribution.contribution_receipt_date ?? contribution.newest;
-
+    const date = contribution.contribution_receipt_date ?? contribution.newest;
     return (
       <div
         key={`recent-contribution-${i}`}
         className={styles.recentExpenditureRow}
       >
-        <div>{date && formatDateFromString(date)}</div>
+        <div className={styles.expenditureDescription}>
+          {date && formatDateFromString(date)}
+        </div>
         <div className={styles.expenditureNameAndAmount}>
           <div>
             <span className="bold">
@@ -133,12 +151,7 @@ export default function RecentContributionsContent({
                       <span key={name}>
                         {j > 0 && ", "}
                         {id ? (
-                          <Link
-                            href={`/2026/companies/${id}`}
-                            className="secondary"
-                          >
-                            {name}
-                          </Link>
+                          <Link href={`/2026/companies/${id}`}>{name}</Link>
                         ) : (
                           name
                         )}
@@ -150,7 +163,9 @@ export default function RecentContributionsContent({
               )}
           </div>
           {amount != null && (
-            <span className="bold">{formatCurrency(amount)}</span>
+            <span className={styles.expenditureAmount}>
+              {formatCurrency(amount, true)}
+            </span>
           )}
         </div>
         <div>
@@ -162,12 +177,12 @@ export default function RecentContributionsContent({
             committeeDisplay
           )}
           {contribution.committee_description && (
-            <span className="secondary">
-              {` · ${contribution.committee_description}`}
-            </span>
+            <div className={styles.expenditureDescription}>
+              {contribution.committee_description}
+            </div>
           )}
-          {candidate && (
-            <div className="secondary">
+          {!contribution.committee_description && candidate && (
+            <div className={styles.expenditureDescription}>
               {candidate.name}
               {candidate.race_id && (
                 <>
@@ -182,6 +197,12 @@ export default function RecentContributionsContent({
                 </>
               )}
               {candidate.notRunning && " (not on 2026 ballot)"}
+            </div>
+          )}
+          {!contribution.committee_description && sponsorCandidate && (
+            <div className={styles.expenditureDescription}>
+              {sponsorCandidate.name}
+              {" · leadership PAC"}
             </div>
           )}
         </div>

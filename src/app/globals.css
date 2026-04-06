@@ -58,7 +58,7 @@
   --background-end: var(--color-neutral-300);
   --card-background: #fefefe;
   --card-background-rgb: 254, 254, 254;
-  --card-border: var(--color-neutral-200);
+  --card-border: var(--color-neutral-300);
   --breadcrumbs-background: var(--color-blue-800);
   --map-background: var(--color-white);
   --logo-background: var(--card-background);
@@ -279,7 +279,7 @@ a.unstyled {
 }
 
 .bold {
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .rep {

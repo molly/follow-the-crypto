@@ -1,5 +1,7 @@
+import sharedStyles from "@/app/shared.module.css";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { Expenditure } from "@/app/types/Expenditures";
+import { Sector } from "@/app/types/Sector";
 import { getCategory } from "@/app/utils/expenditures";
 import { range } from "@/app/utils/range";
 import {
@@ -63,9 +65,11 @@ function getRaceId(expenditure: Expenditure, withState = false) {
 export default function RecentExpendituresContent({
   expenditures,
   committees,
+  sector,
 }: {
   expenditures: Expenditure[];
   committees?: Record<string, CommitteeConstant>;
+  sector?: Sector;
 }) {
   return expenditures.map((expenditure) => {
     let name;
@@ -96,23 +100,17 @@ export default function RecentExpendituresContent({
     if (subraceName) {
       subraceName = sentenceCase(subraceName);
     }
-
     return (
       <div
         key={expenditure.transaction_id}
         className={styles.recentExpenditureRow}
       >
-        <div>
+        <div className={styles.expenditureDescription}>
           {expenditure.expenditure_date &&
             formatDateFromString(expenditure.expenditure_date)}
           {!expenditure.expenditure_date &&
             expenditure.dissemination_date &&
             formatDateFromString(expenditure.dissemination_date)}
-          {expenditure.expenditure_date && expenditure.dissemination_date && (
-            <span>
-              {` (disseminated ${formatDateFromString(expenditure.dissemination_date)})`}
-            </span>
-          )}
         </div>
         <div className={styles.topGroup}>
           <div className={styles.expenditureNameAndAmount}>
@@ -130,39 +128,50 @@ export default function RecentExpendituresContent({
                 }`}
               </span>
               {expenditure.candidate_party && (
-                <span>{` (${expenditure.candidate_party[0]})`}</span>
+                <span className={styles.expenditureParty}>
+                  {` (${expenditure.candidate_party[0]})`}
+                </span>
               )}
             </div>
-            <span className="bold">
-              {formatCurrency(expenditure.expenditure_amount)}
+            <span className={styles.expenditureAmount}>
+              {formatCurrency(expenditure.expenditure_amount, true)}
             </span>
           </div>
-          <div>
-            {subraceName && `${subraceName}, `}
-            {expenditure.candidate_office_state && (
-              <span className="no-wrap">
-                <Link
-                  href={`/2026/elections/${getRaceId(expenditure, true)}`}
-                >{`${STATES_BY_ABBR[expenditure.candidate_office_state]} ${getRaceName(
-                  getRaceId(expenditure),
-                )}`}</Link>
-              </span>
+
+          <div className={styles.expenditureDescription}>
+            <div>
+              {subraceName && `${subraceName}, `}
+              {expenditure.candidate_office_state && (
+                <span className="no-wrap">
+                  <Link
+                    href={`/2026/elections/${getRaceId(expenditure, true)}`}
+                  >{`${STATES_BY_ABBR[expenditure.candidate_office_state]} ${getRaceName(
+                    getRaceId(expenditure),
+                  )}`}</Link>
+                </span>
+              )}
+            </div>
+            {committees && expenditure.committee_id && (
+              <Link href={`/2026/committees/${expenditure.committee_id}`}>
+                {committees[expenditure.committee_id].name}
+              </Link>
+            )}
+            {sector === "all" &&
+              committees &&
+              expenditure.committee_id &&
+              committees[expenditure.committee_id]?.sector && (
+                <span className={sharedStyles.sectorBadge}>
+                  {committees[expenditure.committee_id].sector}
+                </span>
+              )}
+            {expenditure.category_code && (
+              <div>{getCategory(expenditure.category_code)}</div>
+            )}
+            {expenditure.expenditure_description && (
+              <div>{sentenceCase(expenditure.expenditure_description)}</div>
             )}
           </div>
         </div>
-        {committees && expenditure.committee_id && (
-          <Link href={`/2026/committees/${expenditure.committee_id}`}>
-            {committees[expenditure.committee_id].name}
-          </Link>
-        )}
-        {expenditure.category_code && (
-          <div>{getCategory(expenditure.category_code)}</div>
-        )}
-        {expenditure.expenditure_description && (
-          <div className={styles.expenditureDescription}>
-            {expenditure.expenditure_description}
-          </div>
-        )}
       </div>
     );
   });

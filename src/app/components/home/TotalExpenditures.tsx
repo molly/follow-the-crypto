@@ -1,9 +1,8 @@
 import { fetchAllCommitteeTotalExpenditures } from "@/app/actions/fetch";
-import styles from "@/app/page.module.css";
 import sharedStyles from "@/app/shared.module.css";
+import { type Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
 import { humanizeRoundedCurrency } from "@/app/utils/humanize";
-import { type Sector } from "@/app/types/Sector";
 import { humanizeSector } from "@/app/utils/sector";
 import ErrorText from "../ErrorText";
 import MoneyCard from "../MoneyCard";
@@ -27,14 +26,9 @@ export default async function TotalDisbursements({
   const expenditures = expendituresData as number;
   return (
     <MoneyCard
-      topText={
-        <div className={styles.spentTopSection}>
-          {humanizeSector(sector, { abbrev: true, hyphen: true })}focused PACs
-          have spent more than
-        </div>
-      }
+      topText="PAC spending"
       amount={humanizeRoundedCurrency(expenditures, true)}
-      bottomText="on elections so far this cycle."
+      bottomText="spent directly on federal elections this cycle."
       className={className}
     />
   );
