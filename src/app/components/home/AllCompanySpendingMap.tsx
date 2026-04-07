@@ -28,7 +28,7 @@ export default async function AllCompanySpendingMap({
   sector: Sector;
   showLink?: boolean;
 }) {
-  const data = await fetchMapData();
+  const data = await fetchMapData(sector);
   const sectorText = humanizeSector(sector, {
     abbrev: true,
     lowercase: true,

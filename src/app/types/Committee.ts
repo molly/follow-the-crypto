@@ -1,4 +1,4 @@
-import { ExpendituresByParty } from "./Expenditures";
+import { ExpendituresByPartySnapshot } from "./Expenditures";
 import { CommitteeDetail, CommitteeTotals, ScheduleB } from "./FECTypes";
 import { BESector } from "./Sector";
 
@@ -38,7 +38,7 @@ export type DisbursementsByCommittee = {
 };
 
 export type CommitteeDetails = CommitteeConstant & {
-  by_party?: ExpendituresByParty;
+  by_party?: ExpendituresByPartySnapshot;
   disbursements_by_committee: DisbursementsByCommittee;
 } & Pick<
     CommitteeDetail,
@@ -90,11 +90,17 @@ export type AllCommitteesSummary = {
   | "last_cash_on_hand_end_period"
 >;
 
-export type TotalsForCommittees = {
+export type CommitteeTotalsSnapshot = {
   cash_on_hand: number;
   claimed_committed: number;
   disbursements: number;
   expenditures: number;
-  net_receipts: number;
   receipts: number;
+  net_receipts?: number;
+};
+
+export type TotalsForCommittees = {
+  all: CommitteeTotalsSnapshot;
+  crypto: CommitteeTotalsSnapshot;
+  ai: CommitteeTotalsSnapshot;
 };

@@ -1,4 +1,6 @@
-import { Sector } from "../types/Sector";
+import { CommitteeConstant } from "../types/Committee";
+import { CompanyConstant } from "../types/Companies";
+import { BESector, Sector } from "../types/Sector";
 
 const SECTOR_LABELS: Record<Sector, string> = {
   all: "Cryptocurrency and artificial intelligence",
@@ -51,4 +53,32 @@ export function parseSector(value: string | undefined): Sector {
     return value;
   }
   return "all";
+}
+
+export function getCommitteeIdsForSector(
+  sector: Sector,
+  committeeConstants: Record<string, CommitteeConstant>,
+): Set<string> | null {
+  if (sector === "all") {
+    return null;
+  }
+  return new Set(
+    Object.entries(committeeConstants)
+      .filter(([, c]) => c.sector === (sector as BESector))
+      .map(([id]) => id),
+  );
+}
+
+export function getCompanyIdsForSector(
+  sector: Sector,
+  companyConstants: Record<string, CompanyConstant>,
+): Set<string> | null {
+  if (sector === "all") {
+    return null;
+  }
+  return new Set(
+    Object.entries(companyConstants)
+      .filter(([, c]) => c.sector === (sector as BESector))
+      .map(([id]) => id),
+  );
 }

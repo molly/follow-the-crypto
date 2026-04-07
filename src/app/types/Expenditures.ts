@@ -107,7 +107,7 @@ export interface RecentExpenditures {
   by_committee: Record<string, ExpenditureId[]>;
 }
 
-export interface ExpendituresByParty {
+export interface ExpendituresByPartySnapshot {
   dem_oppose: number;
   dem_support: number;
   rep_oppose: number;
@@ -116,6 +116,12 @@ export interface ExpendituresByParty {
   oppose_benefit_rep: number;
   oppose_benefit_mix: number;
   oppose_benefit_unk: number;
+}
+
+export interface ExpendituresByParty {
+  all: ExpendituresByPartySnapshot;
+  crypto: ExpendituresByPartySnapshot;
+  ai: ExpendituresByPartySnapshot;
 }
 
 export interface ExpenditureTotals {
@@ -127,7 +133,7 @@ export interface Expenditures {
   all: Expenditure[];
   recent: RecentExpenditures;
   states: StateExpenditures;
-  by_party: ExpendituresByParty;
+  by_party: ExpendituresByPartySnapshot;
   total: ExpenditureTotals;
 }
 

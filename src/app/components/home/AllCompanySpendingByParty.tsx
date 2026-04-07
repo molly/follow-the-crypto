@@ -8,8 +8,8 @@ import { Suspense } from "react";
 import ErrorText from "../ErrorText";
 import HorizontalPartyBars from "./HorizontalPartyBars";
 
-async function AllCompanySpendingByPartyContent() {
-  const data = await fetchCompanyTotalSpending();
+async function AllCompanySpendingByPartyContent({ sector }: { sector: Sector }) {
+  const data = await fetchCompanyTotalSpending(sector);
   if (isError(data)) {
     return <ErrorText subject="company spending by party" />;
   }
@@ -42,7 +42,7 @@ export default function AllCompanySpendingByParty({
         individuals to candidates and PACs
       </div>
       <Suspense fallback={null}>
-        <AllCompanySpendingByPartyContent />
+        <AllCompanySpendingByPartyContent sector={sector} />
       </Suspense>
     </section>
   );

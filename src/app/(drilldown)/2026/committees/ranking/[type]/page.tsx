@@ -25,7 +25,7 @@ export default async function PACRankingPage({
   return (
     <section className="full-width">
       <h1>Committees</h1>
-      <PACsByReceipts type={type} fullPage={true}>
+      <PACsByReceipts type={type} fullPage={true} sector="all">
         <PacList type={type} />
       </PACsByReceipts>
     </section>

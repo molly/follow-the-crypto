@@ -14,7 +14,7 @@ export default async function TotalDisbursements({
   className?: string;
   sector: Sector;
 }) {
-  const expendituresData = await fetchAllCommitteeTotalExpenditures();
+  const expendituresData = await fetchAllCommitteeTotalExpenditures(sector);
   const sectorText = humanizeSector(sector, { abbrev: true });
   if (isError(expendituresData)) {
     return (

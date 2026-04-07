@@ -22,7 +22,7 @@ export default function Page() {
       <section className={styles.mapRow}>
         <div className={styles.mapContainer}>
           <Suspense fallback={<USMapSkeleton />}>
-            <SuperPacSpendingMapWrapper />
+            <SuperPacSpendingMapWrapper sector="all" />
           </Suspense>
         </div>
         <section className={styles.statesTableCard}>
@@ -47,7 +47,7 @@ export default function Page() {
       <section className={styles.mapRow}>
         <div className={styles.mapContainer}>
           <Suspense fallback={<USMapSkeleton />}>
-            <AllCompanySpendingMap />
+            <AllCompanySpendingMap sector="all" />
           </Suspense>
         </div>
         <section className={styles.statesTableCard}>

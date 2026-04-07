@@ -27,7 +27,7 @@ export default async function SuperPacSpendingMapWrapper({
   sector: Sector;
   showLink?: boolean;
 }) {
-  const data = await fetchMapData();
+  const data = await fetchMapData(sector);
   const sectorText = humanizeSector(sector, {
     context: "industry",
     abbrev: true,

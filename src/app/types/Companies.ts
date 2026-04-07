@@ -1,5 +1,6 @@
 import { IndividualOrCompanyContributionGroup } from "./Contributions";
 import { IndividualConstant } from "./Individuals";
+import { BESector } from "./Sector";
 
 export enum CompanyCategory {
   advocacy = "advocacy",
@@ -15,6 +16,7 @@ export interface CompanyConstant {
   country?: string;
   aliases?: string[];
   category: CompanyCategory[];
+  sector?: BESector;
 }
 
 export interface CompanyOpenSecrets {

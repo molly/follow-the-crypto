@@ -1,7 +1,7 @@
 import { fetchCommitteeTotalReceipts, fetchCommitteesWithContributions } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import MoneyCard from "@/app/components/MoneyCard";
-import type { CommitteeConstantWithContributions, TotalsForCommittees } from "@/app/types/Committee";
+import type { CommitteeConstantWithContributions, CommitteeTotalsSnapshot } from "@/app/types/Committee";
 import { isError } from "@/app/utils/errors";
 import { humanizeRoundedCurrency } from "@/app/utils/humanize";
 import Link from "next/link";
@@ -215,8 +215,8 @@ export default async function CommitteeList() {
   let cardAmount: string;
   let cardBottomText: string | React.ReactElement = "on hand to influence 2026 elections.";
   if (!isError(receiptsData)) {
-    const totals = receiptsData as TotalsForCommittees;
-    const confirmedCash = totals.net_receipts + totals.cash_on_hand;
+    const totals = receiptsData as CommitteeTotalsSnapshot;
+    const confirmedCash = (totals.net_receipts ?? totals.receipts) + totals.cash_on_hand;
     cardAmount = humanizeRoundedCurrency(confirmedCash, true);
     if (totals.claimed_committed) {
       cardBottomText = (

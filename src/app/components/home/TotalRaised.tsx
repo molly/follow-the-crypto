@@ -1,6 +1,6 @@
 import { fetchCommitteeTotalReceipts } from "@/app/actions/fetch";
 import sharedStyles from "@/app/shared.module.css";
-import { TotalsForCommittees } from "@/app/types/Committee";
+import { CommitteeTotalsSnapshot } from "@/app/types/Committee";
 import { type Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
 import { humanizeRoundedCurrency } from "@/app/utils/humanize";
@@ -15,7 +15,7 @@ export default async function TotalRaised({
   className?: string;
   sector: Sector;
 }) {
-  const receiptsData = await fetchCommitteeTotalReceipts();
+  const receiptsData = await fetchCommitteeTotalReceipts(sector);
   const sectorText = humanizeSector(sector, {
     hyphen: true,
     abbrev: true,
@@ -30,8 +30,8 @@ export default async function TotalRaised({
       </div>
     );
   }
-  const totals = receiptsData as TotalsForCommittees;
-  const confirmedCash = totals.net_receipts + totals.cash_on_hand;
+  const totals = receiptsData as CommitteeTotalsSnapshot;
+  const confirmedCash = (totals.net_receipts ?? totals.receipts) + totals.cash_on_hand;
 
   let claimed;
   if (totals.claimed_committed) {

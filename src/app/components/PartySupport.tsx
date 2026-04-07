@@ -2,7 +2,7 @@
 
 import styles from "@/app/components/expenditures.module.css";
 import { useComponentSize } from "@/app/hooks/useComponentSize";
-import { ExpendituresByParty } from "@/app/types/Expenditures";
+import { ExpendituresByPartySnapshot } from "@/app/types/Expenditures";
 import * as d3 from "d3";
 
 const MARGIN_BOTTOM = 20;
@@ -113,7 +113,7 @@ export default function PartySupport({
   expenditures,
   labelId,
 }: {
-  expenditures: ExpendituresByParty;
+  expenditures: ExpendituresByPartySnapshot;
   labelId: string;
 }) {
   const { ref, width, height } = useComponentSize({ width: 400, height: 300 });

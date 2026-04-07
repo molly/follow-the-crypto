@@ -57,7 +57,7 @@ export default async function Home({
               </Suspense>
             </div>
             <SuperPACsByReceipts type="super" sector={sector}>
-              <SuperPACsByReceiptsTableContents />
+              <SuperPACsByReceiptsTableContents sector={sector} />
             </SuperPACsByReceipts>
           </div>
           <div className={styles.sideColumn}>

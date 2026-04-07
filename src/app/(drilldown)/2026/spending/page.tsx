@@ -4,7 +4,7 @@ import SpendingByPartyWithOpposition, {
   SpendingByPartySkeleton,
 } from "@/app/components/SpendingByPartyWithOpposition";
 import sharedStyles from "@/app/shared.module.css";
-import { ExpendituresByParty } from "@/app/types/Expenditures";
+import { ExpendituresByPartySnapshot } from "@/app/types/Expenditures";
 import { isError } from "@/app/utils/errors";
 import { customMetadata } from "@/app/utils/metadata";
 import type { Metadata } from "next";
@@ -26,7 +26,7 @@ async function SpendingByPartyWithOppositionChart() {
   if (isError(data)) {
     return <ErrorText subject="expenditures by party" />;
   }
-  const expenditures = data as ExpendituresByParty;
+  const expenditures = data as ExpendituresByPartySnapshot;
   return (
     <SpendingByPartyWithOpposition
       expenditures={expenditures}

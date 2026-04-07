@@ -16,7 +16,7 @@ export default async function TotalCompanySpending({
   className?: string;
   sector: Sector;
 }) {
-  const companyTotalsData = await fetchCompanyTotalSpending();
+  const companyTotalsData = await fetchCompanyTotalSpending(sector);
   const sectorText = humanizeSector(sector, { context: "industry" });
   if (isError(companyTotalsData)) {
     return (

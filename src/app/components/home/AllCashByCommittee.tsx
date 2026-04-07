@@ -16,7 +16,7 @@ async function AllCashByCommitteeContent({
   sector: Sector;
 }) {
   const [committeesData] = await Promise.all([
-    fetchCommitteesWithContributions(),
+    fetchCommitteesWithContributions(sector),
   ]);
   if (isError(committeesData)) {
     return <ErrorText subject="receipts by committee" />;

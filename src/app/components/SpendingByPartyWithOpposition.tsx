@@ -1,4 +1,4 @@
-import { ExpendituresByParty } from "../types/Expenditures";
+import { ExpendituresByPartySnapshot } from "../types/Expenditures";
 import { formatCompact } from "../utils/humanize";
 import { formatCurrency } from "../utils/utils";
 import styles from "./home/HorizontalBars.module.css";
@@ -28,7 +28,7 @@ export default function SpendingByPartyWithOpposition({
   expenditures,
   labelId: _labelId,
 }: {
-  expenditures: ExpendituresByParty;
+  expenditures: ExpendituresByPartySnapshot;
   labelId: string;
 }) {
   const allValues = GROUPS.flatMap((g) =>

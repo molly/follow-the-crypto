@@ -20,7 +20,7 @@ async function AllRecentExpendituresContent({
   sector?: Sector;
 }) {
   const [expendituresData, committeeConstantData] = await Promise.all([
-    fetchAllRecentExpenditures(),
+    fetchAllRecentExpenditures(sector),
     fetchConstant("committees"),
   ]);
   if (isError(expendituresData)) {
