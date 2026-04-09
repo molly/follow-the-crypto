@@ -22,6 +22,7 @@ export interface RaceCandidate {
 
 export enum RaceType {
   General = "general",
+  GeneralRunoff = "general_runoff",
   Primary = "primary",
   PrimaryRunoff = "primary_runoff",
   Convention = "convention",

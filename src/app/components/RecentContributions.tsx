@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { Sector } from "../types/Sector";
+import { sectorHref } from "../utils/sector";
 import styles from "./recentExpenditures.module.css";
 import tableStyles from "./tables.module.css";
 
@@ -7,11 +9,13 @@ export default function RecentContributions({
   className,
   fullPage,
   noHeader,
+  sector,
 }: {
   children: React.ReactNode;
   className?: string;
   fullPage?: boolean;
   noHeader?: boolean;
+  sector?: Sector;
 }) {
   return (
     <section
@@ -21,7 +25,7 @@ export default function RecentContributions({
       {children}
       {!fullPage && (
         <div className={styles.viewMoreLinks}>
-          <Link href="/2026/contributions" className={styles.viewMoreLink}>
+          <Link href={sectorHref("/2026/contributions", sector ?? "all")} className={styles.viewMoreLink}>
             &raquo; All recent contributions
           </Link>
         </div>

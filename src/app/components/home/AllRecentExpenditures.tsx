@@ -61,6 +61,7 @@ export default async function AllRecentExpenditures({
       className={styles.recentExpenditures}
       noHeader={fullPage}
       fullPage={fullPage}
+      sector={sector}
     >
       <Suspense
         fallback={<RecentExpendituresContentSkeleton fullPage={fullPage} />}

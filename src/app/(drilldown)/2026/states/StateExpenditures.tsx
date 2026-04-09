@@ -3,6 +3,7 @@ import ErrorText from "@/app/components/ErrorText";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import { STATES_BY_ABBR } from "@/app/data/states";
 import { MapData } from "@/app/types/MapData";
+import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
 import { getRaceName } from "@/app/utils/races";
 import { range } from "@/app/utils/range";
@@ -45,8 +46,8 @@ export function StateExpendituresSkeleton() {
   );
 }
 
-export default async function StateExpenditures() {
-  const mapData = await fetchMapData();
+export default async function StateExpenditures({ sector = "all" }: { sector?: Sector }) {
+  const mapData = await fetchMapData(sector);
   if (isError(mapData)) {
     return (
       <tbody>

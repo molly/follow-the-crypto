@@ -11,6 +11,7 @@ import AllExpendituresByCommittee from "./components/home/AllExpendituresByCommi
 import AllExpendituresByParty from "./components/home/AllExpendituresByParty";
 import AllRecentContributions from "./components/home/AllRecentContributions";
 import AllRecentExpenditures from "./components/home/AllRecentExpenditures";
+import CombinedMapToggle from "./components/home/CombinedMapToggle";
 import SuperPacSpendingMapWrapper from "./components/home/SuperPacSpendingMapWrapper";
 import TotalCompanySpending from "./components/home/TotalCompanySpending";
 import TotalExpenditures from "./components/home/TotalExpenditures";
@@ -46,18 +47,22 @@ export default async function Home({
         <div className={styles.columns}>
           <div className={styles.mainColumn}>
             <InfluencedRaces sector={sector} />
-            <div className={styles.companyMap}>
-              <Suspense fallback={<USMapSkeleton />}>
-                <AllCompanySpendingMap sector={sector} showLink={true} />
-              </Suspense>
-            </div>
-            <div className={styles.superPacMap}>
-              <Suspense fallback={<USMapSkeleton />}>
-                <SuperPacSpendingMapWrapper sector={sector} showLink={true} />
-              </Suspense>
+            <div className={styles.combinedMap}>
+              <CombinedMapToggle
+                companyMap={
+                  <Suspense fallback={<USMapSkeleton />}>
+                    <AllCompanySpendingMap sector={sector} showLink={true} />
+                  </Suspense>
+                }
+                superPacMap={
+                  <Suspense fallback={<USMapSkeleton />}>
+                    <SuperPacSpendingMapWrapper sector={sector} showLink={true} />
+                  </Suspense>
+                }
+              />
             </div>
             <SuperPACsByReceipts type="super" sector={sector}>
-              <SuperPACsByReceiptsTableContents sector={sector} />
+              <SuperPACsByReceiptsTableContents />
             </SuperPACsByReceipts>
           </div>
           <div className={styles.sideColumn}>
@@ -66,7 +71,7 @@ export default async function Home({
             <AllExpendituresByCommittee sector={sector} />
             <AllExpendituresByParty sector={sector} />
             <AllRecentExpenditures sector={sector} />
-            <AllRecentContributions />
+            <AllRecentContributions sector={sector} />
           </div>
         </div>
       </main>

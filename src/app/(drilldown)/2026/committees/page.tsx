@@ -1,5 +1,6 @@
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import { customMetadata } from "@/app/utils/metadata";
+import { parseSector } from "@/app/utils/sector";
 import { range } from "@/app/utils/range";
 import type { Metadata } from "next";
 import { Suspense } from "react";
@@ -21,12 +22,19 @@ function CommitteeListSkeleton() {
   ));
 }
 
-export default async function CommitteesPage() {
+export default async function CommitteesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ sector?: string }>;
+}) {
+  const { sector: rawSector } = await searchParams;
+  const sector = parseSector(rawSector);
+
   return (
     <section className="single-column-page">
       <h1>Cryptocurrency-focused political action committees</h1>
       <Suspense fallback={<CommitteeListSkeleton />}>
-        <CommitteeList />
+        <CommitteeList sector={sector} />
       </Suspense>
     </section>
   );

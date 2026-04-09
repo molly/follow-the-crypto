@@ -2,13 +2,29 @@
 import { fetchConstant, fetchIndividualTotalSpending } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import { IndividualConstant, IndividualTotals } from "@/app/types/Individuals";
+import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
 import { humanizeRoundedCurrency } from "@/app/utils/humanize";
 import Link from "next/link";
 import listStyles from "../listStyles.module.css";
 import styles from "./IndividualsList.module.css";
 
-export default async function IndividualsList() {
+function individualMatchesSector(individual: IndividualConstant, sector: Sector): boolean {
+  if (sector === "all") {
+    return true;
+  }
+  const s = individual.sector;
+  if (!s) {
+    return false;
+  }
+  // "tech" individuals appear in both crypto and ai views
+  if (s === "tech") {
+    return true;
+  }
+  return s === sector;
+}
+
+export default async function IndividualsList({ sector = "all" }: { sector?: Sector }) {
   const [data, totalsData] = await Promise.all([
     fetchConstant<Record<string, IndividualConstant> | null>("individuals"),
     fetchIndividualTotalSpending(),
@@ -26,6 +42,7 @@ export default async function IndividualsList() {
   const individuals = Object.values(
     data as Record<string, IndividualConstant>,
   )
+    .filter((individual) => individualMatchesSector(individual, sector))
     .map((individual) => ({
       ...individual,
       total: totals[individual.id]?.total || 0,

@@ -13,8 +13,7 @@
   grid-template-areas:
     "influencedCard"
     "companySpending"
-    "companyMap"
-    "superPacMap"
+    "combinedMap"
     "allCash"
     "byCommittee"
     "expenditures"
@@ -27,14 +26,9 @@
   display: contents;
 }
 
-.companyMap {
+.combinedMap {
   composes: section from "@/app/shared.module.css";
-  grid-area: companyMap;
-}
-
-.superPacMap {
-  composes: section from "@/app/shared.module.css";
-  grid-area: superPacMap;
+  grid-area: combinedMap;
 }
 
 .companySpendingCard {

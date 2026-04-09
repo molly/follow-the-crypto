@@ -2,13 +2,14 @@
 
 import { isError } from "@/app/utils/errors";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { fetchConstant } from "../actions/fetch";
 import { STATES_BY_ABBR } from "../data/states";
 import { CommitteeConstant } from "../types/Committee";
 import { formatCompanyName } from "../utils/names";
 import { getRaceName } from "../utils/races";
+import { parseSector, sectorHref } from "../utils/sector";
 import { titlecase } from "../utils/titlecase";
 import styles from "./header.module.css";
 
@@ -19,6 +20,8 @@ export default function Breadcrumbs() {
   > | null>(null);
 
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const sector = parseSector(searchParams.get("sector") ?? undefined);
   const segments = pathname.split("/").filter(Boolean);
 
   const yearOffset = segments[0] === "2026" ? 1 : 0;
@@ -84,7 +87,7 @@ export default function Breadcrumbs() {
   return (
     <ul className={styles.breadcrumbsContainer}>
       <li className={styles.breadcrumb}>
-        <Link href="/" className={styles.breadcrumbLink}>
+        <Link href={sectorHref("/", sector)} className={styles.breadcrumbLink}>
           Home
         </Link>
       </li>
@@ -97,7 +100,7 @@ export default function Breadcrumbs() {
             ) : (
               <Link
                 className={styles.breadcrumbLink}
-                href={`/${segmentsToRender.slice(0, index + 1).join("/")}`}
+                href={sectorHref(`/${segmentsToRender.slice(0, index + 1).join("/")}`, sector)}
               >
                 {getSegmentText(segment, index, segmentsToRender)}
               </Link>

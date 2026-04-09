@@ -4,7 +4,7 @@ import styles from "@/app/shared.module.css";
 import { ExpendituresByPartySnapshot } from "@/app/types/Expenditures";
 import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
-import { humanizeSector } from "@/app/utils/sector";
+import { humanizeSector, sectorHref } from "@/app/utils/sector";
 import Link from "next/link";
 import { Suspense } from "react";
 import ErrorText from "../ErrorText";
@@ -47,7 +47,7 @@ export default function AllExpendituresByParty({ sector }: { sector: Sector }) {
         <AllExpendituresByPartyContent labelId="expenditures-by-party-label" sector={sector} />
       </Suspense>
       <div className={styles.linkRow}>
-        <Link href="/2026/spending">&raquo; More details</Link>
+        <Link href={sectorHref("/2026/spending", sector)}>&raquo; More details</Link>
       </div>
     </section>
   );

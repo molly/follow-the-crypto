@@ -102,9 +102,15 @@ export interface PopulatedStateExpenditures {
   total: number;
 }
 
-export interface RecentExpenditures {
+export interface RecentExpendituresSnapshot {
   all: ExpenditureId[];
-  by_committee: Record<string, ExpenditureId[]>;
+  by_committee?: Record<string, ExpenditureId[]>;
+}
+
+export interface RecentExpenditures {
+  all: RecentExpendituresSnapshot;
+  crypto: RecentExpendituresSnapshot;
+  ai: RecentExpendituresSnapshot;
 }
 
 export interface ExpendituresByPartySnapshot {
@@ -124,9 +130,15 @@ export interface ExpendituresByParty {
   ai: ExpendituresByPartySnapshot;
 }
 
-export interface ExpenditureTotals {
-  all: number;
+export interface ExpenditureTotalsSnapshot {
+  total: number;
   by_committee: Record<string, number>;
+}
+
+export interface ExpenditureTotals {
+  all: ExpenditureTotalsSnapshot;
+  crypto: ExpenditureTotalsSnapshot;
+  ai: ExpenditureTotalsSnapshot;
 }
 
 export interface Expenditures {

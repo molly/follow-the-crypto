@@ -3,6 +3,8 @@
 import { motion, Variants } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { parseSector, sectorHref } from "../utils/sector";
 import styles from "./sidebar.module.css";
 
 function LeftArrowIcon() {
@@ -32,6 +34,12 @@ function HamburgerIcon() {
 export default function Sidebar() {
   const [isCollapsed, setCollapsed] = useState(true);
   const sidebarRef = useRef<HTMLAnchorElement>(null);
+  const searchParams = useSearchParams();
+  const sector = parseSector(searchParams.get("sector") ?? undefined);
+
+  function navHref(path: string) {
+    return sectorHref(path, sector);
+  }
 
   useEffect(() => {
     if (!isCollapsed) {
@@ -101,7 +109,7 @@ export default function Sidebar() {
               <Link
                 className={styles.sidebarLink}
                 onClick={() => setCollapsed(true)}
-                href="/2026/committees"
+                href={navHref("/2026/committees")}
                 ref={sidebarRef}
               >
                 By cryptocurrency-focused committees
@@ -114,7 +122,7 @@ export default function Sidebar() {
               <Link
                 className={styles.sidebarLink}
                 onClick={() => setCollapsed(true)}
-                href="/2026/companies"
+                href={navHref("/2026/companies")}
               >
                 By companies
               </Link>
@@ -126,7 +134,7 @@ export default function Sidebar() {
               <Link
                 className={styles.sidebarLink}
                 onClick={() => setCollapsed(true)}
-                href="/2026/individuals"
+                href={navHref("/2026/individuals")}
               >
                 By individuals
               </Link>
@@ -138,7 +146,7 @@ export default function Sidebar() {
               <Link
                 className={styles.sidebarLink}
                 onClick={() => setCollapsed(true)}
-                href="/2026/expenditures"
+                href={navHref("/2026/expenditures")}
               >
                 Most recent expenditures
               </Link>
@@ -153,7 +161,7 @@ export default function Sidebar() {
               <Link
                 className={styles.sidebarLink}
                 onClick={() => setCollapsed(true)}
-                href="/2026/states"
+                href={navHref("/2026/states")}
               >
                 By state
               </Link>
@@ -165,7 +173,7 @@ export default function Sidebar() {
               <Link
                 className={styles.sidebarLink}
                 onClick={() => setCollapsed(true)}
-                href="/2026/elections"
+                href={navHref("/2026/elections")}
               >
                 All elections
               </Link>
@@ -180,7 +188,7 @@ export default function Sidebar() {
               <Link
                 className={styles.sidebarLink}
                 onClick={() => setCollapsed(true)}
-                href="/2026/committees/ranking/super"
+                href={navHref("/2026/committees/ranking/super")}
               >
                 Super PACs
               </Link>
@@ -192,7 +200,7 @@ export default function Sidebar() {
               <Link
                 className={styles.sidebarLink}
                 onClick={() => setCollapsed(true)}
-                href="/2026/committees/ranking/all"
+                href={navHref("/2026/committees/ranking/all")}
               >
                 All committees
               </Link>
@@ -207,7 +215,7 @@ export default function Sidebar() {
               <Link
                 className={styles.sidebarLink}
                 onClick={() => setCollapsed(true)}
-                href="/2026/quidproquo"
+                href={navHref("/2026/quidproquo")}
               >
                 Quid pro quo
               </Link>

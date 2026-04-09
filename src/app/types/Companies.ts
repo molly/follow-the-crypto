@@ -57,3 +57,9 @@ export type CompanyTotals = {
   by_party: Record<string, number>;
   by_company: Record<string, CompanyTotalByCompany>;
 };
+
+export type AllCompanyTotals = {
+  all: CompanyTotals;
+  crypto: CompanyTotals;
+  ai: CompanyTotals;
+};

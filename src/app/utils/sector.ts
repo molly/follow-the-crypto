@@ -55,6 +55,24 @@ export function parseSector(value: string | undefined): Sector {
   return "all";
 }
 
+export function sectorHref(path: string, sector: Sector): string {
+  if (sector === "all") {
+    return path;
+  }
+  return `${path}?sector=${sector}`;
+}
+
+/**
+ * Backend sector "tech" means the entity spans all sectors and should appear
+ * in both "crypto" and "ai" filtered views.
+ */
+function matchesSector(entitySector: BESector | undefined, sector: Sector): boolean {
+  if (entitySector === "tech") {
+    return true; // tech appears in all sector views
+  }
+  return entitySector === (sector as BESector);
+}
+
 export function getCommitteeIdsForSector(
   sector: Sector,
   committeeConstants: Record<string, CommitteeConstant>,
@@ -64,7 +82,7 @@ export function getCommitteeIdsForSector(
   }
   return new Set(
     Object.entries(committeeConstants)
-      .filter(([, c]) => c.sector === (sector as BESector))
+      .filter(([, c]) => matchesSector(c.sector, sector))
       .map(([id]) => id),
   );
 }
@@ -78,7 +96,7 @@ export function getCompanyIdsForSector(
   }
   return new Set(
     Object.entries(companyConstants)
-      .filter(([, c]) => c.sector === (sector as BESector))
+      .filter(([, c]) => matchesSector(c.sector, sector))
       .map(([id]) => id),
   );
 }

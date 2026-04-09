@@ -6,7 +6,7 @@ import { STATES_BY_ABBR } from "@/app/data/states";
 import { MapData } from "@/app/types/MapData";
 import { isError } from "@/app/utils/errors";
 import { type Sector } from "@/app/types/Sector";
-import { humanizeSector } from "@/app/utils/sector";
+import { humanizeSector, sectorHref } from "@/app/utils/sector";
 import Link from "next/link";
 import InformationalTooltip from "../InformationalTooltip";
 
@@ -60,7 +60,7 @@ export default async function AllCompanySpendingMap({
         stateValues={toStateValues(mapData)}
         labelId="company-spending-by-state"
       />
-      {showLink && <Link href="/2026/states">&raquo; Spending by state</Link>}
+      {showLink && <Link href={sectorHref("/2026/states", sector)}>&raquo; Spending by state</Link>}
     </>
   );
 }

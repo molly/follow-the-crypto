@@ -3,6 +3,7 @@ import styles from "@/app/page.module.css";
 import sharedStyles from "@/app/shared.module.css";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { RecentContribution } from "@/app/types/Contributions";
+import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
 import { Suspense } from "react";
 import ErrorText from "../ErrorText";
@@ -13,11 +14,13 @@ import RecentContributionsContent, {
 
 async function AllRecentContributionsContent({
   fullPage,
+  sector,
 }: {
   fullPage?: boolean;
+  sector?: Sector;
 }) {
   const [data, committeesData] = await Promise.all([
-    fetchAllRecentContributions(),
+    fetchAllRecentContributions(sector),
     fetchConstant<Record<string, CommitteeConstant>>("committees"),
   ]);
   if (isError(data)) {
@@ -47,19 +50,22 @@ async function AllRecentContributionsContent({
 
 export default async function AllRecentContributions({
   fullPage,
+  sector,
 }: {
   fullPage?: boolean;
+  sector?: Sector;
 }) {
   return (
     <RecentContributions
       className={styles.recentContributions}
       noHeader={fullPage}
       fullPage={fullPage}
+      sector={sector}
     >
       <Suspense
         fallback={<RecentContributionsContentSkeleton fullPage={fullPage} />}
       >
-        <AllRecentContributionsContent fullPage={fullPage} />
+        <AllRecentContributionsContent fullPage={fullPage} sector={sector} />
       </Suspense>
     </RecentContributions>
   );

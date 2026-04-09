@@ -15,6 +15,7 @@ import {
 } from "@/app/types/Beneficiaries";
 import { isError } from "@/app/utils/errors";
 import { getRaceName } from "@/app/utils/races";
+import { parseSector } from "@/app/utils/sector";
 import { titlecaseCommittee, titlecaseLastFirst } from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
 import Link from "next/link";
@@ -93,11 +94,17 @@ function CandidateBeneficiary({
   );
 }
 
-export default async function BeneficiariesList() {
+export default async function BeneficiariesList({
+  searchParams,
+}: {
+  searchParams: Promise<{ sector?: string }>;
+}) {
+  const { sector: rawSector } = await searchParams;
+  const sector = parseSector(rawSector);
   const [beneficiariesData, beneficiariesOrderData] =
     await Promise.all([
-      fetchBeneficiaries(),
-      fetchBeneficiariesOrder(),
+      fetchBeneficiaries(sector),
+      fetchBeneficiariesOrder(sector),
     ]);
   if (isError(beneficiariesData) || isError(beneficiariesOrderData)) {
     return <ErrorText subject="the list of beneficiaries" />;

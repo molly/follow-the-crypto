@@ -10,6 +10,7 @@ import styles from "./page.module.css";
 
 const RACE_ORDER = [
   "general",
+  "general_runoff",
   "primary_runoff",
   "primary",
   "convention",

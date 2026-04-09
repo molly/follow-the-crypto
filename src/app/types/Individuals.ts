@@ -9,6 +9,7 @@ export interface IndividualConstant {
   company?: string[];
   title?: string;
   photoCredit?: string;
+  sector?: import("./Sector").BESector;
 }
 
 export type IndividualTotalByIndividual = {

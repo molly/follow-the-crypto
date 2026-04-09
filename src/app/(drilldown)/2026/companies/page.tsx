@@ -1,5 +1,6 @@
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import { customMetadata } from "@/app/utils/metadata";
+import { parseSector } from "@/app/utils/sector";
 import { range } from "@/app/utils/range";
 import type { Metadata } from "next";
 import { Suspense } from "react";
@@ -21,14 +22,21 @@ function CompanyListSkeleton() {
   ));
 }
 
-export default async function CompaniesPage() {
+export default async function CompaniesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ sector?: string }>;
+}) {
+  const { sector: rawSector } = await searchParams;
+  const sector = parseSector(rawSector);
+
   return (
     <section>
       <h1 className="no-margin">
         Cryptocurrency-related companies active in election spending
       </h1>
       <Suspense fallback={<CompanyListSkeleton />}>
-        <CompanyList />
+        <CompanyList sector={sector} />
       </Suspense>
     </section>
   );

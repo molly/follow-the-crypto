@@ -26,7 +26,7 @@ import {
 import { cache } from "react";
 import { Ad, AdGroup } from "../types/Ads";
 import { Beneficiary } from "../types/Beneficiaries";
-import { Company, CompanyTotals } from "../types/Companies";
+import { AllCompanyTotals, Company, CompanyTotals } from "../types/Companies";
 import {
   ElectionGroup,
   ElectionsByState,
@@ -40,6 +40,7 @@ import {
   ExpendituresByCandidate,
   ExpendituresByParty,
   ExpendituresByPartySnapshot,
+  ExpenditureTotals,
   PopulatedStateExpenditures,
   RecentExpenditures,
   StateExpenditures,
@@ -115,41 +116,21 @@ export const fetchCommitteeTotalReceipts = cache(
 
 export const fetchAllCommitteeTotalExpenditures = cache(
   async (sector: Sector = "all"): Promise<number | ErrorType> => {
-    const [snapshot, committeeConstants] = await Promise.all([
-      fetchSnapshot("expenditures", "total"),
-      sector !== "all" ? fetchConstant<Record<string, CommitteeConstant>>("committees") : Promise.resolve(null),
-    ]);
+    const snapshot = await fetchSnapshot("expenditures", "total");
     if (isError(snapshot)) {
       return snapshot as ErrorType;
     }
-    const byCommittee = snapshot.by_committee as Record<string, number>;
-    if (sector === "all") {
-      return snapshot.all;
-    }
-    const sectorIds = getCommitteeIdsForSector(sector, committeeConstants ?? {});
-    return Object.entries(byCommittee).reduce((sum, [id, amount]) => {
-      return sectorIds?.has(id) ? sum + amount : sum;
-    }, 0);
+    return (snapshot as ExpenditureTotals)[sector].total;
   },
 );
 
 export const fetchAllCommitteeExpenditures = cache(
   async (sector: Sector = "all"): Promise<Record<string, number> | ErrorType> => {
-    const [snapshot, committeeConstants] = await Promise.all([
-      fetchSnapshot("expenditures", "total"),
-      sector !== "all" ? fetchConstant<Record<string, CommitteeConstant>>("committees") : Promise.resolve(null),
-    ]);
+    const snapshot = await fetchSnapshot("expenditures", "total");
     if (isError(snapshot)) {
       return snapshot as ErrorType;
     }
-    const byCommittee = snapshot.by_committee as Record<string, number>;
-    if (sector === "all") {
-      return byCommittee;
-    }
-    const sectorIds = getCommitteeIdsForSector(sector, committeeConstants ?? {});
-    return Object.fromEntries(
-      Object.entries(byCommittee).filter(([id]) => sectorIds?.has(id)),
-    );
+    return (snapshot as ExpenditureTotals)[sector].by_committee;
   },
 );
 
@@ -171,8 +152,9 @@ export const fetchCommitteeTotalExpenditures = cache(
       expenditures: null,
       disbursements: null,
     };
-    if (committeeId in expendituresSnapshot.by_committee) {
-      result.expenditures = expendituresSnapshot.by_committee[committeeId];
+    const allByCommittee = (expendituresSnapshot as ExpenditureTotals)["all"].by_committee;
+    if (committeeId in allByCommittee) {
+      result.expenditures = allByCommittee[committeeId];
     }
     if ("disbursements_by_committee" in committeeSnapshot) {
       result.disbursements = Object.values(
@@ -185,61 +167,32 @@ export const fetchCommitteeTotalExpenditures = cache(
 
 export const fetchCompanyTotalSpending = cache(
   async (sector: Sector = "all"): Promise<CompanyTotals | ErrorType> => {
-    const [snapshot, companyConstants] = await Promise.all([
-      fetchSnapshot("totals", "companies"),
-      sector !== "all" ? fetchConstant<Record<string, CompanyConstant>>("companies") : Promise.resolve(null),
-    ]);
+    const snapshot = await fetchSnapshot("totals", "companies");
     if (isError(snapshot)) {
       return snapshot as ErrorType;
     }
-    if (sector === "all") {
-      return snapshot as CompanyTotals;
-    }
-    const data = snapshot as CompanyTotals;
-    const sectorIds = getCompanyIdsForSector(sector, companyConstants ?? {});
-    const filteredByCompany = Object.fromEntries(
-      Object.entries(data.by_company).filter(([id]) => sectorIds?.has(id)),
-    ) as CompanyTotals["by_company"];
-    const total = Object.values(filteredByCompany).reduce(
-      (sum, c) => sum + c.total,
-      0,
-    );
-    const by_party: Record<string, number> = {};
-    for (const company of Object.values(filteredByCompany)) {
-      for (const [party, amount] of Object.entries(company.by_party)) {
-        by_party[party] = (by_party[party] ?? 0) + amount;
-      }
-    }
-    return { total, by_party, by_company: filteredByCompany };
+    return (snapshot as AllCompanyTotals)[sector];
   },
 );
 
 // ALL COMMITTEES -------------------------------------------------------
 export const fetchPACsByReceipts = cache(
-  async (sector: Sector = "all"): Promise<AllCommitteesSummary[] | ErrorType> => {
+  async (): Promise<AllCommitteesSummary[] | ErrorType> => {
     const data = await fetchSnapshot("allCommittees", "allPacs");
     if (isError(data)) {
       return data as ErrorType;
     }
-    const all = data.by_receipts as AllCommitteesSummary[];
-    if (sector === "all") {
-      return all;
-    }
-    return all.filter((c) => c.sector === sector);
+    return data.by_receipts as AllCommitteesSummary[];
   },
 );
 
 export const fetchSuperPACsByReceipts = cache(
-  async (sector: Sector = "all"): Promise<AllCommitteesSummary[] | ErrorType> => {
+  async (): Promise<AllCommitteesSummary[] | ErrorType> => {
     const data = await fetchSnapshot("allCommittees", "superPacs");
     if (isError(data)) {
       return data as ErrorType;
     }
-    const all = data.by_receipts as AllCommitteesSummary[];
-    if (sector === "all") {
-      return all;
-    }
-    return all.filter((c) => c.sector === sector);
+    return data.by_receipts as AllCommitteesSummary[];
   },
 );
 
@@ -273,7 +226,7 @@ export const fetchCommitteesWithContributions = cache(
       });
       const expendituresByCommittee: Record<string, number> = isError(expendituresData)
         ? {}
-        : (expendituresData as { by_committee: Record<string, number> }).by_committee ?? {};
+        : (expendituresData as ExpenditureTotals)["all"].by_committee ?? {};
       const contributionsCommittees = contributions.map((doc) => ({
         ...doc.data(),
         id: doc.id,
@@ -300,7 +253,10 @@ export const fetchCommitteesWithContributions = cache(
             committee.total + (committee.claimedCommitted || 0) > 0,
         )
         .filter(
-          (committee) => sector === "all" || committee.sector === sector,
+          (committee) =>
+            sector === "all" ||
+            committee.sector === sector ||
+            committee.sector === "tech",
         );
       committeesWithTotals.sort((a, b) => b.total - a.total);
       return committeesWithTotals;
@@ -470,10 +426,9 @@ export const fetchStateExpenditures = cache(
 // Fetch recent expenditures by any committee
 export const fetchAllRecentExpenditures = cache(
   async (sector: Sector = "all"): Promise<Expenditure[] | ErrorType> => {
-    const [data, allRecentExpendituresData, committeeConstants] = await Promise.all([
+    const [data, allRecentExpendituresData] = await Promise.all([
       fetchSnapshot("expenditures", "recent"),
       fetchAllExpenditures(),
-      sector !== "all" ? fetchConstant<Record<string, CommitteeConstant>>("committees") : Promise.resolve(null),
     ]);
     if (isError(data)) {
       return data as ErrorType;
@@ -481,19 +436,12 @@ export const fetchAllRecentExpenditures = cache(
     if (isError(allRecentExpendituresData)) {
       return allRecentExpendituresData as ErrorType;
     }
-    const allRecentExpenditureIds = (data as RecentExpenditures)["all"];
+    const recentIds = (data as RecentExpenditures)[sector].all;
     const allRecentExpenditures = allRecentExpendituresData as Record<
       ExpenditureId,
       Expenditure
     >;
-    const hydrated = allRecentExpenditureIds.map(
-      (expenditureId) => allRecentExpenditures[expenditureId],
-    );
-    if (sector === "all") {
-      return hydrated;
-    }
-    const sectorIds = getCommitteeIdsForSector(sector, committeeConstants ?? {});
-    return hydrated.filter((e) => sectorIds?.has(String(e.committee_id)));
+    return recentIds.map((expenditureId) => allRecentExpenditures[expenditureId]);
   },
 );
 
@@ -507,7 +455,7 @@ export const fetchRecentCommitteeExpenditures = cache(
     } else if (isError(allRecentExpendituresData)) {
       return allRecentExpendituresData as ErrorType;
     } else {
-      const committeeData = (data as RecentExpenditures)["by_committee"];
+      const committeeData = (data as RecentExpenditures)["all"]["by_committee"] ?? {};
       const allRecentExpenditures = allRecentExpendituresData as Record<
         string,
         Expenditure
@@ -535,13 +483,13 @@ export const fetchAllExpenditureTotalsByParty = cache(
 
 // Fetch recent contributions from all tracked individuals and companies
 export const fetchAllRecentContributions = cache(
-  async (): Promise<RecentContribution[] | ErrorType> => {
+  async (sector: Sector = "all"): Promise<RecentContribution[] | ErrorType> => {
     const data = await fetchSnapshot("contributions", "recent");
     if (isError(data)) {
       return data as ErrorType;
-    } else {
-      return (data as { all: RecentContribution[] }).all;
     }
+    const sectorData = (data as Record<string, { all: RecentContribution[] }>)[sector];
+    return sectorData?.all ?? [];
   },
 );
 
@@ -756,12 +704,45 @@ export const fetchAllRecipients = cache(
 
 // BENEFICIARIIES ------------------------------------------------------------
 export const fetchBeneficiaries = cache(
-  async (): Promise<Record<string, Beneficiary> | ErrorType> =>
-    fetchSnapshot("allRecipients", "recipientsWithContribs"),
+  async (sector: Sector = "all"): Promise<Record<string, Beneficiary> | ErrorType> => {
+    const [data, companyConstants] = await Promise.all([
+      fetchSnapshot("allRecipients", "recipientsWithContribs"),
+      sector !== "all" ? fetchConstant<Record<string, CompanyConstant>>("companies") : Promise.resolve(null),
+    ]);
+    if (isError(data)) {
+      return data as ErrorType;
+    }
+    if (sector === "all") {
+      return data as Record<string, Beneficiary>;
+    }
+    const sectorIds = getCompanyIdsForSector(sector, companyConstants ?? {});
+    const filtered: Record<string, Beneficiary> = {};
+    for (const [id, beneficiary] of Object.entries(data as Record<string, Beneficiary>)) {
+      const filteredContribs = beneficiary.contributions.filter((g) =>
+        sectorIds?.has(g.company_id),
+      );
+      const total = filteredContribs.reduce((sum, g) => sum + g.total, 0);
+      if (total > 0) {
+        filtered[id] = { ...beneficiary, contributions: filteredContribs, total };
+      }
+    }
+    return filtered;
+  },
 );
 
 export const fetchBeneficiariesOrder = cache(
-  async (): Promise<string[] | ErrorType> => {
+  async (sector: Sector = "all"): Promise<string[] | ErrorType> => {
+    if (sector !== "all") {
+      // Recompute order from sector-filtered beneficiaries
+      const beneficiariesData = await fetchBeneficiaries(sector);
+      if (isError(beneficiariesData)) {
+        return beneficiariesData as ErrorType;
+      }
+      const beneficiaries = beneficiariesData as Record<string, Beneficiary>;
+      return Object.keys(beneficiaries).sort(
+        (a, b) => beneficiaries[b].total - beneficiaries[a].total,
+      );
+    }
     const beneficiariesOrderData = await fetchSnapshot(
       "allRecipients",
       "recipientsOrder",
@@ -774,7 +755,22 @@ export const fetchBeneficiariesOrder = cache(
 );
 
 export const fetchBeneficiariesWithoutExpendituresOrder = cache(
-  async (): Promise<string[] | ErrorType> => {
+  async (sector: Sector = "all"): Promise<string[] | ErrorType> => {
+    if (sector !== "all") {
+      // Recompute from sector-filtered beneficiaries, preserving the candidatesWithoutExpenditures logic
+      const [beneficiariesData, beneficiariesOrderData] = await Promise.all([
+        fetchBeneficiaries(sector),
+        fetchSnapshot("allRecipients", "recipientsOrder"),
+      ]);
+      if (isError(beneficiariesData) || isError(beneficiariesOrderData)) {
+        return isError(beneficiariesData)
+          ? (beneficiariesData as ErrorType)
+          : (beneficiariesOrderData as ErrorType);
+      }
+      const beneficiaries = beneficiariesData as Record<string, Beneficiary>;
+      const baseOrder: string[] = beneficiariesOrderData.candidatesWithoutExpendituresOrder ?? [];
+      return baseOrder.filter((id) => id in beneficiaries);
+    }
     const beneficiariesOrderData = await fetchSnapshot(
       "allRecipients",
       "recipientsOrder",

@@ -6,8 +6,10 @@ import {
   CompanyConstant,
   CompanyTotals,
 } from "@/app/types/Companies";
+import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
 import { humanizeRoundedCurrency } from "@/app/utils/humanize";
+import { getCompanyIdsForSector } from "@/app/utils/sector";
 import Link from "next/link";
 import listStyles from "../listStyles.module.css";
 import styles from "./page.module.css";
@@ -55,11 +57,11 @@ function CompanyListGroup({
   );
 }
 
-export default async function CompanyList() {
+export default async function CompanyList({ sector = "all" }: { sector?: Sector }) {
   const data = await fetchConstant<Record<string, CompanyConstant> | null>(
     "companies",
   );
-  const totalsData = await fetchCompanyTotalSpending();
+  const totalsData = await fetchCompanyTotalSpending(sector);
   if (data === null) {
     return <ErrorText subject="the list of companies" />;
   }
@@ -71,9 +73,11 @@ export default async function CompanyList() {
     grandTotal = t.total;
   }
 
+  const sectorIds = getCompanyIdsForSector(sector, data as Record<string, CompanyConstant>);
+
   const companyGroups: Record<string, CompanyGroup[]> = Object.values(
     data as Record<string, CompanyConstant>,
-  ).reduce<Record<string, CompanyGroup[]>>(
+  ).filter(({ id }) => sectorIds === null || sectorIds.has(id)).reduce<Record<string, CompanyGroup[]>>(
     (acc, { category, id }) => {
       const companyGroup = { id, total: totals[id]?.total || 0 };
       if (category) {

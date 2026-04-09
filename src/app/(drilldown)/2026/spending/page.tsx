@@ -5,8 +5,10 @@ import SpendingByPartyWithOpposition, {
 } from "@/app/components/SpendingByPartyWithOpposition";
 import sharedStyles from "@/app/shared.module.css";
 import { ExpendituresByPartySnapshot } from "@/app/types/Expenditures";
+import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
 import { customMetadata } from "@/app/utils/metadata";
+import { parseSector } from "@/app/utils/sector";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -21,8 +23,8 @@ export const metadata: Metadata = customMetadata({
     "Cryptocurrency-focused spending in the 2026 election cycle, broken down by political party.",
 });
 
-async function SpendingByPartyWithOppositionChart() {
-  const data = await fetchAllExpenditureTotalsByParty();
+async function SpendingByPartyWithOppositionChart({ sector }: { sector: Sector }) {
+  const data = await fetchAllExpenditureTotalsByParty(sector);
   if (isError(data)) {
     return <ErrorText subject="expenditures by party" />;
   }
@@ -35,7 +37,14 @@ async function SpendingByPartyWithOppositionChart() {
   );
 }
 
-export default function SpendingPage() {
+export default async function SpendingPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ sector?: string }>;
+}) {
+  const { sector: rawSector } = await searchParams;
+  const sector = parseSector(rawSector);
+
   return (
     <section className={styles.column}>
       <h1>Spending by all committees</h1>
@@ -45,7 +54,7 @@ export default function SpendingPage() {
           oppose candidates from Republican and Democratic parties.
         </p>
         <Suspense fallback={<SpendingByPartySkeleton />}>
-          <SpendingByPartyWithOppositionChart />
+          <SpendingByPartyWithOppositionChart sector={sector} />
         </Suspense>
         <p>
           However, spending to oppose Democrats does not always support

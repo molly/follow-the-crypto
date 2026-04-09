@@ -4,6 +4,7 @@ import MoneyCard from "@/app/components/MoneyCard";
 import type { CommitteeConstantWithContributions, CommitteeTotalsSnapshot } from "@/app/types/Committee";
 import { isError } from "@/app/utils/errors";
 import { humanizeRoundedCurrency } from "@/app/utils/humanize";
+import { Sector } from "@/app/types/Sector";
 import Link from "next/link";
 import listStyles from "../listStyles.module.css";
 import styles from "./CommitteeList.module.css";
@@ -188,10 +189,10 @@ function CommitteeGroup({
   );
 }
 
-export default async function CommitteeList() {
+export default async function CommitteeList({ sector = "all" }: { sector?: Sector }) {
   const [data, receiptsData] = await Promise.all([
-    fetchCommitteesWithContributions(),
-    fetchCommitteeTotalReceipts(),
+    fetchCommitteesWithContributions(sector),
+    fetchCommitteeTotalReceipts(sector),
   ]);
 
   if (isError(data)) {
