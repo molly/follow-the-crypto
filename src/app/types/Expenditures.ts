@@ -11,6 +11,7 @@ export type Expenditure = {
   committee_id: number;
   subrace: string;
   uid: string;
+  is_special?: boolean;
 } & Pick<
   ScheduleE,
   | "expenditure_amount"

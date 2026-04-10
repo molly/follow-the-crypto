@@ -53,7 +53,8 @@ function getRaceId(expenditure: Expenditure, withState = false) {
   }
   if (
     expenditure.subrace === "special" ||
-    (expenditure.election_type && expenditure.election_type[0] == "S")
+    (expenditure.election_type && expenditure.election_type[0] == "S") ||
+    expenditure.is_special
   ) {
     raceId += "-special";
   }
