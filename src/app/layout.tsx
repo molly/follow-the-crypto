@@ -4,15 +4,16 @@ import "./globals.css";
 import { BASE_METADATA } from "./utils/metadata";
 
 export const revalidate = 3600;
-const sourceSans = Barlow_Semi_Condensed({
+const sansFont = Barlow_Semi_Condensed({
   subsets: ["latin"],
   variable: "--font-sans",
   weight: ["400", "500", "600", "700"],
 });
-const bebasNueue = Big_Shoulders({
+const displayFont = Big_Shoulders({
   subsets: ["latin"],
   axes: ["opsz"],
   variable: "--font-display",
+  fallback: ["Impact", "sans-serif"],
 });
 
 export const metadata: Metadata = BASE_METADATA;
@@ -27,7 +28,7 @@ export default function RootLayout({
       <head>
         <link rel="me" href="https://hachyderm.io/@followthecrypto" />
       </head>
-      <body className={`${sourceSans.variable} ${bebasNueue.variable}`}>
+      <body className={`${sansFont.variable} ${displayFont.variable}`}>
         {children}
       </body>
     </html>
