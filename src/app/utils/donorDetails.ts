@@ -96,7 +96,10 @@ export function getDonorDetails(
   if (
     new Set(["COM", "PAC", "ORG"]).has(donor.entity_type || "") &&
     donor.contributor_last_name &&
-    donor.contributor_last_name in COMPANY_ALIASES
+    (donor.contributor_last_name in COMPANY_ALIASES ||
+      !donor.contributor_first_name ||
+      donor.contributor_first_name === donor.contributor_last_name ||
+      donor.contributor_last_name === donor.contributor_name)
   ) {
     return {
       ...getDonorCompanyDetails(donor, COMPANY_ALIASES, INDIVIDUAL_EMPLOYERS),
