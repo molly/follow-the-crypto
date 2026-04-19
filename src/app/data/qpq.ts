@@ -61,7 +61,7 @@ export const qpqData = {
         link: "https://www.citationneeded.news/issue-71/#justin-sun",
       },
       {
-        text: "Tron to go public in the US in a $100 million deal brokered via Dominari Securities (where Eric and Donald Trump Jr. are board members)",
+        text: "Tron went public in the US in a $100 million deal brokered via Dominari Securities (where Eric and Donald Trump Jr. are board members)",
         link: "https://www.citationneeded.news/issue-86/#in-the-white-house",
       },
     ],

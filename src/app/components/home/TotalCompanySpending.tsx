@@ -23,7 +23,7 @@ export default async function TotalCompanySpending({
   const spending = companyTotalsData as CompanyTotals;
   return (
     <MoneyCard
-      topText="Cryptocurrency industry companies and associated individuals have spent more than"
+      topText="Cryptocurrency industry companies and associated individuals have contributed more than"
       amount={humanizeRoundedCurrency(spending.total, true)}
       bottomText="to influence 2026 elections."
       tooltip={

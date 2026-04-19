@@ -77,6 +77,8 @@ export const getSubraceName = (race?: SubraceArg) => {
   }
   if (race.type === "general") {
     return "general election";
+  } else if (race.type === "general_runoff") {
+    return "general runoff";
   } else {
     const party = race.party ? getFullPartyName(race.party) : null;
     const raceName = race.type.replace("_", " ");
