@@ -45,7 +45,7 @@ function CompanyListGroup({
               <Link href={`/2026/companies/${id}`}>{companies[id].name}</Link>
             </div>
             <div className={listStyles.barTrack}>
-              <div className={listStyles.bar} style={{ "--bar-width": `${barPct}%` } as React.CSSProperties} />
+              <div className={listStyles.bar} style={{ width: `${barPct}%` }} />
             </div>
             <div className={listStyles.amount}>
               {humanizeRoundedCurrency(roundedTotal || total)}

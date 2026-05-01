@@ -10,15 +10,10 @@ export default function Header() {
     <header className={styles.headerWrapper}>
       <div className={styles.topbar}>
         <div className={styles.topbarContents}>
-          <span className={styles.topbarLogo}>
-            [citation needed] by Molly White
-          </span>
-          <a
-            href="https://www.citationneeded.news"
-            className={styles.topbarLink}
-          >
-            ← Back to citationneeded.news
-          </a>
+          <span className={styles.topbarLogo}>[citation needed]</span>
+          <Link href="/support" className={styles.topbarLink}>
+            Support
+          </Link>
         </div>
       </div>
       <div className={styles.logoAndNav}>

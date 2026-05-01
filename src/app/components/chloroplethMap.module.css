@@ -38,7 +38,7 @@
 }
 
 .stateFillError {
-  fill: rgba(0, 0, 0, 0);
+  fill: transparent;
 }
 
 .stateFill0 {

@@ -134,13 +134,13 @@
 
 .goalAccomplished,
 .checkmark {
-  fill: green;
+  fill: var(--color-green-700);
   max-width: 1rem;
 }
 
 .goalFailed,
 .xMark {
-  fill: red;
+  fill: var(--color-red-600);
   max-width: 1rem;
 }
 

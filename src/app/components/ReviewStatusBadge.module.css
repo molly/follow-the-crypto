@@ -5,16 +5,16 @@
 }
 
 .pending {
-  background-color: #e0e0e0;
-  color: #666;
+  background-color: var(--color-neutral-200);
+  color: var(--secondary-text);
 }
 
 .verified {
-  background-color: #d4edda;
-  color: #155724;
+  background-color: var(--admin-success-bg);
+  color: var(--admin-success-text);
 }
 
 .omitted {
-  background-color: #f8d7da;
-  color: #721c24;
+  background-color: var(--admin-error-bg);
+  color: var(--admin-error-text);
 }

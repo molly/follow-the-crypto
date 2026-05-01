@@ -26,7 +26,7 @@
 .constantsTable td,
 .constantsTable th {
   padding: 0.75rem 0.5rem;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--color-neutral-300);
 }
 
 .adGrid {
@@ -56,11 +56,11 @@
 
 /* Contribution / review card */
 .contributionCard {
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-neutral-300);
   padding: 15px;
   margin-bottom: 10px;
   border-radius: 5px;
-  background-color: #f8f9fa;
+  background-color: var(--admin-card-bg);
 }
 
 /* Flex layouts */
@@ -98,11 +98,11 @@
 }
 
 .detailLabel {
-  color: #666;
+  color: var(--secondary-text);
 }
 
 .rollupTypeValue {
-  color: #856404;
+  color: var(--admin-warning-text);
   font-weight: 500;
 }
 
@@ -116,7 +116,7 @@
 }
 
 .adminLink {
-  color: #007bff;
+  color: var(--admin-link);
   text-decoration: underline;
 }
 
@@ -129,24 +129,24 @@
 /* Inline badges */
 .claimedBadge {
   padding: 2px 6px;
-  background-color: #d1ecf1;
-  color: #0c5460;
+  background-color: var(--admin-info-bg);
+  color: var(--admin-info-text);
   border-radius: 3px;
   margin-right: 5px;
 }
 
 .redactedBadge {
   padding: 2px 6px;
-  background-color: #f8d7da;
-  color: #721c24;
+  background-color: var(--admin-error-bg);
+  color: var(--admin-error-text);
   border-radius: 3px;
   margin-right: 5px;
 }
 
 .individualBadge {
   padding: 2px 6px;
-  background-color: #e2d9f3;
-  color: #4a235a;
+  background-color: var(--admin-purple-bg);
+  color: var(--admin-purple-text);
   border-radius: 3px;
   margin-right: 5px;
 }
@@ -155,7 +155,7 @@
 .reviewNote {
   margin-top: 8px;
   padding: 8px;
-  background-color: #e9ecef;
+  background-color: var(--admin-note-bg);
   border-radius: 3px;
   font-size: 0.85em;
   font-style: italic;
@@ -164,7 +164,7 @@
 /* Edit section */
 .editSection {
   margin-top: 10px;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid var(--color-neutral-300);
   padding-top: 10px;
 }
 
@@ -197,8 +197,8 @@
 /* Buttons — large */
 .buttonVerifyLarge {
   padding: 8px 16px;
-  background-color: #28a745;
-  color: white;
+  background-color: var(--admin-success);
+  color: var(--color-white);
   border: none;
   border-radius: 3px;
   cursor: pointer;
@@ -210,8 +210,8 @@
 
 .buttonOmitLarge {
   padding: 8px 16px;
-  background-color: #dc3545;
-  color: white;
+  background-color: var(--admin-error);
+  color: var(--color-white);
   border: none;
   border-radius: 3px;
   cursor: pointer;
@@ -223,8 +223,8 @@
 
 .buttonCancelLarge {
   padding: 8px 16px;
-  background-color: #6c757d;
-  color: white;
+  background-color: var(--admin-neutral);
+  color: var(--color-white);
   border: none;
   border-radius: 3px;
   cursor: pointer;
@@ -238,8 +238,8 @@
 .buttonVerifySmall {
   padding: 6px 12px;
   font-size: 0.85em;
-  background-color: #28a745;
-  color: white;
+  background-color: var(--admin-success);
+  color: var(--color-white);
   border: none;
   border-radius: 3px;
   cursor: pointer;
@@ -252,8 +252,8 @@
 .buttonOmitSmall {
   padding: 6px 12px;
   font-size: 0.85em;
-  background-color: #dc3545;
-  color: white;
+  background-color: var(--admin-error);
+  color: var(--color-white);
   border: none;
   border-radius: 3px;
   cursor: pointer;
@@ -266,8 +266,8 @@
 .buttonCancelSmall {
   padding: 6px 12px;
   font-size: 0.85em;
-  background-color: #6c757d;
-  color: white;
+  background-color: var(--admin-neutral);
+  color: var(--color-white);
   border: none;
   border-radius: 3px;
   cursor: pointer;
@@ -276,13 +276,13 @@
 /* Save state messages */
 .saveSuccessMsg {
   margin-top: 5px;
-  color: #28a745;
+  color: var(--admin-success);
   font-size: 0.85em;
 }
 
 .saveErrorMsg {
   margin-top: 5px;
-  color: #dc3545;
+  color: var(--admin-error);
   font-size: 0.85em;
 }
 
@@ -299,7 +299,7 @@
 }
 
 .statsText {
-  color: #666;
+  color: var(--secondary-text);
   margin: 0;
 }
 
@@ -307,8 +307,8 @@
 .bulkVerifyButton {
   padding: 6px 14px;
   font-size: 0.85em;
-  background-color: #17a2b8;
-  color: white;
+  background-color: var(--admin-info);
+  color: var(--color-white);
   border: none;
   border-radius: 3px;
   cursor: pointer;
@@ -319,14 +319,14 @@
 }
 
 .bulkVerifyButtonSuccess {
-  background-color: #28a745;
+  background-color: var(--admin-success);
 }
 
 .bulkOmitButton {
   padding: 6px 14px;
   font-size: 0.85em;
-  background-color: #dc3545;
-  color: white;
+  background-color: var(--admin-error);
+  color: var(--color-white);
   border: none;
   border-radius: 3px;
   cursor: pointer;
@@ -337,11 +337,11 @@
 }
 
 .bulkOmitButtonSuccess {
-  background-color: #28a745;
+  background-color: var(--admin-success);
 }
 
 .errorText {
-  color: #dc3545;
+  color: var(--admin-error);
   font-size: 0.85em;
 }
 
@@ -366,14 +366,14 @@
 }
 
 .conflictColumn {
-  border: 1px solid #ccc;
+  border: 1px solid var(--color-neutral-300);
   padding: 15px;
   border-radius: 5px;
 }
 
 .hintText {
   font-size: 0.9em;
-  color: #666;
+  color: var(--secondary-text);
 }
 
 .raceItem {
@@ -383,25 +383,25 @@
 }
 
 .raceItemConflict {
-  background-color: #fff3cd;
+  background-color: var(--admin-warning-bg);
 }
 
 .raceItemNew {
-  background-color: #d4edda;
+  background-color: var(--admin-success-bg);
 }
 
 .raceItemManual {
-  background-color: #d1ecf1;
+  background-color: var(--admin-info-bg);
 }
 
 .conflictMark {
   margin-left: 10px;
-  color: #856404;
+  color: var(--admin-warning-text);
 }
 
 .newMark {
   margin-left: 10px;
-  color: #155724;
+  color: var(--admin-success-text);
 }
 
 .raceUl {
@@ -437,24 +437,24 @@
 
 .actionButtonGray {
   padding: 10px 20px;
-  background-color: #6c757d;
+  background-color: var(--admin-neutral);
 }
 
 .saveFeedbackSuccess {
-  color: green;
+  color: var(--admin-success);
   text-align: center;
   margin-top: 10px;
 }
 
 .saveFeedbackError {
-  color: red;
+  color: var(--admin-error);
   text-align: center;
   margin-top: 10px;
 }
 
 .draftEditor {
   margin-top: 30px;
-  border: 2px solid #0066cc;
+  border: 2px solid var(--admin-primary);
   border-radius: 5px;
   padding: 15px;
 }
@@ -470,7 +470,7 @@
 
 .draftCandidateRow {
   padding: 6px 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--color-neutral-200);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -510,11 +510,11 @@
 }
 
 .conflictListItem {
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-neutral-300);
   padding: 15px;
   border-radius: 5px;
   cursor: pointer;
-  background-color: #f8f9fa;
+  background-color: var(--admin-card-bg);
 }
 
 .conflictTitle {
@@ -524,7 +524,7 @@
 .conflictSubtitle {
   margin: 0;
   font-size: 0.9em;
-  color: #666;
+  color: var(--secondary-text);
 }
 
 /* === Race Details Editor (raceDetails/page) === */
@@ -544,13 +544,13 @@
 }
 
 .helpText {
-  color: #666;
+  color: var(--secondary-text);
   margin-top: 0.25rem;
   display: block;
 }
 
 .existingRacesPanel {
-  background-color: #f0f7ff;
+  background-color: var(--admin-panel-bg);
   padding: 1rem;
   border-radius: 4px;
 }
@@ -558,7 +558,7 @@
 .existingRacesNote {
   margin: 0.5rem 0;
   font-size: 0.9rem;
-  color: #666;
+  color: var(--secondary-text);
 }
 
 .flexColumnHalfGap {
@@ -570,20 +570,20 @@
 .manualRaceButton {
   padding: 0.5rem;
   text-align: left;
-  background-color: #fff;
-  color: #333;
-  border: 1px solid #ccc;
+  background-color: var(--color-white);
+  color: var(--color-neutral-800);
+  border: 1px solid var(--color-neutral-300);
   border-radius: 4px;
   cursor: pointer;
 }
 
 .manualRaceButtonActive {
-  background-color: #0066cc;
-  color: #fff;
+  background-color: var(--admin-primary);
+  color: var(--color-white);
 }
 
 .candidateCard {
-  border: 1px solid #ccc;
+  border: 1px solid var(--color-neutral-300);
   padding: 1rem;
   margin-bottom: 1rem;
   border-radius: 4px;
@@ -601,12 +601,12 @@
 }
 
 .colorRed {
-  color: red;
+  color: var(--admin-error);
 }
 
 .withdrewNote {
   margin-left: 0.5rem;
-  color: #666;
+  color: var(--secondary-text);
   font-size: 0.9rem;
 }
 
@@ -622,12 +622,12 @@
 
 .saveSuccessInline {
   margin-left: 1rem;
-  color: green;
+  color: var(--admin-success);
 }
 
 .saveErrorInline {
   margin-left: 1rem;
-  color: red;
+  color: var(--admin-error);
 }
 
 /* === Constants Editor (constants/page) === */

@@ -25,13 +25,14 @@
   font-family: var(--font-roboto), "Roboto", sans-serif;
   font-weight: 400;
   font-size: 0.875rem;
+  display: block;
   color: var(--color-white);
   letter-spacing: 0;
 }
 
-.topbarLink {
+.topbarButton {
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.85);
+  background-color: var(--color-white);
   font-weight: 500;
   transition: color 0.15s;
 }

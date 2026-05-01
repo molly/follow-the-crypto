@@ -32,6 +32,7 @@
   --color-blue-950: #172554;
 
   --color-red-400: #f87171;
+  --color-red-600: #dc2626;
   --color-red-800: #991b1b;
 
   --color-green-400: #4ade80;
@@ -81,6 +82,27 @@
   --skeleton-end: var(--color-neutral-100);
   --skeleton-on-card-start: var(--color-neutral-200);
   --skeleton-on-card-end: var(--color-neutral-100);
+
+  /* Admin UI status colors (Bootstrap-derived) */
+  --admin-success: #28a745;
+  --admin-success-bg: #d4edda;
+  --admin-success-text: #155724;
+  --admin-error: #dc3545;
+  --admin-error-bg: #f8d7da;
+  --admin-error-text: #721c24;
+  --admin-warning-bg: #fff3cd;
+  --admin-warning-text: #856404;
+  --admin-info: #17a2b8;
+  --admin-info-bg: #d1ecf1;
+  --admin-info-text: #0c5460;
+  --admin-neutral: #6c757d;
+  --admin-purple-bg: #e2d9f3;
+  --admin-purple-text: #4a235a;
+  --admin-card-bg: #f8f9fa;
+  --admin-note-bg: #e9ecef;
+  --admin-link: #007bff;
+  --admin-primary: #0066cc;
+  --admin-panel-bg: #f0f7ff;
 
   --background-gradient: radial-gradient(
     circle at center,
