@@ -11,7 +11,7 @@ export default function Header() {
       <div className={styles.topbar}>
         <div className={styles.topbarContents}>
           <span className={styles.topbarLogo}>[citation needed]</span>
-          <Link href="/support" className={styles.topbarLink}>
+          <Link href="/about/support" className={styles.topbarButton}>
             Support
           </Link>
         </div>

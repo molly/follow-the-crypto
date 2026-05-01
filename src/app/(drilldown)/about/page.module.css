@@ -1,3 +1,25 @@
+.about h2 {
+  font-size: 2rem;
+  margin: 1.5rem 0;
+}
+
+.subpageLinks {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.subpageLinks > * + *::before {
+  content: "·";
+  margin-right: 0.5rem;
+  user-select: none;
+  display: inline-block;
+}
+
+.subpageLinksActive {
+  color: var(--color-neutral-400);
+}
+
 .title {
   composes: accent-text from "@/app/shared.module.css";
   font-size: 3rem;
@@ -18,6 +40,10 @@
   font-size: 1.2rem;
   line-height: 2rem;
   margin-bottom: 2rem;
+}
+
+.mainText i {
+  margin-right: 0.15em;
 }
 
 .quoteCard {
@@ -42,12 +68,45 @@
   text-align: right;
 }
 
+.quoteAttributionSource {
+  font-size: 1rem;
+  color: var(--secondary-text);
+  text-align: right;
+}
+
 .quoteCardImage {
   max-width: 100%;
 }
 
 .footnotes {
   font-size: 0.9rem;
+}
+
+.mainText sup {
+  line-height: 0;
+}
+
+.ctaBlock {
+  margin: 1.5rem 0;
+}
+
+.ctaButton {
+  display: inline-block;
+  background-color: var(--accent);
+  color: var(--color-white);
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+
+.ctaButton:hover {
+  background-color: var(--accent-on-light);
+  color: var(--color-white);
+  text-decoration: none;
 }
 
 @media (min-width: 576px) {

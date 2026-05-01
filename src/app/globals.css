@@ -75,7 +75,7 @@
   --secondary-text: var(--color-neutral-500);
   --tertiary-text: var(--color-neutral-400);
   --link-text: var(--accent-on-light);
-  --link-text-hover: #0a338a;
+  --link-text-hover: var(--color-lime-800);
   --on-dark-text: var(--color-neutral-200);
 
   --skeleton-start: var(--color-neutral-200);
@@ -192,6 +192,11 @@ a {
   text-decoration: none;
 }
 
+a:hover {
+  color: var(--link-text-hover);
+  text-decoration: underline;
+}
+
 p {
   margin-top: 0;
 }
@@ -201,6 +206,7 @@ p {
   flex-direction: column;
   width: 100%;
   max-width: var(--single-column-max-width);
+  padding: 0 1rem;
 }
 
 .full-width {
@@ -352,11 +358,6 @@ a.unstyled {
   flex: 1;
 }
 
-@media (min-width: 1200px) {
-  .single-column-page {
-    padding: 0 1rem;
-  }
-}
 
 @media (prefers-color-scheme: dark) {
   html {

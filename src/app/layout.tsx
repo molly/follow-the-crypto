@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Barlow_Semi_Condensed, Big_Shoulders, Roboto } from "next/font/google";
-import "./globals.css";
 import Footer from "./components/Footer";
+import "./globals.css";
 import { BASE_METADATA } from "./utils/metadata";
 
 export const revalidate = 3600;
@@ -19,7 +19,7 @@ const displayFont = Big_Shoulders({
 const robotoFont = Roboto({
   subsets: ["latin"],
   variable: "--font-roboto",
-  weight: ["400"],
+  weight: ["400", "700"],
 });
 
 export const metadata: Metadata = BASE_METADATA;

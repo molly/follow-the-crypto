@@ -22,7 +22,9 @@ export default function HeaderNavLinks() {
             <Link href={navHref("/2026/committees")}>By committees</Link>
             <Link href={navHref("/2026/companies")}>By companies</Link>
             <Link href={navHref("/2026/individuals")}>By individuals</Link>
-            <Link href={navHref("/2026/expenditures")}>Recent expenditures</Link>
+            <Link href={navHref("/2026/expenditures")}>
+              Recent expenditures
+            </Link>
           </div>
         </div>
         <div className={styles.navItem}>
@@ -35,8 +37,12 @@ export default function HeaderNavLinks() {
         <div className={styles.navItem}>
           <a href="#">Rankings</a>
           <div className={styles.dropdown}>
-            <Link href={navHref("/2026/committees/ranking/super")}>Super PACs</Link>
-            <Link href={navHref("/2026/committees/ranking/all")}>All committees</Link>
+            <Link href={navHref("/2026/committees/ranking/super")}>
+              Super PACs
+            </Link>
+            <Link href={navHref("/2026/committees/ranking/all")}>
+              All committees
+            </Link>
           </div>
         </div>
         <div className={styles.navItem}>
@@ -50,6 +56,7 @@ export default function HeaderNavLinks() {
           <div className={styles.dropdown}>
             <Link href="/about">About</Link>
             <Link href="/about/faq">FAQ</Link>
+            <Link href="/about/support">Support</Link>
             <Link href="/about/contact">Contact</Link>
           </div>
         </div>

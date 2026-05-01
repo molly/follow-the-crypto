@@ -24,21 +24,33 @@
 .topbarLogo {
   font-family: var(--font-roboto), "Roboto", sans-serif;
   font-weight: 400;
-  font-size: 0.875rem;
+  font-size: 1rem;
   display: block;
   color: var(--color-white);
   letter-spacing: 0;
 }
 
-.topbarButton {
-  font-size: 0.8rem;
-  background-color: var(--color-white);
-  font-weight: 500;
-  transition: color 0.15s;
+.logoLink:hover {
+  text-decoration: none;
 }
 
-.topbarLink:hover {
-  color: var(--color-white);
+.topbarButton {
+  font-family: var(--font-roboto), "Roboto", sans-serif;
+  font-size: 0.8rem;
+  background-color: var(--color-white);
+  color: var(--color-blue-700);
+  font-weight: 700;
+  text-decoration: none;
+  padding: 0.25rem 0.5rem;
+  transition:
+    color 0.15s,
+    background-color 0.15s;
+}
+
+.topbarButton:hover {
+  background-color: var(--color-neutral-100);
+  color: var(--color-blue-800);
+  text-decoration: none;
 }
 
 .logoAndNav {

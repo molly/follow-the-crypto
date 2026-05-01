@@ -2,6 +2,7 @@ import { customMetadata } from "@/app/utils/metadata";
 import { Metadata } from "next";
 import Link from "next/link";
 import styles from "../page.module.css";
+import AboutNav from "../AboutNav";
 
 export const metadata: Metadata = customMetadata({
   title: "FAQ",
@@ -10,8 +11,9 @@ export const metadata: Metadata = customMetadata({
 
 export default function FAQPage() {
   return (
-    <div className="single-column-page">
-      <h2 className={styles.title}>FAQ</h2>
+    <div className={`${styles.about} single-column-page`}>
+      <AboutNav />
+      <h2>FAQ</h2>
       <div className={styles.mainText}>
         <h3 id="individual">
           Why are some contributions attributed only to “Individual”?
@@ -98,19 +100,19 @@ export default function FAQPage() {
           is not reported to the FEC.
         </p>
         <h3 id="what-about">
-          Who cares what the cryptocurrency industry is doing when
+          Who cares what the cryptocurrency and/or AI industries are doing when
           [oil|pharma|banking|some other industry] also spends millions on
           lobbying and politics?
         </h3>
         <p>
-          I do! As a crypto industry researcher, this is something I pay a lot
-          of attention to. However, I also think the magnitude of spending
+          I do! As a technology industry researcher, this is something I pay a
+          lot of attention to. However, I also think the magnitude of spending
           warrants scrutiny from a much broader audience.
         </p>
         <p>
           I <i>firmly</i> agree that corporate influence on politics is a much
-          broader issue than just in the cryptocurrency industry. The broader
-          problem is
+          broader issue than just in the cryptocurrency and AI industries. The
+          broader problem is{" "}
           <a href="https://en.wikipedia.org/wiki/Citizens_United_v._FEC">
             <i>Citizens United</i>
           </a>{" "}

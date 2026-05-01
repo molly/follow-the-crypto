@@ -1,6 +1,7 @@
 import { customMetadata } from "@/app/utils/metadata";
 import { Metadata } from "next";
 import styles from "../page.module.css";
+import AboutNav from "../AboutNav";
 
 export const metadata: Metadata = customMetadata({
   title: "Contact",
@@ -9,14 +10,16 @@ export const metadata: Metadata = customMetadata({
 
 export default function FAQPage() {
   return (
-    <div className="single-column-page">
-      <h2 className={styles.title}>Contact</h2>
+    <div className={`${styles.about} single-column-page`}>
+      <AboutNav />
+      <h2>Contact</h2>
       <div className={styles.mainText}>
         <p>
           Spot an error? Found an advertisement by a cryptocurrency-focused PAC
           that isn&rsquo;t on the site yet? Spotted a PAC that appears to be
-          crypto-affiliated? Have a question I haven&rsquo;t answered in the{" "}
-          <a href="/about/faq">FAQ</a>? Have a suggestion? Just want to say hi?
+          crypto- or AI-affiliated? Have a question I haven&rsquo;t answered in
+          the <a href="/about/faq">FAQ</a>? Have a suggestion? Just want to say
+          hi?
         </p>
         <p>
           Missing data, errors, or feature suggestions are best submitted{" "}
@@ -28,10 +31,9 @@ export default function FAQPage() {
         <p>
           If you&rsquo;re not, or for anything else, feel free to reach out via
           email to <a href="mailto:ftc@mollywhite.net">ftc@mollywhite.net</a>.
-          I&rsquo;m also on the usual social media platforms (
-          <a href="https://twitter.com/molly0xFFF">Twitter</a>,{" "}
-          <a href="https://hachyderm.io/@molly0xfff">Mastodon</a>, and{" "}
-          <a href="https://bsky.app/profile/molly.wiki">Bluesky</a>), and can be
+          I&rsquo;m also on{" "}
+          <a href="https://bsky.app/profile/molly.wiki">Bluesky</a> and{" "}
+          <a href="https://hachyderm.io/@molly0xfff">Mastodon</a>, or can be
           contacted in a{" "}
           <a href="https://www.mollywhite.net/verify/">
             multitude of other ways
