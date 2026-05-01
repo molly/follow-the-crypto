@@ -84,6 +84,21 @@ const fetchCollection = async (
   return snapshot.docs;
 };
 
+const fetchCollectionAsRecord = async <T>(
+  collectionName: string,
+): Promise<Record<string, T> | ErrorType> => {
+  const docRef = collection(db, collectionName);
+  const snapshot = await getDocs(docRef);
+  if (snapshot.docs.length === 0) {
+    return { error: true };
+  }
+  const result: Record<string, T> = {};
+  for (const d of snapshot.docs) {
+    result[d.id] = d.data() as T;
+  }
+  return result;
+};
+
 export const fetchConstant = cache(
   async <T>(key: string): Promise<T | null> => {
     const docRef = doc(db, "constants", key);
@@ -706,7 +721,7 @@ export const fetchAllRecipients = cache(
 export const fetchBeneficiaries = cache(
   async (sector: Sector = "all"): Promise<Record<string, Beneficiary> | ErrorType> => {
     const [data, companyConstants] = await Promise.all([
-      fetchSnapshot("allRecipients", "recipientsWithContribs"),
+      fetchCollectionAsRecord<Beneficiary>("recipientDetails"),
       sector !== "all" ? fetchConstant<Record<string, CompanyConstant>>("companies") : Promise.resolve(null),
     ]);
     if (isError(data)) {

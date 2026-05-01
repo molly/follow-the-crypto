@@ -2,12 +2,23 @@ import Link from "next/link";
 import { Suspense } from "react";
 import HeaderNavLinks from "./HeaderNavLinks";
 import Logo from "./Logo";
-import SectorButtons from "./SectorButtons";
+import SectorWrapper from "./SectorWrapper";
 import styles from "./header.module.css";
 
 export default function Header() {
   return (
     <header className={styles.headerWrapper}>
+      <div className={styles.topbar}>
+        <div className={styles.topbarContents}>
+          <span className={styles.topbarLogo}>[citation needed]</span>
+          <a
+            href="https://www.citationneeded.news"
+            className={styles.topbarLink}
+          >
+            ← Back to citationneeded.news
+          </a>
+        </div>
+      </div>
       <div className={styles.logoAndNav}>
         <Link href="/" className={styles.logoLink}>
           <Logo />
@@ -16,14 +27,9 @@ export default function Header() {
           <HeaderNavLinks />
         </Suspense>
       </div>
-      <div className={styles.sectorWrapper}>
-        <div className={styles.sectorContents}>
-          Showing:
-          <Suspense fallback={null}>
-            <SectorButtons />
-          </Suspense>
-        </div>
-      </div>
+      <Suspense fallback={null}>
+        <SectorWrapper />
+      </Suspense>
     </header>
   );
 }

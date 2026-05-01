@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { Barlow_Semi_Condensed, Big_Shoulders } from "next/font/google";
+import { Barlow_Semi_Condensed, Big_Shoulders, Roboto } from "next/font/google";
 import "./globals.css";
+import Footer from "./components/Footer";
 import { BASE_METADATA } from "./utils/metadata";
 
 export const revalidate = 3600;
@@ -15,6 +16,11 @@ const displayFont = Big_Shoulders({
   variable: "--font-display",
   fallback: ["Impact", "sans-serif"],
 });
+const robotoFont = Roboto({
+  subsets: ["latin"],
+  variable: "--font-roboto",
+  weight: ["400"],
+});
 
 export const metadata: Metadata = BASE_METADATA;
 
@@ -28,8 +34,11 @@ export default function RootLayout({
       <head>
         <link rel="me" href="https://hachyderm.io/@followthecrypto" />
       </head>
-      <body className={`${sansFont.variable} ${displayFont.variable}`}>
-        {children}
+      <body
+        className={`${sansFont.variable} ${displayFont.variable} ${robotoFont.variable}`}
+      >
+        <div style={{ flex: 1 }}>{children}</div>
+        <Footer />
       </body>
     </html>
   );

@@ -6,6 +6,40 @@
   background: var(--color-black);
 }
 
+.topbar {
+  background-color: var(--color-blue-700);
+  width: 100%;
+}
+
+.topbarContents {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.3rem 1rem;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.topbarLogo {
+  font-family: var(--font-roboto), "Roboto", sans-serif;
+  font-weight: 400;
+  font-size: 0.875rem;
+  color: var(--color-white);
+  letter-spacing: 0;
+}
+
+.topbarLink {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+  transition: color 0.15s;
+}
+
+.topbarLink:hover {
+  color: var(--color-white);
+}
+
 .logoAndNav {
   display: flex;
   justify-content: space-between;

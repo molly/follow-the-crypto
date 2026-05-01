@@ -1,0 +1,35 @@
+.footer {
+  width: 100%;
+  border-top: 1px solid #e8e8e8;
+  font-size: 0.9rem;
+  color: var(--color-neutral-400);
+}
+
+.footerContents {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 20px 24px;
+}
+
+.footer a {
+  color: var(--link-text);
+}
+
+.footer a:hover {
+  color: var(--link-text-hover);
+}
+
+.description {
+  margin-bottom: 0.5rem;
+}
+
+.links {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.separator {
+  user-select: none;
+}

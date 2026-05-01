@@ -150,6 +150,8 @@ body {
   line-height: 1.3;
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 h1,
