@@ -1,0 +1,20 @@
+.badge {
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 0.85em;
+}
+
+.pending {
+  background-color: #e0e0e0;
+  color: #666;
+}
+
+.verified {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.omitted {
+  background-color: #f8d7da;
+  color: #721c24;
+}

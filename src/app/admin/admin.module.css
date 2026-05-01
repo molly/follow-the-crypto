@@ -42,3 +42,625 @@
 .adRegion {
   grid-column: region;
 }
+
+/* Container and textarea (used by review pages) */
+.container {
+  padding: 1rem;
+}
+
+.editorTextArea {
+  width: 100%;
+  font-family: inherit;
+  padding: 0.25rem;
+}
+
+/* Contribution / review card */
+.contributionCard {
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  background-color: #f8f9fa;
+}
+
+/* Flex layouts */
+.flexRowSpaceBetween {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.flex1 {
+  flex: 1;
+}
+
+.marginLeftAuto {
+  margin-left: auto;
+}
+
+.contributorNameRow {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.contributorNameText {
+  font-size: 1.1em;
+}
+
+/* Details grid */
+.detailsGrid {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 4px;
+  font-size: 0.9em;
+  margin-bottom: 8px;
+}
+
+.detailLabel {
+  color: #666;
+}
+
+.rollupTypeValue {
+  color: #856404;
+  font-weight: 500;
+}
+
+.boldValue {
+  font-weight: 500;
+}
+
+.monoValue {
+  font-family: monospace;
+  font-size: 0.85em;
+}
+
+.adminLink {
+  color: #007bff;
+  text-decoration: underline;
+}
+
+/* Flags row */
+.flagsRow {
+  font-size: 0.85em;
+  margin-bottom: 8px;
+}
+
+/* Inline badges */
+.claimedBadge {
+  padding: 2px 6px;
+  background-color: #d1ecf1;
+  color: #0c5460;
+  border-radius: 3px;
+  margin-right: 5px;
+}
+
+.redactedBadge {
+  padding: 2px 6px;
+  background-color: #f8d7da;
+  color: #721c24;
+  border-radius: 3px;
+  margin-right: 5px;
+}
+
+.individualBadge {
+  padding: 2px 6px;
+  background-color: #e2d9f3;
+  color: #4a235a;
+  border-radius: 3px;
+  margin-right: 5px;
+}
+
+/* Review note */
+.reviewNote {
+  margin-top: 8px;
+  padding: 8px;
+  background-color: #e9ecef;
+  border-radius: 3px;
+  font-size: 0.85em;
+  font-style: italic;
+}
+
+/* Edit section */
+.editSection {
+  margin-top: 10px;
+  border-top: 1px solid #ddd;
+  padding-top: 10px;
+}
+
+.editDescriptionRow {
+  margin-bottom: 10px;
+}
+
+.editLabel {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 0.9em;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+/* Button rows */
+.editButtonRow {
+  display: flex;
+  gap: 10px;
+}
+
+.actionButtonRow {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+}
+
+/* Buttons — large */
+.buttonVerifyLarge {
+  padding: 8px 16px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.buttonVerifyLarge:disabled {
+  cursor: not-allowed;
+}
+
+.buttonOmitLarge {
+  padding: 8px 16px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.buttonOmitLarge:disabled {
+  cursor: not-allowed;
+}
+
+.buttonCancelLarge {
+  padding: 8px 16px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.buttonCancelLarge:disabled {
+  cursor: not-allowed;
+}
+
+/* Buttons — small */
+.buttonVerifySmall {
+  padding: 6px 12px;
+  font-size: 0.85em;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.buttonVerifySmall:disabled {
+  cursor: not-allowed;
+}
+
+.buttonOmitSmall {
+  padding: 6px 12px;
+  font-size: 0.85em;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.buttonOmitSmall:disabled {
+  cursor: not-allowed;
+}
+
+.buttonCancelSmall {
+  padding: 6px 12px;
+  font-size: 0.85em;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+/* Save state messages */
+.saveSuccessMsg {
+  margin-top: 5px;
+  color: #28a745;
+  font-size: 0.85em;
+}
+
+.saveErrorMsg {
+  margin-top: 5px;
+  color: #dc3545;
+  font-size: 0.85em;
+}
+
+/* Loaded section / stats */
+.loadedSection {
+  margin-top: 20px;
+}
+
+.statsRow {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.statsText {
+  color: #666;
+  margin: 0;
+}
+
+/* Bulk action buttons */
+.bulkVerifyButton {
+  padding: 6px 14px;
+  font-size: 0.85em;
+  background-color: #17a2b8;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.bulkVerifyButton:disabled {
+  cursor: not-allowed;
+}
+
+.bulkVerifyButtonSuccess {
+  background-color: #28a745;
+}
+
+.bulkOmitButton {
+  padding: 6px 14px;
+  font-size: 0.85em;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.bulkOmitButton:disabled {
+  cursor: not-allowed;
+}
+
+.bulkOmitButtonSuccess {
+  background-color: #28a745;
+}
+
+.errorText {
+  color: #dc3545;
+  font-size: 0.85em;
+}
+
+/* === Race Review (raceDetails/review) === */
+
+.marginBottom20 {
+  margin-bottom: 20px;
+}
+
+.marginTop10 {
+  margin-top: 10px;
+}
+
+.marginTop20 {
+  margin-top: 20px;
+}
+
+.conflictGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.conflictColumn {
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.hintText {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.raceItem {
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 3px;
+}
+
+.raceItemConflict {
+  background-color: #fff3cd;
+}
+
+.raceItemNew {
+  background-color: #d4edda;
+}
+
+.raceItemManual {
+  background-color: #d1ecf1;
+}
+
+.conflictMark {
+  margin-left: 10px;
+  color: #856404;
+}
+
+.newMark {
+  margin-left: 10px;
+  color: #155724;
+}
+
+.raceUl {
+  margin-top: 5px;
+  margin-bottom: 0;
+}
+
+.raceLi {
+  font-size: 0.9em;
+}
+
+.fullWidthButton {
+  margin-top: 10px;
+  width: 100%;
+}
+
+.copyButton {
+  margin-top: 8px;
+  font-size: 0.85em;
+  padding: 3px 8px;
+}
+
+.actionButtonsRow {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.actionButtonLarge {
+  padding: 10px 20px;
+}
+
+.actionButtonGray {
+  padding: 10px 20px;
+  background-color: #6c757d;
+}
+
+.saveFeedbackSuccess {
+  color: green;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.saveFeedbackError {
+  color: red;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.draftEditor {
+  margin-top: 30px;
+  border: 2px solid #0066cc;
+  border-radius: 5px;
+  padding: 15px;
+}
+
+.draftEditorTitle {
+  margin-top: 0;
+}
+
+.draftList {
+  list-style: none;
+  padding: 0;
+}
+
+.draftCandidateRow {
+  padding: 6px 0;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.draftCandidateDisabled {
+  opacity: 0.4;
+}
+
+.draftCandidateText {
+  font-size: 0.9em;
+}
+
+.draftCandidateStrikethrough {
+  text-decoration: line-through;
+}
+
+.draftActionsRow {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.draftSaveButton {
+  padding: 8px 16px;
+  font-weight: bold;
+}
+
+.draftCancelButton {
+  padding: 8px 16px;
+}
+
+.conflictList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.conflictListItem {
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #f8f9fa;
+}
+
+.conflictTitle {
+  margin: 0 0 5px 0;
+}
+
+.conflictSubtitle {
+  margin: 0;
+  font-size: 0.9em;
+  color: #666;
+}
+
+/* === Race Details Editor (raceDetails/page) === */
+
+.raceIdRow {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.minWidth200 {
+  min-width: 200px;
+}
+
+.minWidth150 {
+  min-width: 150px;
+}
+
+.helpText {
+  color: #666;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.existingRacesPanel {
+  background-color: #f0f7ff;
+  padding: 1rem;
+  border-radius: 4px;
+}
+
+.existingRacesNote {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.flexColumnHalfGap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.manualRaceButton {
+  padding: 0.5rem;
+  text-align: left;
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.manualRaceButtonActive {
+  background-color: #0066cc;
+  color: #fff;
+}
+
+.candidateCard {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+}
+
+.candidateCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.marginZero {
+  margin: 0;
+}
+
+.colorRed {
+  color: red;
+}
+
+.withdrewNote {
+  margin-left: 0.5rem;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.marginBottom1 {
+  margin-bottom: 1rem;
+}
+
+.primaryButton {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.saveSuccessInline {
+  margin-left: 1rem;
+  color: green;
+}
+
+.saveErrorInline {
+  margin-left: 1rem;
+  color: red;
+}
+
+/* === Constants Editor (constants/page) === */
+
+.marginBottom05 {
+  margin-bottom: 0.5rem;
+}
+
+.verticalAlignTop {
+  vertical-align: top;
+}
+
+.minWidth250 {
+  min-width: 250px;
+}
+
+.affiliationCell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.smallLabel {
+  font-size: 0.85em;
+}
+
+.affiliationTypeRow {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.saveRow {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+}

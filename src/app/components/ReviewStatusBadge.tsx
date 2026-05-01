@@ -1,5 +1,6 @@
 import { ManualReview } from "@/app/types/Contributions";
 import React from "react";
+import styles from "./ReviewStatusBadge.module.css";
 
 interface ReviewStatusBadgeProps {
   manualReview?: ManualReview;
@@ -7,19 +8,7 @@ interface ReviewStatusBadgeProps {
 
 export default function ReviewStatusBadge({ manualReview }: ReviewStatusBadgeProps) {
   if (!manualReview) {
-    return (
-      <span
-        style={{
-          padding: "2px 8px",
-          borderRadius: "3px",
-          fontSize: "0.85em",
-          backgroundColor: "#e0e0e0",
-          color: "#666",
-        }}
-      >
-        Pending
-      </span>
-    );
+    return <span className={`${styles.badge} ${styles.pending}`}>Pending</span>;
   }
 
   const isVerified = manualReview.status === "verified";
@@ -27,13 +16,7 @@ export default function ReviewStatusBadge({ manualReview }: ReviewStatusBadgePro
 
   return (
     <span
-      style={{
-        padding: "2px 8px",
-        borderRadius: "3px",
-        fontSize: "0.85em",
-        backgroundColor: isVerified ? "#d4edda" : isOmitted ? "#f8d7da" : "#e0e0e0",
-        color: isVerified ? "#155724" : isOmitted ? "#721c24" : "#666",
-      }}
+      className={`${styles.badge} ${isVerified ? styles.verified : isOmitted ? styles.omitted : styles.pending}`}
     >
       {isVerified ? "Verified" : isOmitted ? "Omitted" : "Pending"}
     </span>

@@ -342,10 +342,10 @@ export default function RaceDetailsEditor() {
             {/* Race ID Selection/Input */}
             <div className={styles.editorInputGroup}>
               <label htmlFor="race-id">Race ID *</label>
-              <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+              <div className={styles.raceIdRow}>
                 <select
                   id="race-id"
-                  className={styles.editorSelect}
+                  className={`${styles.editorSelect} ${styles.minWidth200}`}
                   value={raceId}
                   onChange={(e) => {
                     const newRaceId = e.target.value;
@@ -356,7 +356,6 @@ export default function RaceDetailsEditor() {
                       fetchManualRacesForRaceId(selectedState, newRaceId);
                     }
                   }}
-                  style={{ minWidth: "200px" }}
                 >
                   <option value="">Select or enter race ID</option>
                   <option value="__custom">Enter custom race ID...</option>
@@ -369,55 +368,38 @@ export default function RaceDetailsEditor() {
                 {raceId === "__custom" && (
                   <input
                     type="text"
-                    className={styles.editorInput}
+                    className={`${styles.editorInput} ${styles.minWidth150}`}
                     placeholder="e.g., H-01, S, P"
                     onChange={(e) => setRaceId(e.target.value)}
                     autoFocus
-                    style={{ minWidth: "150px" }}
                   />
                 )}
               </div>
-              <small style={{ color: "#666", marginTop: "0.25rem", display: "block" }}>
+              <small className={styles.helpText}>
                 Examples: H-01 (House District 1), S (Senate), P (President), G (Governor)
               </small>
             </div>
 
             {/* Existing Manual Races Selector */}
             {existingManualRaces.length > 0 && (
-              <div className={styles.editorInputGroup} style={{ backgroundColor: "#f0f7ff", padding: "1rem", borderRadius: "4px" }}>
+              <div className={`${styles.editorInputGroup} ${styles.existingRacesPanel}`}>
                 <label>Existing Manual Entries</label>
-                <p style={{ margin: "0.5rem 0", fontSize: "0.9rem", color: "#666" }}>
+                <p className={styles.existingRacesNote}>
                   This race has {existingManualRaces.length} existing manual {existingManualRaces.length === 1 ? "entry" : "entries"}. Select one to edit or add a new one.
                 </p>
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                <div className={styles.flexColumnHalfGap}>
                   {existingManualRaces.map((race, idx) => (
                     <button
                       key={idx}
                       onClick={() => selectManualRaceToEdit(idx)}
-                      style={{
-                        padding: "0.5rem",
-                        textAlign: "left",
-                        backgroundColor: editingIndex === idx ? "#0066cc" : "#fff",
-                        color: editingIndex === idx ? "#fff" : "#333",
-                        border: "1px solid #ccc",
-                        borderRadius: "4px",
-                        cursor: "pointer",
-                      }}
+                      className={`${styles.manualRaceButton}${editingIndex === idx ? ` ${styles.manualRaceButtonActive}` : ""}`}
                     >
                       {race.type}{race.party ? ` (${race.party})` : ""}{race.date ? ` - ${race.date}` : ""} — {race.candidates.length} candidate{race.candidates.length !== 1 ? "s" : ""}
                     </button>
                   ))}
                   <button
                     onClick={() => selectManualRaceToEdit(null)}
-                    style={{
-                      padding: "0.5rem",
-                      textAlign: "left",
-                      backgroundColor: editingIndex === null ? "#0066cc" : "#fff",
-                      color: editingIndex === null ? "#fff" : "#333",
-                      border: "1px solid #ccc",
-                      borderRadius: "4px",
-                      cursor: "pointer",
-                    }}
+                    className={`${styles.manualRaceButton}${editingIndex === null ? ` ${styles.manualRaceButtonActive}` : ""}`}
                   >
                     + Add New Race
                   </button>
@@ -478,10 +460,10 @@ export default function RaceDetailsEditor() {
             <h3>Candidates</h3>
 
             {raceForm.candidates.map((candidate, index) => (
-              <div key={index} style={{ border: "1px solid #ccc", padding: "1rem", marginBottom: "1rem", borderRadius: "4px" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
-                  <h4 style={{ margin: 0 }}>Candidate {index + 1}</h4>
-                  <button onClick={() => removeCandidate(index)} style={{ color: "red" }}>
+              <div key={index} className={styles.candidateCard}>
+                <div className={styles.candidateCardHeader}>
+                  <h4 className={styles.marginZero}>Candidate {index + 1}</h4>
+                  <button onClick={() => removeCandidate(index)} className={styles.colorRed}>
                     Remove
                   </button>
                 </div>
@@ -588,7 +570,7 @@ export default function RaceDetailsEditor() {
                     />
                     {" "}Withdrew
                     {candidate.withdrew && (
-                      <span style={{ marginLeft: "0.5rem", color: "#666", fontSize: "0.9rem" }}>
+                      <span className={styles.withdrewNote}>
                         (from {raceForm.type}{raceForm.party ? ` ${raceForm.party}` : ""})
                       </span>
                     )}
@@ -597,7 +579,7 @@ export default function RaceDetailsEditor() {
               </div>
             ))}
 
-            <button onClick={addCandidate} style={{ marginBottom: "1rem" }}>
+            <button onClick={addCandidate} className={styles.marginBottom1}>
               Add Candidate
             </button>
 
@@ -605,21 +587,17 @@ export default function RaceDetailsEditor() {
               <button
                 onClick={saveRace}
                 disabled={saveState === "pending" || !raceId || raceId === "__custom" || !raceForm.type || raceForm.candidates.length === 0}
-                style={{
-                  padding: "0.5rem 1rem",
-                  fontSize: "1rem",
-                  fontWeight: "bold",
-                }}
+                className={styles.primaryButton}
               >
                 {saveState === "pending" ? "Saving..." : editingIndex !== null ? "Update Race" : "Save Race"}
               </button>
               {saveState === "success" && (
-                <span style={{ marginLeft: "1rem", color: "green" }}>
+                <span className={styles.saveSuccessInline}>
                   {editingIndex !== null ? "Updated" : "Saved"} successfully to {selectedState}/{raceId}!
                 </span>
               )}
               {saveState === "error" && (
-                <span style={{ marginLeft: "1rem", color: "red" }}>Error saving race</span>
+                <span className={styles.saveErrorInline}>Error saving race</span>
               )}
             </div>
           </>

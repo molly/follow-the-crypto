@@ -54,7 +54,7 @@ export default function SpendingByPartyWithOpposition({
                     role="img"
                     aria-label={`${label}: ${formatCurrency(value, true)}`}
                   >
-                    <div className={styles.fill} style={{ width: `${pct}%` }} />
+                    <div className={styles.fill} style={{ "--bar-width": `${pct}%` } as React.CSSProperties} />
                   </div>
                 ) : (
                   <span className={styles.inlineTrack} aria-hidden={true} />

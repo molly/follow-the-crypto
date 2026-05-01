@@ -63,13 +63,13 @@ function CommitteeRow({
         {spent > 0 && (
           <div
             className={listStyles.bar}
-            style={{ width: `${spentBarPct}%` }}
+            style={{ "--bar-width": `${spentBarPct}%` } as React.CSSProperties}
           />
         )}
         {cashBarPct > 0 && (
           <div
             className={listStyles.barRaised}
-            style={{ width: `${cashBarPct}%` }}
+            style={{ "--bar-width": `${cashBarPct}%` } as React.CSSProperties}
           />
         )}
       </div>

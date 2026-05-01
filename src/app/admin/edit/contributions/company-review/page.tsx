@@ -403,52 +403,23 @@ export default function CompanyContributionReviewPage() {
       "Unknown";
 
     return (
-      <div
-        key={contributionId}
-        style={{
-          border: "1px solid #ddd",
-          padding: "15px",
-          marginBottom: "10px",
-          borderRadius: "5px",
-          backgroundColor: "#f8f9fa",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-          }}
-        >
-          <div style={{ flex: 1 }}>
+      <div key={contributionId} className={styles.contributionCard}>
+        <div className={styles.flexRowSpaceBetween}>
+          <div className={styles.flex1}>
             {/* Header with name and status */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginBottom: "8px",
-              }}
-            >
-              <strong style={{ fontSize: "1.1em" }}>{contributorLabel}</strong>
-              <div style={{ marginLeft: "auto" }}>
+            <div className={styles.contributorNameRow}>
+              <strong className={styles.contributorNameText}>{contributorLabel}</strong>
+              <div className={styles.marginLeftAuto}>
                 <ReviewStatusBadge manualReview={contribution.manualReview} />
               </div>
             </div>
 
             {/* Details grid */}
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "140px 1fr",
-                gap: "4px",
-                fontSize: "0.9em",
-                marginBottom: "8px",
-              }}
-            >
+            <div className={styles.detailsGrid}>
               {isRollup && (
                 <>
-                  <span style={{ color: "#666" }}>Type:</span>
-                  <span style={{ color: "#856404", fontWeight: "500" }}>
+                  <span className={styles.detailLabel}>Type:</span>
+                  <span className={styles.rollupTypeValue}>
                     Rollup ({contribution.total} contributions)
                   </span>
                 </>
@@ -456,50 +427,50 @@ export default function CompanyContributionReviewPage() {
 
               {contribution.isIndividual && contribution.individual && (
                 <>
-                  <span style={{ color: "#666" }}>Individual:</span>
+                  <span className={styles.detailLabel}>Individual:</span>
                   <span>{contribution.individual}</span>
                 </>
               )}
 
-              <span style={{ color: "#666" }}>Recipient:</span>
+              <span className={styles.detailLabel}>Recipient:</span>
               <span>
                 {contribution._committeeName || contribution._committeeId}
               </span>
 
               {contribution.entity_type && (
                 <>
-                  <span style={{ color: "#666" }}>Entity Type:</span>
+                  <span className={styles.detailLabel}>Entity Type:</span>
                   <span>{contribution.entity_type}</span>
                 </>
               )}
 
               {contribution.contributor_occupation && (
                 <>
-                  <span style={{ color: "#666" }}>Occupation:</span>
+                  <span className={styles.detailLabel}>Occupation:</span>
                   <span>{contribution.contributor_occupation}</span>
                 </>
               )}
 
               {isRollup ? (
                 <>
-                  <span style={{ color: "#666" }}>Date Range:</span>
+                  <span className={styles.detailLabel}>Date Range:</span>
                   <span>
                     {formatDate(contribution.oldest)} –{" "}
                     {formatDate(contribution.newest)}
                   </span>
-                  <span style={{ color: "#666" }}>Total Amount:</span>
-                  <span style={{ fontWeight: "500" }}>
+                  <span className={styles.detailLabel}>Total Amount:</span>
+                  <span className={styles.boldValue}>
                     {formatCurrency(contribution.total_receipt_amount)}
                   </span>
                 </>
               ) : (
                 <>
-                  <span style={{ color: "#666" }}>Date:</span>
+                  <span className={styles.detailLabel}>Date:</span>
                   <span>
                     {formatDate(contribution.contribution_receipt_date)}
                   </span>
-                  <span style={{ color: "#666" }}>Amount:</span>
-                  <span style={{ fontWeight: "500" }}>
+                  <span className={styles.detailLabel}>Amount:</span>
+                  <span className={styles.boldValue}>
                     {formatCurrency(contribution.contribution_receipt_amount)}
                   </span>
                 </>
@@ -507,7 +478,7 @@ export default function CompanyContributionReviewPage() {
 
               {contribution.contributor_aggregate_ytd && (
                 <>
-                  <span style={{ color: "#666" }}>Aggregate YTD:</span>
+                  <span className={styles.detailLabel}>Aggregate YTD:</span>
                   <span>
                     {formatCurrency(contribution.contributor_aggregate_ytd)}
                   </span>
@@ -516,8 +487,8 @@ export default function CompanyContributionReviewPage() {
 
               {contribution.receipt_type && (
                 <>
-                  <span style={{ color: "#666" }}>Line Number:</span>
-                  <span style={{ fontFamily: "monospace", fontSize: "0.85em" }}>
+                  <span className={styles.detailLabel}>Line Number:</span>
+                  <span className={styles.monoValue}>
                     {contribution.receipt_type}
                   </span>
                 </>
@@ -525,8 +496,8 @@ export default function CompanyContributionReviewPage() {
 
               {contribution.transaction_id && (
                 <>
-                  <span style={{ color: "#666" }}>Transaction ID:</span>
-                  <span style={{ fontFamily: "monospace", fontSize: "0.85em" }}>
+                  <span className={styles.detailLabel}>Transaction ID:</span>
+                  <span className={styles.monoValue}>
                     {contribution.transaction_id}
                   </span>
                 </>
@@ -534,7 +505,7 @@ export default function CompanyContributionReviewPage() {
 
               {contribution.receipt_type_full && (
                 <>
-                  <span style={{ color: "#666" }}>Receipt Type:</span>
+                  <span className={styles.detailLabel}>Receipt Type:</span>
                   <span>
                     {contribution.receipt_type_full}
                     {contribution.receipt_type &&
@@ -545,20 +516,20 @@ export default function CompanyContributionReviewPage() {
 
               {contribution.memo_text && (
                 <>
-                  <span style={{ color: "#666" }}>Memo:</span>
+                  <span className={styles.detailLabel}>Memo:</span>
                   <span>{contribution.memo_text}</span>
                 </>
               )}
 
               {contribution.pdf_url && (
                 <>
-                  <span style={{ color: "#666" }}>FEC Filing:</span>
+                  <span className={styles.detailLabel}>FEC Filing:</span>
                   <span>
                     <a
                       href={contribution.pdf_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      style={{ color: "#007bff", textDecoration: "underline" }}
+                      className={styles.adminLink}
                     >
                       View PDF
                     </a>
@@ -568,12 +539,9 @@ export default function CompanyContributionReviewPage() {
 
               {contribution.link && (
                 <>
-                  <span style={{ color: "#666" }}>Link:</span>
+                  <span className={styles.detailLabel}>Link:</span>
                   <span>
-                    <a
-                      href={contribution.link}
-                      style={{ color: "#007bff", textDecoration: "underline" }}
-                    >
+                    <a href={contribution.link} className={styles.adminLink}>
                       {contribution.link}
                     </a>
                   </span>
@@ -582,47 +550,18 @@ export default function CompanyContributionReviewPage() {
             </div>
 
             {/* Flags */}
-            <div style={{ fontSize: "0.85em", marginBottom: "8px" }}>
+            <div className={styles.flagsRow}>
               {contribution.claimed && (
-                <span
-                  style={{
-                    padding: "2px 6px",
-                    backgroundColor: "#d1ecf1",
-                    color: "#0c5460",
-                    borderRadius: "3px",
-                    marginRight: "5px",
-                  }}
-                >
-                  Claimed
-                </span>
+                <span className={styles.claimedBadge}>Claimed</span>
               )}
               {contribution.isIndividual && (
-                <span
-                  style={{
-                    padding: "2px 6px",
-                    backgroundColor: "#e2d9f3",
-                    color: "#4a235a",
-                    borderRadius: "3px",
-                    marginRight: "5px",
-                  }}
-                >
-                  Individual
-                </span>
+                <span className={styles.individualBadge}>Individual</span>
               )}
             </div>
 
             {/* Review note */}
             {contribution.description && !isEditing && (
-              <div
-                style={{
-                  marginTop: "8px",
-                  padding: "8px",
-                  backgroundColor: "#e9ecef",
-                  borderRadius: "3px",
-                  fontSize: "0.85em",
-                  fontStyle: "italic",
-                }}
-              >
+              <div className={styles.reviewNote}>
                 <strong>Review Note:</strong> {contribution.description}
               </div>
             )}
@@ -630,21 +569,9 @@ export default function CompanyContributionReviewPage() {
         </div>
 
         {isEditing && (
-          <div
-            style={{
-              marginTop: "10px",
-              borderTop: "1px solid #ddd",
-              paddingTop: "10px",
-            }}
-          >
-            <div style={{ marginBottom: "10px" }}>
-              <label
-                style={{
-                  display: "block",
-                  marginBottom: "5px",
-                  fontSize: "0.9em",
-                }}
-              >
+          <div className={styles.editSection}>
+            <div className={styles.editDescriptionRow}>
+              <label className={styles.editLabel}>
                 Description (optional):
               </label>
               <textarea
@@ -653,23 +580,15 @@ export default function CompanyContributionReviewPage() {
                 onChange={(e) => setEditDescription(e.target.value)}
                 rows={3}
                 placeholder="Add a note about this contribution..."
-                style={{ width: "100%" }}
               />
             </div>
-            <div style={{ display: "flex", gap: "10px" }}>
+            <div className={styles.editButtonRow}>
               <button
                 onClick={() =>
                   updateContributionReview(contribution, "verified", editDescription)
                 }
                 disabled={saveState === "pending"}
-                style={{
-                  padding: "8px 16px",
-                  backgroundColor: "#28a745",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "3px",
-                  cursor: saveState === "pending" ? "not-allowed" : "pointer",
-                }}
+                className={styles.buttonVerifyLarge}
               >
                 Mark as Verified
               </button>
@@ -678,14 +597,7 @@ export default function CompanyContributionReviewPage() {
                   updateContributionReview(contribution, "omit", editDescription)
                 }
                 disabled={saveState === "pending"}
-                style={{
-                  padding: "8px 16px",
-                  backgroundColor: "#dc3545",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "3px",
-                  cursor: saveState === "pending" ? "not-allowed" : "pointer",
-                }}
+                className={styles.buttonOmitLarge}
               >
                 Mark as Omit
               </button>
@@ -695,14 +607,7 @@ export default function CompanyContributionReviewPage() {
                   setEditDescription("");
                 }}
                 disabled={saveState === "pending"}
-                style={{
-                  padding: "8px 16px",
-                  backgroundColor: "#6c757d",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "3px",
-                  cursor: saveState === "pending" ? "not-allowed" : "pointer",
-                }}
+                className={styles.buttonCancelLarge}
               >
                 Cancel
               </button>
@@ -711,34 +616,18 @@ export default function CompanyContributionReviewPage() {
         )}
 
         {!isEditing && (
-          <div style={{ marginTop: "10px", display: "flex", gap: "8px" }}>
+          <div className={styles.actionButtonRow}>
             <button
               onClick={() => updateContributionReview(contribution, "verified", "")}
               disabled={saveState === "pending"}
-              style={{
-                padding: "6px 12px",
-                fontSize: "0.85em",
-                backgroundColor: "#28a745",
-                color: "white",
-                border: "none",
-                borderRadius: "3px",
-                cursor: saveState === "pending" ? "not-allowed" : "pointer",
-              }}
+              className={styles.buttonVerifySmall}
             >
               Verify
             </button>
             <button
               onClick={() => updateContributionReview(contribution, "omit", "")}
               disabled={saveState === "pending"}
-              style={{
-                padding: "6px 12px",
-                fontSize: "0.85em",
-                backgroundColor: "#dc3545",
-                color: "white",
-                border: "none",
-                borderRadius: "3px",
-                cursor: saveState === "pending" ? "not-allowed" : "pointer",
-              }}
+              className={styles.buttonOmitSmall}
             >
               Omit
             </button>
@@ -747,15 +636,7 @@ export default function CompanyContributionReviewPage() {
                 setEditingContribution(contributionId);
                 setEditDescription(contribution.description || "");
               }}
-              style={{
-                padding: "6px 12px",
-                fontSize: "0.85em",
-                backgroundColor: "#6c757d",
-                color: "white",
-                border: "none",
-                borderRadius: "3px",
-                cursor: "pointer",
-              }}
+              className={styles.buttonCancelSmall}
             >
               Edit / Add Note
             </button>
@@ -763,18 +644,10 @@ export default function CompanyContributionReviewPage() {
         )}
 
         {saveState === "success" && (
-          <div
-            style={{ marginTop: "5px", color: "#28a745", fontSize: "0.85em" }}
-          >
-            ✓ Saved successfully
-          </div>
+          <div className={styles.saveSuccessMsg}>✓ Saved successfully</div>
         )}
         {saveState === "error" && (
-          <div
-            style={{ marginTop: "5px", color: "#dc3545", fontSize: "0.85em" }}
-          >
-            ✗ Error saving
-          </div>
+          <div className={styles.saveErrorMsg}>✗ Error saving</div>
         )}
       </div>
     );
@@ -827,33 +700,16 @@ export default function CompanyContributionReviewPage() {
         {loadingState === "loading" && <p>Loading contributions...</p>}
         {loadingState === "error" && <p>Error loading company data.</p>}
         {loadingState === "loaded" && companyData && (
-          <div style={{ marginTop: "20px" }}>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "15px",
-                marginBottom: "15px",
-              }}
-            >
-              <p style={{ color: "#666", margin: 0 }}>
+          <div className={styles.loadedSection}>
+            <div className={styles.statsRow}>
+              <p className={styles.statsText}>
                 Total contributions: {flattened.length}
               </p>
               {flattened.some((c) => !c.manualReview) && (
                 <button
                   onClick={markAllAsVerified}
                   disabled={bulkSaveState === "pending"}
-                  style={{
-                    padding: "6px 14px",
-                    fontSize: "0.85em",
-                    backgroundColor:
-                      bulkSaveState === "success" ? "#28a745" : "#17a2b8",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "3px",
-                    cursor:
-                      bulkSaveState === "pending" ? "not-allowed" : "pointer",
-                  }}
+                  className={`${styles.bulkVerifyButton}${bulkSaveState === "success" ? ` ${styles.bulkVerifyButtonSuccess}` : ""}`}
                 >
                   {bulkSaveState === "pending"
                     ? "Saving..."
@@ -863,7 +719,7 @@ export default function CompanyContributionReviewPage() {
                 </button>
               )}
               {bulkSaveState === "error" && (
-                <span style={{ color: "#dc3545", fontSize: "0.85em" }}>
+                <span className={styles.errorText}>
                   Error saving — please try again
                 </span>
               )}
@@ -871,17 +727,7 @@ export default function CompanyContributionReviewPage() {
                 <button
                   onClick={markAllAsOmit}
                   disabled={bulkOmitState === "pending"}
-                  style={{
-                    padding: "6px 14px",
-                    fontSize: "0.85em",
-                    backgroundColor:
-                      bulkOmitState === "success" ? "#28a745" : "#dc3545",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "3px",
-                    cursor:
-                      bulkOmitState === "pending" ? "not-allowed" : "pointer",
-                  }}
+                  className={`${styles.bulkOmitButton}${bulkOmitState === "success" ? ` ${styles.bulkOmitButtonSuccess}` : ""}`}
                 >
                   {bulkOmitState === "pending"
                     ? "Saving..."
@@ -891,7 +737,7 @@ export default function CompanyContributionReviewPage() {
                 </button>
               )}
               {bulkOmitState === "error" && (
-                <span style={{ color: "#dc3545", fontSize: "0.85em" }}>
+                <span className={styles.errorText}>
                   Error saving — please try again
                 </span>
               )}

@@ -66,7 +66,7 @@ export default function HorizontalPartyBars({
               role="img"
               aria-label={`${label}: ${formatCurrency(partySummary[party], true)}`}
             >
-              <div className={styles.fill} style={{ width: `${pct}%` }} />
+              <div className={styles.fill} style={{ "--bar-width": `${pct}%` } as React.CSSProperties} />
             </div>
           </li>
         );

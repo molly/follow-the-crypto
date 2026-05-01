@@ -23,12 +23,12 @@ export function ElectionsSkeleton() {
           <Skeleton
             width="15rem"
             onCard={true}
-            style={{ marginBottom: "1rem" }}
+            className={styles.skeletonWithMarginBottom}
           />
           <Skeleton
             width="20rem"
             onCard={true}
-            style={{ marginBottom: "1rem" }}
+            className={styles.skeletonWithMarginBottom}
           />
           <table className={styles.candidateExpendituresTable}>
             <thead>

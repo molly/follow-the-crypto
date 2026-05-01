@@ -42,7 +42,7 @@ function InfluencedRacesContentsSkeleton({ fullPage }: { fullPage: boolean }) {
       <Skeleton
         onCard={true}
         width="15rem"
-        style={{ marginBottom: 0, marginLeft: "0.5rem" }}
+        className={sharedStyles.noMarginBottomHalfLeft}
       />
     </div>
   ));

@@ -47,7 +47,7 @@ export default function SpendingByCommittee({
               role="img"
               aria-label={`${name}: ${formatCurrency(spending, true)}`}
             >
-              <div className={styles.fill} style={{ width: `${pct}%` }} />
+              <div className={styles.fill} style={{ "--bar-width": `${pct}%` } as React.CSSProperties} />
             </div>
           </li>
         );

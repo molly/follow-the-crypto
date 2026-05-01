@@ -244,7 +244,7 @@ export default function ConstantsEditor() {
           <h2>
             Needs attention ({incompleteCommittees.length})
           </h2>
-          <p style={{ marginBottom: "0.5rem" }}>
+          <p className={styles.marginBottom05}>
             These committees have received contributions but are missing a
             description, candidate IDs, and sponsor candidate IDs:
           </p>
@@ -265,7 +265,7 @@ export default function ConstantsEditor() {
                 }
                 const entry = entries[i];
                 return (
-                  <tr key={id} style={{ verticalAlign: "top" }}>
+                  <tr key={id} className={styles.verticalAlignTop}>
                     <td>
                       <code>{id}</code>
                     </td>
@@ -273,24 +273,17 @@ export default function ConstantsEditor() {
                     <td>
                       <input
                         type="text"
-                        className={styles.editorInput}
+                        className={`${styles.editorInput} ${styles.minWidth250}`}
                         value={entry.description}
                         onChange={(e) =>
                           updateEntry(i, "description", e.target.value)
                         }
                         placeholder="Description (optional)"
-                        style={{ minWidth: 250 }}
                       />
                     </td>
                     <td>
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: "0.25rem",
-                        }}
-                      >
-                        <label style={{ fontSize: "0.85em" }}>
+                      <div className={styles.affiliationCell}>
+                        <label className={styles.smallLabel}>
                           <input
                             type="checkbox"
                             checked={entry.hasAffiliation}
@@ -301,7 +294,7 @@ export default function ConstantsEditor() {
                           Has affiliation
                         </label>
                         {entry.hasAffiliation && (
-                          <div style={{ display: "flex", gap: "0.25rem" }}>
+                          <div className={styles.affiliationTypeRow}>
                             <select
                               className={styles.editorSelect}
                               value={entry.affiliationType}
@@ -338,7 +331,7 @@ export default function ConstantsEditor() {
                             {entry.affiliationType === "candidate_ids" && (
                               <input
                                 type="text"
-                                className={styles.editorInput}
+                                className={`${styles.editorInput} ${styles.minWidth250}`}
                                 value={entry.candidateIds}
                                 onChange={(e) =>
                                   updateEntry(
@@ -348,14 +341,13 @@ export default function ConstantsEditor() {
                                   )
                                 }
                                 placeholder="Comma-separated candidate IDs"
-                                style={{ minWidth: 250 }}
                               />
                             )}
                             {entry.affiliationType ===
                               "sponsor_candidate_ids" && (
                               <input
                                 type="text"
-                                className={styles.editorInput}
+                                className={`${styles.editorInput} ${styles.minWidth250}`}
                                 value={entry.sponsorCandidateIds}
                                 onChange={(e) =>
                                   updateEntry(
@@ -365,7 +357,6 @@ export default function ConstantsEditor() {
                                   )
                                 }
                                 placeholder="Comma-separated sponsor candidate IDs"
-                                style={{ minWidth: 250 }}
                               />
                             )}
                           </div>
@@ -391,7 +382,7 @@ export default function ConstantsEditor() {
           </thead>
           <tbody>
             {entries.map((entry, i) => (
-              <tr key={i} style={{ verticalAlign: "top" }}>
+              <tr key={i} className={styles.verticalAlignTop}>
                 <td>
                   <input
                     type="text"
@@ -406,18 +397,17 @@ export default function ConstantsEditor() {
                 <td>
                   <input
                     type="text"
-                    className={styles.editorInput}
+                    className={`${styles.editorInput} ${styles.minWidth250}`}
                     value={entry.description}
                     onChange={(e) =>
                       updateEntry(i, "description", e.target.value)
                     }
                     placeholder="Description (optional)"
-                    style={{ minWidth: 250 }}
                   />
                 </td>
                 <td>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
-                    <label style={{ fontSize: "0.85em" }}>
+                  <div className={styles.affiliationCell}>
+                    <label className={styles.smallLabel}>
                       <input
                         type="checkbox"
                         checked={entry.hasAffiliation}
@@ -428,7 +418,7 @@ export default function ConstantsEditor() {
                       Has affiliation
                     </label>
                     {entry.hasAffiliation && (
-                      <div style={{ display: "flex", gap: "0.25rem" }}>
+                      <div className={styles.affiliationTypeRow}>
                         <select
                           className={styles.editorSelect}
                           value={entry.affiliationType}
@@ -459,19 +449,18 @@ export default function ConstantsEditor() {
                         {entry.affiliationType === "candidate_ids" && (
                           <input
                             type="text"
-                            className={styles.editorInput}
+                            className={`${styles.editorInput} ${styles.minWidth250}`}
                             value={entry.candidateIds}
                             onChange={(e) =>
                               updateEntry(i, "candidateIds", e.target.value)
                             }
                             placeholder="Comma-separated candidate IDs"
-                            style={{ minWidth: 250 }}
                           />
                         )}
                         {entry.affiliationType === "sponsor_candidate_ids" && (
                           <input
                             type="text"
-                            className={styles.editorInput}
+                            className={`${styles.editorInput} ${styles.minWidth250}`}
                             value={entry.sponsorCandidateIds}
                             onChange={(e) =>
                               updateEntry(
@@ -481,7 +470,6 @@ export default function ConstantsEditor() {
                               )
                             }
                             placeholder="Comma-separated sponsor candidate IDs"
-                            style={{ minWidth: 250 }}
                           />
                         )}
                       </div>
@@ -495,7 +483,7 @@ export default function ConstantsEditor() {
             ))}
           </tbody>
         </table>
-        <div style={{ marginTop: "0.5rem", display: "flex", gap: "0.5rem" }}>
+        <div className={styles.saveRow}>
           <button onClick={addEntry}>Add entry</button>
           <button onClick={save} disabled={saveState === "pending"}>
             {saveState === "pending" ? "Saving..." : "Save"}

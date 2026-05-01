@@ -1,4 +1,5 @@
 import styles from "@/app/components/tables.module.css";
+import sharedStyles from "@/app/shared.module.css";
 import { type Sector } from "@/app/types/Sector";
 import { range } from "@/app/utils/range";
 import { humanizeSector } from "@/app/utils/sector";
@@ -19,7 +20,7 @@ function TableContentsSkeleton({ type }: { type: string }) {
         </td>
         {type === "all" && (
           <td>
-            <Skeleton width="6rem" onCard={true} style={{ float: "right" }} />
+            <Skeleton width="6rem" onCard={true} className={sharedStyles.floatRight} />
           </td>
         )}
       </tr>

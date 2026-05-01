@@ -158,6 +158,27 @@
   margin-top: 0.5rem;
 }
 
+.floatRight {
+  float: right;
+}
+
+.noMargin {
+  margin: 0;
+}
+
+.noMarginBottom {
+  margin-bottom: 0;
+}
+
+.noMarginBottomHalfLeft {
+  margin-bottom: 0;
+  margin-left: 0.5rem;
+}
+
+.marginBottom1 {
+  margin-bottom: 1rem;
+}
+
 @media (min-width: 500px) {
   .highlight {
     font-size: clamp(2rem, 5vw, 3rem);

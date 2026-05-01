@@ -1,4 +1,5 @@
 import Skeleton from "@/app/components/skeletons/Skeleton";
+import sharedStyles from "@/app/shared.module.css";
 import { customMetadata } from "@/app/utils/metadata";
 import { parseSector } from "@/app/utils/sector";
 import { range } from "@/app/utils/range";
@@ -17,7 +18,7 @@ function CompanyListSkeleton() {
     <Skeleton
       key={`skeleton-row-${x}`}
       randWidth={[5, 15]}
-      style={{ marginBottom: "1rem" }}
+      className={sharedStyles.marginBottom1}
     />
   ));
 }

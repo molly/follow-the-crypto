@@ -75,7 +75,7 @@ export default async function IndividualsList({ sector = "all" }: { sector?: Sec
               ))}
             </div>
             <div className={listStyles.barTrack}>
-              <div className={listStyles.bar} style={{ width: `${barPct}%` }} />
+              <div className={listStyles.bar} style={{ "--bar-width": `${barPct}%` } as React.CSSProperties} />
             </div>
             <div className={listStyles.amount}>
               {humanizeRoundedCurrency(roundedTotal || individual.total)}

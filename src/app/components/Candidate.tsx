@@ -2,6 +2,7 @@ import { CandidateSummary, Party, RaceCandidate } from "@/app/types/Elections";
 import { getFirstLastName } from "@/app/utils/names";
 import { ExpenditureCandidateSummary } from "../types/Expenditures";
 import styles from "./candidate.module.css";
+import sharedStyles from "@/app/shared.module.css";
 import Skeleton from "./skeletons/Skeleton";
 
 function getPartyClass(party?: string | null) {
@@ -15,7 +16,7 @@ export function CandidateSkeleton({ onCard }: { onCard?: boolean }) {
   return (
     <div className={styles.candidateInfoBlock}>
       <CandidateImage />
-      <Skeleton width="10rem" style={{ margin: 0 }} onCard={onCard} />
+      <Skeleton width="10rem" className={sharedStyles.noMargin} onCard={onCard} />
     </div>
   );
 }

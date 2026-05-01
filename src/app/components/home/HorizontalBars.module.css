@@ -69,12 +69,14 @@
   background: var(--accent);
   border-radius: 2px;
   transition: width 0.3s ease;
+  width: var(--bar-width, 0%);
 }
 
 /* Stacked segments (AllCashByCommitteeChart) */
 .segment {
   height: 100%;
   flex-shrink: 0;
+  width: var(--bar-width, 0%);
 }
 
 /* Grouped layout (SpendingByPartyWithOpposition) */

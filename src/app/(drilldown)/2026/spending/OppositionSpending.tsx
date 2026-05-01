@@ -1,6 +1,7 @@
 import { fetchCandidatesWithOpposeSpending } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import Skeleton from "@/app/components/skeletons/Skeleton";
+import sharedStyles from "@/app/shared.module.css";
 import tableStyles from "@/app/components/tables.module.css";
 import { STATES_BY_ABBR } from "@/app/data/states";
 import { OppositionConstant } from "@/app/types/Elections";
@@ -77,7 +78,7 @@ export function OppositionSpendingSkeleton() {
           className={tableStyles.oppositionSpendingRow}
         >
           <td className={`number-cell ${tableStyles.tableCellCollapse1}`}>
-            <Skeleton onCard={true} width="5rem" style={{ float: "right" }} />
+            <Skeleton onCard={true} width="5rem" className={sharedStyles.floatRight} />
           </td>
           <td className="text-cell">
             <Skeleton onCard={true} width="8rem" />

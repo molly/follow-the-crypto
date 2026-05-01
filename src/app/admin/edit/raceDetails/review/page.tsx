@@ -257,7 +257,7 @@ export default function RaceReviewPage() {
 
     return (
       <div className={styles.container}>
-        <div style={{ marginBottom: "20px" }}>
+        <div className={styles.marginBottom20}>
           <button onClick={() => setSelectedConflict(null)}>
             ← Back to List
           </button>
@@ -266,23 +266,11 @@ export default function RaceReviewPage() {
           </h1>
         </div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "20px",
-          }}
-        >
+        <div className={styles.conflictGrid}>
           {/* Manual Races Column */}
-          <div
-            style={{
-              border: "1px solid #ccc",
-              padding: "15px",
-              borderRadius: "5px",
-            }}
-          >
+          <div className={styles.conflictColumn}>
             <h2>Manual Races ({conflict.manualRaces.length})</h2>
-            <p style={{ fontSize: "0.9em", color: "#666" }}>
+            <p className={styles.hintText}>
               From admin entry UI
             </p>
             {conflict.manualRaces.length === 0 ? (
@@ -291,24 +279,17 @@ export default function RaceReviewPage() {
               conflict.manualRaces.map((race, idx) => (
                 <div
                   key={idx}
-                  style={{
-                    marginBottom: "15px",
-                    padding: "10px",
-                    backgroundColor: scrapedKeys.has(generateRaceKey(race))
-                      ? "#fff3cd"
-                      : "#d1ecf1",
-                    borderRadius: "3px",
-                  }}
+                  className={scrapedKeys.has(generateRaceKey(race)) ? `${styles.raceItem} ${styles.raceItemConflict}` : `${styles.raceItem} ${styles.raceItemManual}`}
                 >
                   <strong>{formatRace(race)}</strong>
                   {scrapedKeys.has(generateRaceKey(race)) && (
-                    <span style={{ marginLeft: "10px", color: "#856404" }}>
+                    <span className={styles.conflictMark}>
                       ⚠ Conflict
                     </span>
                   )}
-                  <ul style={{ marginTop: "5px", marginBottom: "0" }}>
+                  <ul className={styles.raceUl}>
                     {race.candidates.map((candidate, cidx) => (
-                      <li key={cidx} style={{ fontSize: "0.9em" }}>
+                      <li key={cidx} className={styles.raceLi}>
                         {formatCandidate(candidate)}
                       </li>
                     ))}
@@ -320,7 +301,7 @@ export default function RaceReviewPage() {
               <button
                 onClick={() => applyMerge(conflict, "use_manual")}
                 disabled={saveState === "pending"}
-                style={{ marginTop: "10px", width: "100%" }}
+                className={styles.fullWidthButton}
               >
                 Use Manual Races
               </button>
@@ -328,15 +309,9 @@ export default function RaceReviewPage() {
           </div>
 
           {/* Scraped Races Column */}
-          <div
-            style={{
-              border: "1px solid #ccc",
-              padding: "15px",
-              borderRadius: "5px",
-            }}
-          >
+          <div className={styles.conflictColumn}>
             <h2>Scraped Races ({conflict.scrapedRaces.length})</h2>
-            <p style={{ fontSize: "0.9em", color: "#666" }}>
+            <p className={styles.hintText}>
               From Python scraper
             </p>
             {conflict.scrapedRaces.length === 0 ? (
@@ -345,40 +320,29 @@ export default function RaceReviewPage() {
               conflict.scrapedRaces.map((race, idx) => (
                 <div
                   key={idx}
-                  style={{
-                    marginBottom: "15px",
-                    padding: "10px",
-                    backgroundColor: manualKeys.has(generateRaceKey(race))
-                      ? "#fff3cd"
-                      : "#d4edda",
-                    borderRadius: "3px",
-                  }}
+                  className={manualKeys.has(generateRaceKey(race)) ? `${styles.raceItem} ${styles.raceItemConflict}` : `${styles.raceItem} ${styles.raceItemNew}`}
                 >
                   <strong>{formatRace(race)}</strong>
                   {manualKeys.has(generateRaceKey(race)) && (
-                    <span style={{ marginLeft: "10px", color: "#856404" }}>
+                    <span className={styles.conflictMark}>
                       ⚠ Conflict
                     </span>
                   )}
                   {!manualKeys.has(generateRaceKey(race)) && (
-                    <span style={{ marginLeft: "10px", color: "#155724" }}>
+                    <span className={styles.newMark}>
                       ✓ New
                     </span>
                   )}
-                  <ul style={{ marginTop: "5px", marginBottom: "0" }}>
+                  <ul className={styles.raceUl}>
                     {race.candidates.map((candidate, cidx) => (
-                      <li key={cidx} style={{ fontSize: "0.9em" }}>
+                      <li key={cidx} className={styles.raceLi}>
                         {formatCandidate(candidate)}
                       </li>
                     ))}
                   </ul>
                   <button
                     onClick={() => copyScrapedToManual(race)}
-                    style={{
-                      marginTop: "8px",
-                      fontSize: "0.85em",
-                      padding: "3px 8px",
-                    }}
+                    className={styles.copyButton}
                   >
                     Copy to Manual
                   </button>
@@ -389,7 +353,7 @@ export default function RaceReviewPage() {
               <button
                 onClick={() => applyMerge(conflict, "use_scraped")}
                 disabled={saveState === "pending"}
-                style={{ marginTop: "10px", width: "100%" }}
+                className={styles.fullWidthButton}
               >
                 Use Scraped Races
               </button>
@@ -398,69 +362,48 @@ export default function RaceReviewPage() {
         </div>
 
         {/* Action Buttons */}
-        <div
-          style={{
-            marginTop: "20px",
-            display: "flex",
-            gap: "10px",
-            justifyContent: "center",
-          }}
-        >
+        <div className={styles.actionButtonsRow}>
           <button
             onClick={() => applyMerge(conflict, "use_both")}
             disabled={saveState === "pending"}
-            style={{ padding: "10px 20px" }}
+            className={styles.actionButtonLarge}
           >
             Use Both (Merge All Unique Races)
           </button>
           <button
             onClick={() => applyMerge(conflict, "keep_current")}
             disabled={saveState === "pending"}
-            style={{ padding: "10px 20px", backgroundColor: "#6c757d" }}
+            className={styles.actionButtonGray}
           >
             Keep Current (Mark Reviewed)
           </button>
         </div>
 
         {saveState === "success" && (
-          <p style={{ color: "green", textAlign: "center", marginTop: "10px" }}>
+          <p className={styles.saveFeedbackSuccess}>
             ✓ Successfully saved!
           </p>
         )}
         {saveState === "error" && (
-          <p style={{ color: "red", textAlign: "center", marginTop: "10px" }}>
+          <p className={styles.saveFeedbackError}>
             ✗ Error saving changes
           </p>
         )}
 
         {/* Draft Manual Race Editor */}
         {draftRace && (
-          <div
-            style={{
-              marginTop: "30px",
-              border: "2px solid #0066cc",
-              borderRadius: "5px",
-              padding: "15px",
-            }}
-          >
-            <h2 style={{ marginTop: 0 }}>
+          <div className={styles.draftEditor}>
+            <h2 className={styles.draftEditorTitle}>
               Draft Manual Race: {formatRace(draftRace)}
             </h2>
-            <p style={{ color: "#666", fontSize: "0.9em" }}>
+            <p className={styles.hintText}>
               Uncheck candidates to exclude them before saving.
             </p>
-            <ul style={{ listStyle: "none", padding: 0 }}>
+            <ul className={styles.draftList}>
               {draftRace.candidates.map((candidate, idx) => (
                 <li
                   key={idx}
-                  style={{
-                    padding: "6px 0",
-                    borderBottom: "1px solid #eee",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    opacity: draftCandidatesEnabled[idx] ? 1 : 0.4,
-                  }}
+                  className={`${styles.draftCandidateRow}${!draftCandidatesEnabled[idx] ? ` ${styles.draftCandidateDisabled}` : ""}`}
                 >
                   <input
                     type="checkbox"
@@ -468,26 +411,21 @@ export default function RaceReviewPage() {
                     onChange={() => toggleDraftCandidate(idx)}
                   />
                   <span
-                    style={{
-                      textDecoration: draftCandidatesEnabled[idx]
-                        ? "none"
-                        : "line-through",
-                      fontSize: "0.9em",
-                    }}
+                    className={`${styles.draftCandidateText}${!draftCandidatesEnabled[idx] ? ` ${styles.draftCandidateStrikethrough}` : ""}`}
                   >
                     {formatCandidate(candidate)}
                   </span>
                 </li>
               ))}
             </ul>
-            <div style={{ display: "flex", gap: "10px", marginTop: "12px" }}>
+            <div className={styles.draftActionsRow}>
               <button
                 onClick={saveDraftToManual}
                 disabled={
                   saveState === "pending" ||
                   draftCandidatesEnabled.every((e) => !e)
                 }
-                style={{ padding: "8px 16px", fontWeight: "bold" }}
+                className={styles.draftSaveButton}
               >
                 {saveState === "pending"
                   ? "Saving..."
@@ -498,7 +436,7 @@ export default function RaceReviewPage() {
                   setDraftRace(null);
                   setDraftCandidatesEnabled([]);
                 }}
-                style={{ padding: "8px 16px" }}
+                className={styles.draftCancelButton}
               >
                 Cancel
               </button>
@@ -515,37 +453,29 @@ export default function RaceReviewPage() {
       <p>Review and merge manual and scraped race data</p>
 
       {conflicts.length === 0 ? (
-        <div style={{ marginTop: "20px" }}>
+        <div className={styles.marginTop20}>
           <p>✓ No conflicts or unreviewed changes found!</p>
-          <button onClick={loadConflicts} style={{ marginTop: "10px" }}>
+          <button onClick={loadConflicts} className={styles.marginTop10}>
             Refresh
           </button>
         </div>
       ) : (
         <>
-          <p style={{ marginBottom: "20px", color: "#666" }}>
+          <p className={`${styles.marginBottom20} ${styles.detailLabel}`}>
             Found {conflicts.length} race{conflicts.length !== 1 ? "s" : ""}{" "}
             with differences to review
           </p>
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "10px" }}
-          >
+          <div className={styles.conflictList}>
             {conflicts.map((conflict, idx) => (
               <div
                 key={idx}
-                style={{
-                  border: "1px solid #ddd",
-                  padding: "15px",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                  backgroundColor: "#f8f9fa",
-                }}
+                className={styles.conflictListItem}
                 onClick={() => setSelectedConflict(conflict)}
               >
-                <h3 style={{ margin: "0 0 5px 0" }}>
+                <h3 className={styles.conflictTitle}>
                   {STATES_BY_ABBR[conflict.state]} - {conflict.raceId}
                 </h3>
-                <p style={{ margin: "0", fontSize: "0.9em", color: "#666" }}>
+                <p className={styles.conflictSubtitle}>
                   Manual: {conflict.manualRaces.length} race
                   {conflict.manualRaces.length !== 1 ? "s" : ""} | Scraped:{" "}
                   {conflict.scrapedRaces.length} race

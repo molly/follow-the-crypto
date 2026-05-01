@@ -14,13 +14,12 @@ export default function Skeleton({
   randHeight?: [number, number];
   width?: string;
   randWidth?: [number, number];
-} & React.HTMLAttributes<HTMLDivElement>) {
+} & Omit<React.HTMLAttributes<HTMLDivElement>, "style">) {
   let className = onCard ? styles.skeletonCard : styles.skeleton;
   if (rest.className) {
     className += ` ${rest.className}`;
   }
   const style = {
-    ...(rest.style || {}),
     ...(height && { height }),
     ...(randHeight && {
       height: `${getRandomInt(randHeight[0], randHeight[1])}rem`,

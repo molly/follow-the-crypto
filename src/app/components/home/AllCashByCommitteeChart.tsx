@@ -89,25 +89,25 @@ export default function AllCashByCommitteeChart({
                 {cashPct > 0 && (
                   <div
                     className={`${styles.segment} ${styles.colorCash}`}
-                    style={{ width: `${cashPct}%` }}
+                    style={{ "--bar-width": `${cashPct}%` } as React.CSSProperties}
                   />
                 )}
                 {contribPct > 0 && (
                   <div
                     className={`${styles.segment} ${styles.colorContributed}`}
-                    style={{ width: `${contribPct}%` }}
+                    style={{ "--bar-width": `${contribPct}%` } as React.CSSProperties}
                   />
                 )}
                 {transferPct > 0 && (
                   <div
                     className={`${styles.segment} ${styles.colorTransferred}`}
-                    style={{ width: `${transferPct}%` }}
+                    style={{ "--bar-width": `${transferPct}%` } as React.CSSProperties}
                   />
                 )}
                 {claimedPct > 0 && (
                   <div
                     className={`${styles.segment} ${styles.colorClaimed}`}
-                    style={{ width: `${claimedPct}%` }}
+                    style={{ "--bar-width": `${claimedPct}%` } as React.CSSProperties}
                   />
                 )}
               </div>

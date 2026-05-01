@@ -65,7 +65,7 @@ function BarLabel({
       y={y}
       width={minWidth}
       height={height}
-      style={{ cursor: "pointer", pointerEvents: "none" }}
+      className={styles.barLabelForeignObject}
       initial={{
         opacity: 0,
       }}
@@ -183,7 +183,7 @@ export function SpendingSkeleton() {
                   <Skeleton
                     height="8px"
                     width="5rem"
-                    style={{ marginBottom: 0 }}
+                    className={styles.skeletonNoMarginBottom}
                   />
                 </div>
               </foreignObject>

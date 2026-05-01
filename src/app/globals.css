@@ -326,6 +326,10 @@ a.unstyled {
   font-weight: bold;
 }
 
+.flex1 {
+  flex: 1;
+}
+
 @media (min-width: 1200px) {
   .single-column-page {
     padding: 0 1rem;

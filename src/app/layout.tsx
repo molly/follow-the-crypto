@@ -37,7 +37,7 @@ export default function RootLayout({
       <body
         className={`${sansFont.variable} ${displayFont.variable} ${robotoFont.variable}`}
       >
-        <div style={{ flex: 1 }}>{children}</div>
+        <div className="flex1">{children}</div>
         <Footer />
       </body>
     </html>

@@ -1,6 +1,7 @@
 import { fetchMapData } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import Skeleton from "@/app/components/skeletons/Skeleton";
+import sharedStyles from "@/app/shared.module.css";
 import { STATES_BY_ABBR } from "@/app/data/states";
 import { MapData } from "@/app/types/MapData";
 import { Sector } from "@/app/types/Sector";
@@ -22,7 +23,7 @@ export function StateExpendituresSkeleton() {
               <Skeleton width="8rem" onCard={true} />
             </td>
             <td>
-              <Skeleton width="6rem" onCard={true} style={{ float: "right" }} />
+              <Skeleton width="6rem" onCard={true} className={sharedStyles.floatRight} />
             </td>
           </tr>
           {range(3).map((j) => (
@@ -35,7 +36,7 @@ export function StateExpendituresSkeleton() {
                 <Skeleton
                   width="5rem"
                   onCard={true}
-                  style={{ float: "right" }}
+                  className={sharedStyles.floatRight}
                 />
               </td>
             </tr>
