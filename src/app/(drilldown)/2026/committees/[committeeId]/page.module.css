@@ -3,6 +3,7 @@
   flex-direction: column;
   width: 100%;
   gap: inherit;
+  padding: 0 1rem;
 }
 
 .description {

@@ -2,6 +2,7 @@ import {
   fetchAllStateElections,
   fetchBeneficiaries,
   fetchCandidateExpenditures,
+  fetchConstant,
 } from "@/app/actions/fetch";
 import styles from "@/app/components/tables.module.css";
 import pageStyles from "@/app/page.module.css";
@@ -19,11 +20,38 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { STATES_BY_ABBR } from "../data/states";
 import { Beneficiary } from "../types/Beneficiaries";
+import { CommitteeConstant } from "../types/Committee";
+import { Sector } from "../types/Sector";
+import { getCommitteeIdsForSector } from "../utils/sector";
 import Candidate, { CandidateSkeleton } from "./Candidate";
 import ErrorText from "./ErrorText";
 import InformationalTooltip from "./InformationalTooltip";
 import Outcome from "./Outcome";
 import Skeleton from "./skeletons/Skeleton";
+
+function computeSectorTotals(
+  candidateName: string,
+  state: string,
+  race: string,
+  raceDetails: Record<string, ElectionsByState>,
+  committeeIds: Set<string>,
+): { support: number; oppose: number } {
+  const raceSpending = raceDetails[state]?.[race]?.spending ?? {};
+  let support = 0;
+  let oppose = 0;
+  for (const [committeeId, spending] of Object.entries(raceSpending)) {
+    if (committeeIds.has(committeeId)) {
+      for (const subraceSpending of Object.values(spending.subraces)) {
+        const candidateSpending = subraceSpending.candidates[candidateName];
+        if (candidateSpending) {
+          support += candidateSpending.support;
+          oppose += candidateSpending.oppose;
+        }
+      }
+    }
+  }
+  return { support, oppose };
+}
 
 const renderPlaintextSpending = (candidate: ExpenditureCandidateSummary) => {
   const support = candidate.support_total
@@ -291,9 +319,11 @@ function CandidateRow({
 export default function InfluencedRacesContents({
   fullPage = false,
   small = false,
+  sector = "all",
 }: {
   fullPage?: boolean;
   small?: boolean;
+  sector?: Sector;
 }) {
   const [expenditures, setExpenditures] = useState<
     ExpendituresByCandidate | ErrorType
@@ -308,14 +338,23 @@ export default function InfluencedRacesContents({
     string,
     Beneficiary
   > | null>();
+  const [committeeConstants, setCommitteeConstants] = useState<
+    Record<string, CommitteeConstant> | null
+  >(null);
 
   useEffect(() => {
+    setCommitteeConstants(null);
     (async function () {
-      const [expenditureData, raceData, beneficiariesData] = await Promise.all([
-        fetchCandidateExpenditures(fullPage ? undefined : 5),
-        fetchAllStateElections(),
-        fetchBeneficiaries(),
-      ]);
+      const fetchLimit = sector === "all" && !fullPage ? 5 : undefined;
+      const [expenditureData, raceData, beneficiariesData, committeeData] =
+        await Promise.all([
+          fetchCandidateExpenditures(fetchLimit),
+          fetchAllStateElections(),
+          fetchBeneficiaries(sector),
+          sector !== "all"
+            ? fetchConstant<Record<string, CommitteeConstant>>("committees")
+            : Promise.resolve(null),
+        ]);
       setExpenditures(expenditureData);
       setRaceDetails(raceData);
       setBeneficiaries(
@@ -323,10 +362,15 @@ export default function InfluencedRacesContents({
           ? {}
           : (beneficiariesData as Record<string, Beneficiary>),
       );
+      setCommitteeConstants(
+        sector !== "all" && !isError(committeeData)
+          ? (committeeData as Record<string, CommitteeConstant>)
+          : null,
+      );
     })();
-  }, [fullPage]);
+  }, [fullPage, sector]);
 
-  if (!expenditures || !raceDetailsData) {
+  if (!raceDetailsData || (sector !== "all" && !committeeConstants)) {
     return <InfluencedRacesContentsSkeleton fullPage={fullPage} />;
   }
 
@@ -340,10 +384,47 @@ export default function InfluencedRacesContents({
 
   const { order, candidates } = expenditures as ExpendituresByCandidate;
   const raceDetails = raceDetailsData as Record<string, ElectionsByState>;
-  let rows = order;
+
+  let rows: string[];
+  let displayCandidates: Record<string, ExpenditureCandidateSummary>;
+
+  if (sector !== "all" && committeeConstants) {
+    const committeeIds =
+      getCommitteeIdsForSector(sector, committeeConstants) ?? new Set<string>();
+    const filtered: Record<string, ExpenditureCandidateSummary> = {};
+    for (const name of order) {
+      const candidate = candidates[name];
+      const { support, oppose } = computeSectorTotals(
+        name,
+        candidate.state,
+        candidate.race,
+        raceDetails,
+        committeeIds,
+      );
+      if (support > 0 || oppose > 0) {
+        filtered[name] = {
+          ...candidate,
+          support_total: support,
+          oppose_total: oppose,
+        };
+      }
+    }
+    rows = Object.keys(filtered).sort((a, b) => {
+      const totalA = filtered[a].support_total + filtered[a].oppose_total;
+      const totalB = filtered[b].support_total + filtered[b].oppose_total;
+      return totalB - totalA;
+    });
+    if (!fullPage) {
+      rows = rows.slice(0, 5);
+    }
+    displayCandidates = filtered;
+  } else {
+    rows = order;
+    displayCandidates = candidates;
+  }
 
   const contents = rows.map((candidateName) => {
-    const candidate = candidates[candidateName];
+    const candidate = displayCandidates[candidateName];
     const beneficiary =
       beneficiaries && candidate.candidate_id
         ? beneficiaries[candidate.candidate_id]

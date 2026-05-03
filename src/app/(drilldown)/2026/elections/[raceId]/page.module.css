@@ -3,9 +3,11 @@
   flex-wrap: wrap;
   align-items: flex-start;
   justify-content: center;
-  max-width: 100rem;
+  max-width: var(--max-width);
+  width: 100%;
   margin: 0 auto;
   gap: 1rem;
+  padding: 0 1rem;
 }
 
 .headerWrapper {
@@ -18,8 +20,8 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-width: 30rem;
-  max-width: 60rem;
+  /* min-width: 30rem;
+  max-width: 60rem; */
   gap: 1rem;
 }
 

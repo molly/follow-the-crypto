@@ -3,6 +3,7 @@
   border-top: 1px solid var(--color-neutral-200);
   font-size: 0.9rem;
   color: var(--color-neutral-400);
+  margin-top: 2rem;
 }
 
 .footerContents {

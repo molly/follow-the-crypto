@@ -32,7 +32,7 @@ export default async function CompaniesPage({
   const sector = parseSector(rawSector);
 
   return (
-    <section>
+    <section className="single-column-page">
       <h1 className="no-margin">
         Cryptocurrency-related companies active in election spending
       </h1>

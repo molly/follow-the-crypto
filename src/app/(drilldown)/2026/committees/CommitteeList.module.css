@@ -29,7 +29,7 @@
 
 .networkGroup {
   border-left: 2px solid var(--color-lime-800);
-  margin: 0.5rem 0;
+  margin: 0.5rem 0 0 0;
 }
 
 .networkLabel {
@@ -40,23 +40,40 @@
   padding-left: 0.75rem;
 }
 
+.committeeGroup {
+  margin-top: 2rem;
+}
+
 .committeeNameIndented {
   padding-left: 0.75rem;
 }
 
 .committeeRow {
   display: grid;
-  grid-template-columns: 10rem 1fr 16rem;
+  grid-template-columns: 16rem 1fr 16rem;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.4rem 0;
+  padding: 0.4rem 0.4rem;
+  border-radius: 4px;
+}
+
+.committeeRowHighlighted {
+  background-color: var(--color-lime-50);
 }
 
 .committeeName {
   font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.3rem;
+}
+
+.committeeNameText {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  min-width: 0;
 }
 
 @media (max-width: 500px) {

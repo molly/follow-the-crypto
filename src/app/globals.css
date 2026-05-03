@@ -60,7 +60,6 @@
   --card-background: #fefefe;
   --card-background-rgb: 254, 254, 254;
   --card-border: var(--color-neutral-300);
-  --breadcrumbs-background: var(--color-blue-800);
   --map-background: var(--color-white);
   --logo-background: var(--card-background);
   --placeholder-color: var(--color-neutral-300);
@@ -183,7 +182,7 @@ h4,
 h5,
 h6 {
   margin-top: 0;
-  margin-block-end: 0.5em;
+  margin-block-end: 0.5rem;
   font-weight: 600;
 }
 
@@ -357,7 +356,6 @@ a.unstyled {
 .flex1 {
   flex: 1;
 }
-
 
 @media (prefers-color-scheme: dark) {
   html {

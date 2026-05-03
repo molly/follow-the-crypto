@@ -132,9 +132,9 @@ export default function AboutPage() {
           .
         </p>
         <h3 id="further-reading">Further reading</h3>
-        <h3>
+        <h4>
           <i>Citation Needed</i>
-        </h3>
+        </h4>
         <ul>
           <li>
             &ldquo;
@@ -158,7 +158,7 @@ export default function AboutPage() {
             </a>
           </li>
         </ul>
-        <h3>Other sources</h3>
+        <h4>Other sources</h4>
         <ul>
           <li>
             “

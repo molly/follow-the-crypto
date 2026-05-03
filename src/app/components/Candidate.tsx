@@ -94,13 +94,18 @@ export function CandidateImage({
 export function UnknownCandidate({
   party,
   name,
+  noMargins,
 }: {
   party?: Party;
   name?: string;
+  noMargins?: boolean;
 }) {
   let candidateImageWrapperClassNames = styles.candidateImageWrapper;
   if (party) {
     candidateImageWrapperClassNames += ` ${styles[getPartyClass(party)]}`;
+  }
+  if (noMargins) {
+    candidateImageWrapperClassNames += ` ${styles.noMargins}`;
   }
   return (
     <>

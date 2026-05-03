@@ -14,7 +14,7 @@
 .subheadTotal {
   background: var(--color-neutral-200);
   color: var(--color-black);
-  border-radius: 999px;
+  border-radius: 0.25rem;
   padding: 0.1em 0.6em;
   font-size: 0.75rem;
   font-weight: 600;

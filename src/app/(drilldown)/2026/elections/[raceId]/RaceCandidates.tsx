@@ -127,6 +127,7 @@ export default function RaceCandidates({
                   <UnknownCandidate
                     party={r.party}
                     name={`${getSubraceName(r)} winner`}
+                    noMargins={true}
                   />
                 </td>
               </tr>

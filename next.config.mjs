@@ -21,7 +21,7 @@ const nextConfig = {
       "spending",
       "states",
     ];
-    return routes.flatMap((route) => [
+    const _2026routes = routes.flatMap((route) => [
       {
         source: `/${route}`,
         destination: `/2026/${route}`,
@@ -33,6 +33,14 @@ const nextConfig = {
         permanent: false,
       },
     ]);
+    return [
+      ..._2026routes,
+      {
+        source: "/2026/committees/ranking",
+        destination: "/2026/committees/ranking/all",
+        permanent: false,
+      },
+    ];
   },
   output: "standalone",
 };

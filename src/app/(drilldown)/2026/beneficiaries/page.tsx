@@ -14,12 +14,27 @@ import {
   CommitteeBeneficiary as CommitteeBeneficiaryType,
 } from "@/app/types/Beneficiaries";
 import { isError } from "@/app/utils/errors";
+import { customMetadata } from "@/app/utils/metadata";
 import { getRaceName } from "@/app/utils/races";
-import { parseSector } from "@/app/utils/sector";
+import { humanizeSector, parseSector } from "@/app/utils/sector";
 import { titlecaseCommittee, titlecaseLastFirst } from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
+import type { Metadata } from "next";
 import Link from "next/link";
 import styles from "./page.module.css";
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ sector?: string }>;
+}): Promise<Metadata> {
+  const { sector: rawSector } = await searchParams;
+  const sector = parseSector(rawSector);
+  return customMetadata({
+    title: "Beneficiaries",
+    description: `Beneficiaries of ${humanizeSector(sector, { context: "industry", lowercase: true })} spending`,
+  });
+}
 
 function CommitteeBeneficiary({
   id,
@@ -33,13 +48,13 @@ function CommitteeBeneficiary({
   return (
     <tr className={tableStyles.beneficiariesRow}>
       <td>
-        <Link
-          href={id in COMMITTEES ? `/2026/committees/${id}` : `/2026/beneficiaries/${id}`}
+        <MaybeLink
+          href={id in COMMITTEES ? `/2026/committees/${id}` : undefined}
         >
           {committee && committee.committee_name
             ? titlecaseCommittee(committee.committee_name)
             : id}
-        </Link>
+        </MaybeLink>
       </td>
       <td>{committee && committee.description ? committee.description : ""}</td>
       <td
@@ -101,11 +116,10 @@ export default async function BeneficiariesList({
 }) {
   const { sector: rawSector } = await searchParams;
   const sector = parseSector(rawSector);
-  const [beneficiariesData, beneficiariesOrderData] =
-    await Promise.all([
-      fetchBeneficiaries(sector),
-      fetchBeneficiariesOrder(sector),
-    ]);
+  const [beneficiariesData, beneficiariesOrderData] = await Promise.all([
+    fetchBeneficiaries(sector),
+    fetchBeneficiariesOrder(sector),
+  ]);
   if (isError(beneficiariesData) || isError(beneficiariesOrderData)) {
     return <ErrorText subject="the list of beneficiaries" />;
   }
@@ -117,6 +131,11 @@ export default async function BeneficiariesList({
     <div className="single-column-page">
       <section className={styles.card}>
         <h2 className={tableStyles.tableCardContent}>Beneficiaries</h2>
+        <p className="secondary">
+          {`Candidates and committees that have received
+          contributions from tracked ${humanizeSector(sector, { context: "industry", lowercase: true })} companies
+          and individuals.`}
+        </p>
         <table>
           <thead>
             <tr>

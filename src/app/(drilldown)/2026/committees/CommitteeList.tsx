@@ -1,11 +1,19 @@
-import { fetchCommitteeTotalReceipts, fetchCommitteesWithContributions } from "@/app/actions/fetch";
+import {
+  fetchCommitteeTotalReceipts,
+  fetchCommitteesWithContributions,
+} from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import MoneyCard from "@/app/components/MoneyCard";
-import type { CommitteeConstantWithContributions, CommitteeTotalsSnapshot } from "@/app/types/Committee";
+import type {
+  CommitteeConstantWithContributions,
+  CommitteeTotalsSnapshot,
+} from "@/app/types/Committee";
+import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
 import { humanizeRoundedCurrency } from "@/app/utils/humanize";
-import { Sector } from "@/app/types/Sector";
+import { humanizeSector } from "@/app/utils/sector";
 import Link from "next/link";
+import sharedStyles from "@/app/shared.module.css";
 import listStyles from "../listStyles.module.css";
 import styles from "./CommitteeList.module.css";
 
@@ -25,10 +33,10 @@ function getPacGroup(committee: CommitteeConstantWithContributions): PacGroup {
 }
 
 const PAC_GROUP_LABELS: Record<PacGroup, string> = {
-  super: "Super PAC",
-  hybrid: "Hybrid PAC",
-  connected: "Corporation or lobbyist PAC",
-  other: "PAC",
+  super: "Super PACs",
+  hybrid: "Hybrid PACs",
+  connected: "Corporation or lobbyist PACs",
+  other: "Other PACs",
 };
 
 const PAC_GROUP_ORDER: PacGroup[] = ["super", "hybrid", "connected", "other"];
@@ -49,15 +57,22 @@ function CommitteeRow({
     maxTotal > 0 ? (Math.max(0, totalRaised - spent) / maxTotal) * 100 : 0;
   const roundedSpent = Math.floor(spent / 10000) * 10000;
   const roundedRaised = Math.floor(totalRaised / 10000) * 10000;
+  const highlighted =
+    committee.sector === "crypto" || committee.sector === "ai";
   return (
     <div
-      className={`${styles.committeeRow}${indented ? ` ${styles.committeeRowIndented}` : ""}`}
+      className={`${styles.committeeRow}${indented ? ` ${styles.committeeRowIndented}` : ""}${highlighted ? ` ${styles.committeeRowHighlighted}` : ""}`}
     >
       <div
         className={`${styles.committeeName}${indented ? ` ${styles.committeeNameIndented}` : ""}`}
         title={committee.name}
       >
-        <Link href={`/2026/committees/${committee.id}`}>{committee.name}</Link>
+        <span className={styles.committeeNameText}>
+          <Link href={`/2026/committees/${committee.id}`}>{committee.name}</Link>
+        </span>
+        {!indented && committee.sector && (
+          <span className={sharedStyles.sectorBadge}>{committee.sector}</span>
+        )}
       </div>
       <div className={listStyles.barTrack}>
         {spent > 0 && (
@@ -153,8 +168,8 @@ function CommitteeGroup({
   });
 
   return (
-    <>
-      <h3 className={listStyles.subhead}>
+    <div className={styles.committeeGroup}>
+      <h3>
         {title}{" "}
         <span className={listStyles.subheadTotal}>
           {humanizeRoundedCurrency(roundedGroupTotal || groupTotal, true)} cash
@@ -163,9 +178,34 @@ function CommitteeGroup({
       </h3>
       {slots.map((slot) => {
         if (slot.kind === "network") {
+          const networkTotal = slot.members.reduce(
+            (sum, c) => sum + c.total,
+            0,
+          );
+          const roundedNetworkTotal =
+            Math.floor(networkTotal / 1000000) * 1000000;
+          const networkSector = slot.members.some((c) => c.sector === "tech")
+            ? "tech"
+            : slot.members.some((c) => c.sector === "crypto") &&
+                slot.members.some((c) => c.sector === "ai")
+              ? "tech"
+              : slot.members.find((c) => c.sector)?.sector;
           return (
             <div key={slot.name} className={styles.networkGroup}>
-              <div className={styles.networkLabel}>{slot.name} network</div>
+              <div className={styles.networkLabel}>
+                {slot.name} network{" "}
+                {networkSector && (
+                  <span className={sharedStyles.sectorBadge}>
+                    {networkSector}
+                  </span>
+                )}{" "}
+                <span className={listStyles.subheadTotal}>
+                  {humanizeRoundedCurrency(
+                    roundedNetworkTotal || networkTotal,
+                    true,
+                  )}
+                </span>
+              </div>
               {slot.members.map((committee) => (
                 <CommitteeRow
                   key={committee.id}
@@ -185,11 +225,15 @@ function CommitteeGroup({
           />
         );
       })}
-    </>
+    </div>
   );
 }
 
-export default async function CommitteeList({ sector = "all" }: { sector?: Sector }) {
+export default async function CommitteeList({
+  sector = "all",
+}: {
+  sector?: Sector;
+}) {
   const [data, receiptsData] = await Promise.all([
     fetchCommitteesWithContributions(sector),
     fetchCommitteeTotalReceipts(sector),
@@ -214,10 +258,12 @@ export default async function CommitteeList({ sector = "all" }: { sector?: Secto
   const maxTotal = Math.max(...committees.map((c) => c.total), 1);
 
   let cardAmount: string;
-  let cardBottomText: string | React.ReactElement = "on hand to influence 2026 elections.";
+  let cardBottomText: string | React.ReactElement =
+    "on hand to influence 2026 elections.";
   if (!isError(receiptsData)) {
     const totals = receiptsData as CommitteeTotalsSnapshot;
-    const confirmedCash = (totals.net_receipts ?? totals.receipts) + totals.cash_on_hand;
+    const confirmedCash =
+      (totals.net_receipts ?? totals.receipts) + totals.cash_on_hand;
     cardAmount = humanizeRoundedCurrency(confirmedCash, true);
     if (totals.claimed_committed) {
       cardBottomText = (
@@ -237,10 +283,9 @@ export default async function CommitteeList({ sector = "all" }: { sector?: Secto
   return (
     <>
       <MoneyCard
-        topText={`${committees.length} cryptocurrency-focused PACs have`}
+        topText="PAC funds on hand"
         amount={cardAmount}
-        bottomText={cardBottomText}
-        className={listStyles.centeredCard}
+        bottomText={`across ${committees.length} ${humanizeSector(sector, { lowercase: true, context: "industry" })} PACs`}
       />
       <div className={styles.legend}>
         <div className={styles.legendItem}>

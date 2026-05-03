@@ -17,7 +17,7 @@ export default async function PacList({ type }: { type: string }) {
       <tr className={styles.superPacErrorRow}>
         <td colSpan={6}>
           <span className="secondary">{`"${type}" is not a supported type of PAC. `}</span>
-          <Link href="/2026/committees/ranking">Go back</Link>
+          <Link href="/2026/committees">Go back</Link>
         </td>
       </tr>
     );

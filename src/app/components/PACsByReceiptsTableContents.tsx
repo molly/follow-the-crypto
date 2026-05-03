@@ -67,8 +67,13 @@ export default async function PACsByReceiptsTableContents({
             </Link>
           );
         }
+        const highlighted =
+          committee.sector === "crypto" || committee.sector === "ai";
         return (
-          <tr key={committee.committee_id} className={styles.superPacRow}>
+          <tr
+            key={committee.committee_id}
+            className={`${styles.superPacRow}${highlighted ? ` ${styles.superPacCryptoRow}` : ""}`}
+          >
             <td>{ind + 1}</td>
             <td className="text-cell">{committeeIdentifier}</td>
             <td className={`text-cell ${styles.tableCellCollapse1}`}>

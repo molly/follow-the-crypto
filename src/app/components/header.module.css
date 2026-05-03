@@ -191,28 +191,6 @@
   color: var(--color-white);
 }
 
-.breadcrumbsContainer {
-  display: flex;
-  padding: 1rem;
-  margin: 0;
-  list-style: none;
-  background-color: var(--breadcrumbs-background);
-}
-
-.breadcrumb {
-  color: var(--on-dark-text);
-
-  &:not(:last-child):after {
-    content: "›";
-    padding: 0 0.5rem;
-    speak: never;
-  }
-}
-
-.breadcrumbLink {
-  color: var(--on-dark-text);
-}
-
 @media (prefers-color-scheme: dark) {
   .logoText {
     -webkit-text-stroke-color: var(--color-neutral-200);

@@ -4,6 +4,7 @@
   flex-direction: column-reverse;
   gap: 1rem;
   width: 100%;
+  padding: 0 1rem;
 }
 
 .imageAndName {
@@ -14,6 +15,7 @@
   width: 100%;
   gap: 1rem;
   text-align: center;
+  padding: 0 1rem;
 }
 
 .imageAndNameSkeleton {

@@ -7,7 +7,10 @@ import styles from "./header.module.css";
 
 export default function SectorWrapper() {
   const pathname = usePathname();
-  if (pathname.startsWith("/about")) {
+  if (
+    pathname.startsWith("/about") ||
+    pathname.includes("/committees/ranking/")
+  ) {
     return null;
   }
   return (

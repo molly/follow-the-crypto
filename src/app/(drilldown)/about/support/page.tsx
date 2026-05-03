@@ -35,8 +35,8 @@ export default function SupportPage() {
         <p>
           Keeping it free, accurate, and independent costs time and money. I
           don't use paywalls, run ads, or accept industry funding. If you find
-          this work valuable, the best way to support it is to subscribe to
-          Citation Needed.
+          this work valuable, the best way to support it is to subscribe to{" "}
+          <i>Citation Needed</i>.
         </p>
         <div className={styles.ctaBlock}>
           <a

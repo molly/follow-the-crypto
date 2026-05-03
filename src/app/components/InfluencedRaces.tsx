@@ -23,7 +23,7 @@ export default function InfluencedRaces({
   return (
     <div className={styles.influencedCard}>
       <h2>{`${fullPage ? "R" : "Top r"}aces influenced by ${sectorText} super PAC money`}</h2>
-      <InfluencedRacesContents small={useCompact} fullPage={fullPage} />
+      <InfluencedRacesContents small={useCompact} fullPage={fullPage} sector={sector} />
       {!fullPage && (
         <Link href={sectorHref("/2026/elections", sector)} className={styles.viewMoreLink}>
           &raquo; All races with {sectorText} spending

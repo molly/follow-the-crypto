@@ -6,8 +6,9 @@
 
 .main {
   gap: 1rem;
-  padding: 0.5rem;
+  padding: 0.5rem 1rem;
   max-width: var(--max-width);
+  width: 100%;
   margin: 0 auto;
 }
 
@@ -21,20 +22,16 @@
 }
 
 .title {
-  composes: accent-text;
-  font-size: clamp(2rem, 10vw, 8rem);
-  text-align: center;
+  font-size: clamp(3rem, 10vw, 4rem);
   margin: 0;
 }
 
 .titleH2 {
-  composes: title accent-text;
-  font-size: clamp(2rem, 8vw, 5rem);
+  font-size: clamp(2rem, 8vw, 3rem);
 }
 
 .titleH3 {
-  composes: title accent-text;
-  font-size: clamp(2rem, 6vw, 4rem);
+  font-size: clamp(1rem, 6vw, 1.5rem);
 }
 
 .card {

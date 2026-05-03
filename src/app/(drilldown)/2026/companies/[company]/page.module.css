@@ -4,6 +4,7 @@
   flex-direction: column-reverse;
   gap: 1rem;
   width: 100%;
+  padding: 0 1rem;
 }
 
 .companyLogoAndName {
@@ -13,6 +14,7 @@
   justify-content: flex-start;
   gap: 1rem;
   width: 100%;
+  padding: 0 1rem;
 }
 
 .companyLogoWrapper {
