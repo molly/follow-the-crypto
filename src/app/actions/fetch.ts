@@ -1036,12 +1036,12 @@ export const fetchCandidatesWithOpposeSpending = cache(
 // ADS ------------------------------------------------------------------
 export const fetchGoogleAds = cache(
   async (): Promise<Record<string, AdGroup> | ErrorType> =>
-    fetchSnapshot("ads", "by_committee"),
+    fetchCollectionAsRecord<AdGroup>("ads"),
 );
 
 export const fetchAdsByRace = cache(
   async (raceId: string): Promise<Ad[] | ErrorType> => {
-    const data = await fetchSnapshot("ads", "by_committee");
+    const data = await fetchCollectionAsRecord<AdGroup>("ads");
     if (isError(data)) {
       return data as ErrorType;
     } else {

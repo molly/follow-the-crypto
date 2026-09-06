@@ -72,6 +72,6 @@ export type ImageAd = {
 export type Ad = GoogleAd | ImageAd;
 
 export type AdGroup = {
-  GATC_id: string;
+  GATC_ids?: string[];
   ads: Ad[];
 };

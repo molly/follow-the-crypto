@@ -153,12 +153,15 @@ export default function RaceSummary({
   if (
     nonPartisanAdvancers &&
     race.type === RaceType.General &&
-    isRaceUpcoming
+    isRaceUpcoming &&
+    upcomingRaces.length > 1
   ) {
     // Top-two / top-four states run a single non-partisan primary that advances
-    // a fixed number of candidates to the general regardless of party. Fill the
-    // general out to that number with non-partisan placeholders for advancing
-    // slots whose winner hasn't been called yet.
+    // a fixed number of candidates to the general regardless of party. While that
+    // primary is still upcoming, fill the general out to that number with
+    // non-partisan placeholders for slots whose winner isn't known yet. Once the
+    // primary has been held, the general's candidate list is authoritative, even
+    // if fewer than the maximum number of candidates advanced.
     nonPartisanPlaceholders = Math.max(
       0,
       nonPartisanAdvancers - candidates.length,

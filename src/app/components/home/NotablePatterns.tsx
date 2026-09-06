@@ -37,7 +37,9 @@ const DEFEND_AMERICAN_JOBS = "C00836221";
 const AMERICAN_MISSION = "C00916692";
 const THINK_BIG = "C00923417";
 const JOBS_AND_DEMOCRACY = "C00928374";
+const GUARDRAILS_ALLIANCE = "C00949487";
 const INTRA_SECTOR_RACE = "NY-H-12";
+const MA_INTRA_SECTOR_RACE = "MA-H-06";
 
 const findCommittee = (race: RaceInsight | undefined, committeeId: string) =>
   race?.committees.find((committee) => committee.id === committeeId);
@@ -65,7 +67,14 @@ function buildPatterns(
     findCommittee(intraSectorRace, THINK_BIG)?.oppose_total ?? 0;
   const jobsAndDemocracySupport =
     findCommittee(intraSectorRace, JOBS_AND_DEMOCRACY)?.support_total ?? 0;
-  const intraSectorCombined = thinkBigOppose + jobsAndDemocracySupport;
+
+  const maIntraSectorRace = insights.find(
+    (race) => race.race_id === MA_INTRA_SECTOR_RACE,
+  );
+  const maThinkBigSupport =
+    findCommittee(maIntraSectorRace, THINK_BIG)?.support_total ?? 0;
+  const guardrailsOppose =
+    findCommittee(maIntraSectorRace, GUARDRAILS_ALLIANCE)?.oppose_total ?? 0;
 
   const opposeByCandidate = new Map<string, number>();
   for (const race of insights) {
@@ -115,24 +124,30 @@ function buildPatterns(
       label: (
         <>
           Intra-sector conflict ·{" "}
-          <Link href="/2026/elections/NY-H-12">NY-H-12</Link>
+          <Link href="/2026/elections/NY-H-12">NY-H-12</Link>,{" "}
+          <Link href="/2026/elections/MA-H-06">MA-H-06</Link>
         </>
       ),
-      headline: `Two AI PACs spent ${formatCompact(intraSectorCombined)} opposing each other in the same primary`,
+      headline: "AI PACs have turned on each other in two House races this cycle",
       description: (
         <>
           The OpenAI- and Andreessen Horowitz-linked{" "}
           <Link href="/2026/committees/C00923417">Think Big</Link> spent{" "}
           {humanizeRoundedCurrency(thinkBigOppose, true, 1)} opposing{" "}
           <Link href="/2026/elections/NY-H-12">Alex Bores</Link> in New
-          York&rsquo;s District 12; the Anthropic-linked{" "}
+          York&rsquo;s District 12, while the Anthropic-linked{" "}
           <Link href="/2026/committees/C00928374">Jobs and Democracy PAC</Link>{" "}
           spent {humanizeRoundedCurrency(jobsAndDemocracySupport, true, 1)}{" "}
-          supporting him. This has been the only intra-sector conflict so far
-          this cycle.
+          supporting him. In Massachusetts&rsquo;s District 6, Think Big landed
+          on the other side: it spent{" "}
+          {humanizeRoundedCurrency(maThinkBigSupport, true, 1)} supporting{" "}
+          <Link href="/2026/elections/MA-H-06">Daniel Koh</Link>, while{" "}
+          <Link href="/2026/committees/C00949487">Guardrails Alliance</Link>{" "}
+          spent {humanizeRoundedCurrency(guardrailsOppose, true, 1)} opposing
+          him. These are the only two intra-sector conflicts so far this
+          cycle.
         </>
       ),
-      href: "/2026/elections/NY-H-12",
     },
     {
       key: "party-lean",
